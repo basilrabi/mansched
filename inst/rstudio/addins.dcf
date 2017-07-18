@@ -1,0 +1,9 @@
+Name: Insert code-link
+Description: Inserts `\code{\link{}}` at the cursor position.
+Binding: insertCodeLink
+Interactive: false
+
+Name: Insert item
+Description: Inserts `\item{}{}` at the cursor position.
+Binding: insertItem
+Interactive: false
