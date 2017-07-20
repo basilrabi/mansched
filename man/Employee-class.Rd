@@ -71,7 +71,12 @@ employee is not required to report to work}
   this number of hours.
   This slot only applies to real employees.}
 
-\item{\code{regularTime}}{integer vector with length of 12
+\item{\code{totHours}}{integer vector with length of 12
+
+  This represents the number of hours per month which is equated to the
+  employee's basic monthly wage.}
+
+\item{\code{reg}}{integer vector with length of 12
 
   This represents the number of regular hours budgeted per month.}
 }}

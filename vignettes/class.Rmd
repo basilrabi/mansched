@@ -1,0 +1,136 @@
+---
+title: "Classes and Methods"
+author: "Basil Eric Rabi"
+date: "July 19, 2017"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Classes and Methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+# Object Inheritance
+```{dot, echo=FALSE}
+digraph classes {
+
+node [shape = box]
+
+employee [label=<
+<TABLE
+  BORDER="0">
+  <TR>
+    <TD COLSPAN="3"><B>Employee</B></TD>
+  </TR>
+  <TR>
+    <TD>ID</TD>
+    <TD>costCode</TD>
+    <TD>isTheo</TD>
+  </TR>
+  <TR>
+    <TD>name</TD>
+    <TD>status</TD>
+    <TD>restday</TD>
+  </TR>
+  <TR>
+    <TD>designation</TD>
+    <TD>cBegin</TD>
+    <TD>holHours</TD>
+  </TR>
+  <TR>
+    <TD>attendance</TD>
+    <TD>cEnd</TD>
+    <TD>totHours</TD>
+  </TR>
+  <TR>
+    <TD>spareFactor</TD>
+    <TD>inHouse</TD>
+    <TD>reg</TD>
+  </TR>
+</TABLE>>]
+
+staff [label=<<B>Staff</B>>]
+
+division_manager [label=<<B>Division Manager</B>>]
+
+group_manager [label=<<B>Group Manager</B>>]
+
+department_manager [label=<<B>Department Manager</B>>]
+
+section_head [label=<<B>Section Head</B>>]
+
+non_staff [label=<
+<TABLE 
+  BORDER="0">
+  <TR>
+    <TD><B>Non Staff</B></TD>
+  </TR>
+  <TR>
+    <TD>isRF</TD>
+  </TR>
+  <TR>
+    <TD>regOT</TD>
+  </TR>
+</TABLE>>]
+
+clerk [label=<<B>Clerk</B>>]
+
+operation_personnel [label=<
+<TABLE
+  BORDER="0">
+  <TR>
+    <TD COLSPAN="3"><B>Operation Personnel</B></TD>
+  </TR>
+  <TR>
+    <TD>rd</TD>
+    <TD>rdOT</TD>
+    <TD>sh</TD>
+  </TR>
+  <TR>
+    <TD>shOT</TD>
+    <TD>lh</TD>
+    <TD>lhOT</TD>
+  </TR>
+  <TR>
+    <TD>nh</TD>
+    <TD>nhOT</TD>
+    <TD>rs</TD>
+  </TR>
+  <TR>
+    <TD>rsOT</TD>
+    <TD>rl</TD>
+    <TD>rlOT</TD>
+  </TR>
+  <TR>
+    <TD>rn</TD>
+    <TD>rnOT</TD>
+    <TD></TD>
+  </TR>
+</TABLE>>]
+
+technical [label=<<B>Technical</B>>]
+
+production_personnel [label=<<B>Production Personnel</B>>]
+
+supervisor [label=<<B>Supervisor</B>>]
+
+laborer [label=<<B>Laborer</B>>]
+
+operator [label=<
+<TABLE
+  BORDER="0">
+  <TR>
+    <TD><B>Operator</B></TD>
+  </TR>
+  <TR>
+    <TD>equipment</TD>
+  </TR>
+</TABLE>>]
+
+employee -> {staff, non_staff}
+staff -> {division_manager, group_manager, department_manager, section_head}
+non_staff -> {clerk, operation_personnel}
+operation_personnel -> {technical, production_personnel}
+production_personnel -> {supervisor, laborer, operator}
+
+}
+```

@@ -2,6 +2,7 @@ Package: mansched2
 Type: Package
 Title: Man Hours Database Calculator for Budgeting
 Version: 0.1.0.9000
+Date: 2017-07-21
 Authors@R: c(
   person("Basil Eric", "Rabi",
   email = "basil.rabi@tmc.nickelasia.com",
@@ -11,8 +12,8 @@ Description: Tools for computing the budgeted man power costs for a year in the
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends:
-  R (>= 3.4.0),
-  methods
-Suggests: rstudioapi (>= 0.6)
+Depends: R (>= 3.4.0), methods
+Suggests: rstudioapi (>= 0.6), knitr, rmarkdown
 RoxygenNote: 6.0.1
+VignetteBuilder: knitr
+    
