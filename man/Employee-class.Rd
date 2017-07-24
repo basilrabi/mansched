@@ -55,9 +55,6 @@ employee}
 \item{\code{inHouse}}{logical value \cr
 Is the employee's accomodation given by the company?}
 
-\item{\code{isTheo}}{logical value \cr
-Is the employee theoretical?}
-
 \item{\code{restday}}{character string defining the day of the week wherein the
 employee is not required to report to work}
 

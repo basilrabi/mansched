@@ -9,11 +9,11 @@ getCalDays(cBegin, cEnd = NA, year, hol, restday)
 \arguments{
 \item{cBegin}{character string representing the start date
 
-  The accepted format is \code{'yyyy-mm-dd'}.}
+  The accepted format is \code{"yyyy-mm-dd"}.}
 
 \item{cEnd}{character string representing the end date
 
-  The accepted format is \code{'yyyy-mm-dd'}.}
+  The accepted format is \code{"yyyy-mm-dd"}.}
 
 \item{year}{numeric value representing the year to be budgeted}
 

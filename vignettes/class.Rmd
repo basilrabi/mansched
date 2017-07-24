@@ -1,7 +1,7 @@
 ---
 title: "Classes and Methods"
 author: "Basil Eric Rabi"
-date: "July 19, 2017"
+date: "July 25, 2017"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Classes and Methods}
@@ -24,7 +24,7 @@ employee [label=<
   <TR>
     <TD>ID</TD>
     <TD>costCode</TD>
-    <TD>isTheo</TD>
+    <TD></TD>
   </TR>
   <TR>
     <TD>name</TD>

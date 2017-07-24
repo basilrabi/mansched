@@ -38,8 +38,6 @@ NULL
 #'   employee
 #' @slot inHouse logical value \cr
 #'   Is the employee's accomodation given by the company?
-#' @slot isTheo logical value \cr
-#'   Is the employee theoretical?
 #' @slot restday character string defining the day of the week wherein the
 #'   employee is not required to report to work
 #' @slot holHours integer vector with length of 12
@@ -61,23 +59,22 @@ NULL
 #' @examples employee()
 #' @export employee
 employee <- setClass(
-  'Employee',
+  "Employee",
   slots = c(
-    ID = 'character',
-    name = 'character',
-    designation = 'character',
-    attendance = 'numeric',
-    spareFactor = 'numeric',
-    costCode = 'character',
-    status = 'character',
-    cBegin = 'character',
-    cEnd = 'character',
-    inHouse = 'logical',
-    isTheo = 'logical',
-    restday = 'character',
-    holHours = 'integer',
-    totHours = 'integer',
-    reg = 'integer'
+    ID = "character",
+    name = "character",
+    designation = "character",
+    attendance = "numeric",
+    spareFactor = "numeric",
+    costCode = "character",
+    status = "character",
+    cBegin = "character",
+    cEnd = "character",
+    inHouse = "logical",
+    restday = "character",
+    holHours = "integer",
+    totHours = "integer",
+    reg = "integer"
   )
 )
 
@@ -88,15 +85,15 @@ employee <- setClass(
 #'   \code{\link{Group Manager-class}},
 #'   \code{\link{Department Manager-class}}
 #'   \code{\link{Section Head-class}}. In TMC, department managers and up are
-#'   termed 'Senior Staff' while section heads are termed 'Junior Staff'.
+#'   termed "Senior Staff" while section heads are termed "Junior Staff".
 #'
 #' @seealso \code{\link{Employee-class}}
 #' @examples staff()
 #' @export staff
 staff <- setClass(
-  'Staff',
+  "Staff",
   slots = character(0),
-  contains = 'Employee'
+  contains = "Employee"
 )
 
 #' An S4 class representing a division manager
@@ -108,9 +105,9 @@ staff <- setClass(
 #' @examples division_manager()
 #' @export division_manager
 division_manager <- setClass(
-  'Division Manager',
+  "Division Manager",
   slots = character(0),
-  contains = 'Staff'
+  contains = "Staff"
 )
 
 #' An S4 class representing a group manager
@@ -122,9 +119,9 @@ division_manager <- setClass(
 #' @examples group_manager()
 #' @export group_manager
 group_manager <- setClass(
-  'Group Manager',
+  "Group Manager",
   slots = character(0),
-  contains = 'Staff'
+  contains = "Staff"
 )
 
 #' An S4 class representing a department manager
@@ -136,9 +133,9 @@ group_manager <- setClass(
 #' @examples department_manager()
 #' @export department_manager
 department_manager <- setClass(
-  'Department Manager',
+  "Department Manager",
   slots = character(0),
-  contains = 'Staff'
+  contains = "Staff"
 )
 
 #' An S4 class representing a section head
@@ -151,9 +148,9 @@ department_manager <- setClass(
 #' @examples section_head()
 #' @export section_head
 section_head <- setClass(
-  'Section Head',
+  "Section Head",
   slots = character(0),
-  contains = 'Staff'
+  contains = "Staff"
 )
 
 #' An S4 class representing an employee who is not a staff
@@ -171,12 +168,12 @@ section_head <- setClass(
 #' @examples non_staff()
 #' @export non_staff
 non_staff <- setClass(
-  'Non Staff',
+  "Non Staff",
   slots = c(
-    isRF = 'logical',
-    regOT = 'integer'
+    isRF = "logical",
+    regOT = "integer"
   ),
-  contains = 'Employee'
+  contains = "Employee"
 )
 
 #' An S4 class representing a clerk
@@ -189,9 +186,9 @@ non_staff <- setClass(
 #' @examples clerk()
 #' @export clerk
 clerk <- setClass(
-  'Clerk',
+  "Clerk",
   slots = character(0),
-  contains = 'Non Staff'
+  contains = "Non Staff"
 )
 
 #' An S4 class representing an operation personnel
@@ -300,24 +297,24 @@ clerk <- setClass(
 #' @examples operation_personnel()
 #' @export operation_personnel
 operation_personnel <- setClass(
-  'Operation Personnel',
+  "Operation Personnel",
   slots = c(
-    rd = 'integer',
-    rdOT = 'integer',
-    sh = 'integer',
-    shOT = 'integer',
-    lh = 'integer',
-    lhOT = 'integer',
-    nh = 'integer',
-    nhOT = 'integer',
-    rs = 'integer',
-    rsOT = 'integer',
-    rl = 'integer',
-    rlOT = 'integer',
-    rn = 'integer',
-    rnOT = 'integer'
+    rd = "integer",
+    rdOT = "integer",
+    sh = "integer",
+    shOT = "integer",
+    lh = "integer",
+    lhOT = "integer",
+    nh = "integer",
+    nhOT = "integer",
+    rs = "integer",
+    rsOT = "integer",
+    rl = "integer",
+    rlOT = "integer",
+    rn = "integer",
+    rnOT = "integer"
   ),
-  contains = 'Non Staff'
+  contains = "Non Staff"
 )
 
 #' An S4 class representing a technical personnel
@@ -330,9 +327,9 @@ operation_personnel <- setClass(
 #' @examples technical()
 #' @export technical
 technical <- setClass(
-  'Technical',
+  "Technical",
   slots = character(0),
-  contains = 'Operation Personnel'
+  contains = "Operation Personnel"
 )
 
 #' An S4 class representing a production personnel
@@ -346,9 +343,9 @@ technical <- setClass(
 #' @examples production_personnel()
 #' @export production_personnel
 production_personnel <- setClass(
-  'Production Personnel',
+  "Production Personnel",
   slots = character(0),
-  contains = 'Operation Personnel'
+  contains = "Operation Personnel"
 )
 
 #' An S4 class representing a supervisor
@@ -362,9 +359,9 @@ production_personnel <- setClass(
 #' @examples supervisor()
 #' @export supervisor
 supervisor <- setClass(
-  'Supervisor',
+  "Supervisor",
   slots = character(0),
-  contains = 'Production Personnel'
+  contains = "Production Personnel"
 )
 
 #' An S4 class representing a laborer
@@ -376,9 +373,9 @@ supervisor <- setClass(
 #' @examples laborer()
 #' @export laborer
 laborer <- setClass(
-  'Laborer',
+  "Laborer",
   slots = character(0),
-  contains = 'Production Personnel'
+  contains = "Production Personnel"
 )
 
 #' An S4 class representing an operator
@@ -392,9 +389,9 @@ laborer <- setClass(
 #' @examples operator()
 #' @export operator
 operator <- setClass(
-  'Operator',
+  "Operator",
   slots = c(
-    equipment = 'character'
+    equipment = "character"
   ),
-  contains = 'Production Personnel'
+  contains = "Production Personnel"
 )

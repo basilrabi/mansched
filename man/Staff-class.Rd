@@ -11,7 +11,7 @@ These are employees that are classified as
   \code{\link{Group Manager-class}},
   \code{\link{Department Manager-class}}
   \code{\link{Section Head-class}}. In TMC, department managers and up are
-  termed 'Senior Staff' while section heads are termed 'Junior Staff'.
+  termed "Senior Staff" while section heads are termed "Junior Staff".
 }
 \examples{
 staff()
