@@ -9,7 +9,7 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-# Object Inheritance
+# S4-Class Object Inheritance
 ```{dot, echo=FALSE}
 digraph classes {
 
@@ -24,22 +24,22 @@ employee [label=<
   <TR>
     <TD>ID</TD>
     <TD>costCode</TD>
-    <TD></TD>
+    <TD>restday</TD>
   </TR>
   <TR>
     <TD>name</TD>
     <TD>status</TD>
-    <TD>restday</TD>
+    <TD>holHours</TD>
   </TR>
   <TR>
     <TD>designation</TD>
     <TD>cBegin</TD>
-    <TD>holHours</TD>
+    <TD>totHours</TD>
   </TR>
   <TR>
     <TD>attendance</TD>
     <TD>cEnd</TD>
-    <TD>totHours</TD>
+    <TD>maxReg</TD>
   </TR>
   <TR>
     <TD>spareFactor</TD>

@@ -33,3 +33,6 @@ Each row represents a day from the year computed. The columns are:
 Creates a schedule for all types of holidays throughout the year in a form of
   a database including the weekday of each date.
 }
+\seealso{
+\code{\link{getCalDays}}
+}

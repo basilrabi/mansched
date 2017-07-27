@@ -4,7 +4,7 @@
 \alias{getCalDays}
 \title{Get Calendar Days}
 \usage{
-getCalDays(cBegin, cEnd = NA, year, hol, restday)
+getCalDays(cBegin, cEnd = NA, hol, restday)
 }
 \arguments{
 \item{cBegin}{character string representing the start date
@@ -14,8 +14,6 @@ getCalDays(cBegin, cEnd = NA, year, hol, restday)
 \item{cEnd}{character string representing the end date
 
   The accepted format is \code{"yyyy-mm-dd"}.}
-
-\item{year}{numeric value representing the year to be budgeted}
 
 \item{hol}{a \code{\link{data.frame}} return by \code{\link{getHol}}}
 

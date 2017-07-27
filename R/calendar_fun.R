@@ -21,6 +21,7 @@
 #'     Is the date a special holiday?
 #'   }
 #' }
+#' @seealso \code{\link{getCalDays}}
 #' @export getHol
 getHol <- function(hol, year) {
 
@@ -71,17 +72,17 @@ getHol <- function(hol, year) {
 #' @param cEnd character string representing the end date
 #'
 #'   The accepted format is \code{"yyyy-mm-dd"}.
-#' @param year numeric value representing the year to be budgeted
 #' @param hol a \code{\link{data.frame}} return by \code{\link{getHol}}
 #' @param restday character string representing the day of the week defined as
 #'   the rest day
 #' @return a \code{matrix} with 12 rows and 7 columns
 #'
 #' Each row represents a month while each column represents a man hour type.
-#' @importFrom lubridate month
+#' @importFrom lubridate year month
 #' @export getCalDays
-getCalDays <- function(cBegin, cEnd = NA, year, hol, restday) {
+getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
 
+  year <- lubridate::year(hol$date[1])
   cBegin <- as.Date(cBegin)
   cBegin.temp <- as.Date(paste(year, "01-01", sep = "-"))
 
@@ -116,7 +117,7 @@ getCalDays <- function(cBegin, cEnd = NA, year, hol, restday) {
       } else if (x[4] & x[3]) {
         return("rs") # rest day and special holiday
       } else if (x[4] & x[1]) {
-        return("rn") # rest day and negotiated holidau
+        return("rn") # rest day and negotiated holiday
       }
     } else
       return(NA)
@@ -125,5 +126,5 @@ getCalDays <- function(cBegin, cEnd = NA, year, hol, restday) {
   hol$month <- lubridate::month(hol$date)
   hol <- hol[,c("month", "mdType")]
   hol <- table(hol)
-  return(tempData)
+  return(hol)
 }

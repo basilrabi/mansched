@@ -4,14 +4,55 @@
 \name{initREmployee}
 \alias{initREmployee}
 \alias{initREmployee,Employee-method}
+\alias{initREmployee,Staff-method}
+\alias{initREmployee,Non Staff-method}
+\alias{initREmployee,Clerk-method}
+\alias{initREmployee,Operation Personnel-method}
+\alias{initREmployee,Technical-method}
+\alias{initREmployee,Supervisor-method}
+\alias{initREmployee,Laborer-method}
+\alias{initREmployee,Operator-method}
 \title{Initialize real employee}
 \usage{
 initREmployee(theObject, ID, name, designation, attendance = 1,
-  costCode = "NONE", status = "reg", cBegin, cEnd = NA, inHouse,
-  restday = "Sunday", hol, isRF, equipment)
+  costCode = "NONE", status = "reg", cBegin, cEnd = NA, inHouse = FALSE,
+  restday = "Sunday", hol, isRF = FALSE, equipment, OT = 3)
 
-\S4method{initREmployee}{Employee}(theObject, ID, name, designation, attendance,
-  costCode, status, cBegin, cEnd = NA, inHouse, restday)
+\S4method{initREmployee}{Employee}(theObject, ID, name, designation,
+  attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
+  inHouse = FALSE, restday = "Sunday", hol)
+
+\S4method{initREmployee}{Staff}(theObject, ID, name, designation,
+  attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
+  inHouse = FALSE, restday = "Sunday", hol)
+
+\S4method{initREmployee}{`Non Staff`}(theObject, ID, name, designation,
+  attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
+  inHouse = FALSE, restday = "Sunday", hol, OT = 3)
+
+\S4method{initREmployee}{Clerk}(theObject, ID, name, designation,
+  attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
+  inHouse = FALSE, restday = "Sunday", hol, isRF = FALSE, OT = 3)
+
+\S4method{initREmployee}{`Operation Personnel`}(theObject, ID, name,
+  designation, attendance = 1, costCode = "NONE", status = "reg", cBegin,
+  cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, OT = 3)
+
+\S4method{initREmployee}{Technical}(theObject, ID, name, designation,
+  attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
+  inHouse = FALSE, restday = "Sunday", hol, OT = 3)
+
+\S4method{initREmployee}{Supervisor}(theObject, ID, name, designation,
+  attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
+  inHouse = FALSE, restday = "Sunday", hol, OT = 3)
+
+\S4method{initREmployee}{Laborer}(theObject, ID, name, designation,
+  attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
+  inHouse = FALSE, restday = "Sunday", hol, OT = 3)
+
+\S4method{initREmployee}{Operator}(theObject, ID, name, designation,
+  attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
+  inHouse = FALSE, restday = "Sunday", hol, equipment, OT = 3)
 }
 \arguments{
 \item{theObject}{\code{\link{Employee-class}} object}
@@ -23,7 +64,10 @@ initREmployee(theObject, ID, name, designation, attendance = 1,
 \item{designation}{character string representing designation of employee}
 
 \item{attendance}{numeric value used to account for the absenteeism of the
-employee}
+  employee
+
+  This may be used as correction factor to estimate the workable man hours of
+  an employee.}
 
 \item{costCode}{character vector containing the cost codes wherein the
 employee will be charged}
@@ -34,6 +78,22 @@ employee will be charged}
   The accepted values are \code{"reg"} (regular), \code{"pro"}
   (probationary), and \code{"sea"} (seasonal).}
 
+\item{cBegin}{character string defining the date wherein the employment
+  contract of the employee began
+
+  The accepted format is \code{"yyyy-mm-dd"}.}
+
+\item{cEnd}{character string defining the date wherein the employment
+  contract of the emplyee will end
+
+  The accepted format is \code{"yyyy-mm-dd"}.}
+
+\item{inHouse}{logical value \cr
+Is the employee's accommodation given by the company?}
+
+\item{restday}{character string defining the day of the week wherein the
+employee is not required to report to work}
+
 \item{hol}{a \code{\link{data.frame}} returned by \code{\link{getHol}}
 
   This contains all the holidays in the year to be budgeted.}
@@ -43,6 +103,8 @@ Is the employee rank and file?}
 
 \item{equipment}{character vector representing the equipment types which the
 employee is authorized to operate}
+
+\item{OT}{integer value defining the budgeted overtime hours}
 }
 \description{
 Initializes employee data and its working hours. This function can be
@@ -52,6 +114,53 @@ Initializes employee data and its working hours. This function can be
 \section{Methods (by class)}{
 \itemize{
 \item \code{Employee}: Initialize ID, name, designation, attendance,
-spareFactor, costCode, status, isTheo
+costCode, status, cBegin, cEnd, inHouse, restday and calDays
+(see \code{\link{getCalDays}})
+
+\item \code{Staff}: Return only the \code{\link{Staff-class}} object
+
+\item \code{Non Staff}: Initialize regOT
+
+\item \code{Clerk}: Initialize isRF and return only the
+\code{\link{Clerk-class}} object
+
+\item \code{Operation Personnel}: Initialize rd, rdOT, sh, shOT, lh, lhOT, nh, nhOT,
+rs, rsOT, rl, rlOT, rn, rnOT. Return only the
+\code{\link{Operation Personnel-class}} object.
+
+\item \code{Technical}: Return only the \code{\link{Technical-class}}
+object. All \code{Technical-class} personnel are not rank and file.
+
+\item \code{Supervisor}: Return only the
+\code{\link{Supervisor-class}} object. All \code{Supervisor-class}
+employees are not rank and file
+
+\item \code{Laborer}: Return only the
+\code{\link{Laborer-class}} object. All \code{Laborer-class}
+employees are rank and file
+
+\item \code{Operator}: Initialize equipment
+
+\code{\link{Operator-class}} personnel may be authorized to operate multiple
+  types of equipment. In Taganito Mining Corporation, some of the equipment
+  types are:
+  \enumerate{
+    \item CRANE
+    \item CT (bulldozer)
+    \item DT (dump truck)
+    \item FL (fuel truck)
+    \item FORKLIFT
+    \item RG (road grader)
+    \item SB (service bus)
+    \item SP (service pickup)
+    \item TT (trailer truck)
+    \item TX (tracked excavator)
+    \item VC (vibrating compactor)
+    \item WL (wheel loader)
+    \item WTL (water truck)
+    \item WX (wheeled excavator)
+  }
+
+  All \code{Operator-class} employees are rank and file.
 }}
 

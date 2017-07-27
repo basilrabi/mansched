@@ -53,6 +53,10 @@ NULL
 #'
 #'   This represents the number of hours per month which is equated to the
 #'   employee's basic monthly wage.
+#' @slot maxReg integer vector with length of 12
+#'
+#'   This represents the number of hours wherein the employee must report to
+#'   work.
 #' @slot reg integer vector with length of 12
 #'
 #'   This represents the number of regular hours budgeted per month.
@@ -74,6 +78,7 @@ employee <- setClass(
     restday = "character",
     holHours = "integer",
     totHours = "integer",
+    maxReg = "integer",
     reg = "integer"
   )
 )
