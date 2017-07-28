@@ -101,8 +101,10 @@ employee is not required to report to work}
 \item{isRF}{logical value \cr
 Is the employee rank and file?}
 
-\item{equipment}{character vector representing the equipment types which the
-employee is authorized to operate}
+\item{equipment}{character string representing the equipment types which the
+  employee is authorized to operate
+
+  Equipment types are separated by spaces and must be in upper case.}
 
 \item{OT}{integer value defining the budgeted overtime hours}
 }

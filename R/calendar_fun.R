@@ -75,9 +75,21 @@ getHol <- function(hol, year) {
 #' @param hol a \code{\link{data.frame}} return by \code{\link{getHol}}
 #' @param restday character string representing the day of the week defined as
 #'   the rest day
-#' @return a \code{matrix} with 12 rows and 7 columns
+#' @return a \code{matrix} with 12 rows and n columns
 #'
-#' Each row represents a month while each column represents a man hour type.
+#' Each row represents a month while each column represents a man day type.
+#' Depending on the available man day type, the number of columns may vary. The
+#' possible column names are:
+#' \describe{
+#'  \item{reg}{regular day}
+#'  \item{rd}{rest day}
+#'  \item{lh}{legal holiday}
+#'  \item{sh}{special holiday}
+#'  \item{nh}{negotiated holiday}
+#'  \item{rl}{rest day and legal holiday}
+#'  \item{rs}{rest day abd special holiday}
+#'  \item{rn}{rest day and negotiated holiday}
+#' }
 #' @importFrom lubridate year month
 #' @export getCalDays
 getCalDays <- function(cBegin, cEnd = NA, hol, restday) {

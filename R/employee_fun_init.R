@@ -40,8 +40,10 @@ NULL
 #'   This contains all the holidays in the year to be budgeted.
 #' @param isRF logical value \cr
 #'   Is the employee rank and file?
-#' @param equipment character vector representing the equipment types which the
+#' @param equipment character string representing the equipment types which the
 #'   employee is authorized to operate
+#'
+#'   Equipment types are separated by spaces and must be in upper case.
 #' @param OT integer value defining the budgeted overtime hours
 #' @importFrom lubridate year
 #' @export initREmployee
@@ -126,15 +128,21 @@ setMethod(
 
     totDays <- apply(calDays[,c("reg", "lh", "sh", "nh")],
                      MARGIN = 1, FUN = sum)
+
+    if (theObject@status == "reg") {
+      holDays <- apply(calDays[,c("lh", "sh", "nh")], MARGIN = 1, FUN = sum)
+      regDays <- calDays[,c("reg")]
+    } else {
+      holDays <- calDays[,c("lh")]
+      regDays <- apply(calDays[,c("reg", "sh", "nh")], MARGIN = 1, FUN = sum)
+    }
+
     theObject@totHours <- totDays * 8L
-
-    holDays <- apply(calDays[,c("lh", "sh", "nh")], MARGIN = 1, FUN = sum)
     theObject@holHours <- holDays * 8L
+    theObject@maxReg <- regDays * 8L
 
-    theObject@maxReg <- calDays[,c("reg")] * 8L
-    theObject@reg <- as.integer(
-      calDays[,c("reg")] * 8 * theObject@attendance
-    )
+    regDays <- calDays[,c("reg")]
+    theObject@reg <- as.integer(regDays* 8 * theObject@attendance)
 
     return(list(theObject, calDays))
   }
@@ -210,7 +218,7 @@ setMethod(
       calDays[,c("reg")] * theObject@attendance * OT
     )
 
-    return(theObject, calDays)
+    return(list(theObject, calDays))
   }
 )
 
@@ -288,54 +296,91 @@ setMethod(
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
 
-    theObject@rd <- as.integer(
-      calDays[,c("rd")] * theObject@attendance * 8
-    )
-    theObject@rdOT <- as.integer(
-      calDays[,c("rd")] * theObject@attendance * OT
-    )
+    zero <- rep(0L, times = 12)
 
-    theObject@sh <- as.integer(
-      calDays[,c("sh")] * theObject@attendance * 8
-    )
-    theObject@shOT <- as.integer(
-      calDays[,c("sh")] * theObject@attendance * OT
-    )
+    if ("rd" %in% colnames(calDays)) {
+      theObject@rd <- as.integer(
+        calDays[,c("rd")] * theObject@attendance * 8
+      )
+      theObject@rdOT <- as.integer(
+        calDays[,c("rd")] * theObject@attendance * OT
+      )
+    } else {
+      theObject@rd <- zero
+      theObject@rdOT <- zero
+    }
 
-    theObject@lh <- as.integer(
-      calDays[,c("lh")] * theObject@attendance * 8
-    )
-    theObject@lhOT <- as.integer(
-      calDays[,c("lh")] * theObject@attendance * OT
-    )
+    if ("sh" %in% colnames(calDays)) {
+      theObject@sh <- as.integer(
+        calDays[,c("sh")] * theObject@attendance * 8
+      )
+      theObject@shOT <- as.integer(
+        calDays[,c("sh")] * theObject@attendance * OT
+      )
+    } else {
+      theObject@sh <- zero
+      theObject@shOT <- zero
+    }
 
-    theObject@nh <- as.integer(
-      calDays[,c("nh")] * theObject@attendance * 8
-    )
-    theObject@nhOT <- as.integer(
-      calDays[,c("nh")] * theObject@attendance * OT
-    )
+    if ("lh" %in% colnames(calDays)) {
+      theObject@lh <- as.integer(
+        calDays[,c("lh")] * theObject@attendance * 8
+      )
+      theObject@lhOT <- as.integer(
+        calDays[,c("lh")] * theObject@attendance * OT
+      )
+    } else {
+      theObject@lh <- zero
+      theObject@lhOT <- zero
+    }
 
-    theObject@rs <- as.integer(
-      calDays[,c("rs")] * theObject@attendance * 8
-    )
-    theObject@rsOT <- as.integer(
-      calDays[,c("rs")] * theObject@attendance * OT
-    )
+    if ("nh" %in% colnames(calDays)) {
+      theObject@nh <- as.integer(
+        calDays[,c("nh")] * theObject@attendance * 8
+      )
+      theObject@nhOT <- as.integer(
+        calDays[,c("nh")] * theObject@attendance * OT
+      )
+    } else {
+      theObject@nh <- zero
+      theObject@nhOT <- zero
+    }
 
-    theObject@rl <- as.integer(
-      calDays[,c("rl")] * theObject@attendance * 8
-    )
-    theObject@rlOT <- as.integer(
-      calDays[,c("rl")] * theObject@attendance * OT
-    )
+    if ("rs" %in% colnames(calDays)) {
+      theObject@rs <- as.integer(
+        calDays[,c("rs")] * theObject@attendance * 8
+      )
+      theObject@rsOT <- as.integer(
+        calDays[,c("rs")] * theObject@attendance * OT
+      )
+    } else {
+      theObject@rs <- zero
+      theObject@rsOT <- zero
+    }
 
-    theObject@rn <- as.integer(
-      calDays[,c("rn")] * theObject@attendance * 8
-    )
-    theObject@rnOT <- as.integer(
-      calDays[,c("rn")] * theObject@attendance * OT
-    )
+    if ("rl" %in% colnames(calDays)) {
+      theObject@rl <- as.integer(
+        calDays[,c("rl")] * theObject@attendance * 8
+      )
+      theObject@rlOT <- as.integer(
+        calDays[,c("rl")] * theObject@attendance * OT
+      )
+    } else {
+      theObject@rl <- zero
+      theObject@rlOT <- zero
+    }
+
+    if ("rn" %in% colnames(calDays)) {
+      theObject@rn <- as.integer(
+        calDays[,c("rn")] * theObject@attendance * 8
+      )
+      theObject@rnOT <- as.integer(
+        calDays[,c("rn")] * theObject@attendance * OT
+      )
+    } else {
+      theObject@rn <- zero
+      theObject@rnOT <- zero
+    }
 
     return(theObject)
   }
@@ -541,3 +586,25 @@ setMethod(
     return(theObject)
   }
 )
+
+#' Create an employee
+#'
+#' Creates an \code{\link{Employee-class}} object using a switch.
+#'
+#' @param empClass character string representing the employee sub-class
+#'
+#'   Only the end nodes are accepted (see vignette).
+#' @return an object that is a sub-class of \code{\link{Employee-class}}
+#' @export createEmp
+createEmp <- function(empClass) {
+  switch(empClass,
+         "division manager" = division_manager(),
+         "group manager" = group_manager(),
+         "department manager" = department_manager(),
+         "section head" = section_head(),
+         "clerk" = clerk(),
+         "technical" = technical(),
+         "supervisor" = supervisor(),
+         "laborer" = laborer(),
+         "operator" = operator())
+}

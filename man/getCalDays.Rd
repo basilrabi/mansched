@@ -21,9 +21,21 @@ getCalDays(cBegin, cEnd = NA, hol, restday)
 the rest day}
 }
 \value{
-a \code{matrix} with 12 rows and 7 columns
+a \code{matrix} with 12 rows and n columns
 
-Each row represents a month while each column represents a man hour type.
+Each row represents a month while each column represents a man day type.
+Depending on the available man day type, the number of columns may vary. The
+possible column names are:
+\describe{
+ \item{reg}{regular day}
+ \item{rd}{rest day}
+ \item{lh}{legal holiday}
+ \item{sh}{special holiday}
+ \item{nh}{negotiated holiday}
+ \item{rl}{rest day and legal holiday}
+ \item{rs}{rest day abd special holiday}
+ \item{rn}{rest day and negotiated holiday}
+}
 }
 \description{
 Using a date range, the available working days type is computed. The

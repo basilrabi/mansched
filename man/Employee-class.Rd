@@ -65,7 +65,10 @@ employee is not required to report to work}
   of the vector represents a month.
 
   Even if the employee will not report on duty, he or she will be paid by
-  this number of hours.
+  this number of hours. For regular employees, \code{holHours} is comprised
+  by special holidays, legal holidays, and negotiated holidays. For
+  non-regular employees, \code{holHours} is comprised only by legal holidays.
+
   This slot only applies to real employees.}
 
 \item{\code{totHours}}{integer vector with length of 12
@@ -76,7 +79,9 @@ employee is not required to report to work}
 \item{\code{maxReg}}{integer vector with length of 12
 
   This represents the number of hours wherein the employee must report to
-  work.}
+  work in order to be compensated. Regular employees may not report to work
+  during any type of holiday. Non-regular employees, on the other hand, may
+  not report to work during legal holidays only.}
 
 \item{\code{reg}}{integer vector with length of 12
 
