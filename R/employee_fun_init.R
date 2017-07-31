@@ -41,7 +41,7 @@ NULL
 #' @param isRF logical value \cr
 #'   Is the employee rank and file?
 #' @param equipment character string representing the equipment types which the
-#'   employee is authorized to operate
+#'   employee was given authority to operate
 #'
 #'   Equipment types are separated by spaces and must be in upper case.
 #' @param OT integer value defining the budgeted overtime hours
@@ -242,18 +242,18 @@ setMethod(
                         isRF = FALSE,
                         OT = 3) {
     theObject <- callNextMethod(theObject = theObject,
-                               ID = ID,
-                               name = name,
-                               designation = designation,
-                               attendance = attendance,
-                               costCode = costCode,
-                               status = status,
-                               cBegin = cBegin,
-                               cEnd = cEnd,
-                               inHouse = inHouse,
-                               restday = restday,
-                               hol = hol,
-                               OT = OT)[[1]]
+                                ID = ID,
+                                name = name,
+                                designation = designation,
+                                attendance = attendance,
+                                costCode = costCode,
+                                status = status,
+                                cBegin = cBegin,
+                                cEnd = cEnd,
+                                inHouse = inHouse,
+                                restday = restday,
+                                hol = hol,
+                                OT = OT)[[1]]
 
     theObject@isRF <- isRF
 
@@ -582,6 +582,188 @@ setMethod(
       theObject@equipment <- equipment
     else
       stop("Invalid equipment!")
+
+    return(theObject)
+  }
+)
+
+#' Initialize theoretical employee
+#'
+#' Initialize employee data and its working hours. This function can be applied
+#'   only to theoretical employees. Theoretica employees represent the manpower
+#'   requirement for a scheduled activity.
+#'
+#' @param theObject \code{\link{Employee-class}} object
+#' @param ID character string representing the employee's unique identifier
+#' @param costCode character string representing the accounting cost code
+#'   wherein the employee's man hour cost will be charged
+#' @param equipment character string representing the equipment type which the
+#'   employee was given authority to operate
+#' @param OT integer value defining the budgeted overtime hours
+#' @param calDays a \code{\link{data.frame}} returned by
+#'   \code{\link{getCalDays}}
+#' @param mdtProb a \code{data.frame} returned by \code{\link{getMDTProb}}
+#' @param spareFactor numeric value of greater than or equal to 1 used as man
+#'   hours multiplier
+#' @param monthSched integer vector of length 12
+#'
+#'   This represents the number of days an activity is scheduled for each month.
+#'   This argument is used only for \code{\link{Production Personnel-class}}
+#'   objects.
+#' @return \code{\link{Employee-class}} object
+#' @export initTEmployee
+setGeneric(
+  name = "initTEmployee",
+  def = function(theObject,
+                 ID,
+                 costCode = "NONE",
+                 equipment,
+                 OT = 3,
+                 calDays,
+                 mdtProb,
+                 spareFactor = 1,
+                 monthSched = NA) {
+    standardGeneric("initTEmployee")
+  }
+)
+
+#' @describeIn initTEmployee Initialize ID, costCode and spareFactor
+setMethod(
+  f = "initTEmployee",
+  signature = "Employee",
+  definition = function(theObject,
+                        ID,
+                        costCode,
+                        spareFactor = 1) {
+    # Checking of the validity of all arguments must be done prior to calling
+    #  initTEmployee()
+
+    theObject@ID <- ID
+    theObject@costCode <- costCode
+    theObject@spareFactor <- spareFactor
+
+    return(theObject)
+  }
+)
+
+#' @describeIn initTEmployee Initialize reg
+setMethod(
+  f = "initTEmployee",
+  signature = "Staff",
+  definition = function(theObject,
+                        ID,
+                        costCode,
+                        calDays,
+                        spareFactor = 1) {
+
+    theObject <- callNextMethod(theObject = theObject,
+                                ID = ID,
+                                costCode = costCode,
+                                spareFactor = spareFactor)
+    theObject@reg <- as.integer(calDays[,c("reg")] * 8 * theObject@spareFactor)
+    return(theObject)
+  }
+)
+
+#' @describeIn initTEmployee Initialize reg and regOT
+setMethod(
+  f = "initTEmployee",
+  signature = "Clerk",
+  definition = function(theObject,
+                        ID,
+                        costCode,
+                        OT = 3,
+                        calDays,
+                        spareFactor = 1) {
+    theObject <- callNextMethod(theObject = theObject,
+                                ID = ID,
+                                costCode = costCode,
+                                spareFactor = spareFactor)
+    theObject@reg <- as.integer(calDays[,c("reg")] * 8 *
+                                  theObject@spareFactor)
+    theObject@regOT <- as.integer(calDays[,c("reg")] * OT *
+                                    theObject@spareFactor)
+
+    return(theObject)
+  }
+)
+
+#' @describeIn initTEmployee Initialize all man hour type using man day type
+#'   probabilities
+setMethod(
+  f = "initTEmployee",
+  signature = "Operation Personnel",
+  definition = function(theObject,
+                        ID,
+                        costCode,
+                        OT = 3,
+                        mdtProb,
+                        spareFactor = 1,
+                        monthSched = NA) {
+    theObject <- callNextMethod(theObject = theObject,
+                                ID = ID,
+                                costCode = costCode,
+                                spareFactor = spareFactor)
+
+    reg <- mdtProb$reg * theObject@spareFactor * 8
+    rd <- mdtProb$rd * theObject@spareFactor * 8
+    sh <- mdtProb$sh * theObject@spareFactor * 8
+    lh <- mdtProb$lh * theObject@spareFactor * 8
+    nh <- mdtProb$nh * theObject@spareFactor * 8
+    rs <- mdtProb$rs * theObject@spareFactor * 8
+    rl <- mdtProb$rl * theObject@spareFactor * 8
+    rn <- mdtProb$rn * theObject@spareFactor * 8
+
+    regOT <- mdtProb$reg * theObject@spareFactor * OT
+    rdOT <- mdtProb$rd * theObject@spareFactor * OT
+    shOT <- mdtProb$sh * theObject@spareFactor * OT
+    lhOT <- mdtProb$lh * theObject@spareFactor * OT
+    nhOT <- mdtProb$nh * theObject@spareFactor * OT
+    rsOT <- mdtProb$rs * theObject@spareFactor * OT
+    rlOT <- mdtProb$rl * theObject@spareFactor * OT
+    rnOT <- mdtProb$rn * theObject@spareFactor * OT
+
+    if (any(is.na(monthSched))) {
+
+      theObject@reg <- as.integer(reg * mdtProb$days + 0.5)
+      theObject@rd <- as.integer(rd * mdtProb$days + 0.5)
+      theObject@sh <- as.integer(sh * mdtProb$days + 0.5)
+      theObject@lh <- as.integer(lh * mdtProb$days + 0.5)
+      theObject@nh <- as.integer(nh * mdtProb$days + 0.5)
+      theObject@rs <- as.integer(rs * mdtProb$days + 0.5)
+      theObject@rl <- as.integer(rl * mdtProb$days + 0.5)
+      theObject@rn <- as.integer(rn * mdtProb$days + 0.5)
+
+      theObject@regOT <- as.integer(regOT * mdtProb$days + 0.5)
+      theObject@rdOT <- as.integer(rdOT * mdtProb$days + 0.5)
+      theObject@shOT <- as.integer(shOT * mdtProb$days + 0.5)
+      theObject@lhOT <- as.integer(lhOT * mdtProb$days + 0.5)
+      theObject@nhOT <- as.integer(nhOT * mdtProb$days + 0.5)
+      theObject@rsOT <- as.integer(rsOT * mdtProb$days + 0.5)
+      theObject@rlOT <- as.integer(rlOT * mdtProb$days + 0.5)
+      theObject@rnOT <- as.integer(rnOT * mdtProb$days + 0.5)
+
+    } else {
+
+      theObject@reg <- as.integer(reg * monthSched + 0.5)
+      theObject@rd <- as.integer(rd * monthSched + 0.5)
+      theObject@sh <- as.integer(sh * monthSched + 0.5)
+      theObject@lh <- as.integer(lh * monthSched + 0.5)
+      theObject@nh <- as.integer(nh * monthSched + 0.5)
+      theObject@rs <- as.integer(rs * monthSched + 0.5)
+      theObject@rl <- as.integer(rl * monthSched + 0.5)
+      theObject@rn <- as.integer(rn * monthSched + 0.5)
+
+      theObject@regOT <- as.integer(regOT * monthSched + 0.5)
+      theObject@rdOT <- as.integer(rdOT * monthSched + 0.5)
+      theObject@shOT <- as.integer(shOT * monthSched + 0.5)
+      theObject@lhOT <- as.integer(lhOT * monthSched + 0.5)
+      theObject@nhOT <- as.integer(nhOT * monthSched + 0.5)
+      theObject@rsOT <- as.integer(rsOT * monthSched + 0.5)
+      theObject@rlOT <- as.integer(rlOT * monthSched + 0.5)
+      theObject@rnOT <- as.integer(rnOT * monthSched + 0.5)
+
+    }
 
     return(theObject)
   }

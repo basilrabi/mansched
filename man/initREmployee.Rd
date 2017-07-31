@@ -102,7 +102,7 @@ employee is not required to report to work}
 Is the employee rank and file?}
 
 \item{equipment}{character string representing the equipment types which the
-  employee is authorized to operate
+  employee was given authority to operate
 
   Equipment types are separated by spaces and must be in upper case.}
 

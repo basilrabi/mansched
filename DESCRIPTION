@@ -2,18 +2,20 @@ Package: mansched2
 Type: Package
 Title: Man Hours Database Calculator for Budgeting
 Version: 0.1.0.9000
-Date: 2017-07-28
+Date: 2017-07-31
 Authors@R: c(
   person("Basil Eric", "Rabi",
   email = "basil.rabi@tmc.nickelasia.com",
   role = c("cre", "aut")))
 Description: Tools for computing the budgeted man power costs for a year in the
-    operations of Taganito Mine.
+  operations of Taganito Mine.
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.4.0), methods
-Suggests: rstudioapi (>= 0.6), knitr, rmarkdown, lubridate
+Imports: lubridate (>= 1.6.0)
+Suggests: rstudioapi (>= 0.6), knitr (>= 1.16), rmarkdown (>= 1.6),
+  testthat (>= 1.0.2)
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
     

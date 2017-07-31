@@ -15,7 +15,7 @@ getCalDays(cBegin, cEnd = NA, hol, restday)
 
   The accepted format is \code{"yyyy-mm-dd"}.}
 
-\item{hol}{a \code{\link{data.frame}} return by \code{\link{getHol}}}
+\item{hol}{a \code{\link{data.frame}} returned by \code{\link{getHol}}}
 
 \item{restday}{character string representing the day of the week defined as
 the rest day}
