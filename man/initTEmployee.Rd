@@ -7,6 +7,7 @@
 \alias{initTEmployee,Staff-method}
 \alias{initTEmployee,Clerk-method}
 \alias{initTEmployee,Operation Personnel-method}
+\alias{initTEmployee,Operator-method}
 \title{Initialize theoretical employee}
 \usage{
 initTEmployee(theObject, ID, costCode = "NONE", equipment, OT = 3, calDays,
@@ -22,6 +23,9 @@ initTEmployee(theObject, ID, costCode = "NONE", equipment, OT = 3, calDays,
 
 \S4method{initTEmployee}{`Operation Personnel`}(theObject, ID, costCode,
   OT = 3, mdtProb, spareFactor = 1, monthSched = NA)
+
+\S4method{initTEmployee}{Operator}(theObject, ID, costCode, equipment, OT = 3,
+  mdtProb, spareFactor = 1, monthSched = NA)
 }
 \arguments{
 \item{theObject}{\code{\link{Employee-class}} object}
@@ -68,5 +72,7 @@ Initialize employee data and its working hours. This function can be applied
 
 \item \code{Operation Personnel}: Initialize all man hour type using man day type
 probabilities
+
+\item \code{Operator}: Initialize equipment
 }}
 

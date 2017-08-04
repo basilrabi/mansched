@@ -560,21 +560,6 @@ setMethod(
     if (is.na(equipment))
       stop("No equipment authorized")
 
-    validEquipment <- c("CRANE",
-                        "CT",  # dozer
-                        "DT",  # dump truck
-                        "FL",  # fuel truck
-                        "FORKLIFT",
-                        "RG",  # road grader
-                        "SB",  # service bus
-                        "SP",  # service pickup
-                        "TT",  # trailer truck, prime mover
-                        "TX",  # tracked excavator
-                        "VC",  # vibrating compactor
-                        "WL",  # wheel loader
-                        "WTL", # water truck
-                        "WX")  # wheeled excavator
-
     # Vectorize equipment
     equipment <- strsplit(x = equipment, split = " ", fixed = TRUE)[[1]]
 
@@ -764,6 +749,39 @@ setMethod(
       theObject@rnOT <- as.integer(rnOT * monthSched + 0.5)
 
     }
+
+    return(theObject)
+  }
+)
+
+#' @describeIn initTEmployee Initialize equipment
+setMethod(
+  f = "initTEmployee",
+  signature = "Operator",
+  definition = function(theObject,
+                        ID,
+                        costCode,
+                        equipment,
+                        OT = 3,
+                        mdtProb,
+                        spareFactor = 1,
+                        monthSched = NA) {
+
+    theObject <- callNextMethod(theObject = theObject,
+                                ID = ID,
+                                costCode = costCode,
+                                OT = OT,
+                                mdtProb = mdtProb,
+                                spareFactor = spareFactor,
+                                monthSched = monthSched)
+
+    if (is.na(equipment))
+      stop("No equipment assigned")
+
+    if (equipment %in% validEquipment)
+      theObject@equipment <- equipment
+    else
+      stop("Invalid equipment!")
 
     return(theObject)
   }
