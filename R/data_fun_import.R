@@ -5,8 +5,7 @@
 #'
 #' @param empPool a \code{data.frame} with 13 columns
 #'
-#'   Each row represents a real
-#'   employee. The columns are:
+#'   Each row represents a real employee. The columns are:
 #'   \describe{
 #'     \item{ID}{character string representing the employee's unique identifier}
 #'     \item{name}{character string representing the employee's name}
@@ -29,18 +28,24 @@
 #'     \item{status}{character string representing the employment status of the
 #'       employee
 #'
-#'       Accepted values are \code{'reg'} (regular), \code{'pro'}
+#'       Accepted values are \code{"reg"} (regular), \code{"pro"}
 #'       (probationary), and \code{'sea'} (seasonal).}
 #'     \item{cBegin}{character string representing the date of employment of
 #'       personnel
 #'
 #'       The accepted format is ISO 8601 which expresses a day as
-#'       \code{'yyyy-mm-dd'}.}
+#'       \code{"yyyy-mm-dd"}.}
 #'     \item{cEnd}{character string representing the date of termination
 #'       employment of the seasonal employee
 #'
 #'       The accepted format is ISO 8601 which expresses a day as
-#'       \code{'yyyy-mm-dd'}.}
+#'       \code{"yyyy-mm-dd"}.}
+#'     \item{inHouse}{logical value \cr
+#'       Is the employee's accommodation given by the company?}
+#'     \item{restday}{character string representing the day of the week wherein
+#'       the employee is not required to report to work}
+#'     \item{isRF}{logical value \cr
+#'       Is the employee rank and file?}
 #'   }
 #' @param hol a \code{data.frame} similar to \code{\link{holidays}}
 #' @param year integer value representing the year to be budgeted
@@ -67,7 +72,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
 
   # Remove punctuations for costCode
   empPool$costCode <- gsub(pattern = "[[:punct:]]",
-                           replacement = '',
+                           replacement = "",
                            x = empPool$costCode)
 
   # Convert to lower case
@@ -97,8 +102,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   manPool <- rep(list(NA), times = length(empPool[,1]))
 
   if (is.na(year)) {
-    year <- as.integer(format(Sys.Date() + 365, '%Y'))
-    message(sprintf('Using %d as year.', year))
+    year <- as.integer(format(Sys.Date() + 365, "%Y"))
+    message(sprintf("Using %d as year.", year))
   }
 
   if (any(is.na(hol))) {
@@ -187,40 +192,40 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   # Error if scheduled any scheduled activity is duplicated
   if (anyDuplicated(sched$activity) > 0) {
     tempData <- sched$activity[which(duplicated(sched$activity))]
-    stop(paste('Duplicated:',tempData))
+    stop(paste("Duplicated:",tempData))
   }
 
   # Error if assigned activity is not scheduled
   if (!all(unique(empReq$activity) %in% sched$activity)) {
     tempData <- unique(empReq$activity)
     tempIndex <- which(!tempData %in% empReq$activity)
-    stop(paste('No schedule:',tempData[tempIndex]))
+    stop(paste("No schedule:", tempData[tempIndex]))
   }
 
   # Warning if scheduled activity has no personnel assigned
   if (!all(sched$activity %in% unique(empReq$activity))) {
     tempData <- sched$activity[
       which(!sched$activity %in% unique(empReq$activity))]
-    warning(paste('No personnel assigned:', tempData))
+    warning(paste("No personnel assigned:", tempData))
   }
 
   # Error if personnel assignment is duplicated
   if (anyDuplicated(empReq) > 0) {
     tempIndex <- which(duplicated(empReq))
-    stop(paste('Duplicate row:', tempIndex))
+    stop(paste("Duplicate row:", tempIndex))
   }
 
   # Trim and remove white spaces
   empReq$personnelClass <- rmWS(empReq$personnelClass)
 
   # Remove spaces for costCode and equipment
-  empReq[,c('equipment', 'costCode')] <- lapply(
-    empReq[,c('equipment', 'costCode')],
+  empReq[,c("equipment", "costCode")] <- lapply(
+    empReq[,c("equipment", "costCode")],
     FUN = rmS
   )
 
   # Remove punctuations for costCode
-  empReq$costCode <- gsub(pattern = '[[:punct:]]',
+  empReq$costCode <- gsub(pattern = "[[:punct:]]",
                           replacement = '',
                           x = empReq$costCode)
 
@@ -228,15 +233,15 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   empReq$personnelClass <- stringr::str_to_lower(empReq$personnelClass)
 
   # Change to upper case
-  empReq[,c('equipment', 'costCode')] <- lapply(
-    empReq[,c('equipment', 'costCode')],
+  empReq[,c("equipment", "costCode")] <- lapply(
+    empReq[,c("equipment", "costCode")],
     FUN = stringr::str_to_upper
   )
 
   # Check accepted employee class
   if (any(!empReq$personnelClass %in% validEmpClass)) {
     tempIndex <- which(!empReq$personnelClass %in% validEmpClass)
-    stop(paste('Invalid employee class in rows:', tempIndex))
+    stop(paste("Invalid employee class in rows:", tempIndex))
   }
 
   # Initialize premium probabilities

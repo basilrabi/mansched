@@ -84,7 +84,7 @@ dfAppend <- function(x, y) {
 #' @importFrom stringr str_trim
 #' @export rmWS
 rmWS <- function(x) {
-  x <- gsub(pattern = '\\s+', replacement = ' ', x = x)
+  x <- gsub(pattern = "\\s+", replacement = " ", x = x)
   x <- stringr::str_trim(x)
   x
 }
@@ -97,6 +97,6 @@ rmWS <- function(x) {
 #' @return character vector without 2 adjacent space characters
 #' @export rmS
 rmS <- function(x) {
-  x <- gsub(pattern = '\\s+', replacement = '', x = x)
+  x <- gsub(pattern = "\\s+", replacement = "", x = x)
   x
 }

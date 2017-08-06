@@ -9,8 +9,7 @@ initEmpPool(empPool, hol = NA, year = NA)
 \arguments{
 \item{empPool}{a \code{data.frame} with 13 columns
 
-  Each row represents a real
-  employee. The columns are:
+  Each row represents a real employee. The columns are:
   \describe{
     \item{ID}{character string representing the employee's unique identifier}
     \item{name}{character string representing the employee's name}
@@ -33,18 +32,24 @@ initEmpPool(empPool, hol = NA, year = NA)
     \item{status}{character string representing the employment status of the
       employee
 
-      Accepted values are \code{'reg'} (regular), \code{'pro'}
+      Accepted values are \code{"reg"} (regular), \code{"pro"}
       (probationary), and \code{'sea'} (seasonal).}
     \item{cBegin}{character string representing the date of employment of
       personnel
 
       The accepted format is ISO 8601 which expresses a day as
-      \code{'yyyy-mm-dd'}.}
+      \code{"yyyy-mm-dd"}.}
     \item{cEnd}{character string representing the date of termination
       employment of the seasonal employee
 
       The accepted format is ISO 8601 which expresses a day as
-      \code{'yyyy-mm-dd'}.}
+      \code{"yyyy-mm-dd"}.}
+    \item{inHouse}{logical value \cr
+      Is the employee's accommodation given by the company?}
+    \item{restday}{character string representing the day of the week wherein
+      the employee is not required to report to work}
+    \item{isRF}{logical value \cr
+      Is the employee rank and file?}
   }}
 
 \item{hol}{a \code{data.frame} similar to \code{\link{holidays}}}

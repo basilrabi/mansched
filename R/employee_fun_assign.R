@@ -100,6 +100,8 @@ assignMH <- function(hoursT, hoursR) {
 #'         \item{month}{integer value representing the month}
 #'         \item{np}{integer value representing the man hours with night premium
 #'           pay}
+#'         \item{costCode}{character string representing accounting cost code
+#'           wherein the man hours is charged}
 #'       }
 #'     \item an \code{\link{Employee-class}} object representing the theoretical
 #'       employee with reduced man hours
