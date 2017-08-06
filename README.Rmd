@@ -12,6 +12,7 @@ R package with tools for manhours budgeting in Taganito Mine
 
 ## Installation
 ```{r, eval=FALSE}
+devtools::install_github('basilrabi/readODS')
 devtools::install_github('basilrabi/mansched2')
 ```
 ## Notes

@@ -26,6 +26,6 @@
 validEquipment
 }
 \description{
-A character vector containing the valid equipment types in Taganito Mine
+A character vector containing the valid equipment types in Taganito Mine.
 }
 \keyword{datasets}

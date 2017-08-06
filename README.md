@@ -7,6 +7,7 @@ Installation
 ------------
 
 ``` r
+devtools::install_github('basilrabi/readODS')
 devtools::install_github('basilrabi/mansched2')
 ```
 

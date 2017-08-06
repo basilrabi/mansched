@@ -13,7 +13,7 @@
 
 #' Valid equipment types
 #'
-#' A character vector containing the valid equipment types in Taganito Mine
+#' A character vector containing the valid equipment types in Taganito Mine.
 #'
 #' @format character vector:
 #'
@@ -48,3 +48,28 @@ validEquipment <- c("CRANE",
                     "WL",
                     "WTL",
                     "WX")
+
+#' Valid \code{personnelClass}
+#'
+#' A character vector containing the valid personnel classes used in this
+#'   package.
+#'
+#' @format character vector
+#' @export validEmpClass
+validEmpClass <- c("division manager",
+                   "group manager",
+                   "department manager",
+                   "section head",
+                   "clerk",
+                   "technical",
+                   "supervisor",
+                   "laborer",
+                   "operator")
+
+#' Valid employment \code{status}
+#'
+#' A character vector containing the valid employment status in Taganito Mine.
+#'
+#' @format character vector
+#' @export validEmpStatus
+validEmpStatus <- c("reg", "pro", "sea")
