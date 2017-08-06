@@ -1,4 +1,4 @@
-Package: mansched2
+Package: mansched
 Type: Package
 Title: Man Hours Database Calculator for Budgeting
 Version: 0.1.0.9000

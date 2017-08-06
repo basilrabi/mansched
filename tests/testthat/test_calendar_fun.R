@@ -1,4 +1,4 @@
-library(mansched2)
+library(mansched)
 
 hol <- getHol(hol = holidays, year = 2018)
 

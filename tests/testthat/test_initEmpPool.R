@@ -1,8 +1,8 @@
-library(mansched2)
+library(mansched)
 library(readODS)
 library(readr)
 
-myFile <- system.file("exdata", "sampleData.ods", package = "mansched2")
+myFile <- system.file("exdata", "sampleData.ods", package = "mansched")
 empPool <- read_ods(path = myFile,
                     sheet = 3,
                     col_types = cols(.default = col_character(),

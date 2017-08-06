@@ -1,8 +1,8 @@
-library(mansched2)
+library(mansched)
 library(readODS)
 library(readr)
 
-myFile <- system.file("exdata", "sampleData.ods", package = "mansched2")
+myFile <- system.file("exdata", "sampleData.ods", package = "mansched")
 
 empReq <- read_ods(path = myFile,
                    sheet = 1,
@@ -34,7 +34,7 @@ tempData <- getmhDB(empReq = empReq,
                     empPool = empPool,
                     sched = sched,
                     year = year,
-                    hol = mansched2::holidays)
+                    hol = mansched::holidays)
 
 totTf <- getHoursL(tempData[[2]])
 totRf <- getHoursL(tempData[[3]])

@@ -1,4 +1,4 @@
-library(mansched2)
+library(mansched)
 
 ID <- "S-240"
 name <- "Basil Eric Rabi"

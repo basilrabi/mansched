@@ -107,7 +107,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   }
 
   if (any(is.na(hol))) {
-    hol <- mansched2::holidays
+    hol <- mansched::holidays
     message("Using built-in holidays.")
   }
 

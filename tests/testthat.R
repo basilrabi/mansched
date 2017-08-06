@@ -1,4 +1,4 @@
 library(testthat)
-library(mansched2)
+library(mansched)
 
-test_check("mansched2")
+test_check("mansched")

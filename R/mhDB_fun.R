@@ -40,7 +40,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
   }
 
   if (any(is.na(hol[1]))) {
-    hol <- mansched2::holidays
+    hol <- mansched::holidays
     message("Using built-in holidays list.")
   }
 

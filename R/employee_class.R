@@ -189,7 +189,7 @@ non_staff <- setClass(
 #' An S4 class representing a clerk
 #'
 #' Clerks are mainly responsible for data encoding. Prior to the creation of
-#'  \code{\link{mansched2}}, they were responsible for man hours encoding
+#'  \code{\link{mansched}}, they were responsible for man hours encoding
 #'  using the spreadsheet template from accounting.
 #'
 #' @seealso \code{\link{Non Staff-class}}

@@ -1,4 +1,4 @@
-library(mansched2)
+library(mansched)
 
 ID <- "Materials Handling General Employee"
 costCode <- "14000"
