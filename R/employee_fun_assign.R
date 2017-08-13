@@ -102,6 +102,13 @@ assignMH <- function(hoursT, hoursR) {
 #'           pay}
 #'         \item{costCode}{character string representing accounting cost code
 #'           wherein the man hours is charged}
+#'         \item{sal}{a single character: \code{"a"} or \code{"b"}
+#'
+#'           This represents the salary to be applied (see
+#'           \code{\link{payA}} and \code{\link{payB}}).}
+#'         \item{scheme}{character string defining the salary scheme
+#'
+#'           This may be \code{"m"} (monthly) or \code{"d"} (daily).}
 #'       }
 #'     \item an \code{\link{Employee-class}} object representing the theoretical
 #'       employee with reduced man hours
@@ -109,6 +116,7 @@ assignMH <- function(hoursT, hoursR) {
 #'       employee with reduced man hours
 #'   }
 #' @importFrom data.table rbindlist
+#' @importFrom dplyr left_join
 #' @export assignEmp
 setGeneric(
   name = "assignEmp",
@@ -152,7 +160,16 @@ setMethod(
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
-    return(callNextMethod(empT = empT, empR = empR))
+    # Assign hourly salary
+    # Staff has no probationary and seasonal
+
+    results <- callNextMethod(empT = empT, empR = empR)
+    results[[1]] <- dplyr::left_join(x = results[[1]],
+                                     y = payA,
+                                     by = "month")
+    results[[1]]$scheme <- "m"
+
+    return(results)
   }
 )
 
@@ -196,7 +213,28 @@ setMethod(
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
-    return(callNextMethod(empT = empT, empR = empR))
+    results <- callNextMethod(empT = empT, empR = empR)
+
+    if (empR@status != "reg") {
+      results[[1]]$sal <- "a"
+    } else {
+      if (empR@isRF) {
+        results[[1]] <- dplyr::left_join(x = results[[1]],
+                                         y = payB,
+                                         by = "month")
+      } else {
+        results[[1]] <- dplyr::left_join(x = results[[1]],
+                                         y = payA,
+                                         by = "month")
+      }
+    }
+
+    if (empR@isRF)
+      results[[1]]$scheme <- "d"
+    else
+      results[[1]]$scheme <- "m"
+
+    return(results)
   }
 )
 
@@ -390,12 +428,6 @@ setMethod(
 
     mhDB <- as.data.frame(mhDB[which(mhDB$mh > 0),])
 
-    # This is for Production personnel only
-    # if(empR@status == "reg")
-    #   mhDB$np <- as.integer((mhDB$mh * 0.5) + 0.5)
-    # else
-    #   mhDB$np <- as.integer((mhDB * (1/3)) + 0.5)
-
     return(list(mhDB, empT, empR))
   }
 )
@@ -409,7 +441,19 @@ setMethod(
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
-    return(callNextMethod(empT = empT, empR = empR))
+    results <- callNextMethod(empT = empT, empR = empR)
+
+    if (empR@status != "reg") {
+      results[[1]]$sal <- "a"
+    } else {
+      results[[1]] <- dplyr::left_join(x = results[[1]],
+                                       y = payA,
+                                       by = "month")
+    }
+
+    results[[1]]$scheme <- "m"
+
+    return(results)
   }
 )
 
@@ -440,7 +484,19 @@ setMethod(
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
-    return(callNextMethod(empT = empT, empR = empR))
+    results <- callNextMethod(empT = empT, empR = empR)
+
+    if (empR@status != "reg") {
+      results[[1]]$sal <- "a"
+    } else {
+      results[[1]] <- dplyr::left_join(x = results[[1]],
+                                       y = payA,
+                                       by = "month")
+    }
+
+    results[[1]]$scheme <- "m"
+
+    return(results)
   }
 )
 
@@ -453,7 +509,19 @@ setMethod(
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
-    return(callNextMethod(empT = empT, empR = empR))
+    results <- callNextMethod(empT = empT, empR = empR)
+
+    if (empR@status != "reg") {
+      results[[1]]$sal <- "a"
+    } else {
+      results[[1]] <- dplyr::left_join(x = results[[1]],
+                                       y = payB,
+                                       by = "month")
+    }
+
+    results[[1]]$scheme <- "d"
+
+    return(results)
   }
 )
 
@@ -468,6 +536,18 @@ setMethod(
     if (!empT@equipment %in% empR@equipment)
       stop("Unauthorized equipment!")
 
-    return(callNextMethod(empT = empT, empR = empR))
+    results <- callNextMethod(empT = empT, empR = empR)
+
+    if (empR@status != "reg") {
+      results[[1]]$sal <- "a"
+    } else {
+      results[[1]] <- dplyr::left_join(x = results[[1]],
+                                       y = payB,
+                                       by = "month")
+    }
+
+    results[[1]]$scheme <- "d"
+
+    return(results)
   }
 )

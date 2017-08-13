@@ -86,6 +86,11 @@ employee is not required to report to work}
 \item{\code{reg}}{integer vector with length of 12
 
   This represents the number of regular hours budgeted per month.}
+
+\item{\code{leaveHours}}{integer value defining the number of leave hours the
+  employee can enjoy
+
+  This equates to paid vacation or sick leave.}
 }}
 
 \examples{

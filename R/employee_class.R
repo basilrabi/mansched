@@ -65,6 +65,10 @@ NULL
 #' @slot reg integer vector with length of 12
 #'
 #'   This represents the number of regular hours budgeted per month.
+#' @slot leaveHours integer value defining the number of leave hours the
+#'   employee can enjoy
+#'
+#'   This equates to paid vacation or sick leave.
 #' @examples employee()
 #' @export employee
 employee <- setClass(
@@ -84,7 +88,8 @@ employee <- setClass(
     holHours = "integer",
     totHours = "integer",
     maxReg = "integer",
-    reg = "integer"
+    reg = "integer",
+    leaveHours = "integer"
   )
 )
 

@@ -108,6 +108,9 @@ Is the employee rank and file?}
 
 \item{OT}{integer value defining the budgeted overtime hours}
 }
+\value{
+an \code{\link{Employee-class}} object
+}
 \description{
 Initializes employee data and its working hours. This function can be
   applied only to real employees. Real employees represent the actual

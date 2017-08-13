@@ -2,7 +2,7 @@ Package: mansched
 Type: Package
 Title: Man Hours Database Calculator for Budgeting
 Version: 0.1.0.9000
-Date: 2017-08-06
+Date: 2017-08-13
 Authors@R: c(
   person("Basil Eric", "Rabi",
   email = "basil.rabi@tmc.nickelasia.com",
@@ -15,8 +15,11 @@ LazyData: true
 Depends: R (>= 3.4.0), methods
 Imports:
   data.table (>= 1.10.4),
+  dplyr (>= 0.7.2),
   lubridate (>= 1.6.0),
-  stringr (>= 1.2.0)
+  magrittr (>= 1.5),
+  stringr (>= 1.2.0),
+  tidyr (>= 0.6.3)
 Suggests:
   knitr (>= 1.16),
   readODS (>= 1.6.6),

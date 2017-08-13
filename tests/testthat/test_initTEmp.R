@@ -18,6 +18,7 @@ tempEmp <- initTEmployee(theObject = tempEmp,
 test_that("division_manager() works", {
   expect_equal(class(tempEmp)[1], "Division Manager")
   expect_equivalent(tempEmp@reg / 8, testDays)
+  expect_equal(isRF(tempEmp), FALSE)
 })
 
 tempEmp <- createEmp("group manager")
@@ -29,6 +30,7 @@ tempEmp <- initTEmployee(theObject = tempEmp,
 test_that("group_manager() works", {
   expect_equal(class(tempEmp)[1], "Group Manager")
   expect_equivalent(tempEmp@reg / 8, testDays)
+  expect_equal(isRF(tempEmp), FALSE)
 })
 
 tempEmp <- createEmp("department manager")
@@ -40,6 +42,7 @@ tempEmp <- initTEmployee(theObject = tempEmp,
 test_that("department_manager() works", {
   expect_equal(class(tempEmp)[1], "Department Manager")
   expect_equivalent(tempEmp@reg / 8, testDays)
+  expect_equal(isRF(tempEmp), FALSE)
 })
 
 tempEmp <- createEmp("section head")
@@ -51,6 +54,7 @@ tempEmp <- initTEmployee(theObject = tempEmp,
 test_that("section_head() works", {
   expect_equal(class(tempEmp)[1], "Section Head")
   expect_equivalent(tempEmp@reg / 8, testDays)
+  expect_equal(isRF(tempEmp), FALSE)
 })
 
 OT <- 2
@@ -61,10 +65,11 @@ tempEmp <- initTEmployee(theObject = tempEmp,
                          calDays = calDays,
                          OT = OT)
 
-test_that("section_head() works", {
+test_that("clerk() works", {
   expect_equal(class(tempEmp)[1], "Clerk")
   expect_equivalent(tempEmp@reg / 8, testDays)
   expect_equivalent(tempEmp@regOT / OT, testDays)
+  expect_error(isRF(tempEmp))
 })
 
 mdtProb <- getMDTProb(getHol(hol = holidays, year = 2018))

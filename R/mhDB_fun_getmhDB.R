@@ -25,6 +25,10 @@
 #'           pay}
 #'         \item{costCode}{character string representing accounting cost code
 #'           wherein the man hours is charged}
+#'         \item{sal}{a single character: \code{"a"} or \code{"b"}
+#'
+#'           This represents the salary to be applied (see
+#'           \code{\link{payA}} and \code{\link{payB}}).}
 #'       }
 #'     \item list of \code{\link{Employee-class}} objects representing the
 #'       theoretical employees with assigned man hours
@@ -59,11 +63,13 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
   # Initialize man hours database
   mhDB <- data.frame(ID = NA,
-                       mh = NA,
-                       mhType = NA,
-                       month = NA,
-                       np = NA,
-                       costCode = NA)
+                     mh = NA,
+                     mhType = NA,
+                     month = NA,
+                     np = NA,
+                     costCode = NA,
+                     sal = NA,
+                     scheme = NA)
 
   # Assign employees to empReq
   for(i in 1:length(empReq[,1])) {

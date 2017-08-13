@@ -34,6 +34,8 @@ test_that("division_manager() works", {
                     c(24, 23, 27, 22, 26, 26, 25, 27, 24, 25, 24, 25))
   expect_equal(tempEmp@holHours,
                tempEmp@totHours - tempEmp@maxReg)
+  expect_equal(isRF(tempEmp), FALSE)
+  expect_equal(tempEmp@leaveHours, 240L)
 })
 
 tempEmp <- createEmp(empClass = "group manager")
@@ -56,6 +58,8 @@ test_that("group_manager() works", {
                     c(24, 23, 27, 22, 26, 26, 25, 27, 24, 25, 24, 25))
   expect_equal(tempEmp@holHours,
                tempEmp@totHours - tempEmp@maxReg)
+  expect_equal(isRF(tempEmp), FALSE)
+  expect_equal(tempEmp@leaveHours, 240L)
 })
 
 tempEmp <- createEmp(empClass = "department manager")
@@ -78,6 +82,8 @@ test_that("department_manager() works", {
                     c(24, 23, 27, 22, 26, 26, 25, 27, 24, 25, 24, 25))
   expect_equal(tempEmp@holHours,
                tempEmp@totHours - tempEmp@maxReg)
+  expect_equal(isRF(tempEmp), FALSE)
+  expect_equal(tempEmp@leaveHours, 240L)
 })
 
 tempEmp <- createEmp(empClass = "section head")
@@ -100,6 +106,8 @@ test_that("section_head() works", {
                     c(24, 23, 27, 22, 26, 26, 25, 27, 24, 25, 24, 25))
   expect_equal(tempEmp@holHours,
                tempEmp@totHours - tempEmp@maxReg)
+  expect_equal(isRF(tempEmp), FALSE)
+  expect_equal(tempEmp@leaveHours, 240L)
 })
 
 tempEmp <- createEmp(empClass = "clerk")
@@ -124,6 +132,8 @@ test_that("clerk() works", {
                tempEmp@totHours - tempEmp@maxReg)
   expect_equivalent(tempEmp@regOT,
                     (tempEmp@maxReg /8) * 3)
+  expect_equal(isRF(tempEmp), FALSE)
+  expect_equal(tempEmp@leaveHours, 240L)
 })
 
 tempEmp <- createEmp(empClass = "technical")
@@ -158,6 +168,8 @@ test_that("technical() works", {
                      tempEmp@rn,
                      tempEmp@rnOT)),
                365 * 11)
+  expect_equal(isRF(tempEmp), FALSE)
+  expect_equal(tempEmp@leaveHours, 240L)
 })
 
 tempEmp <- createEmp(empClass = "supervisor")
@@ -192,6 +204,8 @@ test_that("supervisor() works", {
                      tempEmp@rn,
                      tempEmp@rnOT)),
                365 * 11)
+  expect_equal(isRF(tempEmp), FALSE)
+  expect_equal(tempEmp@leaveHours, 240L)
 })
 
 status <- "sea"
@@ -227,6 +241,8 @@ test_that("laborer() works", {
                      tempEmp@rn,
                      tempEmp@rnOT)),
                365 * 11)
+  expect_equal(isRF(tempEmp), TRUE)
+  expect_equal(tempEmp@leaveHours, 0L)
 })
 
 equipment <- "TX WL DT"
@@ -263,4 +279,6 @@ test_that("operator() works", {
                      tempEmp@rn,
                      tempEmp@rnOT)),
                365 * 11)
+  expect_equal(isRF(tempEmp), TRUE)
+  expect_equal(tempEmp@leaveHours, 0L)
 })

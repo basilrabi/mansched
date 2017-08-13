@@ -45,6 +45,7 @@ NULL
 #'
 #'   Equipment types are separated by spaces and must be in upper case.
 #' @param OT integer value defining the budgeted overtime hours
+#' @return an \code{\link{Employee-class}} object
 #' @importFrom lubridate year
 #' @export initREmployee
 setGeneric(
@@ -143,6 +144,17 @@ setMethod(
 
     regDays <- calDays[,c("reg")]
     theObject@reg <- as.integer(regDays* 8 * theObject@attendance)
+
+    if (theObject@status == "reg") {
+      theObject@leaveHours <- getLeaveHours(cBegin = theObject@cBegin,
+                                            year = lubridate::year(
+                                              holDays$date[1]
+                                            ))
+    } else {
+      theObject@leaveHours <- 0L
+    }
+
+
 
     return(list(theObject, calDays))
   }
