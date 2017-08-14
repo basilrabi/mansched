@@ -39,13 +39,45 @@ NULL
 #' @param dir character string defining the directory wherein the ODS file will
 #'   be written
 #' @return 0 if success
-#' @importFrom dplyr left_join
+#' @importFrom dplyr left_join group_by summarise
 #' @importFrom magrittr "%>%"
 #' @importFrom tidyr gather
 getCost <- function(mhDB, listR, wage, dir = "~") {
 
+  # Code Contents #
+
   # Fix for "no visible binding for global varible" note in R CMD check
-  sal <- salM <- ID <- salH <- NULL
+  # Start of Code
+  # Error if any ID in wage is duplicated
+  # Error if any ID in listR is not in wage$ID
+  # Assign if employee is RF or not
+  # Get salary increase
+  # Assign totHours
+  # Compute hourly rates
+  # Compute Salaries for monthly wagers
+  ## Separate Regular Employees
+  ### Separate non-OT
+  #### Get monthly wage minus absences
+  ##### Get absences hours
+  ##### Get salary scheme
+  ##### Get monthly and hourly salary
+  ##### Get absences cost
+  ##### monthly wage minus absences = salMB
+  #### Combine salMB
+  #### Get man hour fraction of each cost code per month
+  #### Compute Costs
+  ### Separate OT
+  #### Get salary scheme
+  #### Get hourly wage
+  #### Compute Costs
+  ## Separate Non-regular Employees
+
+  # Fix for "no visible binding for global varible" note in R CMD check
+  sal <-
+    salM <-
+    ID <-
+    salH <-
+    mh <- NULL
 
   # library(mansched)
   # library(readODS)
@@ -84,6 +116,7 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
 
 
   # Start of Code
+
   # Error if any ID in wage is duplicated
   if (anyDuplicated(wage$ID) > 0) {
     tempData <- wage$ID[which(duplicated(wage$ID))]
@@ -146,18 +179,129 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   wageM <- wageM %>% tidyr::gather(sal, salM, -ID)
   wageH <- wageH %>% tidyr::gather(sal, salH, -ID)
 
-  wageTemp <- dplyr::left_join(x = wageM,
+  wageEmp <- dplyr::left_join(x = wageM,
                                y = wageH,
                                by = c("ID", "sal"))
-  wageTemp <- dplyr::left_join(x = wageTemp,
+  wageEmp <- dplyr::left_join(x = wageEmp,
                                y = wage[,c(1,3)],
                                by = c("ID"))
 
+  # Compute Salaries for monthly wagers
+
+  mhDB.m <- mhDB[which(mhDB$scheme == "m"),
+                 !names(mhDB) %in% c("scheme")]
+
+  ## Separate Regular Employees
+  mhDB.m.R <- mhDB.m[which(mhDB.m$isReg),
+                     !names(mhDB.m) %in% c("sal", "isReg", "maxReg")]
+
+  mhDB.m.R <- dplyr::left_join(x = mhDB.m.R,
+                               y = premium[,c("isOT.R",
+                                              "premiumR",
+                                              "npR",
+                                              "mhType")])
+
+  ### Separate non-OT
+  mhDB.m.R.Reg <- mhDB.m.R[which(!mhDB.m.R$isOT.R),
+                           !names(mhDB.m.R) %in% c("mhType",
+                                                   "salH",
+                                                   "isOT.R",
+                                                   "premiumR")]
+
+  #### Get monthly wage minus absences
+
+  mhDB.m.R.Reg.M <- mhDB.m.R.Reg %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::summarise(mhTot = sum(mh))
+
+  mhDB.m.R.Reg.M <- dplyr::left_join(
+    x = mhDB.m.R.Reg.M,
+    y = unique(mhDB[, c("ID", "month", "maxReg")])
+  )
+
+  ##### Get absences hours
+  mhDB.m.R.Reg.M$abHours <- mhDB.m.R.Reg.M$maxReg - mhDB.m.R.Reg.M$mhTot
+
+  ##### Get salary scheme
+  mhDB.m.R.Reg.M <- dplyr::left_join(
+    x = mhDB.m.R.Reg.M,
+    y = unique(mhDB[,c("ID", "month", "sal")])
+  )
+
+  ##### Get monthly and hourly salary
+  mhDB.m.R.Reg.M <- dplyr::left_join(
+    x = mhDB.m.R.Reg.M,
+    y = wageEmp[, !names(wageEmp) %in% c("isRF")]
+  )
+
+  ##### Get absences cost
+  mhDB.m.R.Reg.M$abCost <- round(
+    mhDB.m.R.Reg.M$salH * mhDB.m.R.Reg.M$abHours, digits = 2
+  )
+
+  ##### monthly wage minus absences = salMB
+  mhDB.m.R.Reg.M$salMB <- mhDB.m.R.Reg.M$salM - mhDB.m.R.Reg.M$abCost
+
+  #### Combine salMB
+  mhDB.m.R.Reg <- dplyr::left_join(
+    x = mhDB.m.R.Reg,
+    y = mhDB.m.R.Reg.M[,c("ID",
+                          "month",
+                          "mhTot",
+                          "salH",
+                          "salMB")]
+  )
+
+  #### Get man hour fraction of each cost code per month
+  mhDB.m.R.Reg$Xmh <- mhDB.m.R.Reg$mh / mhDB.m.R.Reg$mhTot
+
+  #### Compute Costs
+  mhDB.m.R.Reg$costWage <- round(mhDB.m.R.Reg$Xmh * mhDB.m.R.Reg$salMB,
+                                 digits = 2)
+  mhDB.m.R.Reg$costNP <- round(
+    mhDB.m.R.Reg$salH * mhDB.m.R.Reg$np * mhDB.m.R.Reg$npR, digits = 2)
 
 
-  mhDB.m <- mhDB[which(mhDB$scheme == "m"),]
+  ### Separate OT
 
-  mhDB.d <- mhDB[which(mhDB$scheme == "d"),]
+  mhDB.m.R.OT <- mhDB.m.R[which(mhDB.m.R$isOT.R),
+                          !names(mhDB.m.R) %in% c("mhType")]
+
+  #### Get salary scheme
+  mhDB.m.R.OT <- dplyr::left_join(
+    x = mhDB.m.R.OT,
+    y = unique(mhDB[,c("ID", "month", "sal")])
+  )
+
+  #### Get hourly wage
+  mhDB.m.R.OT <- dplyr::left_join(
+    x = mhDB.m.R.OT,
+    y = wageEmp[, !names(wageEmp) %in% c("salM", "isRF")]
+  )
+
+  #### Compute Costs
+  mhDB.m.R.OT$costWage <- round(
+    mhDB.m.R.OT$salH * mhDB.m.R.OT$mh * mhDB.m.R.OT$premiumR, digits = 2
+  )
+  mhDB.m.R.OT$costNP <- round(
+    mhDB.m.R.OT$salH * mhDB.m.R.OT$np * mhDB.m.R.OT$npR, digits = 2
+  )
+
+  ## Separate Non-regular Employees
+
+  mhDB.m.S <- mhDB.m[which(!mhDB.m$isReg),
+                     !names(mhDB.m) %in% c("sal", "isReg", "maxReg")]
+
+  ### Separate non-OT
+
+
+
+  ### Separate OT
+
+  # Compute Salaries-Regular for daily wagers
+
+  mhDB.d <- mhDB[which(mhDB$scheme == "d"),
+                 !names(mhDB) %in% c("scheme")]
 
   tempDir <- getwd()
   setwd(dir)

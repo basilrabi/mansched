@@ -17,5 +17,5 @@ manPool <- initEmpPool(empPool = empPool,
                        year = 2018)
 
 test_that("initEmpPool() works", {
-  expect_equal(length(manPool), 3)
+  expect_equal(length(manPool), 4)
 })

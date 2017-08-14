@@ -109,6 +109,11 @@ assignMH <- function(hoursT, hoursR) {
 #'         \item{scheme}{character string defining the salary scheme
 #'
 #'           This may be \code{"m"} (monthly) or \code{"d"} (daily).}
+#'         \item{isReg}{logical\cr
+#'           Is the employee regular?}
+#'         \item{maxReg}{integer value \cr
+#'           Number of hours the employee is required to report to enjoy full
+#'           salary.}
 #'       }
 #'     \item an \code{\link{Employee-class}} object representing the theoretical
 #'       employee with reduced man hours
@@ -168,6 +173,13 @@ setMethod(
                                      y = payA,
                                      by = "month")
     results[[1]]$scheme <- "m"
+    results[[1]]$isReg <- isReg(empR)
+
+    maxReg <- data.frame(month = 1:12,
+                         maxReg = empR@maxReg)
+    tempData <- dplyr::left_join(x = results[[1]],
+                                 y = maxReg)
+    results[[1]] <- as.data.frame(tempData)
 
     return(results)
   }
@@ -233,6 +245,14 @@ setMethod(
       results[[1]]$scheme <- "d"
     else
       results[[1]]$scheme <- "m"
+
+    results[[1]]$isReg <- isReg(empR)
+
+    maxReg <- data.frame(month = 1:12,
+                         maxReg = empR@maxReg)
+    tempData <- dplyr::left_join(x = results[[1]],
+                                 y = maxReg)
+    results[[1]] <- as.data.frame(tempData)
 
     return(results)
   }
@@ -452,6 +472,13 @@ setMethod(
     }
 
     results[[1]]$scheme <- "m"
+    results[[1]]$isReg <- isReg(empR)
+
+    maxReg <- data.frame(month = 1:12,
+                         maxReg = empR@maxReg)
+    tempData <- dplyr::left_join(x = results[[1]],
+                                 y = maxReg)
+    results[[1]] <- as.data.frame(tempData)
 
     return(results)
   }
@@ -495,6 +522,13 @@ setMethod(
     }
 
     results[[1]]$scheme <- "m"
+    results[[1]]$isReg <- isReg(empR)
+
+    maxReg <- data.frame(month = 1:12,
+                         maxReg = empR@maxReg)
+    tempData <- dplyr::left_join(x = results[[1]],
+                                 y = maxReg)
+    results[[1]] <- as.data.frame(tempData)
 
     return(results)
   }
@@ -520,6 +554,13 @@ setMethod(
     }
 
     results[[1]]$scheme <- "d"
+    results[[1]]$isReg <- isReg(empR)
+
+    maxReg <- data.frame(month = 1:12,
+                         maxReg = empR@maxReg)
+    tempData <- dplyr::left_join(x = results[[1]],
+                                 y = maxReg)
+    results[[1]] <- as.data.frame(tempData)
 
     return(results)
   }
@@ -547,6 +588,13 @@ setMethod(
     }
 
     results[[1]]$scheme <- "d"
+    results[[1]]$isReg <- isReg(empR)
+
+    maxReg <- data.frame(month = 1:12,
+                         maxReg = empR@maxReg)
+    tempData <- dplyr::left_join(x = results[[1]],
+                                 y = maxReg)
+    results[[1]] <- as.data.frame(tempData)
 
     return(results)
   }

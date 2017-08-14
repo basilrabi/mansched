@@ -102,6 +102,11 @@ a list containing the following:
         \item{scheme}{character string defining the salary scheme
 
           This may be \code{"m"} (monthly) or \code{"d"} (daily).}
+        \item{isReg}{logical\cr
+          Is the employee regular?}
+        \item{maxReg}{integer value \cr
+          Number of hours the employee is required to report to enjoy full
+          salary.}
       }
     \item an \code{\link{Employee-class}} object representing the theoretical
       employee with reduced man hours

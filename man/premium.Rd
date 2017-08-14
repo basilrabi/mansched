@@ -9,11 +9,21 @@
   Each row represents the premium pay for a man hour type. The columns are
   cosisted by:
   \describe{
-    \item{type}{man hour type (see \code{\link{assignEmp}})}
-    \item{premiumR}{wage premium enjoyed by regular employees}
-    \item{premiumS}{wage premium enjoyed by non-regular employees}
-    \item{npR}{night premium enjoyed by regular employees}
-    \item{npS}{night premium enjoyed by non-regular employees}
+    \item{mhType}{character value representing the man hour type (see
+      \code{\link{assignEmp}})}
+    \item{premiumR}{numeric value representing the wage premium enjoyed by
+      regular employees}
+    \item{premiumS}{numeric value representing wage premium enjoyed by
+      non-regular employees}
+    \item{npR}{numeric value representing night premium enjoyed by regular
+      employees}
+    \item{npS}{numeric value representing night premium enjoyed by
+      non-regular employees}
+    \item{isOT.R}{logical value \cr
+      Is man hour type of regular employee treated as overtime work?}
+    \item{isOT.S}{logical value \cr
+      Is man hour type of non-regular employee treated as overtime work?}
+
   }}
 \usage{
 premium

@@ -46,6 +46,11 @@ employee [label=<
     <TD>inHouse</TD>
     <TD>reg</TD>
   </TR>
+  <TR>
+    <TD>leaveHours</TD>
+    <TD></TD>
+    <TD></TD>
+  </TR>
 </TABLE>>]
 
 staff [label=<<B>Staff</B>>]
