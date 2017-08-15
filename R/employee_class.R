@@ -42,14 +42,21 @@ NULL
 #'   employee is not required to report to work
 #' @slot holHours integer vector with length of 12
 #'
-#'   This represents the total number hours consisting of only the first eight
-#'   hours of a holiday not scheduled on a rest day of employee. Each element
-#'   of the vector represents a month.
+#'   This represents the total number of hours consisting of only the first
+#'   eight hours of the holidays wherein the employee is still paid even if the
+#'   employee will not report to work. Each element of the vector represents a
+#'   month.
 #'
-#'   Even if the employee will not report on duty, he or she will be paid by
-#'   this number of hours. For regular employees, \code{holHours} is comprised
+#'   For regular non-RF employees, \code{holHours} is comprised
 #'   by special holidays, legal holidays, and negotiated holidays. For
-#'   non-regular employees, \code{holHours} is comprised only by legal holidays.
+#'   non-RF non-Regular employees, \code{holHours} is comprised only by legal
+#'   holidays.
+#'
+#'   For regular RF employees, \code{holHours} is comprised by special holidays,
+#'   legal holidays, negotiated holidays, special holidays on rest days, legal
+#'   holidays on rest days, and negotiated holidays on rest days. For
+#'   non-regular RF employees, \code{holHours} is comprised by legal holidays
+#'   and legal holidays on rest days.
 #'
 #'   This slot only applies to real employees.
 #' @slot totHours integer vector with length of 12

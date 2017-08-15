@@ -44,41 +44,6 @@ NULL
 #' @importFrom tidyr gather
 getCost <- function(mhDB, listR, wage, dir = "~") {
 
-  # Code Contents #
-
-  # Fix for "no visible binding for global varible" note in R CMD check
-  # Start of Code
-  # Error if any ID in wage is duplicated
-  # Error if any ID in listR is not in wage$ID
-  # Assign if employee is RF or not
-  # Get salary increase
-  # Assign totHours
-  # Compute hourly rates
-  # Compute Salaries for monthly wagers
-  ## Separate Regular Employees
-  ### Separate non-OT
-  #### Get monthly wage minus absences
-  ##### Get absences hours
-  ##### Get salary scheme
-  ##### Get monthly and hourly salary
-  ##### Get absences cost
-  ##### monthly wage minus absences = salMB
-  #### Combine salMB
-  #### Get man hour fraction of each cost code per month
-  #### Compute Costs
-  ### Separate OT
-  #### Get salary scheme
-  #### Get hourly wage
-  #### Compute Costs
-  ## Separate Non-regular Employees
-
-  # Fix for "no visible binding for global varible" note in R CMD check
-  sal <-
-    salM <-
-    ID <-
-    salH <-
-    mh <- NULL
-
   # library(mansched)
   # library(readODS)
   # library(readr)
@@ -114,8 +79,41 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   #                  sheet = 5,
   #                  col_types = cols(col_character(), col_number()))
 
+  ### Code Contents ###
 
-  # Start of Code
+  # Fix for "no visible binding for global variable" note in R CMD check
+  # Error if any ID in wage is duplicated
+  # Error if any ID in listR is not in wage$ID
+  # Assign if employee is RF or not
+  # Assign if employee is staff or not
+  # Get salary increase
+  # Assign totHours
+  # Compute hourly rates
+
+  # Compute Salaries for monthly wagers
+  ## Separate Regular Employees
+  ### Separate non-OT
+  #### Get monthly wage minus absences
+  ##### Get absences hours
+  ##### Get salary scheme
+  ##### Get monthly and hourly salary
+  ##### Get absences cost
+  ##### monthly wage minus absences = salMB
+  #### Combine salMB
+  #### Get man hour fraction of each cost code per month
+  #### Compute Costs
+  ### Separate OT
+  #### Get salary scheme
+  #### Get hourly wage
+  #### Compute Costs
+  ## Separate Non-regular Employees
+
+  # Fix for "no visible binding for global variable" note in R CMD check
+  sal <-
+    salM <-
+    ID <-
+    salH <-
+    mh <- NULL
 
   # Error if any ID in wage is duplicated
   if (anyDuplicated(wage$ID) > 0) {
@@ -138,11 +136,19 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
     isRF(listR[[index]])
   })
 
+  # Assign if employee is staff or not
+  wage$isStaff <- sapply(wage$ID, FUN = function(x) {
+    index <- which(empID == x)
+    is(listR[[index]], "Staff")
+  })
+
   # Get salary increase
-  wage$sB <- apply(wage[,c(2:3)], MARGIN = 1, FUN = function(x) {
+  wage$sB <- apply(wage[,c(2:4)], MARGIN = 1, FUN = function(x) {
     sal <- NA
     if (x[2])
-      sal <- x[1] + 100
+      sal <- x[1] + 105
+    else if (x[3])
+      sal <- x[1] + 3500
     else
       sal <- x[1] + 3000
     return(sal)
@@ -151,18 +157,22 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   # Assign totHours
   wage$totHours <- sapply(wage$ID, FUN = function(x) {
     index <- which(empID == x)
-    sum(listR[[index]]@totHours)
+
+    # sum(listR[[index]]@totHours)
+    # total days per year is 313 as advised by Accounting
+
+    return(313 * 8)
   })
 
   # Compute hourly rates
-  tempData <- apply(wage[,2:5], MARGIN = 1, FUN = function(x) {
+  tempData <- apply(wage[,2:6], MARGIN = 1, FUN = function(x) {
     sal <- c(NA, NA)
     if (x[2]) {
       sal[1] <- x[1] / 8
-      sal[2] <- x[3] / 8
+      sal[2] <- x[4] / 8
     } else {
-      sal[1] <- x[1] / x[4]
-      sal[2] <- x[3] / x[4]
+      sal[1] <- x[1] / x[5]
+      sal[2] <- x[4] / x[5]
       sal <- sal * 12
     }
     sal <- round(sal, digits = 2)
@@ -171,8 +181,8 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   wage$hRateA <- tempData[1,]
   wage$hRateB <- tempData[2,]
 
-  wageM <- wage[,c(1,2,4)]
-  wageH <- wage[,c(1,6,7)]
+  wageM <- wage[, colnames(wage) %in% c("ID", "s", "sB")]
+  wageH <- wage[, colnames(wage) %in% c("ID", "hRateA", "hRateB")]
   colnames(wageM)[c(2,3)] <- c("a", "b")
   colnames(wageH)[c(2,3)] <- c("a", "b")
 
@@ -189,11 +199,11 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   # Compute Salaries for monthly wagers
 
   mhDB.m <- mhDB[which(mhDB$scheme == "m"),
-                 !names(mhDB) %in% c("scheme")]
+                 !colnames(mhDB) %in% c("scheme")]
 
   ## Separate Regular Employees
   mhDB.m.R <- mhDB.m[which(mhDB.m$isReg),
-                     !names(mhDB.m) %in% c("sal", "isReg", "maxReg")]
+                     !colnames(mhDB.m) %in% c("sal", "isReg", "maxReg")]
 
   mhDB.m.R <- dplyr::left_join(x = mhDB.m.R,
                                y = premium[,c("isOT.R",
@@ -203,7 +213,7 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
 
   ### Separate non-OT
   mhDB.m.R.Reg <- mhDB.m.R[which(!mhDB.m.R$isOT.R),
-                           !names(mhDB.m.R) %in% c("mhType",
+                           !colnames(mhDB.m.R) %in% c("mhType",
                                                    "salH",
                                                    "isOT.R",
                                                    "premiumR")]
@@ -231,7 +241,7 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   ##### Get monthly and hourly salary
   mhDB.m.R.Reg.M <- dplyr::left_join(
     x = mhDB.m.R.Reg.M,
-    y = wageEmp[, !names(wageEmp) %in% c("isRF")]
+    y = wageEmp[, !colnames(wageEmp) %in% c("isRF")]
   )
 
   ##### Get absences cost
@@ -265,7 +275,7 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   ### Separate OT
 
   mhDB.m.R.OT <- mhDB.m.R[which(mhDB.m.R$isOT.R),
-                          !names(mhDB.m.R) %in% c("mhType")]
+                          !colnames(mhDB.m.R) %in% c("mhType")]
 
   #### Get salary scheme
   mhDB.m.R.OT <- dplyr::left_join(
@@ -276,7 +286,7 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   #### Get hourly wage
   mhDB.m.R.OT <- dplyr::left_join(
     x = mhDB.m.R.OT,
-    y = wageEmp[, !names(wageEmp) %in% c("salM", "isRF")]
+    y = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")]
   )
 
   #### Compute Costs
@@ -290,7 +300,7 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   ## Separate Non-regular Employees
 
   mhDB.m.S <- mhDB.m[which(!mhDB.m$isReg),
-                     !names(mhDB.m) %in% c("sal", "isReg", "maxReg")]
+                     !colnames(mhDB.m) %in% c("sal", "isReg", "maxReg")]
 
   ### Separate non-OT
 
@@ -301,7 +311,7 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   # Compute Salaries-Regular for daily wagers
 
   mhDB.d <- mhDB[which(mhDB$scheme == "d"),
-                 !names(mhDB) %in% c("scheme")]
+                 !colnames(mhDB) %in% c("scheme")]
 
   tempDir <- getwd()
   setwd(dir)

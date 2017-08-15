@@ -176,6 +176,10 @@ test_that("technical() works", {
   expect_equal(isRF(tempEmp), FALSE)
   expect_equal(tempEmp@leaveHours, 240L)
   expect_equal(isReg(tempEmp), TRUE)
+  expect_equivalent(tempEmp@totHours / 8,
+                    c(26, 24, 27, 26, 26, 26, 26, 27, 26, 26, 26, 27))
+  expect_equal(tempEmp@holHours,
+               tempEmp@totHours - tempEmp@maxReg)
 })
 
 tempEmp <- createEmp(empClass = "supervisor")
@@ -213,6 +217,10 @@ test_that("supervisor() works", {
   expect_equal(isRF(tempEmp), FALSE)
   expect_equal(tempEmp@leaveHours, 240L)
   expect_equal(isReg(tempEmp), TRUE)
+  expect_equivalent(tempEmp@totHours / 8,
+                    c(26, 24, 27, 26, 26, 26, 26, 27, 26, 26, 26, 27))
+  expect_equal(tempEmp@holHours,
+               tempEmp@totHours - tempEmp@maxReg)
 })
 
 status <- "sea"
@@ -251,6 +259,8 @@ test_that("laborer() works", {
   expect_equal(isRF(tempEmp), TRUE)
   expect_equal(tempEmp@leaveHours, 0L)
   expect_equal(isReg(tempEmp), FALSE)
+  expect_equivalent(tempEmp@holHours / 8,
+                    c(1, 0, 0, 3, 1, 2, 0, 1, 1, 0, 1, 2))
 })
 
 equipment <- "TX WL DT"
@@ -290,4 +300,87 @@ test_that("operator() works", {
   expect_equal(isRF(tempEmp), TRUE)
   expect_equal(tempEmp@leaveHours, 0L)
   expect_equal(isReg(tempEmp), FALSE)
+  expect_equivalent(tempEmp@holHours / 8,
+                    c(1, 0, 0, 3, 1, 2, 0, 1, 1, 0, 1, 2))
+})
+
+status <- "reg"
+tempEmp <- createEmp(empClass = "laborer")
+tempEmp <- initREmployee(theObject = tempEmp,
+                         ID = ID,
+                         name = name,
+                         designation = designation,
+                         costCode = costCode,
+                         status = status,
+                         cBegin = cBegin,
+                         inHouse = inHouse,
+                         restday = restday,
+                         hol = hol)
+
+test_that("laborer() works", {
+  expect_equal(class(tempEmp)[1], "Laborer")
+  expect_equal(tempEmp@isRF, TRUE)
+  expect_equal(sum(c(tempEmp@reg,
+                     tempEmp@regOT,
+                     tempEmp@rd,
+                     tempEmp@rdOT,
+                     tempEmp@sh,
+                     tempEmp@shOT,
+                     tempEmp@lh,
+                     tempEmp@lhOT,
+                     tempEmp@nh,
+                     tempEmp@nhOT,
+                     tempEmp@rs,
+                     tempEmp@rsOT,
+                     tempEmp@rl,
+                     tempEmp@rlOT,
+                     tempEmp@rn,
+                     tempEmp@rnOT)),
+               365 * 11)
+  expect_equal(isRF(tempEmp), TRUE)
+  expect_equal(tempEmp@leaveHours, 240L)
+  expect_equal(isReg(tempEmp), TRUE)
+  expect_equivalent(tempEmp@holHours / 8,
+                    c(3, 1, 0, 4, 2, 3, 1, 2, 2, 1, 2, 3))
+})
+
+equipment <- "TX WL DT"
+tempEmp <- createEmp(empClass = "operator")
+tempEmp <- initREmployee(theObject = tempEmp,
+                         ID = ID,
+                         name = name,
+                         designation = designation,
+                         costCode = costCode,
+                         status = status,
+                         cBegin = cBegin,
+                         inHouse = inHouse,
+                         restday = restday,
+                         hol = hol,
+                         equipment = equipment)
+
+test_that("operator() works", {
+  expect_equal(class(tempEmp)[1], "Operator")
+  expect_equal(tempEmp@isRF, TRUE)
+  expect_equal(sum(c(tempEmp@reg,
+                     tempEmp@regOT,
+                     tempEmp@rd,
+                     tempEmp@rdOT,
+                     tempEmp@sh,
+                     tempEmp@shOT,
+                     tempEmp@lh,
+                     tempEmp@lhOT,
+                     tempEmp@nh,
+                     tempEmp@nhOT,
+                     tempEmp@rs,
+                     tempEmp@rsOT,
+                     tempEmp@rl,
+                     tempEmp@rlOT,
+                     tempEmp@rn,
+                     tempEmp@rnOT)),
+               365 * 11)
+  expect_equal(isRF(tempEmp), TRUE)
+  expect_equal(tempEmp@leaveHours, 240L)
+  expect_equal(isReg(tempEmp), TRUE)
+  expect_equivalent(tempEmp@holHours / 8,
+                    c(3, 1, 0, 4, 2, 3, 1, 2, 2, 1, 2, 3))
 })

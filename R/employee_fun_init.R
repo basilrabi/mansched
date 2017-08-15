@@ -135,7 +135,7 @@ setMethod(
       regDays <- calDays[,c("reg")]
     } else {
       holDays <- calDays[,c("lh")]
-      regDays <- apply(calDays[,c("reg", "sh", "nh")], MARGIN = 1, FUN = sum)
+      regDays <- apply(calDays[,c("reg", "nh")], MARGIN = 1, FUN = sum)
     }
 
     theObject@totHours <- totDays * 8L
@@ -153,8 +153,6 @@ setMethod(
     } else {
       theObject@leaveHours <- 0L
     }
-
-
 
     return(list(theObject, calDays))
   }
@@ -253,21 +251,47 @@ setMethod(
                         hol,
                         isRF = FALSE,
                         OT = 3) {
-    theObject <- callNextMethod(theObject = theObject,
-                                ID = ID,
-                                name = name,
-                                designation = designation,
-                                attendance = attendance,
-                                costCode = costCode,
-                                status = status,
-                                cBegin = cBegin,
-                                cEnd = cEnd,
-                                inHouse = inHouse,
-                                restday = restday,
-                                hol = hol,
-                                OT = OT)[[1]]
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
+                               designation = designation,
+                               attendance = attendance,
+                               costCode = costCode,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               restday = restday,
+                               hol = hol,
+                               OT = OT)
+
+    theObject <- tempData[[1]]
+    calDays <- tempData[[2]]
 
     theObject@isRF <- isRF
+
+    if (theObject@isRF) {
+      if (theObject@status == "reg") {
+        holDays <- apply(
+          calDays[, colnames(calDays) %in% c("lh",
+                                             "sh",
+                                             "nh",
+                                             "rl",
+                                             "rs",
+                                             "rn")],
+          MARGIN = 1,
+          FUN = sum
+        )
+      } else {
+        holDays <- apply(
+          calDays[, colnames(calDays) %in% c("lh", "rl")],
+          MARGIN = 1,
+          FUN = sum
+        )
+      }
+
+      theObject@holHours <- holDays * 8L
+    }
 
     return(theObject)
   }
@@ -292,6 +316,7 @@ setMethod(
                         restday = "Sunday",
                         hol,
                         OT = 3) {
+
     tempData <- callNextMethod(theObject = theObject,
                                ID = ID,
                                name = name,
@@ -305,6 +330,7 @@ setMethod(
                                restday = restday,
                                hol = hol,
                                OT = OT)
+
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
 
@@ -394,7 +420,7 @@ setMethod(
       theObject@rnOT <- zero
     }
 
-    return(theObject)
+    return(list(theObject, calDays))
   }
 )
 
@@ -417,19 +443,21 @@ setMethod(
                         hol,
                         OT = 3) {
 
-    theObject <- callNextMethod(theObject = theObject,
-                                ID = ID,
-                                name = name,
-                                designation = designation,
-                                attendance = attendance,
-                                costCode = costCode,
-                                status = status,
-                                cBegin = cBegin,
-                                cEnd = cEnd,
-                                inHouse = inHouse,
-                                restday = restday,
-                                hol = hol,
-                                OT = OT)
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
+                               designation = designation,
+                               attendance = attendance,
+                               costCode = costCode,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               restday = restday,
+                               hol = hol,
+                               OT = OT)
+
+    theObject <- tempData[[1]]
 
     theObject@isRF <- FALSE
     return(theObject)
@@ -456,19 +484,21 @@ setMethod(
                         hol,
                         OT = 3) {
 
-    theObject <- callNextMethod(theObject = theObject,
-                                ID = ID,
-                                name = name,
-                                designation = designation,
-                                attendance = attendance,
-                                costCode = costCode,
-                                status = status,
-                                cBegin = cBegin,
-                                cEnd = cEnd,
-                                inHouse = inHouse,
-                                restday = restday,
-                                hol = hol,
-                                OT = OT)
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
+                               designation = designation,
+                               attendance = attendance,
+                               costCode = costCode,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               restday = restday,
+                               hol = hol,
+                               OT = OT)
+
+    theObject <- tempData[[1]]
     theObject@isRF <- FALSE
     return(theObject)
   }
@@ -494,20 +524,47 @@ setMethod(
                         hol,
                         OT = 3) {
 
-    theObject <- callNextMethod(theObject = theObject,
-                                ID = ID,
-                                name = name,
-                                designation = designation,
-                                attendance = attendance,
-                                costCode = costCode,
-                                status = status,
-                                cBegin = cBegin,
-                                cEnd = cEnd,
-                                inHouse = inHouse,
-                                restday = restday,
-                                hol = hol,
-                                OT = OT)
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
+                               designation = designation,
+                               attendance = attendance,
+                               costCode = costCode,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               restday = restday,
+                               hol = hol,
+                               OT = OT)
+
+    theObject <- tempData[[1]]
+    calDays <- tempData[[2]]
     theObject@isRF <- TRUE
+
+    if (theObject@isRF) {
+      if (theObject@status == "reg") {
+        holDays <- apply(
+          calDays[, colnames(calDays) %in% c("lh",
+                                             "sh",
+                                             "nh",
+                                             "rl",
+                                             "rs",
+                                             "rn")],
+          MARGIN = 1,
+          FUN = sum
+        )
+      } else {
+        holDays <- apply(
+          calDays[, colnames(calDays) %in% c("lh", "rl")],
+          MARGIN = 1,
+          FUN = sum
+        )
+      }
+
+      theObject@holHours <- holDays * 8L
+    }
+
     return(theObject)
   }
 )
@@ -553,21 +610,47 @@ setMethod(
                         equipment,
                         OT = 3) {
 
-    theObject <- callNextMethod(theObject = theObject,
-                                ID = ID,
-                                name = name,
-                                designation = designation,
-                                attendance = attendance,
-                                costCode = costCode,
-                                status = status,
-                                cBegin = cBegin,
-                                cEnd = cEnd,
-                                inHouse = inHouse,
-                                restday = restday,
-                                hol = hol,
-                                OT =OT)
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
+                               designation = designation,
+                               attendance = attendance,
+                               costCode = costCode,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               restday = restday,
+                               hol = hol,
+                               OT =OT)
+
+    theObject <- tempData[[1]]
+    calDays <- tempData[[2]]
 
     theObject@isRF <- TRUE
+
+    if (theObject@isRF) {
+      if (theObject@status == "reg") {
+        holDays <- apply(
+          calDays[, colnames(calDays) %in% c("lh",
+                                             "sh",
+                                             "nh",
+                                             "rl",
+                                             "rs",
+                                             "rn")],
+          MARGIN = 1,
+          FUN = sum
+        )
+      } else {
+        holDays <- apply(
+          calDays[, colnames(calDays) %in% c("lh", "rl")],
+          MARGIN = 1,
+          FUN = sum
+        )
+      }
+
+      theObject@holHours <- holDays * 8L
+    }
 
     if (is.na(equipment))
       stop("No equipment authorized")
