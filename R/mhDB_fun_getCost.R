@@ -190,11 +190,11 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   wageH <- wageH %>% tidyr::gather(sal, salH, -ID)
 
   wageEmp <- dplyr::left_join(x = wageM,
-                               y = wageH,
-                               by = c("ID", "sal"))
+                              y = wageH,
+                              by = c("ID", "sal"))
   wageEmp <- dplyr::left_join(x = wageEmp,
-                               y = wage[,c(1,3)],
-                               by = c("ID"))
+                              y = wage[,c(1,3)],
+                              by = c("ID"))
 
   # Compute Salaries for monthly wagers
 
@@ -214,9 +214,9 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   ### Separate non-OT
   mhDB.m.R.Reg <- mhDB.m.R[which(!mhDB.m.R$isOT.R),
                            !colnames(mhDB.m.R) %in% c("mhType",
-                                                   "salH",
-                                                   "isOT.R",
-                                                   "premiumR")]
+                                                      "salH",
+                                                      "isOT.R",
+                                                      "premiumR")]
 
   #### Get monthly wage minus absences
 
@@ -266,6 +266,7 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   mhDB.m.R.Reg$Xmh <- mhDB.m.R.Reg$mh / mhDB.m.R.Reg$mhTot
 
   #### Compute Costs
+  #### These costs are purely worked
   mhDB.m.R.Reg$costWage <- round(mhDB.m.R.Reg$Xmh * mhDB.m.R.Reg$salMB,
                                  digits = 2)
   mhDB.m.R.Reg$costNP <- round(
@@ -302,11 +303,34 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   mhDB.m.S <- mhDB.m[which(!mhDB.m$isReg),
                      !colnames(mhDB.m) %in% c("sal", "isReg", "maxReg")]
 
-  ### Separate non-OT
+  mhDB.m.S <- dplyr::left_join(x = mhDB.m.S,
+                               y = premium[, c("isOT.S",
+                                               "premiumS",
+                                               "npS",
+                                               "mhType")])
 
+  ### Separate non-OT
+  mhDB.m.S.Reg <- mhDB.m.S[which(!mhDB.m.S$isOT.S),
+                           !colnames(mhDB.m.S) %in% c("mhType",
+                                                      "salH",
+                                                      "isOT.S",
+                                                      "premiumS")]
+
+  #### Get monthly wage minus absences
+
+  mhDB.m.S.Reg.M <- mhDB.m.S.Reg %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::summarise(mhTot = sum(mh))
+
+  mhDB.m.S.Reg.M <- dplyr::left_join(
+    x = mhDB.m.S.Reg.M,
+    y = unique(mhDB[, c("ID", "month", "maxReg")])
+  )
 
 
   ### Separate OT
+  mhDB.m.S.OT <- mhDB.m.S[which(mhDB.m.S$isOT.S),
+                          !colnames(mhDB.m.S) %in% c("mhType")]
 
   # Compute Salaries-Regular for daily wagers
 

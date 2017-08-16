@@ -179,6 +179,27 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
     }
   }
 
+  # Assign excess regular hours to a dummy cost code
+
+  ## Create a theoretical employee list
+  listTN <- lapply(listR, FUN = normEmp)
+
+  for (i in 1:length(listTN)) {
+
+    # message(paste("Got here, i = ", i, sep = ""))
+    # print(listTN[[i]])
+
+    if (sum(getHours(listTN[[i]])) > 0) {
+      tempData <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
+      listTN[[i]] <- tempData[[2]]
+      listR[[i]] <- tempData[[3]]
+      mhDB <- dfAppend(mhDB, tempData[[1]])
+    }
+
+    if (sum(getHours(listTN[[i]])) != 0)
+      stop("Something went wrong. :(")
+  }
+
   # Remove NA values at the bottom
   if (any(is.na(mhDB[,1]))) {
     index <- which(is.na(mhDB[,1]))
