@@ -59,10 +59,6 @@ NULL
 #'   and legal holidays on rest days.
 #'
 #'   This slot only applies to real employees.
-#' @slot totHours integer vector with length of 12
-#'
-#'   This represents the number of hours per month which is equated to the
-#'   employee's basic monthly wage.
 #' @slot maxReg integer vector with length of 12
 #'
 #'   This represents the number of hours wherein the employee must report to
@@ -93,7 +89,6 @@ employee <- setClass(
     inHouse = "logical",
     restday = "character",
     holHours = "integer",
-    totHours = "integer",
     maxReg = "integer",
     reg = "integer",
     leaveHours = "integer"

@@ -124,11 +124,8 @@ setMethod(
                           hol = hol,
                           restday = theObject@restday)
 
-    # totDays and holDays may differ between reg employees and non-reg employees
+    # holDays may differ between reg employees and non-reg employees
     # This must be confirmed with accounting first
-
-    totDays <- apply(calDays[,c("reg", "lh", "sh", "nh")],
-                     MARGIN = 1, FUN = sum)
 
     if (theObject@status == "reg") {
       holDays <- apply(calDays[,c("lh", "sh", "nh")], MARGIN = 1, FUN = sum)
@@ -139,7 +136,6 @@ setMethod(
     }
 
     regDays <- calDays[,c("reg")]
-    theObject@totHours <- totDays * 8L
     theObject@holHours <- holDays * 8L
     theObject@maxReg <- maxRegF * 8L
 
@@ -299,7 +295,7 @@ setMethod(
         calDays[,c("nh")] * theObject@attendance * 8
       )
 
-      theObject@regOT <- theObject@reg + as.integer(
+      theObject@regOT <- theObject@regOT + as.integer(
         calDays[,c("nh")] * theObject@attendance * OT
       )
     }

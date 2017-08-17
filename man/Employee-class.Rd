@@ -78,11 +78,6 @@ employee is not required to report to work}
 
   This slot only applies to real employees.}
 
-\item{\code{totHours}}{integer vector with length of 12
-
-  This represents the number of hours per month which is equated to the
-  employee's basic monthly wage.}
-
 \item{\code{maxReg}}{integer vector with length of 12
 
   This represents the number of hours wherein the employee must report to

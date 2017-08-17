@@ -184,7 +184,8 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
 
   ## Separate Regular Employees
   mhDB.m.R <- mhDB.m[which(mhDB.m$isReg),
-                     !colnames(mhDB.m) %in% c("sal", "isReg", "maxReg")]
+                     !colnames(mhDB.m) %in% c("isReg",
+                                              "maxReg")]
 
   mhDB.m.R <- dplyr::left_join(x = mhDB.m.R,
                                y = premium[,c("isOT.R",
