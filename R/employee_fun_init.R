@@ -132,17 +132,17 @@ setMethod(
 
     if (theObject@status == "reg") {
       holDays <- apply(calDays[,c("lh", "sh", "nh")], MARGIN = 1, FUN = sum)
-      regDays <- calDays[,c("reg")]
+      maxRegF <- calDays[,c("reg")]
     } else {
       holDays <- calDays[,c("lh")]
-      regDays <- apply(calDays[,c("reg", "nh")], MARGIN = 1, FUN = sum)
+      maxRegF <- apply(calDays[,c("reg", "nh")], MARGIN = 1, FUN = sum)
     }
 
+    regDays <- calDays[,c("reg")]
     theObject@totHours <- totDays * 8L
     theObject@holHours <- holDays * 8L
-    theObject@maxReg <- regDays * 8L
+    theObject@maxReg <- maxRegF * 8L
 
-    regDays <- calDays[,c("reg")]
     theObject@reg <- as.integer(regDays* 8 * theObject@attendance)
 
     if (theObject@status == "reg") {
@@ -288,9 +288,20 @@ setMethod(
           MARGIN = 1,
           FUN = sum
         )
+
       }
 
       theObject@holHours <- holDays * 8L
+    }
+
+    if (theObject@status != "reg") {
+      theObject@reg <- theObject@reg + as.integer(
+        calDays[,c("nh")] * theObject@attendance * 8
+      )
+
+      theObject@regOT <- theObject@reg + as.integer(
+        calDays[,c("nh")] * theObject@attendance * OT
+      )
     }
 
     return(theObject)
