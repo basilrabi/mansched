@@ -21,11 +21,10 @@ getCalDays(cBegin, cEnd = NA, hol, restday)
 the rest day}
 }
 \value{
-a \code{matrix} with 12 rows and n columns
+a \code{data.frame} with 12 rows and 8 columns
 
 Each row represents a month while each column represents a man day type.
-Depending on the available man day type, the number of columns may vary. The
-possible column names are:
+  The column names are:
 \describe{
  \item{reg}{regular day}
  \item{rd}{rest day}

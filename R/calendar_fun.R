@@ -75,11 +75,10 @@ getHol <- function(hol, year) {
 #' @param hol a \code{\link{data.frame}} returned by \code{\link{getHol}}
 #' @param restday character string representing the day of the week defined as
 #'   the rest day
-#' @return a \code{matrix} with 12 rows and n columns
+#' @return a \code{data.frame} with 12 rows and 8 columns
 #'
 #' Each row represents a month while each column represents a man day type.
-#' Depending on the available man day type, the number of columns may vary. The
-#' possible column names are:
+#'   The column names are:
 #' \describe{
 #'  \item{reg}{regular day}
 #'  \item{rd}{rest day}
@@ -94,6 +93,11 @@ getHol <- function(hol, year) {
 #' @export getCalDays
 getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
 
+  # hol <- getHol(holidays, 2018)
+  # cBegin <- "2018-06-01"
+  # restday <- "Sunday"
+  # cEnd <- NA
+
   year <- lubridate::year(hol$date[1])
   cBegin <- as.Date(cBegin)
   cBegin.temp <- as.Date(paste(year, "01-01", sep = "-"))
@@ -103,6 +107,9 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
 
   if (is.na(cEnd))
     cEnd <- as.Date(paste(year, "12-31", sep = "-"))
+
+  if (cEnd < cBegin)
+    stop("cEnd must be later than cBegin!")
 
   hol <- hol[which(hol$date >= cBegin & hol$date <= cEnd),]
 
@@ -121,7 +128,7 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
       } else if (x[1]) {
         return("nh") # negotiated holiday
       } else {
-        return(NA)
+        stop("Somethings wrong with holidays.")
       }
     } else if (sum(x) == 2) {
       if (x[4] & x[2]) {
@@ -132,12 +139,40 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
         return("rn") # rest day and negotiated holiday
       }
     } else
-      return(NA)
+      stop("Somethings wrong with holidays.")
   })
 
   hol$month <- lubridate::month(hol$date)
   hol <- hol[,c("month", "mdType")]
   hol <- table(hol)
+
+  hol <- as.data.frame.matrix(hol)
+
+  # Ensure all 12 rows are present
+  hol$month <- row.names(hol)
+  misMonth <- which(!(1:12) %in% hol$month)
+  numRows <- length(misMonth)
+  numCols <- length(hol)
+  misMonthMat <- matrix(data = 0L,
+                        nrow = numRows,
+                        ncol = numCols)
+  misMonthMat[,7] <- misMonth
+  colnames(misMonthMat) <- colnames(hol)
+  hol <- rbind(hol, misMonthMat)
+  hol$month <- as.integer(hol$month)
+  hol <- hol[order(hol$month),]
+  hol$month <- NULL
+
+  mhType <- c("reg", "rd", "sh", "lh", "nh", "rs", "rl", "rn")
+  mis.mhType <- mhType[which(!mhType %in% colnames(hol))]
+
+  if (length(mis.mhType) > 0) {
+    for (i in mis.mhType) {
+      tempCMD <- paste("hol$", i, " <- 0L", sep = "")
+      eval(parse(text = tempCMD))
+    }
+  }
+
   return(hol)
 }
 

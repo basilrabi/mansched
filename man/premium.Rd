@@ -4,7 +4,7 @@
 \name{premium}
 \alias{premium}
 \title{Wage premiums}
-\format{\code{\link{data.frame}} with 16 rows and columns
+\format{\code{\link{data.frame}} with 16 rows and 7 columns
 
   Each row represents the premium pay for a man hour type. The columns are
   cosisted by:
@@ -29,7 +29,10 @@
 premium
 }
 \description{
-Hourly salary multipliers according to man hour types along with the thier
+Hourly salary multipliers according to man hour types along with the their
   corresponding night premiums.
+}
+\seealso{
+\code{\link{premium.RF}} \code{\link{premium.nonRF}}
 }
 \keyword{datasets}

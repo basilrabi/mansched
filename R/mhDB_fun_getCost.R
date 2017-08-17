@@ -184,19 +184,18 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
 
   ## Separate Regular Employees
   mhDB.m.R <- mhDB.m[which(mhDB.m$isReg),
-                     !colnames(mhDB.m) %in% c("isReg",
-                                              "maxReg")]
+                     !colnames(mhDB.m) %in% c("sal", "isReg", "maxReg")]
 
+  ### Get isOT.R
   mhDB.m.R <- dplyr::left_join(x = mhDB.m.R,
-                               y = premium[,c("isOT.R",
-                                              "premiumR",
-                                              "npR",
-                                              "mhType")])
+                               y = premium.nonRF[,c("isOT.R",
+                                                    "premiumR",
+                                                    "npR",
+                                                    "mhType")])
 
   ### Separate non-OT
   mhDB.m.R.Reg <- mhDB.m.R[which(!mhDB.m.R$isOT.R),
                            !colnames(mhDB.m.R) %in% c("mhType",
-                                                      "salH",
                                                       "isOT.R",
                                                       "premiumR")]
 
@@ -285,16 +284,16 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   mhDB.m.S <- mhDB.m[which(!mhDB.m$isReg),
                      !colnames(mhDB.m) %in% c("sal", "isReg", "maxReg")]
 
+  ### Get isOT.S
   mhDB.m.S <- dplyr::left_join(x = mhDB.m.S,
-                               y = premium[, c("isOT.S",
-                                               "premiumS",
-                                               "npS",
-                                               "mhType")])
+                               y = premium.nonRF[, c("isOT.S",
+                                                     "premiumS",
+                                                     "npS",
+                                                     "mhType")])
 
   ### Separate non-OT
   mhDB.m.S.Reg <- mhDB.m.S[which(!mhDB.m.S$isOT.S),
                            !colnames(mhDB.m.S) %in% c("mhType",
-                                                      "salH",
                                                       "isOT.S",
                                                       "premiumS")]
 
@@ -381,27 +380,88 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   mhDB.d <- mhDB[which(mhDB$scheme == "d"),
                  !colnames(mhDB) %in% c("scheme")]
 
+  ## Get hourly salary
+  mhDB.d <- dplyr::left_join(
+    x = mhDB.d,
+    y = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")]
+  )
+
   ## Separate Regular Employees
   mhDB.d.R <- mhDB.d[which(mhDB.d$isReg),
-                     !colnames(mhDB.d) %in% c("sal","isReg", "maxReg")]
-
-  mhDB.d.R <- dplyr::left_join(x = mhDB.d.R,
-                               y = premium[, c("isOT.R",
-                                               "premiumR",
-                                               "npR",
-                                               "mhType")])
-
-  ### Separate non-OT
-  mhDB.d.R.Reg <- mhDB.d.R[which(!mhDB.d.R$isOT.R),
-                           !colnames(mhDB.d.R) %in% c("mhType")]
-
-  ### Separate OT
-
-  ## Separate Non-regular Employees
-
-  mhDB.d.R <- mhDB.d[which(!mhDB.d$isReg),
                      !colnames(mhDB.d) %in% c("isReg", "maxReg")]
 
+  ### Get premium
+  mhDB.d.R <- dplyr::left_join(x = mhDB.d.R,
+                               y = premium.RF[, c("isOT.R",
+                                                  "premiumR",
+                                                  "npR",
+                                                  "mhType")])
+
+  ### Get cost
+  mhDB.d.R$costWage <- round(
+    mhDB.d.R$salH * mhDB.d.R$mh * mhDB.d.R$premiumR, digits = 2
+  )
+  mhDB.d.R$costNP <- round(
+    mhDB.d.R$salH * mhDB.d.R$np * mhDB.d.R$npR, digits = 2
+  )
+
+  ### Separate non-OT
+  mhDB.d.R.Reg <- mhDB.d.R[which(!mhDB.d.R$isOT.R),]
+
+  ### Separate OT
+  mhDB.d.R.OT <- mhDB.d.R[which(mhDB.d.R$isOT.R),]
+
+  ## Separate Non-regular Employees
+  mhDB.d.S <- mhDB.d[which(!mhDB.d$isReg),
+                     !colnames(mhDB.d) %in% c("isReg", "maxReg")]
+
+  ### Get premium
+  mhDB.d.S <- dplyr::left_join(x = mhDB.d.S,
+                               y = premium.RF[, c("isOT.S",
+                                                  "premiumS",
+                                                  "npS",
+                                                  "mhType")])
+
+  ### Get cost
+  mhDB.d.S$costWage <- round(
+    mhDB.d.S$salH * mhDB.d.S$mh * mhDB.d.S$premiumS, digits = 2
+  )
+  mhDB.d.S$costNP <- round(
+    mhDB.d.S$salH * mhDB.d.S$np * mhDB.d.S$npS, digits = 2
+  )
+
+  ### Separate non-OT
+  mhDB.d.S.Reg <- mhDB.d.S[which(!mhDB.d.S$isOT.S),]
+
+  ### Separate OT
+  mhDB.d.S.OT <- mhDB.d.S[which(mhDB.d.S$isOT.S),]
+
+  # Distribute holHours
+
+  hol.mhDB <- mhDB[, !colnames(mhDB) %in% c("mhType",
+                                            "np",
+                                            "scheme",
+                                            "maxReg")]
+
+  ## Create data.frame of holHours
+  holHours <- sapply(listR, FUN = function(x) {
+    data.frame(ID = x@ID,
+               month = 1:12,
+               holHours = x@holHours)
+  })
+
+  # Salaries-Regular
+  # OT Pay - Regular
+  # Salaries-Seasonal
+  # OT Pay - Seasonal
+  # Employee Allowance
+  # Employee Benefits
+  # Premium SSS, EC
+  # Prem-HDMF (Pag-ibig)
+  # Philhealth
+  # Leave Commutation
+  # Hospital and Medical Expenses
+  # 13th Month Pay
 
   tempDir <- getwd()
   setwd(dir)

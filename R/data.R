@@ -98,10 +98,10 @@ payB <- data.frame(month = 1:12,
 
 #' Wage premiums
 #'
-#' Hourly salary multipliers according to man hour types along with the thier
+#' Hourly salary multipliers according to man hour types along with the their
 #'   corresponding night premiums.
 #'
-#' @format \code{\link{data.frame}} with 16 rows and columns
+#' @format \code{\link{data.frame}} with 16 rows and 7 columns
 #'
 #'   Each row represents the premium pay for a man hour type. The columns are
 #'   cosisted by:
@@ -122,6 +122,7 @@ payB <- data.frame(month = 1:12,
 #'       Is man hour type of non-regular employee treated as overtime work?}
 #'
 #'   }
+#' @seealso \code{\link{premium.RF}} \code{\link{premium.nonRF}}
 #' @export premium
 premium <- data.frame(mhType = c("reg",
                                  "regOT",
@@ -236,3 +237,53 @@ premium <- data.frame(mhType = c("reg",
                                  TRUE,
                                  TRUE),
                       stringsAsFactors = FALSE)
+
+#' Wage premiums for Rank and File
+#'
+#' @seealso \code{\link{premium}} \code{\link{premium.nonRF}}
+#' @export premium.RF
+premium.RF <- premium
+premium.RF[which(premium.RF$mhType %in% c("sh",
+                                          "lh",
+                                          "nh",
+                                          "rs",
+                                          "rl",
+                                          "rn")),
+           c("premiumR")] <-
+  premium.RF[which(premium.RF$mhType %in% c("sh",
+                                            "lh",
+                                            "nh",
+                                            "rs",
+                                            "rl",
+                                            "rn")),
+             c("premiumR")] - 1
+premium.RF[which(premium.RF$mhType %in% c("sh",
+                                          "lh",
+                                          "rs",
+                                          "rl")),
+           c("premiumS")] <-
+  premium.RF[which(premium.RF$mhType %in% c("sh",
+                                            "lh",
+                                            "rs",
+                                            "rl")),
+             c("premiumS")] - 1
+
+#' Wage premiums for non-Rank and File
+#'
+#' @seealso \code{\link{premium}} \code{\link{premium.RF}}
+#' @export premium.nonRF
+premium.nonRF <- premium
+premium.nonRF[which(premium.nonRF$mhType %in% c("sh",
+                                                "lh",
+                                                "nh")),
+              c("premiumR")] <-
+  premium.nonRF[which(premium.nonRF$mhType %in% c("sh",
+                                                  "lh",
+                                                  "nh")),
+                c("premiumR")] - 1
+premium.nonRF[which(premium.nonRF$mhType %in% c("sh",
+                                                "lh")),
+              c("premiumS")] <-
+  premium.nonRF[which(premium.nonRF$mhType %in% c("sh",
+                                                  "lh")),
+                c("premiumS")] - 1
