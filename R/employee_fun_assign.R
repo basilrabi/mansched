@@ -278,6 +278,26 @@ setMethod(
     tempData.rl <- assignMH(hoursT = empT@rl, hoursR = empR@rl)
     tempData.rn <- assignMH(hoursT = empT@rn, hoursR = empR@rn)
 
+    # If a non-regular RF is assigned in a special holiday, add 8 hours per
+    # special holiday assigned in holHours
+    if (!isReg(empR) & isRF(empR)) {
+      if (sum(tempData.sh$hoursA) + sum(tempData.rs$hoursA) > 0) {
+        shToBeAddedA <- tempData.sh$hoursA
+        shToBeAddedB <- tempData.rs$hoursA
+        indexZeroA <- which(shToBeAddedA == 0L)
+        indexZeroB <- which(shToBeAddedB == 0L)
+        shToBeAddedA <- shToBeAddedA %/% 8
+        shToBeAddedB <- shToBeAddedB %/% 8
+        shToBeAddedA <- shToBeAddedA + 1L
+        shToBeAddedB <- shToBeAddedB + 1L
+        shToBeAddedA <- shToBeAddedA * 8L
+        shToBeAddedB <- shToBeAddedB * 8L
+        shToBeAddedA[indexZeroA] <- 0L
+        shToBeAddedB[indexZeroB] <- 0L
+        empR@holHours <- empR@holHours + shToBeAddedA + shToBeAddedB
+      }
+    }
+
     tempData.rdOT <- assignMH(hoursT = empT@rdOT, hoursR = empR@rdOT)
     tempData.shOT <- assignMH(hoursT = empT@shOT, hoursR = empR@shOT)
     tempData.lhOT <- assignMH(hoursT = empT@lhOT, hoursR = empR@lhOT)

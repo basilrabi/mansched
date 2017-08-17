@@ -131,7 +131,8 @@ setMethod(
       holDays <- apply(calDays[,c("lh", "sh", "nh")], MARGIN = 1, FUN = sum)
       maxRegF <- calDays[,c("reg")]
     } else {
-      holDays <- calDays[,c("lh")]
+      holDays <- apply(calDays[,c("lh", "sh")], MARGIN = 1, FUN = sum)
+      # holDays <- calDays[,c("lh")]
       maxRegF <- apply(calDays[,c("reg", "nh")], MARGIN = 1, FUN = sum)
     }
 

@@ -171,7 +171,9 @@ test_that("clerk() works for seasonal non-RF", {
                sum(calDays[, colnames(calDays) %in% c("reg",
                                                       "nh")]))
   expect_equal(tempEmp@holHours / 8,
-               calDays[, colnames(calDays) %in% c("lh")])
+               apply(calDays[, colnames(calDays) %in% c("lh","sh")],
+                     MARGIN = 1,
+                     FUN = sum))
 })
 
 tempEmp <- createEmp(empClass = "clerk")
@@ -374,7 +376,9 @@ test_that("supervisor() works for seasonal", {
   expect_equal(isReg(tempEmp), FALSE)
   expect_equal(sum(getHours(tempEmp)) / 11, sum(calDays))
   expect_equal(tempEmp@holHours / 8,
-               calDays[, colnames(calDays) %in% c("lh")])
+               apply(calDays[, colnames(calDays) %in% c("lh","sh")],
+                     MARGIN = 1,
+                     FUN = sum))
 })
 
 tempEmp <- createEmp(empClass = "laborer")

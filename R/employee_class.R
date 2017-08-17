@@ -49,14 +49,15 @@ NULL
 #'
 #'   For regular non-RF employees, \code{holHours} is comprised
 #'   by special holidays, legal holidays, and negotiated holidays. For
-#'   non-RF non-Regular employees, \code{holHours} is comprised only by legal
-#'   holidays.
+#'   non-RF non-Regular employees, \code{holHours} is comprised by legal
+#'   holidays and special holidays.
 #'
 #'   For regular RF employees, \code{holHours} is comprised by special holidays,
 #'   legal holidays, negotiated holidays, special holidays on rest days, legal
 #'   holidays on rest days, and negotiated holidays on rest days. For
-#'   non-regular RF employees, \code{holHours} is comprised by legal holidays
-#'   and legal holidays on rest days.
+#'   non-regular RF employees, \code{holHours} is comprised by legal holidays,
+#'   legal holidays on rest days, worked special holidays, and worked special
+#'   holidays on rest days..
 #'
 #'   This slot only applies to real employees.
 #' @slot maxReg integer vector with length of 12
