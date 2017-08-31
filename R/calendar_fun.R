@@ -1,3 +1,20 @@
+#' Create dates
+#'
+#' Creates a \code{\link{data.frame}} of one column containing a range of dates.
+#'
+#' @param begin a character string defing the start date\cr
+#'   The accepted format is \code{"yyyy-mm-dd"}.
+#' @param end a character string defing the end date\cr
+#'   The accepted format is \code{"yyyy-mm-dd"}.
+#' @return a \code{data.frame} with only one column (\code{"date"})
+#' @export dates
+dates <- function(begin, end) {
+  begin <- as.Date(begin)
+  end <- as.Date(end)
+  date <- as.Date(begin:end, origin = "1970-01-01")
+  return(data.frame(date = date))
+}
+
 #' Create holiday database
 #'
 #' Creates a schedule for all types of holidays throughout the year in a form of
@@ -26,12 +43,9 @@
 getHol <- function(hol, year) {
 
   yBegin <- paste(year, "01-01", sep = "-")
-  yBegin <- as.Date(yBegin)
   yEnd <- paste(year, "12-31", sep = "-")
-  yEnd <- as.Date(yEnd)
+  tempData <- dates(begin = yBegin, end = yEnd)
 
-  date <- as.Date(yBegin:yEnd, origin = "1970-01-01")
-  tempData <- data.frame(date = date)
   tempData$weekday <- weekdays(tempData$date)
   tempData$is.sh <- tempData$is.lh <- tempData$is.nh <- NA
 

@@ -39,8 +39,9 @@ NULL
 #' @param dir character string defining the directory wherein the ODS file will
 #'   be written
 #' @return 0 if success
-#' @importFrom dplyr left_join group_by summarise
+#' @importFrom dplyr left_join group_by summarise mutate
 #' @importFrom magrittr "%>%"
+#' @importFrom data.table rbindlist
 #' @importFrom tidyr gather
 getCost <- function(mhDB, listR, wage, dir = "~") {
 
@@ -443,25 +444,227 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
                                             "scheme",
                                             "maxReg")]
 
+  hol.mhDB <- dplyr::left_join(
+    x = hol.mhDB,
+    y = unique(wageEmp[, colnames(wageEmp) %in% c("ID", "isRF")])
+  )
+
+  hol.mhDB.m <- hol.mhDB[!hol.mhDB$isRF,]
+  hol.mhDB.d <- hol.mhDB[hol.mhDB$isRF,]
+
   ## Create data.frame of holHours
-  holHours <- sapply(listR, FUN = function(x) {
+  holHours <- lapply(listR, FUN = function(x) {
     data.frame(ID = x@ID,
                month = 1:12,
-               holHours = x@holHours)
+               holHours = x@holHours,
+               stringsAsFactors = FALSE)
   })
 
+  holHours <- data.table::rbindlist(holHours)
+
+  ## Get sal
+  holHours <- dplyr::left_join(
+    x = holHours,
+    y = unique(mhDB[, c("ID", "month", "sal")])
+  )
+
+  ## Get salH
+  holHours <- dplyr::left_join(
+    x = holHours,
+    y = wageEmp[, !colnames(wageEmp) %in% c("salM")]
+  )
+
+  holHours.m <- holHours[!holHours$isRF,]
+  holHours.d <- holHours[holHours$isRF,]
+
+  holHours.d$costWage <- holHours.d$salH * holHours.d$holHours
+
+  ## Merge costWage and holHours to hol.mhDB.d
+  hol.mhDB.d <- dplyr::left_join(
+    x = hol.mhDB.d,
+    y = unique(holHours.d[, colnames(holHours.d) %in% c("ID",
+                                                        "month",
+                                                        "holHours",
+                                                        "costWage")])
+  )
+  hol.mhDB.m <- dplyr::left_join(
+    x = hol.mhDB.m,
+    y = holHours.m[, colnames(holHours.m) %in% c("ID",
+                                                 "month",
+                                                 "holHours")]
+  )
+
+  ## Compute for total mh per month per employee
+  hol.mhDB.d <- hol.mhDB.d %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totHours = sum(mh))
+  hol.mhDB.m <- hol.mhDB.m %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totHours = sum(mh))
+
+  ## Compute mh fraction
+  hol.mhDB.d$X <- hol.mhDB.d$mh / hol.mhDB.d$totHours
+  hol.mhDB.m$X <- hol.mhDB.m$mh / hol.mhDB.m$totHours
+
+  ## Compute for distributed holHours and costWage
+  hol.mhDB.d$XholHours <- hol.mhDB.d$X * hol.mhDB.d$holHours
+  hol.mhDB.m$XholHours <- hol.mhDB.m$X * hol.mhDB.m$holHours
+  hol.mhDB.d$XcostWage <- hol.mhDB.d$X * hol.mhDB.d$costWage
+
+  ## Separate regular and non-regular employees
+  hol.mhDB.d.R <- hol.mhDB.d[hol.mhDB.d$isReg,]
+  hol.mhDB.d.S <- hol.mhDB.d[!hol.mhDB.d$isReg,]
+
+  # Compute for Employee Allowances
+  allowance <- NULL
+
+
   # Salaries-Regular
+  r01.01 <- data.frame(costCode = mhDB.m.R.Reg$costCode,
+                       month = mhDB.m.R.Reg$month,
+                       cost = mhDB.m.R.Reg$costWage,
+                       stringsAsFactors = FALSE)
+
+  r01.02 <- data.frame(costCode = mhDB.d.R.Reg$costCode,
+                       month = mhDB.d.R.Reg$month,
+                       cost = mhDB.d.R.Reg$costWage,
+                       stringsAsFactors = FALSE)
+
+  r01.03 <- data.frame(costCode = hol.mhDB.d.R$costCode,
+                       month = hol.mhDB.d.R$month,
+                       cost = hol.mhDB.d.R$XcostWage,
+                       stringsAsFactors = FALSE)
+
+  r01 <- as.data.frame(data.table::rbindlist(l = list(r01.01,
+                                                      r01.02,
+                                                      r01.03)))
+  r01$row <- "Salaries-Regular"
+
   # OT Pay - Regular
+  r02.01 <- data.frame(costCode = mhDB.m.R.Reg$costCode,
+                       month = mhDB.m.R.Reg$month,
+                       cost = mhDB.m.R.Reg$costNP,
+                       stringsAsFactors = FALSE)
+
+  r02.02 <- data.frame(costCode = mhDB.m.R.OT$costCode,
+                       month = mhDB.m.R.OT$month,
+                       cost = mhDB.m.R.OT$costWage,
+                       stringsAsFactors = FALSE)
+
+  r02.03 <- data.frame(costCode = mhDB.m.R.OT$costCode,
+                       month = mhDB.m.R.OT$month,
+                       cost = mhDB.m.R.OT$costNP,
+                       stringsAsFactors = FALSE)
+
+  r02.04 <- data.frame(costCode = mhDB.d.R.Reg$costCode,
+                       month = mhDB.d.R.Reg$month,
+                       cost = mhDB.d.R.Reg$costNP,
+                       stringsAsFactors = FALSE)
+
+  r02.05 <- data.frame(costCode = mhDB.d.R.OT$costCode,
+                       month = mhDB.d.R.OT$month,
+                       cost = mhDB.d.R.OT$costWage,
+                       stringsAsFactors = FALSE)
+
+  r02.06 <- data.frame(costCode = mhDB.d.R.OT$costCode,
+                       month = mhDB.d.R.OT$month,
+                       cost = mhDB.d.R.OT$costNP,
+                       stringsAsFactors = FALSE)
+
+  r02 <- as.data.frame(data.table::rbindlist(l = list(r02.01,
+                                                      r02.02,
+                                                      r02.03,
+                                                      r02.04,
+                                                      r02.05,
+                                                      r02.06)))
+  r02$row <- "OT Pay - Regular"
+
   # Salaries-Seasonal
+  r03.01 <- data.frame(costCode = mhDB.m.S.Reg$costCode,
+                       month = mhDB.m.S.Reg$month,
+                       cost = mhDB.m.S.Reg$costWage,
+                       stringsAsFactors = FALSE)
+
+  r03.02 <- data.frame(costCode = mhDB.d.S.Reg$costWage,
+                       month = mhDB.d.S.Reg$month,
+                       cost = mhDB.d.S.Reg$costWage,
+                       stringsAsFactors = FALSE)
+
+  r03.03 <- data.frame(costCode = hol.mhDB.d.S$costCode,
+                       month = hol.mhDB.d.S$month,
+                       cost = hol.mhDB.d.S$XcostWage,
+                       stringsAsFactors = FALSE)
+
+  r03 <- as.data.frame(data.table::rbindlist(l = list(r03.01,
+                                                      r03.02,
+                                                      r03.03)))
+  r03$row <- "Salaries-Seasonal"
+
   # OT Pay - Seasonal
+  r04.01 <- data.frame(costCode = mhDB.m.S.Reg$costCode,
+                       month = mhDB.m.S.Reg$month,
+                       cost = mhDB.m.S.Reg$costNP,
+                       stringsAsFactors = FALSE)
+
+  r04.02 <- data.frame(costCode = mhDB.m.S.OT$costCode,
+                       month = mhDB.m.S.OT$month,
+                       cost = mhDB.m.S.OT$costWage,
+                       stringsAsFactors = FALSE)
+
+  r04.03 <- data.frame(costCode = mhDB.m.S.OT$costCode,
+                       month = mhDB.m.S.OT$month,
+                       cost = mhDB.m.S.OT$costNP,
+                       stringsAsFactors = FALSE)
+
+  r04.04 <- data.frame(costCode = mhDB.d.S.Reg$costCode,
+                       month = mhDB.d.S.Reg$month,
+                       cost = mhDB.d.S.Reg$costNP,
+                       stringsAsFactors = FALSE)
+
+  r04.05 <- data.frame(costCode = mhDB.d.S.OT$costCode,
+                       month = mhDB.d.S.OT$month,
+                       cost = mhDB.d.S.OT$costWage,
+                       stringsAsFactors = FALSE)
+
+  r04.06 <- data.frame(costCode = mhDB.d.S.OT$costCode,
+                       month = mhDB.d.S.OT$month,
+                       cost = mhDB.d.S.OT$costNP,
+                       stringsAsFactors = FALSE)
+
+  r04 <- as.data.frame(data.table::rbindlist(l = list(r04.01,
+                                                      r04.02,
+                                                      r04.03,
+                                                      r04.04,
+                                                      r04.05,
+                                                      r04.06)))
+  r04$row <- "OT Pay - Seasonal"
+
   # Employee Allowance
+  r05 <- NULL
+
   # Employee Benefits
+  r06 <- NULL
+
   # Premium SSS, EC
+  r07 <- NULL
+
   # Prem-HDMF (Pag-ibig)
+  r08 <- NULL
+
   # Philhealth
+  r09 <- NULL
+
   # Leave Commutation
+  r10 <- NULL
+
   # Hospital and Medical Expenses
+  r11 <- NULL
+
   # 13th Month Pay
+  r12 <- NULL
+
+  # man hours
+  r13 <- NULL
 
   tempDir <- getwd()
   setwd(dir)
