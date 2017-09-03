@@ -565,37 +565,100 @@ getCost <- function(mhDB, listR, wage) {
 
   # Compute for Leave Commutation
 
-  maxRegDB <- lapply(listR, FUN = function(x) {
-    if (x@status == "reg")
-      data.frame(ID = x@ID,
-                 month = 1:12,
-                 maxReg = x@maxReg,
-                 stringsAsFactors = FALSE)
-  })
-  maxRegDB <- maxRegDB[-which(sapply(maxRegDB, is.null))]
+  ## Get maxReg
 
-  ## Get total regular attendance (RH)
-  mhDB.RH <- mhDB[mhDB$isReg, !colnames(mhDB) %in% c("np",
-                                                     "scheme",
-                                                     "isReg",
-                                                     "maxReg",
-                                                     "costCode")]
-  mhDB.RH <- mhDB.RH[which(mhDB.RH$mhType == "reg"),
-                     !colnames(mhDB.RH) %in% c("mhType")]
-  mhDB.RH <- mhDB.RH %>%
+  maxRegDB <- lapply(listR, FUN = function(x) {
+    data.frame(ID = x@ID,
+               month = 1:12,
+               maxReg = x@maxReg,
+               stringsAsFactors = FALSE)
+  })
+
+  ## Get total reg hours attendance (RH)
+
+  ### Separate regular employees
+
+  mhDB.RH.R <- mhDB[mhDB$isReg &
+                      mhDB$mhType == "reg",] %>%
     dplyr::group_by(ID, month, sal) %>%
     dplyr::summarise(mh = sum(mh))
 
+  ### Separate non-regular employee
+
+  mhDB.RH.S <- mhDB[!mhDB$isReg &
+                      mhDB$mhType %in% c("reg", "nh"),] %>%
+    dplyr::group_by(ID, month, sal) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  ### Merge regular and non-regular
+
+  mhDB.RH <- data.table::rbindlist(l = list(mhDB.RH.R, mhDB.RH.S))
+
   ## Combine RH to maxRegDB
   maxRegDB <- lapply(maxRegDB, FUN = function(z) {
-    z <- dplyr::left_join(
-      x = z,
-      y = mhDB.RH[, !colnames(mhDB.RH) %in% c("sal")]
-    )
+
+    z <- dplyr::left_join(x = z, y = mhDB.RH)
     z[is.na(z)] <- 0L
     z$absence <- z$maxReg - z$mh
+
+    if (any(z$absence) < 0)
+      stop("Uh, something's wrong.")
+
+    tempID <- sapply(listR, FUN = function(x) {x@ID})
+
+    tempIndex <- which(tempID == z$ID[1])
+
+    LC <- listR[[tempIndex]]@leaveHours
+
+    z$LH <- 0
+
+    for (i in 1:12) {
+      if (LC > 0) {
+        minus <- min(z$absence[i], LC)
+        z$LH[i] <- minus
+        LC <- LC - minus
+      } else
+        break
+    }
+    z$LH[4] <- z$LH[4] + LC
+
+    if (sum(z$LH) != listR[[tempIndex]]@leaveHours)
+      stop("Uh, something's wrong.")
+
     z
   })
+
+  maxRegDB <- data.table::rbindlist(maxRegDB)
+  maxRegDB <- dplyr::left_join(
+    x = maxRegDB,
+    y = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")]
+  )
+  maxRegDB$LC <- maxRegDB$salH * maxRegDB$LH
+
+  ## Distribute leave commutation cost
+  mhDB.LC <-mhDB %>%
+    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.LC <- mhDB.LC %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.LC$X <- mhDB.LC$mh / mhDB.LC$totMH
+
+  if (any(mhDB.LC$X > 1))
+    stop("Uh, something's wrong.")
+
+  mhDB.LC <- dplyr::left_join(
+    x = mhDB.LC,
+    y = maxRegDB[, colnames(maxRegDB) %in% c("ID",
+                                             "month",
+                                             "LC")]
+  )
+
+  ## Get cost
+  mhDB.LC$cost <- round(mhDB.LC$X * mhDB.LC$LC, digits = 2)
+  mhDB.LC <- as.data.frame(mhDB.LC)
 
   # Salaries-Regular
   r01.01 <- data.frame(costCode = mhDB.m.R.Reg$costCode,
@@ -741,7 +804,8 @@ getCost <- function(mhDB, listR, wage) {
   r09$row <- "Philhealth"
 
   # Leave Commutation
-  r10 <- NULL
+  r10 <- mhDB.LC[, c("costCode", "month", "cost")]
+  r10$row <- "Leave Commutation"
 
   # Hospital and Medical Expenses
   r11 <- NULL

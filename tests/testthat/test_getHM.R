@@ -16,15 +16,15 @@ calDays <- getCalDays(cBegin = cBegin,
 
 tempEmp <- createEmp(empClass = "division manager")
 tempEmp1 <- initREmployee(theObject = tempEmp,
-                         ID = ID,
-                         name = name,
-                         designation = designation,
-                         costCode = costCode,
-                         status = status,
-                         cBegin = cBegin,
-                         inHouse = inHouse,
-                         restday = restday,
-                         hol = hol)
+                          ID = ID,
+                          name = name,
+                          designation = designation,
+                          costCode = costCode,
+                          status = status,
+                          cBegin = cBegin,
+                          inHouse = inHouse,
+                          restday = restday,
+                          hol = hol)
 
 cBegin <- "2018-02-01"
 inHouse <- FALSE
@@ -86,10 +86,9 @@ tempEmp5 <- initREmployee(theObject = tempEmp,
                           hol = hol,
                           equipment = equipment)
 
-cEnd <- "2018-10-31"
-inHouse <- TRUE
-status <- "sea"
-tempEmp <- createEmp(empClass = "technical")
+status <- "pro"
+equipment <- "FL"
+tempEmp <- createEmp(empClass = "operator")
 tempEmp6 <- initREmployee(theObject = tempEmp,
                           ID = ID,
                           name = name,
@@ -97,17 +96,16 @@ tempEmp6 <- initREmployee(theObject = tempEmp,
                           costCode = costCode,
                           status = status,
                           cBegin = cBegin,
-                          cEnd = cEnd,
                           inHouse = inHouse,
                           restday = restday,
-                          hol = hol)
+                          hol = hol,
+                          equipment = equipment)
 
-
-test_that("getAllowance() works", {
-  expect_equal(sum(getAllowance(tempEmp1)$allowance), 1100 * 12)
-  expect_equal(sum(getAllowance(tempEmp2)$allowance), 4100 * 11)
-  expect_equal(sum(getAllowance(tempEmp3)$allowance), 4000 * 10)
-  expect_equal(sum(getAllowance(tempEmp4)$allowance), 1800 * 9)
-  expect_equal(sum(getAllowance(tempEmp5)$allowance), 0)
-  expect_equal(sum(getAllowance(tempEmp6)$allowance), 1800 * 7)
+test_that("getHM() works", {
+  expect_equal(sum(getHM(tempEmp1)$HM), 1600 * 12)
+  expect_equal(sum(getHM(tempEmp2)$HM), 1600 * 11)
+  expect_equal(sum(getHM(tempEmp3)$HM), 1600 * 10)
+  expect_equal(sum(getHM(tempEmp4)$HM), 600 * 1)
+  expect_equal(sum(getHM(tempEmp5)$HM), 600 * 1)
+  expect_equal(sum(getHM(tempEmp6)$HM), 1000 * 1)
 })
