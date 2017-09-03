@@ -83,7 +83,7 @@ setMethod(
 
     cost <- cost + 1100 # for housing
 
-    allowance$cost <- round(allowance$allow * cost, digits = 2)
+    allowance$allowance <- round(allowance$allow * cost, digits = 2)
 
     return(allowance[,c(1, 3, 4)])
   }
@@ -122,7 +122,7 @@ setMethod(
 
     }
 
-    allowance$cost <- round(allowance$allow * cost, digits = 2)
+    allowance$allowance <- round(allowance$allow * cost, digits = 2)
 
     return(allowance[,c(1, 3, 4)])
   }

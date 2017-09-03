@@ -36,66 +36,21 @@ NULL
 #'        beginning of the year. For non-rank and file, this value represents
 #'        the monthly salary at the beginning of the year.}
 #'   }
-#' @param dir character string defining the directory wherein the ODS file will
-#'   be written
 #' @return 0 if success
 #' @importFrom dplyr left_join group_by summarise mutate
 #' @importFrom magrittr "%>%"
 #' @importFrom data.table rbindlist
 #' @importFrom tidyr gather
-getCost <- function(mhDB, listR, wage, dir = "~") {
-
-  ### Code Contents ###
-
-  # Fix for "no visible binding for global variable" note in R CMD check
-  # Error if any ID in wage is duplicated
-  # Error if any ID in listR is not in wage$ID
-  # Assign if employee is RF or not
-  # Assign if employee is staff or not
-  # Get salary increase
-  # Assign totHours
-  # Compute hourly rates
-
-  # Compute Salaries for monthly wagers
-  ## Separate Regular Employees
-  ### Separate non-OT
-  #### Get monthly wage minus absences
-  ##### Get absences hours
-  ##### Get salary scheme
-  ##### Get monthly and hourly salary
-  ##### Get absences cost
-  ##### monthly wage minus absences = salMB
-  #### Combine salMB
-  #### Get man hour fraction of each cost code per month
-  #### Compute Costs
-  ### Separate OT
-  #### Get salary scheme
-  #### Get hourly wage
-  #### Compute Costs
-  ## Separate Non-regular Employees
-  ### Separate non-OT
-  #### Get monthly wage minus absences
-  ##### Get absences hours
-  ##### Get salary scheme
-  ##### Get monthly and hourly salary
-  ##### Get absences cost
-  ##### monthly wage minus absences = salMB
-  #### Combine salMB
-  #### Get man hour fraction of each cost code per month
-  #### Compute Costs
-  ### Separate OT
-  #### Get salary scheme
-  #### Get hourly wage
-  #### Compute costs
-
-  # Compute Salaries-Regular for daily wagers
+getCost <- function(mhDB, listR, wage) {
 
   # Fix for "no visible binding for global variable" note in R CMD check
   sal <-
     salM <-
     ID <-
     salH <-
-    mh <- NULL
+    mh <-
+    costCode <-
+    cost <- NULL
 
   # Error if any ID in wage is duplicated
   if (anyDuplicated(wage$ID) > 0) {
@@ -509,15 +464,138 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   ## Compute for distributed holHours and costWage
   hol.mhDB.d$XholHours <- hol.mhDB.d$X * hol.mhDB.d$holHours
   hol.mhDB.m$XholHours <- hol.mhDB.m$X * hol.mhDB.m$holHours
-  hol.mhDB.d$XcostWage <- hol.mhDB.d$X * hol.mhDB.d$costWage
+  hol.mhDB.d$XcostWage <- round(hol.mhDB.d$X * hol.mhDB.d$costWage, digits = 2)
 
   ## Separate regular and non-regular employees
   hol.mhDB.d.R <- hol.mhDB.d[hol.mhDB.d$isReg,]
   hol.mhDB.d.S <- hol.mhDB.d[!hol.mhDB.d$isReg,]
 
   # Compute for Employee Allowances
-  allowance <- NULL
+  allowance <- data.table::rbindlist(lapply(listR, getAllowance))
 
+  mhDB.allow <- mhDB %>%
+    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.allow <- mhDB.allow %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.allow <- dplyr::left_join(mhDB.allow, allowance)
+
+  mhDB.allow$X <- mhDB.allow$mh / mhDB.allow$totMH
+
+  mhDB.allow$cost <- round(mhDB.allow$X * mhDB.allow$allowance, digits = 2)
+
+  # Compute for Safety Bonus
+  mhDB.SB <- mhDB %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.SB$cost <- round(mhDB.SB$mh * 0.2, digits = 2)
+  mhDB.SB <- as.data.frame(mhDB.SB)
+
+  # Compute for SSS contribution of employer
+  # FIXME - monthly salaries of all employees are all estimated at the same time
+
+  mhDB.SSS <- mhDB %>%
+    dplyr::group_by(ID, month, costCode, sal) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.SSS <- dplyr::left_join(
+    x = mhDB.SSS,
+    y = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")]
+  )
+
+  mhDB.SSS$salM <- mhDB.SSS$salH * 313 * 8 / 12
+  mhDB.SSS$SSS <- sapply(mhDB.SSS$salM, FUN = function(x) {
+    SSS$c[which(SSS$r1 <= x & SSS$r2 >= x)]
+  })
+
+  mhDB.SSS <- mhDB.SSS %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.SSS$X <- mhDB.SSS$mh / mhDB.SSS$totMH
+
+  mhDB.SSS$cost <- round(mhDB.SSS$X * mhDB.SSS$SSS, digits = 2)
+  mhDB.SSS <- as.data.frame(mhDB.SSS)
+
+  # Compute for Pag-ibig contribution of employer
+
+  mhDB.PI <- mhDB %>%
+    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.PI$PI <- 100
+
+  mhDB.PI <- mhDB.PI %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.PI$X <- mhDB.PI$mh / mhDB.PI$totMH
+
+  mhDB.PI$cost <- round(mhDB.PI$X * mhDB.PI$PI, digits = 2)
+  mhDB.PI <- as.data.frame(mhDB.PI)
+
+  # Compute for Phil-Health contribution of employer
+
+  mhDB.PH <- mhDB %>%
+    dplyr::group_by(ID, month, costCode, sal) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.PH <- dplyr::left_join(
+    x = mhDB.PH,
+    y = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")]
+  )
+
+  mhDB.PH$salM <- mhDB.PH$salH * 313 * 8 / 12
+  mhDB.PH$PH <- sapply(mhDB.PH$salM, FUN = function(x) {
+    PHIC$c[which(PHIC$r1 <= x & PHIC$r2 >= x)]
+  })
+
+  mhDB.PH <- mhDB.PH %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.PH$X <- mhDB.PH$mh / mhDB.PH$totMH
+
+  mhDB.PH$cost <- round(mhDB.PH$X * mhDB.PH$PH, digits = 2)
+  mhDB.PH <- as.data.frame(mhDB.PH)
+
+  # Compute for Leave Commutation
+
+  maxRegDB <- lapply(listR, FUN = function(x) {
+    if (x@status == "reg")
+      data.frame(ID = x@ID,
+                 month = 1:12,
+                 maxReg = x@maxReg,
+                 stringsAsFactors = FALSE)
+  })
+  maxRegDB <- maxRegDB[-which(sapply(maxRegDB, is.null))]
+
+  ## Get total regular attendance (RH)
+  mhDB.RH <- mhDB[mhDB$isReg, !colnames(mhDB) %in% c("np",
+                                                     "scheme",
+                                                     "isReg",
+                                                     "maxReg",
+                                                     "costCode")]
+  mhDB.RH <- mhDB.RH[which(mhDB.RH$mhType == "reg"),
+                     !colnames(mhDB.RH) %in% c("mhType")]
+  mhDB.RH <- mhDB.RH %>%
+    dplyr::group_by(ID, month, sal) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  ## Combine RH to maxRegDB
+  maxRegDB <- lapply(maxRegDB, FUN = function(z) {
+    z <- dplyr::left_join(
+      x = z,
+      y = mhDB.RH[, !colnames(mhDB.RH) %in% c("sal")]
+    )
+    z[is.na(z)] <- 0L
+    z$absence <- z$maxReg - z$mh
+    z
+  })
 
   # Salaries-Regular
   r01.01 <- data.frame(costCode = mhDB.m.R.Reg$costCode,
@@ -640,19 +718,27 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
   r04$row <- "OT Pay - Seasonal"
 
   # Employee Allowance
-  r05 <- NULL
+  r05 <- mhDB.allow %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost))
+  r05 <- as.data.frame(r05)
+  r05$row <- "Employee Allowance"
 
   # Employee Benefits
-  r06 <- NULL
+  r06 <- mhDB.SB[, !colnames(mhDB.SB) %in% c("mh")]
+  r06$row <- "Employee Benefits"
 
   # Premium SSS, EC
-  r07 <- NULL
+  r07 <- mhDB.SSS[, c("costCode", "month", "cost")]
+  r07$row <- "Premium SSS, EC"
 
   # Prem-HDMF (Pag-ibig)
-  r08 <- NULL
+  r08 <- mhDB.PI[, c("costCode", "month", "cost")]
+  r08$row <- "Prem-HDMF (Pag-ibig)"
 
   # Philhealth
-  r09 <- NULL
+  r09 <- mhDB.PH[, c("costCode", "month", "cost")]
+  r09$row <- "Philhealth"
 
   # Leave Commutation
   r10 <- NULL
@@ -665,6 +751,7 @@ getCost <- function(mhDB, listR, wage, dir = "~") {
 
   # man hours
   r13 <- NULL
+
 
   tempDir <- getwd()
   setwd(dir)

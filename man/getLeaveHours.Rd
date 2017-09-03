@@ -4,7 +4,7 @@
 \alias{getLeaveHours}
 \title{Compute Leave Hours}
 \usage{
-getLeaveHours(cBegin, year)
+getLeaveHours(cBegin, year, status)
 }
 \arguments{
 \item{cBegin}{character string defining the date wherein the employment
@@ -13,6 +13,12 @@ getLeaveHours(cBegin, year)
   The accepted format is \code{"yyyy-mm-dd"}.}
 
 \item{year}{numeric value representing the year to be computed}
+
+\item{status}{character string representing the employment status of the
+  employee
+
+  The accepted values are \code{"reg"} (regular), \code{"pro"}
+  (probationary), and \code{"sea"} (seasonal).}
 }
 \value{
 integer value

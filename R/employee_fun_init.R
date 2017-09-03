@@ -142,14 +142,9 @@ setMethod(
 
     theObject@reg <- as.integer(regDays* 8 * theObject@attendance)
 
-    if (theObject@status == "reg") {
-      theObject@leaveHours <- getLeaveHours(cBegin = theObject@cBegin,
-                                            year = lubridate::year(
-                                              holDays$date[1]
-                                            ))
-    } else {
-      theObject@leaveHours <- 0L
-    }
+    theObject@leaveHours <- getLeaveHours(cBegin = theObject@cBegin,
+                                          year = lubridate::year(hol$date[1]),
+                                          status = theObject@status)
 
     return(list(theObject, calDays))
   }

@@ -4,7 +4,7 @@
 \alias{getCost}
 \title{Compute Personnel Cost}
 \usage{
-getCost(mhDB, listR, wage, dir = "~")
+getCost(mhDB, listR, wage)
 }
 \arguments{
 \item{mhDB}{a \code{\link{data.frame}} similar to \code{mhDB} return by
@@ -23,9 +23,6 @@ employee pool}
        beginning of the year. For non-rank and file, this value represents
        the monthly salary at the beginning of the year.}
   }}
-
-\item{dir}{character string defining the directory wherein the ODS file will
-be written}
 }
 \value{
 0 if success
