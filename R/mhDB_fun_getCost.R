@@ -660,6 +660,23 @@ getCost <- function(mhDB, listR, wage) {
   mhDB.LC$cost <- round(mhDB.LC$X * mhDB.LC$LC, digits = 2)
   mhDB.LC <- as.data.frame(mhDB.LC)
 
+  # Compute for Hospital and Medical Expenses
+  hm <- data.table::rbindlist(lapply(listR, getHM))
+
+  mhDB.HM <- mhDB %>%
+    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.HM <- mhDB.HM %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.HM <- dplyr::left_join(mhDB.HM, hm)
+
+  mhDB.HM$X <- mhDB.HM$mh / mhDB.HM$totMH
+
+  mhDB.HM$cost <- round(mhDB.HM$X * mhDB.HM$HM, digits = 2)
+
   # Salaries-Regular
   r01.01 <- data.frame(costCode = mhDB.m.R.Reg$costCode,
                        month = mhDB.m.R.Reg$month,
@@ -808,7 +825,8 @@ getCost <- function(mhDB, listR, wage) {
   r10$row <- "Leave Commutation"
 
   # Hospital and Medical Expenses
-  r11 <- NULL
+  r11 <- mhDB.HM[, c("costCode", "month", "cost")]
+  r11$row <- "Hospital and Medical Expenses"
 
   # 13th Month Pay
   r12 <- NULL
