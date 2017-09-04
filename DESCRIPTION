@@ -20,8 +20,10 @@ Imports:
   magrittr (>= 1.5),
   readODS (>= 1.6.6),
   readr (>= 1.1.1),
+  readxl (>= 1.0.0),
   stringr (>= 1.2.0),
-  tidyr (>= 0.6.3)
+  tidyr (>= 0.6.3),
+  xlsx (>= 0.5.7)
 Suggests:
   knitr (>= 1.16),
   rmarkdown (>= 1.6),

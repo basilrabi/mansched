@@ -43,6 +43,7 @@ NULL
 #'     \item cost code
 #'     \item personnel costs table for the whole year
 #'   }
+#' @export getCost
 #' @importFrom dplyr left_join group_by summarise mutate
 #' @importFrom magrittr "%>%"
 #' @importFrom data.table rbindlist
@@ -909,6 +910,7 @@ getCost <- function(mhDB, listR, wage) {
     tempData <- costDB[costDB$costCode == x,
                        !colnames(costDB) %in% c("costCode")]
     tempData <- tempData[, c(2, 1, 3:14)]
+    tempData <- as.data.frame(tempData)
     return(list(x, tempData))
   })
 
