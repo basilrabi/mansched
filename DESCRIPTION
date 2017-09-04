@@ -18,12 +18,12 @@ Imports:
   dplyr (>= 0.7.2),
   lubridate (>= 1.6.0),
   magrittr (>= 1.5),
+  readODS (>= 1.6.6),
+  readr (>= 1.1.1),
   stringr (>= 1.2.0),
   tidyr (>= 0.6.3)
 Suggests:
   knitr (>= 1.16),
-  readODS (>= 1.6.6),
-  readr (>= 1.1.1),
   rmarkdown (>= 1.6),
   rstudioapi (>= 0.6),
   testthat (>= 1.0.2)
