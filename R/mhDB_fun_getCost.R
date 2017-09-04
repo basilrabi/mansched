@@ -36,11 +36,17 @@ NULL
 #'        beginning of the year. For non-rank and file, this value represents
 #'        the monthly salary at the beginning of the year.}
 #'   }
-#' @return 0 if success
+#' @return list
+#'
+#'   Each element of the list contains a list of 2:
+#'   \enumerate{
+#'     \item cost code
+#'     \item personnel costs table for the whole year
+#'   }
 #' @importFrom dplyr left_join group_by summarise mutate
 #' @importFrom magrittr "%>%"
 #' @importFrom data.table rbindlist
-#' @importFrom tidyr gather
+#' @importFrom tidyr gather spread
 getCost <- function(mhDB, listR, wage) {
 
   # Fix for "no visible binding for global variable" note in R CMD check
@@ -50,7 +56,8 @@ getCost <- function(mhDB, listR, wage) {
     salH <-
     mh <-
     costCode <-
-    cost <- NULL
+    cost <-
+    XholHours <- NULL
 
   # Error if any ID in wage is duplicated
   if (anyDuplicated(wage$ID) > 0) {
@@ -677,6 +684,43 @@ getCost <- function(mhDB, listR, wage) {
 
   mhDB.HM$cost <- round(mhDB.HM$X * mhDB.HM$HM, digits = 2)
 
+  # Compute for 13th month pay
+
+  mp13 <- data.table::rbindlist(lapply(listR, FUN = function(x) {
+    tempIndex <- which(wageEmp$ID == x@ID)
+    tempSal <- wageEmp$salH[tempIndex]
+    get13mp(theObject = x, sal = tempSal)
+  }))
+
+  mhDB.13mp <- mhDB %>%
+    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.13mp <- mhDB.13mp %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.13mp$X <- mhDB.13mp$mh / mhDB.13mp$totMH
+
+  mhDB.13mp <- dplyr::left_join(mhDB.13mp, mp13)
+
+  mhDB.13mp$cost <- round(mhDB.13mp$X * mhDB.13mp$mp, digits = 2)
+
+  # Sum all manhours
+  mhDB.mh1 <- mhDB %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(mh))
+
+  mhDB.mh2 <- hol.mhDB.m %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(XholHours))
+
+  mhDB.mh3 <- hol.mhDB.d %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(XholHours))
+
+  mhDB.mh <- data.table::rbindlist(list(mhDB.mh1, mhDB.mh2, mhDB.mh3))
+
   # Salaries-Regular
   r01.01 <- data.frame(costCode = mhDB.m.R.Reg$costCode,
                        month = mhDB.m.R.Reg$month,
@@ -743,7 +787,7 @@ getCost <- function(mhDB, listR, wage) {
                        cost = mhDB.m.S.Reg$costWage,
                        stringsAsFactors = FALSE)
 
-  r03.02 <- data.frame(costCode = mhDB.d.S.Reg$costWage,
+  r03.02 <- data.frame(costCode = mhDB.d.S.Reg$costCode,
                        month = mhDB.d.S.Reg$month,
                        cost = mhDB.d.S.Reg$costWage,
                        stringsAsFactors = FALSE)
@@ -802,7 +846,7 @@ getCost <- function(mhDB, listR, wage) {
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
   r05 <- as.data.frame(r05)
-  r05$row <- "Employee Allowance"
+  r05$row <- "Employees Allowance"
 
   # Employee Benefits
   r06 <- mhDB.SB[, !colnames(mhDB.SB) %in% c("mh")]
@@ -829,16 +873,44 @@ getCost <- function(mhDB, listR, wage) {
   r11$row <- "Hospital and Medical Expenses"
 
   # 13th Month Pay
-  r12 <- NULL
+  r12 <- mhDB.13mp[, c("costCode", "month", "cost")]
+  r12$row <- "13th Month Pay"
 
   # man hours
-  r13 <- NULL
+  r13 <- as.data.frame(mhDB.mh)
+  r13$row <- "man-hours"
 
+  costDB <- data.table::rbindlist(list(r01,
+                                       r02,
+                                       r03,
+                                       r04,
+                                       r05,
+                                       r06,
+                                       r07,
+                                       r08,
+                                       r09,
+                                       r10,
+                                       r11,
+                                       r12,
+                                       r13))
 
-  tempDir <- getwd()
-  setwd(dir)
-  message(paste("Saving ODS in: '", getwd(), "'.", sep = ""))
-  # write ODS
-  setwd(tempDir)
-  return(0L)
+  costDB <- costDB %>%
+    dplyr::group_by(costCode, row, month) %>%
+    dplyr::summarise(cost = sum(cost))
+
+  costDB <- dplyr::left_join(costDB, ac)
+
+  costDB <- costDB %>%
+    tidyr::spread(month, cost, fill = 0)
+
+  costCode <- unique(costDB$costCode)
+
+  export <- lapply(costCode, FUN = function(x) {
+    tempData <- costDB[costDB$costCode == x,
+                       !colnames(costDB) %in% c("costCode")]
+    tempData <- tempData[, c(2, 1, 3:14)]
+    return(list(x, tempData))
+  })
+
+  return(export)
 }

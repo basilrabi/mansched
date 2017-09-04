@@ -479,3 +479,36 @@ PHIC <- data.frame(r1 = c( 1.00,
                          412.50,
                          425.00,
                          437.50))
+
+#' Employee costs accounting codes
+#'
+#' M3 codes used by accounting for employee costs.
+#'
+#' @export ac
+ac <- data.frame(row = c("Salaries-Regular",
+                         "OT Pay - Regular",
+                         "Salaries-Seasonal",
+                         "OT Pay - Seasonal",
+                         "Employees Allowance",
+                         "Employee Benefits",
+                         "Premium SSS, EC",
+                         "Prem-HDMF (Pag-ibig)",
+                         "Philhealth",
+                         "Leave Commutation",
+                         "Hospital and Medical Expenses",
+                         "13th Month Pay",
+                         "man-hours"),
+                 code = c(521001L,
+                          521021L,
+                          521002L,
+                          521022L,
+                          521004L,
+                          521005L,
+                          521006L,
+                          521007L,
+                          521008L,
+                          521012L,
+                          521017L,
+                          521009L,
+                          0L),
+                 stringsAsFactors = FALSE)

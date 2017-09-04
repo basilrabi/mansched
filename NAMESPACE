@@ -2,6 +2,7 @@
 
 export(PHIC)
 export(SSS)
+export(ac)
 export(assignEmp)
 export(assignMH)
 export(capacityEnough)
@@ -68,3 +69,4 @@ importFrom(stringr,str_to_lower)
 importFrom(stringr,str_to_upper)
 importFrom(stringr,str_trim)
 importFrom(tidyr,gather)
+importFrom(tidyr,spread)

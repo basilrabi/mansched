@@ -25,7 +25,13 @@ employee pool}
   }}
 }
 \value{
-0 if success
+list
+
+  Each element of the list contains a list of 2:
+  \enumerate{
+    \item cost code
+    \item personnel costs table for the whole year
+  }
 }
 \description{
 Calculates monthly personnel cost for each cost code. Personnel costs are
