@@ -911,6 +911,7 @@ getCost <- function(mhDB, listR, wage) {
                        !colnames(costDB) %in% c("costCode")]
     tempData <- tempData[, c(2, 1, 3:14)]
     tempData <- as.data.frame(tempData)
+    tempData <- tempData[order(tempData[,1]),]
     return(list(x, tempData))
   })
 
