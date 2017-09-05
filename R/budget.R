@@ -48,7 +48,7 @@ budget <- function(myFile, year) {
                       empPool = empPool,
                       sched = sched,
                       year = year,
-                      hol = mansched::holidays)
+                      hol = hol)
 
   # listR <- initEmpPool(empPool = empPool, hol = hol, year)
   # listT <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)
@@ -158,7 +158,7 @@ budget2 <- function(myFile, year) {
                       empPool = empPool,
                       sched = sched,
                       year = year,
-                      hol = mansched::holidays)
+                      hol = hol)
 
   mhDB <- tempData[[1]]
   listR <- tempData[[3]]
