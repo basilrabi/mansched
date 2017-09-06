@@ -21,6 +21,7 @@ NULL
 #' @importFrom lubridate month
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr group_by summarise n
+#' @export getCM
 setGeneric(
   name = "getCM",
   def = function(theObject) {

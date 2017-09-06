@@ -1,8 +1,6 @@
 #' @import methods
 NULL
 
-# theObject <- listR[[1]]
-
 #' Compute monthly accrued 13th month pay
 #'
 #' 13th month pay is pro-rated to the number of months the employee is employed

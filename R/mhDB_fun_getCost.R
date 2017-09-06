@@ -504,24 +504,52 @@ getCost <- function(mhDB, listR, wage) {
   mhDB.SB <- as.data.frame(mhDB.SB)
 
   # Compute for SSS contribution of employer
-  # FIXME - monthly salaries of all employees are all estimated at the same time
-  # SSS Contribution is fixed
-  # For monthly wagers, SSS is based on basic monthly salary
-  # For daily wagers, SSS is based on daily wage * 26
+  #- SSS Contribution is fixed
+  #- For monthly wagers, SSS is based on basic monthly salary
+  #- For daily wagers, SSS is based on daily wage * 313 / 12
+
+  SSSdb <- data.table::rbindlist(lapply(listR, FUN = function(x) {
+    tempData <- getCM(x)
+
+    if (!isReg(x)) {
+      tempData$sal <- "a"
+    } else {
+      if (isRF(x)) {
+        tempData <- dplyr::left_join(tempData, payB)
+      } else {
+        tempData <- dplyr::left_join(tempData, payA)
+      }
+    }
+
+    if (isRF(x)) {
+      tempData <- dplyr::left_join(
+        tempData,
+        wageEmp[wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")])
+
+      tempData$salM2 <- round(tempData$salM * 313 / 12, digits = 2)
+      tempData$salM <- tempData$salM2
+
+      tempData <- tempData[, !colnames(tempData) %in% c("salM2")]
+    } else {
+      tempData <- dplyr::left_join(
+        tempData,
+        wageEmp[!wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")]
+      )
+    }
+
+    tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
+
+    tempData$SSS <- sapply(tempData$salG, FUN = function(x) {
+      SSS$c[which(SSS$r1 <= x & SSS$r2 >= x)]
+    })
+
+    tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "SSS")]
+    tempData <- as.data.frame(tempData)
+  }))
 
   mhDB.SSS <- mhDB %>%
-    dplyr::group_by(ID, month, costCode, sal) %>%
+    dplyr::group_by(ID, month, costCode) %>%
     dplyr::summarise(mh = sum(mh))
-
-  mhDB.SSS <- dplyr::left_join(
-    x = mhDB.SSS,
-    y = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")]
-  )
-
-  mhDB.SSS$salM <- mhDB.SSS$salH * 313 * 8 / 12
-  mhDB.SSS$SSS <- sapply(mhDB.SSS$salM, FUN = function(x) {
-    SSS$c[which(SSS$r1 <= x & SSS$r2 >= x)]
-  })
 
   mhDB.SSS <- mhDB.SSS %>%
     dplyr::group_by(ID, month) %>%
@@ -529,7 +557,10 @@ getCost <- function(mhDB, listR, wage) {
 
   mhDB.SSS$X <- mhDB.SSS$mh / mhDB.SSS$totMH
 
+  mhDB.SSS <- dplyr::left_join(mhDB.SSS, SSSdb)
+
   mhDB.SSS$cost <- round(mhDB.SSS$X * mhDB.SSS$SSS, digits = 2)
+
   mhDB.SSS <- as.data.frame(mhDB.SSS)
 
   # Compute for Pag-ibig contribution of employer
@@ -551,19 +582,48 @@ getCost <- function(mhDB, listR, wage) {
 
   # Compute for Phil-Health contribution of employer
 
+  PHdb <- data.table::rbindlist(lapply(listR, FUN = function(x) {
+    tempData <- getCM(x)
+
+    if (!isReg(x)) {
+      tempData$sal <- "a"
+    } else {
+      if (isRF(x)) {
+        tempData <- dplyr::left_join(tempData, payB)
+      } else {
+        tempData <- dplyr::left_join(tempData, payA)
+      }
+    }
+
+    if (isRF(x)) {
+      tempData <- dplyr::left_join(
+        tempData,
+        wageEmp[wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")])
+
+      tempData$salM2 <- round(tempData$salM * 313 / 12, digits = 2)
+      tempData$salM <- tempData$salM2
+
+      tempData <- tempData[, !colnames(tempData) %in% c("salM2")]
+    } else {
+      tempData <- dplyr::left_join(
+        tempData,
+        wageEmp[!wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")]
+      )
+    }
+
+    tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
+
+    tempData$PH <- sapply(tempData$salG, FUN = function(x) {
+      PHIC$c[which(PHIC$r1 <= x & PHIC$r2 >= x)]
+    })
+
+    tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "PH")]
+    tempData <- as.data.frame(tempData)
+  }))
+
   mhDB.PH <- mhDB %>%
-    dplyr::group_by(ID, month, costCode, sal) %>%
+    dplyr::group_by(ID, month, costCode) %>%
     dplyr::summarise(mh = sum(mh))
-
-  mhDB.PH <- dplyr::left_join(
-    x = mhDB.PH,
-    y = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")]
-  )
-
-  mhDB.PH$salM <- mhDB.PH$salH * 313 * 8 / 12
-  mhDB.PH$PH <- sapply(mhDB.PH$salM, FUN = function(x) {
-    PHIC$c[which(PHIC$r1 <= x & PHIC$r2 >= x)]
-  })
 
   mhDB.PH <- mhDB.PH %>%
     dplyr::group_by(ID, month) %>%
@@ -571,7 +631,10 @@ getCost <- function(mhDB, listR, wage) {
 
   mhDB.PH$X <- mhDB.PH$mh / mhDB.PH$totMH
 
+  mhDB.PH <- dplyr::left_join(mhDB.PH, PHdb)
+
   mhDB.PH$cost <- round(mhDB.PH$X * mhDB.PH$PH, digits = 2)
+
   mhDB.PH <- as.data.frame(mhDB.PH)
 
   # Compute for Leave Commutation
