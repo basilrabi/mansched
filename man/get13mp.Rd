@@ -26,7 +26,7 @@ a \code{\link{data.frame}} with 12 rows and 3 columns representing
      \item{ID}{character string representing the unique identifier of the
        real employee}
      \item{month}{integer value representing the month}
-     \item{cost}{numeric value defining the accrued 13th month pay}
+     \item{mp}{numeric value defining the accrued 13th month pay}
   }
 }
 \description{

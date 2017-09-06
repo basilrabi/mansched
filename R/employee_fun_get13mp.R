@@ -20,11 +20,8 @@ NULL
 #'      \item{ID}{character string representing the unique identifier of the
 #'        real employee}
 #'      \item{month}{integer value representing the month}
-#'      \item{cost}{numeric value defining the accrued 13th month pay}
+#'      \item{mp}{numeric value defining the accrued 13th month pay}
 #'   }
-#' @importFrom lubridate month
-#' @importFrom magrittr "%>%"
-#' @importFrom dplyr group_by summarise n
 #' @export get13mp
 setGeneric(
   name = "get13mp",
@@ -39,28 +36,7 @@ setMethod(
   signature = "Employee",
   definition = function(theObject, sal) {
 
-    tempYear <- substr(theObject@cEnd, start = 1, stop = 4)
-    sched <- dates(begin = paste(tempYear, "-01-01", sep = ""),
-                   end = paste(tempYear, "-12-31", sep = ""))
-
-    sched$month <- as.integer(lubridate::month(sched$date))
-
-    schedEmp <- sched[which(sched$date >= as.Date(theObject@cBegin) &
-                              sched$date <= as.Date(theObject@cEnd)),]
-
-    sched <- sched %>%
-      dplyr::group_by(month) %>%
-      dplyr::summarise(days = n())
-
-    schedEmp <- schedEmp %>%
-      dplyr::group_by(month) %>%
-      dplyr::summarise(daysEmp = n())
-
-    sched <- dplyr::left_join(sched, schedEmp)
-    sched[is.na(sched)] <- 0
-    sched$allow <- sched$daysEmp / sched$days
-    sched <- as.data.frame(sched)
-    sched$ID <- theObject@ID
+    sched <- getCM(theObject)
 
     if (theObject@status != "reg") {
       cost <- sal[1]
@@ -74,6 +50,6 @@ setMethod(
 
     sched$mp <- round(sched$cost * sched$allow, digits = 2)
 
-    return(sched[,c(1,5,7)])
+    return(sched[, colnames(sched) %in% c("month", "ID", "mp")])
   }
 )

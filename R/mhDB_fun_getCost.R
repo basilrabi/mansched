@@ -505,6 +505,9 @@ getCost <- function(mhDB, listR, wage) {
 
   # Compute for SSS contribution of employer
   # FIXME - monthly salaries of all employees are all estimated at the same time
+  # SSS Contribution is fixed
+  # For monthly wagers, SSS is based on basic monthly salary
+  # For daily wagers, SSS is based on daily wage * 26
 
   mhDB.SSS <- mhDB %>%
     dplyr::group_by(ID, month, costCode, sal) %>%

@@ -22,7 +22,7 @@ a \code{\link{data.frame}} with 12 rows and 3 columns representing
      \item{ID}{character string representing the unique identifier of the
        real employee}
      \item{month}{integer value representing the month}
-     \item{cost}{numeric value defining the total hospital and medical
+     \item{HM}{numeric value defining the total hospital and medical
        allowances budgeted to the employee}
   }
 }

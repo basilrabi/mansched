@@ -22,12 +22,9 @@ NULL
 #'      \item{ID}{character string representing the unique identifier of the
 #'        real employee}
 #'      \item{month}{integer value representing the month}
-#'      \item{cost}{numeric value defining the total allowances to be received
+#'      \item{allowance}{numeric value defining the total allowances to be received
 #'        by the employee}
 #'   }
-#' @importFrom lubridate month
-#' @importFrom magrittr "%>%"
-#' @importFrom dplyr group_by summarise n
 #' @export getAllowance
 setGeneric(
   name = "getAllowance",
@@ -42,30 +39,8 @@ setMethod(
   signature = "Employee",
   definition = function(theObject) {
 
-    tempYear <- substr(theObject@cEnd, start = 1, stop = 4)
-    sched <- dates(begin = paste(tempYear, "-01-01", sep = ""),
-                   end = paste(tempYear, "-12-31", sep = ""))
+    return(getCM(theObject))
 
-    sched$month <- as.integer(lubridate::month(sched$date))
-
-    schedEmp <- sched[which(sched$date >= as.Date(theObject@cBegin) &
-                              sched$date <= as.Date(theObject@cEnd)),]
-
-    sched <- sched %>%
-      dplyr::group_by(month) %>%
-      dplyr::summarise(days = n())
-
-    schedEmp <- schedEmp %>%
-      dplyr::group_by(month) %>%
-      dplyr::summarise(daysEmp = n())
-
-    sched <- dplyr::left_join(sched, schedEmp)
-    sched[is.na(sched)] <- 0
-    sched$allow <- sched$daysEmp / sched$days
-    sched <- as.data.frame(sched)
-    sched$ID <- theObject@ID
-
-    return(sched[,c(1,4,5)])
   }
 )
 
@@ -85,7 +60,7 @@ setMethod(
 
     allowance$allowance <- round(allowance$allow * cost, digits = 2)
 
-    return(allowance[,c(1, 3, 4)])
+    return(allowance[, colnames(allowance) %in% c("month", "ID", "allowance")])
   }
 )
 
@@ -124,6 +99,6 @@ setMethod(
 
     allowance$allowance <- round(allowance$allow * cost, digits = 2)
 
-    return(allowance[,c(1, 3, 4)])
+    return(allowance[, colnames(allowance) %in% c("month", "ID", "allowance")])
   }
 )
