@@ -70,6 +70,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   # Remove space for status
   empPool$status <- rmS(empPool$status)
 
+
   # Remove punctuations for costCode
   empPool$costCode <- gsub(pattern = "[[:punct:]]",
                            replacement = "",
@@ -84,6 +85,9 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   empPool[,c("equipment", "costCode")] <- lapply(
     empPool[,c("equipment", "costCode")],
     FUN = stringr::str_to_upper)
+
+  # Get only the first 3 characters for employee status
+  empPool$status <- substr(x = empPool$status, start = 1L, stop = 3L)
 
   # Check all personnelClass if valid
   if (any(!empPool$personnelClass %in% validEmpClass)) {
