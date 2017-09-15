@@ -23,6 +23,8 @@
 #'     \item{DT}{dump truck}
 #'     \item{FL}{fuel truck}
 #'     \item{FORKLIFT}{forklift}
+#'     \item{MOC}{Mobile Crusher}
+#'     \item{MOS}{Mobile Screen}
 #'     \item{RG}{road grader}
 #'     \item{SB}{service bus}
 #'     \item{SP}{service pickup}
@@ -39,6 +41,8 @@ validEquipment <- c("CRANE",
                     "DT",
                     "FL",
                     "FORKLIFT",
+                    "MOC",
+                    "MOS",
                     "RG",
                     "SB",
                     "SP",
