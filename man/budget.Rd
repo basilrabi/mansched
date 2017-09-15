@@ -12,6 +12,6 @@ budget(myFile, year)
 \item{year}{integer value defining the year to be budgeted}
 }
 \description{
-Given a spreadsheet containing the employee pool, requirements, wages, and
+Given a xlsx file containing the employee pool, requirements, wages, and
   work schedules, the budget is computed.
 }
