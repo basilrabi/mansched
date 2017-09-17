@@ -192,7 +192,6 @@ budget <- function(myFile, year) {
 
   hol <- as.data.frame(hol)
 
-
   tempData <- getmhDB(empReq = empReq,
                       empPool = empPool,
                       sched = sched,

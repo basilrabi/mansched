@@ -114,10 +114,20 @@ setMethod(
     }
 
     theObject@cEnd <- cEnd
-    theObject@inHouse <- inHouse
+
+    if (is.na(inHouse)) {
+      theObject@inHouse <- FALSE
+    } else {
+      theObject@inHouse <- inHouse
+    }
 
     # restday must be a valid weekday prior to calling initEmployee
-    theObject@restday <- restday
+
+    if (is.na(restday)) {
+      theObject@restday <- "Sunday"
+    } else {
+      theObject@restday <- restday
+    }
 
     calDays <- getCalDays(cBegin = theObject@cBegin,
                           cEnd = theObject@cEnd,
@@ -661,10 +671,11 @@ setMethod(
     # Vectorize equipment
     equipment <- strsplit(x = equipment, split = " ", fixed = TRUE)[[1]]
 
-    if (all(equipment %in% validEquipment))
+    if (all(equipment %in% validEquipment)) {
       theObject@equipment <- equipment
-    else
-      stop("Invalid equipment!")
+    } else {
+      stop(paste("Invalid equipment at", theObject@ID, sep = " "))
+    }
 
     return(theObject)
   }
@@ -876,10 +887,11 @@ setMethod(
     if (is.na(equipment))
       stop("No equipment assigned")
 
-    if (equipment %in% validEquipment)
+    if (equipment %in% validEquipment) {
       theObject@equipment <- equipment
-    else
-      stop("Invalid equipment!")
+    } else {
+      stop(paste("Invalid equipment at", theObject@ID, sep = " "))
+    }
 
     return(theObject)
   }
