@@ -28,6 +28,7 @@
 #'     \item{RG}{road grader}
 #'     \item{SB}{service bus}
 #'     \item{SP}{service pickup}
+#'     \item{ST}{service truck}
 #'     \item{TT}{prime mover (trailer truck)}
 #'     \item{TX}{tracked excavator}
 #'     \item{VC}{vibrating compactor}
@@ -46,6 +47,7 @@ validEquipment <- c("CRANE",
                     "RG",
                     "SB",
                     "SP",
+                    "ST",
                     "TT",
                     "TX",
                     "VC",
