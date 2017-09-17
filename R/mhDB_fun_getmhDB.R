@@ -85,10 +85,12 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
   for(i in 1:length(empReq[,1])) {
 
     tempClass <- class(listT[[i]])
-    if (tempClass == "Operator")
+    if (tempClass == "Operator") {
       tempEquip <- listT[[i]]@equipment
-    else
+    } else {
       tempEquip <- NA
+    }
+
     tempCostCode <- listT[[i]]@costCode
 
     # Get employee with available manhours
@@ -142,8 +144,11 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
     index <- which(empPool$choice1)
 
     if (length(index) > 0) {
-      # Randomize
-      index <- sample(index)
+
+      if (length(index) > 1) {
+        # Randomize
+        index <- sample(index)
+      }
 
       # Assign
       if (sum(getHours(listT[[i]])) > 0) {
@@ -163,8 +168,11 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
       index <- which(empPool$choice2)
 
       if (length(index) > 0) {
-        # Randomize
-        index <- sample(index)
+
+        if (length(index) > 1) {
+          # Randomize
+          index <- sample(index)
+        }
 
         # Assign
         for (j in index) {
