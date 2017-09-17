@@ -170,7 +170,7 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
   misMonthMat <- matrix(data = 0L,
                         nrow = numRows,
                         ncol = numCols)
-  misMonthMat[,7] <- misMonth
+  misMonthMat[, numCols] <- misMonth
   colnames(misMonthMat) <- colnames(hol)
   hol <- rbind(hol, misMonthMat)
   hol$month <- as.integer(hol$month)
@@ -186,6 +186,9 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
       eval(parse(text = tempCMD))
     }
   }
+
+  hol <- as.data.frame(hol)
+  row.names(hol) <- NULL
 
   return(hol)
 }
