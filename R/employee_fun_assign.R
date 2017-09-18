@@ -483,6 +483,8 @@ setMethod(
 
     mhDB <- as.data.frame(mhDB[which(mhDB$mh > 0),])
 
+    # tempData <- list(mhDB, empT, empR)
+
     return(list(mhDB, empT, empR))
   }
 )
@@ -533,11 +535,15 @@ setMethod(
     mhDB <- tempData[[1]]
 
     if (length(mhDB$ID) > 0) {
-      if(empR@status == "reg") {
+
+      if (tempData[[3]]@status == "reg") {
+
         mhDB$np <- as.integer((mhDB$mh * 0.5) + 0.5)
+
       } else {
-        mhDB$np <- as.integer((mhDB * (1/3)) + 0.5)
+        mhDB$np <- as.integer((mhDB$mh * (1/3)) + 0.5)
       }
+
     } else {
       mhDB <- NA
     }
@@ -622,8 +628,10 @@ setMethod(
   f = "assignEmp",
   signature = "Operator",
   definition = function(empT, empR) {
+
     if (class(empT) != class(empR))
       stop("Incompatible class!")
+
     if (!empT@equipment %in% empR@equipment)
       stop("Unauthorized equipment!")
 
