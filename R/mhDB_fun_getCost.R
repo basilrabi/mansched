@@ -1128,5 +1128,17 @@ getCost <- function(mhDB, listR, wage) {
     return(list(x, tempData))
   })
 
-  return(export)
+  export.mh <- costDB[costDB$code == 999999,
+                      !colnames(costDB) %in% c("row", "code")]
+
+  export.13mp <- costDB[costDB$code == 521009,
+                        !colnames(costDB) %in% c("row", "code")]
+
+  export.mh <- as.data.frame(export.mh)
+  export.13mp <- as.data.frame(export.13mp)
+
+  export.mh <- export.mh[order(export.mh$costCode),]
+  export.13mp <- export.13mp[order(export.13mp$costCode),]
+
+  return(list(export, export.mh, export.13mp))
 }

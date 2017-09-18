@@ -12,6 +12,7 @@
 budget <- function(myFile, year) {
 
   # setwd("/home/brabi/sampleBudget/")
+  # library(magrittr)
 
   # myFile <- "MinesForecast2017.xlsx"
   # year <- 2017
@@ -224,17 +225,25 @@ budget <- function(myFile, year) {
 
   # SavePoint
 
-  export <- getCost(mhDB = mhDB, listR = listR, wage = wage)
+  costDB <- getCost(mhDB = mhDB, listR = listR, wage = wage)
   tempFolder <- getwd()
   dir.create(path = "./budget")
   setwd(paste(tempFolder, "/budget", sep = ""))
 
-  for (i in export) {
+  for (i in costDB[[1]]) {
 
     xlsx::write.xlsx(x = i[[2]],
                      file = paste(i[[1]], ".xlsx", sep = ""),
                      row.names = FALSE)
   }
+
+  xlsx::write.xlsx(x = costDB[[2]],
+                   file = "manhours.xlsx",
+                   row.names = FALSE)
+
+  xlsx::write.xlsx(x = costDB[[3]],
+                   file = "13mp.xlsx",
+                   row.names = FALSE)
 
   setwd(tempFolder)
 
