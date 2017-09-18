@@ -112,13 +112,19 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
     # Get matching equipment
     empPool$matchEquip <- sapply(listR, FUN = function(x) {
-      if (tempClass != "Operator")
+
+      if (tempClass != "Operator") {
         return(TRUE)
-      else {
-        if (tempEquip %in% x@equipment)
-          return(TRUE)
-        else
+      } else {
+
+        if (class(x) != "Operator") {
           return(FALSE)
+        } else {
+          if (tempEquip %in% x@equipment)
+            return(TRUE)
+          else
+            return(FALSE)
+        }
       }
     })
 
