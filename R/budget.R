@@ -16,9 +16,6 @@ budget <- function(myFile, year) {
   # myFile <- "MinesForecast2017.xlsx"
   # year <- 2017
 
-  # myFile <- "sampleData.xlsx"
-  # year <- 2018
-
   empReq.colnames <- c("activity",
                        "personnelClass",
                        "quantity",

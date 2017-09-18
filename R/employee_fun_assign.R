@@ -152,6 +152,8 @@ setMethod(
 
     mhDB <- mhDB[which(mhDB$mh > 0),]
 
+    # results <- list(mhDB, empT, empR)
+
     return(list(mhDB, empT, empR))
   }
 )
@@ -172,14 +174,19 @@ setMethod(
     results[[1]] <- dplyr::left_join(x = results[[1]],
                                      y = payA,
                                      by = "month")
-    results[[1]]$scheme <- "m"
-    results[[1]]$isReg <- isReg(empR)
 
-    maxReg <- data.frame(month = 1:12,
-                         maxReg = empR@maxReg)
-    tempData <- dplyr::left_join(x = results[[1]],
-                                 y = maxReg)
-    results[[1]] <- as.data.frame(tempData)
+    if (length(results[[1]]$ID) > 0) {
+      results[[1]]$scheme <- "m"
+      results[[1]]$isReg <- isReg(empR)
+
+      maxReg <- data.frame(month = 1:12,
+                           maxReg = empR@maxReg)
+      tempData <- dplyr::left_join(x = results[[1]],
+                                   y = maxReg)
+      results[[1]] <- as.data.frame(tempData)
+    } else {
+      results[[1]] <- NA
+    }
 
     return(results)
   }
@@ -212,6 +219,8 @@ setMethod(
 
     mhDB <- rbind(results[[1]], mhDB)
 
+    # results <- list(mhDB, empT, empR)
+
     return(list(mhDB, empT, empR))
   }
 )
@@ -227,32 +236,38 @@ setMethod(
 
     results <- callNextMethod(empT = empT, empR = empR)
 
-    if (empR@status != "reg") {
-      results[[1]]$sal <- "a"
-    } else {
-      if (empR@isRF) {
-        results[[1]] <- dplyr::left_join(x = results[[1]],
-                                         y = payB,
-                                         by = "month")
+    if (length(results[[1]]$ID) > 0) {
+
+      if (empR@status != "reg") {
+        results[[1]]$sal <- "a"
       } else {
-        results[[1]] <- dplyr::left_join(x = results[[1]],
-                                         y = payA,
-                                         by = "month")
+        if (empR@isRF) {
+          results[[1]] <- dplyr::left_join(x = results[[1]],
+                                           y = payB,
+                                           by = "month")
+        } else {
+          results[[1]] <- dplyr::left_join(x = results[[1]],
+                                           y = payA,
+                                           by = "month")
+        }
       }
+
+      if (empR@isRF) {
+        results[[1]]$scheme <- "d"
+      } else {
+        results[[1]]$scheme <- "m"
+      }
+
+      results[[1]]$isReg <- isReg(empR)
+      maxReg <- data.frame(month = 1:12,
+                           maxReg = empR@maxReg)
+      tempData <- dplyr::left_join(x = results[[1]],
+                                   y = maxReg)
+
+      results[[1]] <- as.data.frame(tempData)
+    } else {
+      results[[1]] <- NA
     }
-
-    if (empR@isRF)
-      results[[1]]$scheme <- "d"
-    else
-      results[[1]]$scheme <- "m"
-
-    results[[1]]$isReg <- isReg(empR)
-
-    maxReg <- data.frame(month = 1:12,
-                         maxReg = empR@maxReg)
-    tempData <- dplyr::left_join(x = results[[1]],
-                                 y = maxReg)
-    results[[1]] <- as.data.frame(tempData)
 
     return(results)
   }
@@ -483,22 +498,26 @@ setMethod(
 
     results <- callNextMethod(empT = empT, empR = empR)
 
-    if (empR@status != "reg") {
-      results[[1]]$sal <- "a"
+    if (length(results[[1]]$ID) > 0) {
+      if (empR@status != "reg") {
+        results[[1]]$sal <- "a"
+      } else {
+        results[[1]] <- dplyr::left_join(x = results[[1]],
+                                         y = payA,
+                                         by = "month")
+      }
+
+      results[[1]]$scheme <- "m"
+      results[[1]]$isReg <- isReg(empR)
+
+      maxReg <- data.frame(month = 1:12,
+                           maxReg = empR@maxReg)
+      tempData <- dplyr::left_join(x = results[[1]],
+                                   y = maxReg)
+      results[[1]] <- as.data.frame(tempData)
     } else {
-      results[[1]] <- dplyr::left_join(x = results[[1]],
-                                       y = payA,
-                                       by = "month")
+      results[[1]] <- NA
     }
-
-    results[[1]]$scheme <- "m"
-    results[[1]]$isReg <- isReg(empR)
-
-    maxReg <- data.frame(month = 1:12,
-                         maxReg = empR@maxReg)
-    tempData <- dplyr::left_join(x = results[[1]],
-                                 y = maxReg)
-    results[[1]] <- as.data.frame(tempData)
 
     return(results)
   }
@@ -513,10 +532,15 @@ setMethod(
 
     mhDB <- tempData[[1]]
 
-    if(empR@status == "reg")
-      mhDB$np <- as.integer((mhDB$mh * 0.5) + 0.5)
-    else
-      mhDB$np <- as.integer((mhDB * (1/3)) + 0.5)
+    if (length(mhDB$ID) > 0) {
+      if(empR@status == "reg") {
+        mhDB$np <- as.integer((mhDB$mh * 0.5) + 0.5)
+      } else {
+        mhDB$np <- as.integer((mhDB * (1/3)) + 0.5)
+      }
+    } else {
+      mhDB <- NA
+    }
 
     return(list(mhDB, tempData[[2]], tempData[[3]]))
   }
@@ -533,22 +557,25 @@ setMethod(
 
     results <- callNextMethod(empT = empT, empR = empR)
 
-    if (empR@status != "reg") {
-      results[[1]]$sal <- "a"
-    } else {
-      results[[1]] <- dplyr::left_join(x = results[[1]],
-                                       y = payA,
-                                       by = "month")
+    if (class(results[[1]]) != "logical") {
+    # if (!is.na(results[[1]])) {
+      if (empR@status != "reg") {
+        results[[1]]$sal <- "a"
+      } else {
+        results[[1]] <- dplyr::left_join(x = results[[1]],
+                                         y = payA,
+                                         by = "month")
+      }
+
+      results[[1]]$scheme <- "m"
+      results[[1]]$isReg <- isReg(empR)
+
+      maxReg <- data.frame(month = 1:12,
+                           maxReg = empR@maxReg)
+      tempData <- dplyr::left_join(x = results[[1]],
+                                   y = maxReg)
+      results[[1]] <- as.data.frame(tempData)
     }
-
-    results[[1]]$scheme <- "m"
-    results[[1]]$isReg <- isReg(empR)
-
-    maxReg <- data.frame(month = 1:12,
-                         maxReg = empR@maxReg)
-    tempData <- dplyr::left_join(x = results[[1]],
-                                 y = maxReg)
-    results[[1]] <- as.data.frame(tempData)
 
     return(results)
   }
@@ -565,22 +592,25 @@ setMethod(
 
     results <- callNextMethod(empT = empT, empR = empR)
 
-    if (empR@status != "reg") {
-      results[[1]]$sal <- "a"
-    } else {
-      results[[1]] <- dplyr::left_join(x = results[[1]],
-                                       y = payB,
-                                       by = "month")
+    if (class(results[[1]]) != "logical") {
+    # if (!is.na(results[[1]])) {
+      if (empR@status != "reg") {
+        results[[1]]$sal <- "a"
+      } else {
+        results[[1]] <- dplyr::left_join(x = results[[1]],
+                                         y = payB,
+                                         by = "month")
+      }
+
+      results[[1]]$scheme <- "d"
+      results[[1]]$isReg <- isReg(empR)
+
+      maxReg <- data.frame(month = 1:12,
+                           maxReg = empR@maxReg)
+      tempData <- dplyr::left_join(x = results[[1]],
+                                   y = maxReg)
+      results[[1]] <- as.data.frame(tempData)
     }
-
-    results[[1]]$scheme <- "d"
-    results[[1]]$isReg <- isReg(empR)
-
-    maxReg <- data.frame(month = 1:12,
-                         maxReg = empR@maxReg)
-    tempData <- dplyr::left_join(x = results[[1]],
-                                 y = maxReg)
-    results[[1]] <- as.data.frame(tempData)
 
     return(results)
   }
@@ -599,22 +629,26 @@ setMethod(
 
     results <- callNextMethod(empT = empT, empR = empR)
 
-    if (empR@status != "reg") {
-      results[[1]]$sal <- "a"
-    } else {
-      results[[1]] <- dplyr::left_join(x = results[[1]],
-                                       y = payB,
-                                       by = "month")
+    if (class(results[[1]]) != "logical") {
+    # if (!is.na(results[[1]])) {
+
+      if (empR@status != "reg") {
+        results[[1]]$sal <- "a"
+      } else {
+        results[[1]] <- dplyr::left_join(x = results[[1]],
+                                         y = payB,
+                                         by = "month")
+      }
+
+      results[[1]]$scheme <- "d"
+      results[[1]]$isReg <- isReg(empR)
+
+      maxReg <- data.frame(month = 1:12,
+                           maxReg = empR@maxReg)
+      tempData <- dplyr::left_join(x = results[[1]],
+                                   y = maxReg)
+      results[[1]] <- as.data.frame(tempData)
     }
-
-    results[[1]]$scheme <- "d"
-    results[[1]]$isReg <- isReg(empR)
-
-    maxReg <- data.frame(month = 1:12,
-                         maxReg = empR@maxReg)
-    tempData <- dplyr::left_join(x = results[[1]],
-                                 y = maxReg)
-    results[[1]] <- as.data.frame(tempData)
 
     return(results)
   }

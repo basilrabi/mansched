@@ -214,13 +214,20 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   if (!all(sched$activity %in% unique(empReq$activity))) {
     tempData <- sched$activity[
       which(!sched$activity %in% unique(empReq$activity))]
-    warning(paste("No personnel assigned:", tempData))
+    cat(paste("No personnel assigned: ", tempData, "\n", sep = ""))
+    warning("Schedules without employees detected!")
   }
 
   # Error if personnel assignment is duplicated
   if (anyDuplicated(empReq) > 0) {
     tempIndex <- which(duplicated(empReq))
-    stop(paste("Duplicate row:", tempIndex))
+    cat(paste("Duplicate row:",
+              empReq$activity[tempIndex],
+              empReq$personnelClass[tempIndex],
+              empReq$costCode[tempIndex],
+              "\n",
+              sep = " "))
+    stop("Check duplicate!")
   }
 
   # Trim and remove white spaces
@@ -267,12 +274,18 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
     schedIndex <- which(sched$activity == empReq$activity[i])
     tempEmp <- createEmp(empReq$personnelClass[i])
 
-    if (all(is.na(sched[schedIndex,c(2:13)])))
+    if (all(is.na(sched[schedIndex,c(2:13)]))) {
       workSched <- NA
-    else {
+    } else {
       workSched <- as.integer(sched[schedIndex,c(2:13)])
       workSched[is.na(workSched)] <- 0L
     }
+
+    if (is.na(empReq$spareFactor[i]))
+      empReq$spareFactor[i] <- 1
+
+    if (is.na(empReq$OT[i]))
+      empReq$OT[i] <- 0
 
     tempEmp <- initTEmployee(theObject = tempEmp,
                              ID = paste(empReq$activity[i],

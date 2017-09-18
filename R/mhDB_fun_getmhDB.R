@@ -156,7 +156,11 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
           tempData <- assignEmp(empT = listT[[i]], empR = listR[[j]])
           listT[[i]] <- tempData[[2]]
           listR[[j]] <- tempData[[3]]
-          mhDB <- dfAppend(mhDB, tempData[[1]])
+
+          if (class(tempData[[1]]) != "logical")
+          # if (!is.na(tempData[[1]]))
+            mhDB <- dfAppend(mhDB, tempData[[1]])
+
           if (sum(getHours(listT[[i]])) == 0)
             break
         }
@@ -179,7 +183,10 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
           tempData <- assignEmp(empT = listT[[i]], empR = listR[[j]])
           listT[[i]] <- tempData[[2]]
           listR[[j]] <- tempData[[3]]
-          mhDB <- dfAppend(mhDB, tempData[[1]])
+
+          if (class(tempData[[1]]) != "logical")
+            mhDB <- dfAppend(mhDB, tempData[[1]])
+
           if (sum(getHours(listT[[i]])) == 0)
             break
         }
