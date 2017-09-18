@@ -81,8 +81,15 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
                      isReg = NA,
                      maxReg = NA)
 
-  # Assign employees to empReq
+  # Assign employees to empReq - priority
   for(i in 1:length(empReq[,1])) {
+
+    cat(paste("Priority assigning: ",
+              i,
+              " out of ",
+              length(empReq[,1]),
+              " requirements.\n",
+              sep = ""))
 
     tempClass <- class(listT[[i]])
     if (tempClass == "Operator") {
@@ -144,17 +151,114 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
     })
 
     # Filter selections
-    # choice1 has matched cost code
-    empPool$choice1 <- apply(empPool[,c(14:17)], MARGIN = 1, FUN = function(x) {
+    empPool$choice <- apply(empPool[,c(14:17)], MARGIN = 1, FUN = function(x) {
       all(x)
     })
-    # choice2 does not match cost code
-    empPool$choice2 <- apply(empPool[,c(14:17)], MARGIN = 1, FUN = function(x) {
+
+    # Select choice and assign
+
+    index <- which(empPool$choice)
+
+    if (length(index) > 0) {
+
+      if (length(index) > 1) {
+        # Randomize
+        index <- sample(index)
+      }
+
+      # Assign
+      if (sum(getHours(listT[[i]])) > 0) {
+        for (j in index) {
+          tempData <- assignEmp(empT = listT[[i]], empR = listR[[j]])
+          listT[[i]] <- tempData[[2]]
+          listR[[j]] <- tempData[[3]]
+
+          if (class(tempData[[1]]) != "logical")
+            mhDB <- dfAppend(mhDB, tempData[[1]])
+
+          if (sum(getHours(listT[[i]])) == 0)
+            break
+        }
+      }
+    }
+  }
+
+  # Assign employees to empReq - non priority
+  for(i in 1:length(empReq[,1])) {
+
+    cat(paste("Non-priority assigning: ",
+              i,
+              " out of ",
+              length(empReq[,1]),
+              " requirements.\n",
+              sep = ""))
+
+    tempClass <- class(listT[[i]])
+    if (tempClass == "Operator") {
+      tempEquip <- listT[[i]]@equipment
+    } else {
+      tempEquip <- NA
+    }
+
+    tempCostCode <- listT[[i]]@costCode
+
+    # Get employee with available manhours
+    empPool$hasAviHours <- sapply(listR, FUN = function(x) {
+
+      tempHoursR <- getHours(x)
+      tempHoursT <- getHours(listT[[i]])
+
+      tempHoursR[tempHoursT == 0] <- 0L
+
+      tempHours <- sum(tempHoursR)
+
+      if (tempHours > 0)
+        return(TRUE)
+      else
+        return(FALSE)
+    })
+
+    # Get matching Employee-class
+    empPool$matchClass <- sapply(listR, FUN = function(x) {
+      if (tempClass == class(x))
+        return(TRUE)
+      else
+        return(FALSE)
+    })
+
+    # Get matching equipment
+    empPool$matchEquip <- sapply(listR, FUN = function(x) {
+
+      if (tempClass != "Operator") {
+        return(TRUE)
+      } else {
+
+        if (class(x) != "Operator") {
+          return(FALSE)
+        } else {
+          if (tempEquip %in% x@equipment)
+            return(TRUE)
+          else
+            return(FALSE)
+        }
+      }
+    })
+
+    # Get matching cost code
+    empPool$matchCostCode <- sapply(listR, FUN = function(x) {
+      if (tempCostCode %in% x@costCode)
+        return(TRUE)
+      else
+        return(FALSE)
+    })
+
+    # Filter selections
+    empPool$choice <- apply(empPool[,c(14:17)], MARGIN = 1, FUN = function(x) {
       all(x[1:3],!x[4])
     })
 
-    # Select choice1 and assign
-    index <- which(empPool$choice1)
+    # Select choice and assign
+    index <- which(empPool$choice)
 
     if (length(index) > 0) {
 
@@ -172,32 +276,6 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
           if (class(tempData[[1]]) != "logical")
           # if (!is.na(tempData[[1]]))
-            mhDB <- dfAppend(mhDB, tempData[[1]])
-
-          if (sum(getHours(listT[[i]])) == 0)
-            break
-        }
-      }
-    }
-
-    if (sum(getHours(listT[[i]])) > 0) {
-      # Select choice2 and assign
-      index <- which(empPool$choice2)
-
-      if (length(index) > 0) {
-
-        if (length(index) > 1) {
-          # Randomize
-          index <- sample(index)
-        }
-
-        # Assign
-        for (j in index) {
-          tempData <- assignEmp(empT = listT[[i]], empR = listR[[j]])
-          listT[[i]] <- tempData[[2]]
-          listR[[j]] <- tempData[[3]]
-
-          if (class(tempData[[1]]) != "logical")
             mhDB <- dfAppend(mhDB, tempData[[1]])
 
           if (sum(getHours(listT[[i]])) == 0)

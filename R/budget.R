@@ -64,6 +64,10 @@ budget <- function(myFile, year) {
   )
   empReq <- as.data.frame(empReq)
 
+  # Remove empReq rows with zero or NA quantities
+  empReq <- empReq[!is.na(empReq$quantity),]
+  empReq <- empReq[!empReq$quantity == 0,]
+
   sched <- readxl::read_xlsx(path = myFile,
                              sheet = "Schedule",
                              col_types = c("text",

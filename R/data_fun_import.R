@@ -193,10 +193,6 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
 #' @export initEmpReq
 initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
 
-  # Remove empReq rows with zero or NA quantities
-  empReq <- empReq[!is.na(empReq$quantity),]
-  empReq <- empReq[!empReq$quantity == 0,]
-
   # Error if scheduled any scheduled activity is duplicated
   if (anyDuplicated(sched$activity) > 0) {
     tempData <- sched$activity[which(duplicated(sched$activity))]
