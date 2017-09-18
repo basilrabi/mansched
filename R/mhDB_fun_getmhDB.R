@@ -95,7 +95,14 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
     # Get employee with available manhours
     empPool$hasAviHours <- sapply(listR, FUN = function(x) {
-      tempHours <- sum(getHours(x))
+
+      tempHoursR <- getHours(x)
+      tempHoursT <- getHours(listT[[i]])
+
+      tempHoursR[tempHoursT == 0] <- 0L
+
+      tempHours <- sum(tempHoursR)
+
       if (tempHours > 0)
         return(TRUE)
       else
