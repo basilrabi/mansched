@@ -84,6 +84,20 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
   # Assign employees to empReq - priority
   for(i in 1:length(empReq[,1])) {
 
+    # if(.Platform$OS.type == "unix") {
+    #
+    #   cores <- detectCores()
+    #
+    #   if (cores > 1)
+    #     cores <- cores - 1
+    #
+    # } else {
+    #   cores <- 1
+    # }
+
+    if (sum(getHours(listT[[i]])) == 0)
+      next
+
     cat(paste("Priority assigning: ",
               i,
               " out of ",
@@ -115,6 +129,23 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
       else
         return(FALSE)
     })
+
+    # ptd <- mclapply(X = listR,
+    #                 mc.preschedule = FALSE,
+    #                 mc.cores = cores,
+    #                 FUN = function(x) {
+    #                   tempHoursR <- getHours(x)
+    #                   tempHoursT <- getHours(listT[[i]])
+    #
+    #                   tempHoursR[tempHoursT == 0] <- 0L
+    #
+    #                   tempHours <- sum(tempHoursR)
+    #
+    #                   if (tempHours > 0)
+    #                     return(TRUE)
+    #                   else
+    #                     return(FALSE)
+    #                 })
 
     # Get matching Employee-class
     empPool$matchClass <- sapply(listR, FUN = function(x) {
@@ -169,7 +200,11 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
       # Assign
       if (sum(getHours(listT[[i]])) > 0) {
         for (j in index) {
-          tempData <- assignEmp(empT = listT[[i]], empR = listR[[j]])
+
+          suppressMessages(
+            tempData <- assignEmp(empT = listT[[i]], empR = listR[[j]])
+          )
+
           listT[[i]] <- tempData[[2]]
           listR[[j]] <- tempData[[3]]
 
@@ -185,6 +220,9 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
   # Assign employees to empReq - non priority
   for(i in 1:length(empReq[,1])) {
+
+    if (sum(getHours(listT[[i]])) == 0)
+      next
 
     cat(paste("Non-priority assigning: ",
               i,
@@ -270,12 +308,16 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
       # Assign
       if (sum(getHours(listT[[i]])) > 0) {
         for (j in index) {
-          tempData <- assignEmp(empT = listT[[i]], empR = listR[[j]])
+
+          suppressMessages(
+            tempData <- assignEmp(empT = listT[[i]], empR = listR[[j]])
+          )
+
           listT[[i]] <- tempData[[2]]
           listR[[j]] <- tempData[[3]]
 
           if (class(tempData[[1]]) != "logical")
-          # if (!is.na(tempData[[1]]))
+            # if (!is.na(tempData[[1]]))
             mhDB <- dfAppend(mhDB, tempData[[1]])
 
           if (sum(getHours(listT[[i]])) == 0)
@@ -292,11 +334,12 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
   for (i in 1:length(listTN)) {
 
-    # message(paste("Got here, i = ", i, sep = ""))
-    # print(listTN[[i]])
-
     if (sum(getHours(listTN[[i]])) > 0) {
-      tempData <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
+
+      suppressMessages(
+        tempData <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
+      )
+
       listTN[[i]] <- tempData[[2]]
       listR[[i]] <- tempData[[3]]
       mhDB <- dfAppend(mhDB, tempData[[1]])
@@ -304,6 +347,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
     if (sum(getHours(listTN[[i]])) != 0)
       stop("Something went wrong. :(")
+
   }
 
   # Remove NA values at the bottom
@@ -312,5 +356,17 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
     mhDB <- mhDB[-index,]
   }
 
-  return(list(mhDB, listT, listR))
+  mhReq <- lapply(listT, FUN = function(x) {
+
+    mh <- as.data.frame(getHours(x))
+    mh$month <- 1:12
+    mh$ID <- x@ID
+
+    return(mh)
+  })
+
+  mhReq <- data.table::rbindlist(mhReq)
+  mhReq <- as.data.frame(mhReq)
+
+  return(list(mhDB, listT, listR, mhReq))
 }
