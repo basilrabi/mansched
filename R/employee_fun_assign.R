@@ -309,7 +309,7 @@ setMethod(
         shToBeAddedB <- shToBeAddedB * 8L
         shToBeAddedA[indexZeroA] <- 0L
         shToBeAddedB[indexZeroB] <- 0L
-        empR@holHours <- empR@holHours + shToBeAddedA + shToBeAddedB
+        empR@holHours <- as.integer(empR@holHours + shToBeAddedA + shToBeAddedB)
       }
     }
 
