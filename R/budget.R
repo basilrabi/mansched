@@ -216,9 +216,13 @@ budget <- function(myFile, year) {
   if (class(wage$s) != "numeric")
     stop("Column s in wage is not numeric")
 
+  wage <- wage[wage$ID %in% empPool$ID,]
+
   wage$s[is.na(wage$s)] <- 0
 
   wage <- as.data.frame(wage)
+
+  # SavePoint
 
   export <- getCost(mhDB = mhDB, listR = listR, wage = wage)
   tempFolder <- getwd()

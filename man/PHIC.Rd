@@ -4,7 +4,7 @@
 \name{PHIC}
 \alias{PHIC}
 \title{Employer's PHIC Contribution}
-\format{An object of class \code{data.frame} with 28 rows and 3 columns.}
+\format{An object of class \code{data.frame} with 29 rows and 3 columns.}
 \usage{
 PHIC
 }

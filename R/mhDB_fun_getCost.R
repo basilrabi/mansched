@@ -78,6 +78,7 @@ getCost <- function(mhDB, listR, wage) {
   # Assign if employee is RF or not
   wage$isRF <- sapply(wage$ID, FUN = function(x) {
     index <- which(empID == x)
+    # index
     isRF(listR[[index]])
   })
 
@@ -98,6 +99,7 @@ getCost <- function(mhDB, listR, wage) {
       sal <- x[1] + 3000
     return(sal)
   })
+  cat("\nEstimated salary increase.\n")
 
   # Assign totHours
   wage$totHours <- sapply(wage$ID, FUN = function(x) {
@@ -147,6 +149,8 @@ getCost <- function(mhDB, listR, wage) {
   )
 
   # Compute Salaries for monthly wagers
+
+  cat("\nComputing salaries for non-RF.\n")
 
   mhDB.m <- mhDB[which(mhDB$scheme == "m"),
                  !colnames(mhDB) %in% c("scheme")]
@@ -379,6 +383,8 @@ getCost <- function(mhDB, listR, wage) {
 
   # Compute Salaries for daily wagers or RF
 
+  cat("\nComputing salaries for RF.\n")
+
   mhDB.d <- mhDB[which(mhDB$scheme == "d"),
                  !colnames(mhDB) %in% c("scheme")]
 
@@ -534,7 +540,10 @@ getCost <- function(mhDB, listR, wage) {
   hol.mhDB.d.S <- hol.mhDB.d[!hol.mhDB.d$isReg,]
 
   # Compute for Employee Allowances
-  allowance <- data.table::rbindlist(lapply(listR, getAllowance))
+  cat("\nComputing employee allowances.\n")
+  suppressMessages(
+    allowance <- data.table::rbindlist(lapply(listR, getAllowance))
+  )
 
   mhDB.allow <- mhDB %>%
     dplyr::group_by(ID, month, costCode) %>%
@@ -553,6 +562,7 @@ getCost <- function(mhDB, listR, wage) {
   mhDB.allow$cost <- round(mhDB.allow$X * mhDB.allow$allowance, digits = 2)
 
   # Compute for Safety Bonus
+  cat("\nComputing safety bonus.\n")
   mhDB.SB <- mhDB %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(mh = sum(mh))
@@ -561,12 +571,17 @@ getCost <- function(mhDB, listR, wage) {
   mhDB.SB <- as.data.frame(mhDB.SB)
 
   # Compute for SSS contribution of employer
+  cat("\nComputing SSS contribution.\n")
+
+  # savePoint2
+
   #- SSS Contribution is fixed
   #- For monthly wagers, SSS is based on basic monthly salary
   #- For daily wagers, SSS is based on daily wage * 313 / 12
 
-  SSSdb <- data.table::rbindlist(lapply(listR, FUN = function(x) {
-    tempData <- getCM(x)
+  SSSdb <- lapply(listR, FUN = function(x) {
+
+    suppressMessages(tempData <- getCM(x))
 
     if (!isReg(x)) {
       tempData$sal <- "a"
@@ -594,6 +609,7 @@ getCost <- function(mhDB, listR, wage) {
       tempData$salM <- tempData$salM2
 
       tempData <- tempData[, !colnames(tempData) %in% c("salM2")]
+
     } else {
 
       suppressMessages(
@@ -602,7 +618,6 @@ getCost <- function(mhDB, listR, wage) {
           wageEmp[!wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")]
         )
       )
-
     }
 
     tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
@@ -613,7 +628,11 @@ getCost <- function(mhDB, listR, wage) {
 
     tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "SSS")]
     tempData <- as.data.frame(tempData)
-  }))
+
+    tempData
+  })
+
+  SSSdb <- data.table::rbindlist(SSSdb)
 
   mhDB.SSS <- mhDB %>%
     dplyr::group_by(ID, month, costCode) %>%
@@ -635,6 +654,8 @@ getCost <- function(mhDB, listR, wage) {
 
   # Compute for Pag-ibig contribution of employer
 
+  cat("\nComputing Pag-ibig contributions.\n")
+
   mhDB.PI <- mhDB %>%
     dplyr::group_by(ID, month, costCode) %>%
     dplyr::summarise(mh = sum(mh))
@@ -652,8 +673,11 @@ getCost <- function(mhDB, listR, wage) {
 
   # Compute for Phil-Health contribution of employer
 
-  PHdb <- data.table::rbindlist(lapply(listR, FUN = function(x) {
-    tempData <- getCM(x)
+  cat("\nComputing Philhealth contribution.\n")
+
+  PHdb <- lapply(listR, FUN = function(x) {
+
+    suppressMessages(tempData <- getCM(x))
 
     if (!isReg(x)) {
       tempData$sal <- "a"
@@ -704,7 +728,11 @@ getCost <- function(mhDB, listR, wage) {
 
     tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "PH")]
     tempData <- as.data.frame(tempData)
-  }))
+
+    tempData
+  })
+
+  PHdb <- data.table::rbindlist(PHdb)
 
   mhDB.PH <- mhDB %>%
     dplyr::group_by(ID, month, costCode) %>%
@@ -725,6 +753,7 @@ getCost <- function(mhDB, listR, wage) {
   mhDB.PH <- as.data.frame(mhDB.PH)
 
   # Compute for Leave Commutation
+  cat("\nComputing leave commutation.\n")
 
   ## Get maxReg
 
@@ -831,7 +860,11 @@ getCost <- function(mhDB, listR, wage) {
   mhDB.LC <- as.data.frame(mhDB.LC)
 
   # Compute for Hospital and Medical Expenses
-  hm <- data.table::rbindlist(lapply(listR, getHM))
+  cat("\nComputing hospital and medical expenses.\n")
+
+  suppressMessages(
+    hm <- data.table::rbindlist(lapply(listR, getHM))
+  )
 
   mhDB.HM <- mhDB %>%
     dplyr::group_by(ID, month, costCode) %>%
@@ -850,11 +883,18 @@ getCost <- function(mhDB, listR, wage) {
   mhDB.HM$cost <- round(mhDB.HM$X * mhDB.HM$HM, digits = 2)
 
   # Compute for 13th month pay
+  cat("\nComputing 13th month pay.\n")
 
   mp13 <- data.table::rbindlist(lapply(listR, FUN = function(x) {
+
     tempIndex <- which(wageEmp$ID == x@ID)
     tempSal <- wageEmp$salH[tempIndex]
-    get13mp(theObject = x, sal = tempSal)
+
+    suppressMessages(
+      tempData <- get13mp(theObject = x, sal = tempSal)
+    )
+
+    tempData
   }))
 
   mhDB.13mp <- mhDB %>%
@@ -887,6 +927,8 @@ getCost <- function(mhDB, listR, wage) {
     dplyr::summarise(cost = sum(XholHours))
 
   mhDB.mh <- data.table::rbindlist(list(mhDB.mh1, mhDB.mh2, mhDB.mh3))
+
+  cat("\nMerging costs.\n")
 
   # Salaries-Regular
   r01.01 <- data.frame(costCode = mhDB.m.R.Reg$costCode,
@@ -1074,6 +1116,8 @@ getCost <- function(mhDB, listR, wage) {
     tidyr::spread(month, cost, fill = 0)
 
   costCode <- unique(costDB$costCode)
+
+  cat("\nExporting data as xlsx.\n")
 
   export <- lapply(costCode, FUN = function(x) {
     tempData <- costDB[costDB$costCode == x,
