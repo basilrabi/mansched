@@ -202,7 +202,7 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   # Error if assigned activity is not scheduled
   if (!all(unique(empReq$activity) %in% sched$activity)) {
     tempData <- unique(empReq$activity)
-    tempIndex <- which(!tempData %in% empReq$activity)
+    tempIndex <- which(!tempData %in% sched$activity)
     stop(paste("No schedule:", tempData[tempIndex]))
   }
 

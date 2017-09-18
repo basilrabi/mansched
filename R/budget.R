@@ -9,13 +9,14 @@
 #' @export budget
 #' @importFrom readxl read_xlsx
 #' @importFrom xlsx write.xlsx
+#' @importFrom stringr str_to_upper
 budget <- function(myFile, year) {
 
   # setwd("/home/brabi/sampleBudget/")
   # library(magrittr)
 
-  # myFile <- "MinesForecast2017.xlsx"
-  # year <- 2017
+  # myFile <- "MinesBudget2018.xlsx"
+  # year <- 2018
 
   empReq.colnames <- c("activity",
                        "personnelClass",
@@ -193,6 +194,9 @@ budget <- function(myFile, year) {
     stop("Column Description in hol is not character!")
 
   hol <- as.data.frame(hol)
+
+  empReq$activity <- stringr::str_to_upper(empReq$activity)
+  sched$activity <- stringr::str_to_upper(sched$activity)
 
   tempData <- getmhDB(empReq = empReq,
                       empPool = empPool,
