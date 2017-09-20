@@ -5,12 +5,14 @@
 #'
 #' @param myFile full path of the spreadsheet
 #' @param year integer value defining the year to be budgeted
+#' @param forecast logical value \cr
+#'   Compute cost for forecast?
 #' @return NULL
 #' @export budget
 #' @importFrom readxl read_xlsx
 #' @importFrom xlsx write.xlsx
 #' @importFrom stringr str_to_upper
-budget <- function(myFile, year) {
+budget <- function(myFile, year, forecast = FALSE) {
 
   # setwd("/home/brabi/sampleBudget/")
   # library(magrittr)
@@ -229,7 +231,11 @@ budget <- function(myFile, year) {
 
   # SavePoint
 
-  costDB <- getCost(mhDB = mhDB, listR = listR, wage = wage)
+  costDB <- getCost(mhDB = mhDB,
+                    listR = listR,
+                    wage = wage,
+                    forecast = forecast)
+
   tempFolder <- getwd()
   dir.create(path = "./budget")
   setwd(paste(tempFolder, "/budget", sep = ""))

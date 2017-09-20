@@ -4,7 +4,7 @@
 \alias{getCost}
 \title{Compute Personnel Cost}
 \usage{
-getCost(mhDB, listR, wage)
+getCost(mhDB, listR, wage, forecast)
 }
 \arguments{
 \item{mhDB}{a \code{\link{data.frame}} similar to \code{mhDB} return by
@@ -23,6 +23,9 @@ employee pool}
        beginning of the year. For non-rank and file, this value represents
        the monthly salary at the beginning of the year.}
   }}
+
+\item{forecast}{logical value \cr
+Compute cost for forecast?}
 }
 \value{
 list

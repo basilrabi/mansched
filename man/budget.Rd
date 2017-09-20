@@ -4,12 +4,15 @@
 \alias{budget}
 \title{Compute budget}
 \usage{
-budget(myFile, year)
+budget(myFile, year, forecast = FALSE)
 }
 \arguments{
 \item{myFile}{full path of the spreadsheet}
 
 \item{year}{integer value defining the year to be budgeted}
+
+\item{forecast}{logical value \cr
+Compute cost for forecast?}
 }
 \description{
 Given a xlsx file containing the employee pool, requirements, wages, and

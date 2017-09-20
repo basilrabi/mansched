@@ -36,6 +36,8 @@ NULL
 #'        beginning of the year. For non-rank and file, this value represents
 #'        the monthly salary at the beginning of the year.}
 #'   }
+#' @param forecast logical value \cr
+#'   Compute cost for forecast?
 #' @return list
 #'
 #'   Each element of the list contains a list of 2:
@@ -48,7 +50,7 @@ NULL
 #' @importFrom magrittr "%>%"
 #' @importFrom data.table rbindlist
 #' @importFrom tidyr gather spread
-getCost <- function(mhDB, listR, wage) {
+getCost <- function(mhDB, listR, wage, forecast) {
 
   # Fix for "no visible binding for global variable" note in R CMD check
   sal <-
@@ -91,12 +93,27 @@ getCost <- function(mhDB, listR, wage) {
   # Get salary increase
   wage$sB <- apply(wage[,c(2:4)], MARGIN = 1, FUN = function(x) {
     sal <- NA
-    if (x[2])
-      sal <- x[1] + 105
-    else if (x[3])
-      sal <- x[1] + 3500
-    else
-      sal <- x[1] + 3000
+
+    if (forecast) {
+
+      if (x[2])
+        sal <- x[1]
+      else if (x[3])
+        sal <- x[1]
+      else
+        sal <- x[1]
+
+    } else {
+
+      if (x[2])
+        sal <- x[1] + 105
+      else if (x[3])
+        sal <- x[1] + 3500
+      else
+        sal <- x[1] + 3000
+
+    }
+
     return(sal)
   })
   cat("\nEstimated salary increase.\n")
