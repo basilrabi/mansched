@@ -960,6 +960,85 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   mhDB.mh <- data.table::rbindlist(list(mhDB.mh1, mhDB.mh2, mhDB.mh3))
 
+  # Compute for Mid-year and Year-end bonus
+
+  cat("\nComputing bonus.\n")
+
+  bonus <- lapply(listR, FUN = function(x) {
+
+    if (!isReg(x))
+      return(NULL)
+
+    suppressMessages(tempData <- getCM(x))
+
+    if (isRF(x)) {
+
+      suppressMessages(
+        tempData <- dplyr::left_join(tempData, payB)
+      )
+
+      suppressMessages(
+        tempData <- dplyr::left_join(
+          tempData,
+          wageEmp[wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")])
+      )
+
+      tempData$salM2 <- round(tempData$salM * 313 / 12, digits = 2)
+      tempData$salM <- tempData$salM2
+
+      tempData <- tempData[, !colnames(tempData) %in% c("salM2")]
+
+    } else {
+
+      suppressMessages(
+        tempData <- dplyr::left_join(tempData, payA)
+      )
+
+      suppressMessages(
+        tempData <- dplyr::left_join(
+          tempData,
+          wageEmp[!wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")]
+        )
+      )
+
+    }
+
+    tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
+
+    tempData$bonus <- tempData$salG * c(0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1.5)
+
+    tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "bonus")]
+    tempData <- as.data.frame(tempData)
+
+    tempData
+  })
+
+  bonus <- data.table::rbindlist(bonus)
+
+  mhDB.bonus <- mhDB %>%
+    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.bonus <- mhDB.bonus %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.bonus$X <- mhDB.bonus$mh / mhDB.bonus$totMH
+
+  suppressMessages(
+    mhDB.bonus <- dplyr::left_join(mhDB.bonus, bonus)
+  )
+
+  mhDB.bonus$cost <- round(mhDB.bonus$X * mhDB.bonus$bonus, digits = 2)
+  mhDB.bonus <- mhDB.bonus[!is.na(mhDB.bonus$cost),]
+
+  mhDB.bonus <- mhDB.bonus %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost)) %>%
+    tidyr::spread(month, cost, fill = 0)
+
+  mhDB.bonus <- as.data.frame(mhDB.bonus)
+
   cat("\nMerging costs.\n")
 
   # Salaries-Regular
@@ -1165,5 +1244,5 @@ getCost <- function(mhDB, listR, wage, forecast) {
   export.mh <- as.data.frame(export.mh)
   export.mh <- export.mh[order(export.mh$costCode),]
 
-  return(list(export, export.mh, accr.13mp))
+  return(list(export, export.mh, accr.13mp, mhDB.bonus))
 }

@@ -9,7 +9,7 @@ NULL
 #'   expenses.
 #'
 #' @param theObject \code{\link{Employee-class}} object
-#' @return a \code{\link{data.frame}} with 12 rows and 13 columns
+#' @return a \code{\link{data.frame}} with 12 rows and 3 columns
 #'
 #'   Each row represents a month while the columns are:
 #'   \describe{

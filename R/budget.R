@@ -272,6 +272,10 @@ budget <- function(myFile, year, forecast = FALSE) {
                    file = "13mp-sea.xlsx",
                    row.names = FALSE)
 
+  xlsx::write.xlsx(x = costDB[[4]],
+                   file = "bonus.xlsx",
+                   row.names = FALSE)
+
   setwd(tempFolder)
 
   return(NULL)
