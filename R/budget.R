@@ -18,7 +18,10 @@ budget <- function(myFile, year, forecast = FALSE) {
   # library(magrittr)
 
   # myFile <- "MinesBudget2018.xlsx"
+
+  # myFile <- "sampleData.xlsx"
   # year <- 2018
+  # forecast <- FALSE
 
   empReq.colnames <- c("activity",
                        "personnelClass",
@@ -251,8 +254,22 @@ budget <- function(myFile, year, forecast = FALSE) {
                    file = "manhours.xlsx",
                    row.names = FALSE)
 
-  xlsx::write.xlsx(x = costDB[[3]],
-                   file = "13mp.xlsx",
+  accr.13mp <- costDB[[3]]
+
+  accr.13mp.R <- accr.13mp[accr.13mp$isReg,
+                           !colnames(accr.13mp) %in% c("isReg")]
+
+  accr.13mp.S <- accr.13mp[!accr.13mp$isReg,
+                           !colnames(accr.13mp) %in% c("isReg")]
+
+  accr.13mp.R <- as.data.frame(accr.13mp.R)
+  accr.13mp.S <- as.data.frame(accr.13mp.S)
+
+  xlsx::write.xlsx(x = accr.13mp.R,
+                   file = "13mp-reg.xlsx",
+                   row.names = FALSE)
+  xlsx::write.xlsx(x = accr.13mp.S,
+                   file = "13mp-sea.xlsx",
                    row.names = FALSE)
 
   setwd(tempFolder)

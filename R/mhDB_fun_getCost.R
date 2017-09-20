@@ -930,6 +930,21 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   mhDB.13mp$cost <- round(mhDB.13mp$X * mhDB.13mp$mp, digits = 2)
 
+  ## Separate 13th month pay for regular and non-regular as requested by
+  ## accounting
+
+  accr.13mp <- unique(mhDB[, colnames(mhDB) %in% c("ID", "isReg")])
+
+  suppressMessages(
+    accr.13mp <- dplyr::left_join(mhDB.13mp, accr.13mp)
+  )
+
+  accr.13mp <- accr.13mp %>%
+    dplyr::group_by(isReg, costCode, month) %>%
+    dplyr::summarise(cost = sum(cost)) %>%
+    tidyr::spread(month, cost, fill = 0)
+
+
   # Sum all manhours
   mhDB.mh1 <- mhDB %>%
     dplyr::group_by(costCode, month) %>%
@@ -1147,15 +1162,8 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   export.mh <- costDB[costDB$code == 999999,
                       !colnames(costDB) %in% c("row", "code")]
-
-  export.13mp <- costDB[costDB$code == 521009,
-                        !colnames(costDB) %in% c("row", "code")]
-
   export.mh <- as.data.frame(export.mh)
-  export.13mp <- as.data.frame(export.13mp)
-
   export.mh <- export.mh[order(export.mh$costCode),]
-  export.13mp <- export.13mp[order(export.13mp$costCode),]
 
-  return(list(export, export.mh, export.13mp))
+  return(list(export, export.mh, accr.13mp))
 }
