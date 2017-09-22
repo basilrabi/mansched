@@ -38,8 +38,15 @@ setMethod(
   f = "isRF",
   signature = "Non Staff",
   definition = function(theObject) {
-    if (length(theObject@isRF) != 1)
-      stop("Check isRF slot of the object!")
+    RF <- theObject@isRF
+
+    if (length(RF) != 1)
+      stop("Length of isRF slot != 1.")
+
+    if (is.na(RF))
+      stop(paste("isRF slot of ",
+                 theObject@ID,
+                 " is not initialized."))
 
     return(theObject@isRF)
   }
@@ -59,10 +66,10 @@ setMethod(
   f = "isRF",
   signature = "Technical",
   definition = function(theObject) {
-    isRF <- callNextMethod(theObject)
+    RF <- callNextMethod(theObject)
 
-    if (isRF)
-      warning("A Technical-class was declared rank and file.")
+    if (RF)
+      stop("A Technical-class was declared rank and file.")
 
     return(FALSE)
   }
@@ -73,10 +80,10 @@ setMethod(
   f = "isRF",
   signature = "Supervisor",
   definition = function(theObject) {
-    isRF <- callNextMethod(theObject)
+    RF <- callNextMethod(theObject)
 
-    if (isRF)
-      warning("A Supervisor-class was declared rank and file.")
+    if (RF)
+      stop("A Supervisor-class was declared rank and file.")
 
     return(FALSE)
   }
@@ -87,10 +94,10 @@ setMethod(
   f = "isRF",
   signature = "Laborer",
   definition = function(theObject) {
-    isRF <- callNextMethod(theObject)
+    RF <- callNextMethod(theObject)
 
-    if (!isRF)
-      warning("A Laborer-class was not declared rank and file.")
+    if (!RF)
+      stop("A Laborer-class was not declared rank and file.")
 
     return(TRUE)
   }
@@ -101,10 +108,10 @@ setMethod(
   f = "isRF",
   signature = "Operator",
   definition = function(theObject) {
-    isRF <- callNextMethod(theObject)
+    RF <- callNextMethod(theObject)
 
-    if (!isRF)
-      warning("An Operator-class was not declared rank and file.")
+    if (!RF)
+      stop("An Operator-class was not declared rank and file.")
 
     return(TRUE)
   }

@@ -131,7 +131,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
                              inHouse = empPool$inHouse[i],
                              restday = empPool$restday[i],
                              hol = hol,
-                             isRF = empPool$isRF[i],
+                             RF = empPool$isRF[i],
                              equipment = empPool$equipment[i])
     manPool[[i]] <- tempEmp
   }

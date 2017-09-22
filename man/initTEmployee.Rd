@@ -10,21 +10,21 @@
 \alias{initTEmployee,Operator-method}
 \title{Initialize theoretical employee}
 \usage{
-initTEmployee(theObject, ID, costCode = "NONE", equipment, OT = 3, calDays,
-  mdtProb, spareFactor = 1, monthSched = NA)
+initTEmployee(theObject, ID, costCode, equipment, OT = 0, calDays, mdtProb,
+  spareFactor = 1, monthSched = NA)
 
 \S4method{initTEmployee}{Employee}(theObject, ID, costCode, spareFactor = 1)
 
 \S4method{initTEmployee}{Staff}(theObject, ID, costCode, calDays,
   spareFactor = 1)
 
-\S4method{initTEmployee}{Clerk}(theObject, ID, costCode, OT = 3, calDays,
+\S4method{initTEmployee}{Clerk}(theObject, ID, costCode, OT = 0, calDays,
   spareFactor = 1)
 
 \S4method{initTEmployee}{`Operation Personnel`}(theObject, ID, costCode,
-  OT = 3, mdtProb, spareFactor = 1, monthSched = NA)
+  OT = 0, mdtProb, spareFactor = 1, monthSched = NA)
 
-\S4method{initTEmployee}{Operator}(theObject, ID, costCode, equipment, OT = 3,
+\S4method{initTEmployee}{Operator}(theObject, ID, costCode, equipment, OT = 0,
   mdtProb, spareFactor = 1, monthSched = NA)
 }
 \arguments{

@@ -53,7 +53,7 @@ tempEmp3 <- initREmployee(theObject = tempEmp,
                           inHouse = inHouse,
                           restday = restday,
                           hol = hol,
-                          isRF = FALSE)
+                          RF = FALSE)
 
 cBegin <- "2018-04-01"
 inHouse <- TRUE

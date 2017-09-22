@@ -187,7 +187,7 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          inHouse = inHouse,
                          restday = restday,
                          hol = hol,
-                         isRF = TRUE)
+                         RF = TRUE)
 
 test_that("clerk() works for regular RF", {
   expect_equal(class(tempEmp)[1], "Clerk")
@@ -218,7 +218,7 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          inHouse = inHouse,
                          restday = restday,
                          hol = hol,
-                         isRF = TRUE)
+                         RF = TRUE)
 
 test_that("clerk() works for seasonal RF", {
   expect_equal(class(tempEmp)[1], "Clerk")

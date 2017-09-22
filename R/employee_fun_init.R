@@ -38,7 +38,7 @@ NULL
 #' @param hol a \code{\link{data.frame}} returned by \code{\link{getHol}}
 #'
 #'   This contains all the holidays in the year to be budgeted.
-#' @param isRF logical value \cr
+#' @param RF logical value \cr
 #'   Is the employee rank and file?
 #' @param equipment character string representing the equipment types which the
 #'   employee was given authority to operate
@@ -62,7 +62,7 @@ setGeneric(
                  inHouse = FALSE,
                  restday = "Sunday",
                  hol,
-                 isRF = FALSE,
+                 RF = FALSE,
                  equipment,
                  OT = 3) {
     standardGeneric("initREmployee")
@@ -123,11 +123,11 @@ setMethod(
 
     # restday must be a valid weekday prior to calling initEmployee
 
-    if (is.na(restday)) {
-      theObject@restday <- "Sunday"
-    } else {
-      theObject@restday <- restday
-    }
+    if (is.na(restday))
+      restday <- "Sunday"
+
+    theObject@restday <- restday
+
 
     calDays <- getCalDays(cBegin = theObject@cBegin,
                           cEnd = theObject@cEnd,
@@ -211,6 +211,9 @@ setMethod(
                         hol,
                         OT = 3) {
 
+    if (is.na(OT))
+      OT <- 3
+
     tempData <- callNextMethod(theObject = theObject,
                                ID = ID,
                                name = name,
@@ -234,7 +237,7 @@ setMethod(
   }
 )
 
-#' @describeIn initREmployee Initialize isRF and return only the
+#' @describeIn initREmployee Initialize RF and return only the
 #'   \code{\link{Clerk-class}} object
 setMethod(
   f = "initREmployee",
@@ -251,8 +254,15 @@ setMethod(
                         inHouse = FALSE,
                         restday = "Sunday",
                         hol,
-                        isRF = FALSE,
+                        RF = FALSE,
                         OT = 3) {
+
+    if (is.na(OT))
+      OT <- 3
+
+    if (is.na(RF))
+      RF <- FALSE
+
     tempData <- callNextMethod(theObject = theObject,
                                ID = ID,
                                name = name,
@@ -270,7 +280,7 @@ setMethod(
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
 
-    theObject@isRF <- isRF
+    theObject@isRF <- RF
 
     if (theObject@isRF) {
       if (theObject@status == "reg") {
@@ -329,6 +339,9 @@ setMethod(
                         restday = "Sunday",
                         hol,
                         OT = 3) {
+
+    if (is.na(OT))
+      OT <- 3
 
     tempData <- callNextMethod(theObject = theObject,
                                ID = ID,
@@ -456,6 +469,9 @@ setMethod(
                         hol,
                         OT = 3) {
 
+    if (is.na(OT))
+      OT <- 3
+
     tempData <- callNextMethod(theObject = theObject,
                                ID = ID,
                                name = name,
@@ -497,6 +513,9 @@ setMethod(
                         hol,
                         OT = 3) {
 
+    if (is.na(OT))
+      OT <- 3
+
     tempData <- callNextMethod(theObject = theObject,
                                ID = ID,
                                name = name,
@@ -536,6 +555,9 @@ setMethod(
                         restday = "Sunday",
                         hol,
                         OT = 3) {
+
+    if (is.na(OT))
+      OT <- 3
 
     tempData <- callNextMethod(theObject = theObject,
                                ID = ID,
@@ -623,6 +645,9 @@ setMethod(
                         equipment,
                         OT = 3) {
 
+    if (is.na(OT))
+      OT <- 3
+
     tempData <- callNextMethod(theObject = theObject,
                                ID = ID,
                                name = name,
@@ -635,7 +660,7 @@ setMethod(
                                inHouse = inHouse,
                                restday = restday,
                                hol = hol,
-                               OT =OT)
+                               OT = OT)
 
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
@@ -710,9 +735,9 @@ setGeneric(
   name = "initTEmployee",
   def = function(theObject,
                  ID,
-                 costCode = "NONE",
+                 costCode,
                  equipment,
-                 OT = 3,
+                 OT = 0,
                  calDays,
                  mdtProb,
                  spareFactor = 1,
@@ -732,6 +757,9 @@ setMethod(
     # Checking of the validity of all arguments must be done prior to calling
     #  initTEmployee()
 
+    if (is.na(spareFactor))
+      spareFactor <- 1
+
     theObject@ID <- ID
     theObject@costCode <- costCode
     theObject@spareFactor <- spareFactor
@@ -750,6 +778,9 @@ setMethod(
                         calDays,
                         spareFactor = 1) {
 
+    if (is.na(spareFactor))
+      spareFactor <- 1
+
     theObject <- callNextMethod(theObject = theObject,
                                 ID = ID,
                                 costCode = costCode,
@@ -766,9 +797,16 @@ setMethod(
   definition = function(theObject,
                         ID,
                         costCode,
-                        OT = 3,
+                        OT = 0,
                         calDays,
                         spareFactor = 1) {
+
+    if (is.na(OT))
+      OT <- 0
+
+    if (is.na(spareFactor))
+      spareFactor <- 1
+
     theObject <- callNextMethod(theObject = theObject,
                                 ID = ID,
                                 costCode = costCode,
@@ -790,10 +828,17 @@ setMethod(
   definition = function(theObject,
                         ID,
                         costCode,
-                        OT = 3,
+                        OT = 0,
                         mdtProb,
                         spareFactor = 1,
                         monthSched = NA) {
+
+    if (is.na(OT))
+      OT <- 0
+
+    if (is.na(spareFactor))
+      spareFactor <- 1
+
     theObject <- callNextMethod(theObject = theObject,
                                 ID = ID,
                                 costCode = costCode,
@@ -871,10 +916,16 @@ setMethod(
                         ID,
                         costCode,
                         equipment,
-                        OT = 3,
+                        OT = 0,
                         mdtProb,
                         spareFactor = 1,
                         monthSched = NA) {
+
+    if (is.na(OT))
+      OT <- 0
+
+    if (is.na(spareFactor))
+      spareFactor <- 1
 
     theObject <- callNextMethod(theObject = theObject,
                                 ID = ID,

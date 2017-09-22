@@ -16,7 +16,7 @@
 \usage{
 initREmployee(theObject, ID, name, designation, attendance = 1,
   costCode = "NONE", status = "reg", cBegin, cEnd = NA, inHouse = FALSE,
-  restday = "Sunday", hol, isRF = FALSE, equipment, OT = 3)
+  restday = "Sunday", hol, RF = FALSE, equipment, OT = 3)
 
 \S4method{initREmployee}{Employee}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
@@ -32,7 +32,7 @@ initREmployee(theObject, ID, name, designation, attendance = 1,
 
 \S4method{initREmployee}{Clerk}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
-  inHouse = FALSE, restday = "Sunday", hol, isRF = FALSE, OT = 3)
+  inHouse = FALSE, restday = "Sunday", hol, RF = FALSE, OT = 3)
 
 \S4method{initREmployee}{`Operation Personnel`}(theObject, ID, name,
   designation, attendance = 1, costCode = "NONE", status = "reg", cBegin,
@@ -98,7 +98,7 @@ employee is not required to report to work}
 
   This contains all the holidays in the year to be budgeted.}
 
-\item{isRF}{logical value \cr
+\item{RF}{logical value \cr
 Is the employee rank and file?}
 
 \item{equipment}{character string representing the equipment types which the
@@ -126,7 +126,7 @@ costCode, status, cBegin, cEnd, inHouse, restday and calDays
 
 \item \code{Non Staff}: Initialize regOT
 
-\item \code{Clerk}: Initialize isRF and return only the
+\item \code{Clerk}: Initialize RF and return only the
 \code{\link{Clerk-class}} object
 
 \item \code{Operation Personnel}: Initialize rd, rdOT, sh, shOT, lh, lhOT, nh, nhOT,
