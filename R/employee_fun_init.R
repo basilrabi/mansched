@@ -941,65 +941,57 @@ setMethod(
                                 costCode = costCode,
                                 spareFactor = spareFactor)
 
-    reg <- mdtProb$reg * theObject@spareFactor * 8
-    rd <- mdtProb$rd * theObject@spareFactor * 8
-    sh <- mdtProb$sh * theObject@spareFactor * 8
-    lh <- mdtProb$lh * theObject@spareFactor * 8
-    nh <- mdtProb$nh * theObject@spareFactor * 8
-    rs <- mdtProb$rs * theObject@spareFactor * 8
-    rl <- mdtProb$rl * theObject@spareFactor * 8
-    rn <- mdtProb$rn * theObject@spareFactor * 8
+    d.reg <- mdtProb$reg + mdtProb$rd
+    d.sh <- mdtProb$sh + mdtProb$rs
+    d.lh <- mdtProb$lh + mdtProb$rl
+    d.nh <- mdtProb$nh + mdtProb$rn
 
-    regOT <- mdtProb$reg * theObject@spareFactor * OT
-    rdOT <- mdtProb$rd * theObject@spareFactor * OT
-    shOT <- mdtProb$sh * theObject@spareFactor * OT
-    lhOT <- mdtProb$lh * theObject@spareFactor * OT
-    nhOT <- mdtProb$nh * theObject@spareFactor * OT
-    rsOT <- mdtProb$rs * theObject@spareFactor * OT
-    rlOT <- mdtProb$rl * theObject@spareFactor * OT
-    rnOT <- mdtProb$rn * theObject@spareFactor * OT
+    reg <- d.reg * theObject@spareFactor * 8
+    sh <- d.sh * theObject@spareFactor * 8
+    lh <- d.lh * theObject@spareFactor * 8
+    nh <- d.nh * theObject@spareFactor * 8
+
+    regOT <- d.reg * theObject@spareFactor * OT
+    shOT <- d.sh * theObject@spareFactor * OT
+    lhOT <- d.lh * theObject@spareFactor * OT
+    nhOT <- d.nh * theObject@spareFactor * OT
 
     if (any(is.na(monthSched))) {
 
       theObject@reg <- as.integer(reg * mdtProb$days + 0.5)
-      theObject@rd <- as.integer(rd * mdtProb$days + 0.5)
       theObject@sh <- as.integer(sh * mdtProb$days + 0.5)
       theObject@lh <- as.integer(lh * mdtProb$days + 0.5)
       theObject@nh <- as.integer(nh * mdtProb$days + 0.5)
-      theObject@rs <- as.integer(rs * mdtProb$days + 0.5)
-      theObject@rl <- as.integer(rl * mdtProb$days + 0.5)
-      theObject@rn <- as.integer(rn * mdtProb$days + 0.5)
 
       theObject@regOT <- as.integer(regOT * mdtProb$days + 0.5)
-      theObject@rdOT <- as.integer(rdOT * mdtProb$days + 0.5)
       theObject@shOT <- as.integer(shOT * mdtProb$days + 0.5)
       theObject@lhOT <- as.integer(lhOT * mdtProb$days + 0.5)
       theObject@nhOT <- as.integer(nhOT * mdtProb$days + 0.5)
-      theObject@rsOT <- as.integer(rsOT * mdtProb$days + 0.5)
-      theObject@rlOT <- as.integer(rlOT * mdtProb$days + 0.5)
-      theObject@rnOT <- as.integer(rnOT * mdtProb$days + 0.5)
 
     } else {
 
       theObject@reg <- as.integer(reg * monthSched + 0.5)
-      theObject@rd <- as.integer(rd * monthSched + 0.5)
       theObject@sh <- as.integer(sh * monthSched + 0.5)
       theObject@lh <- as.integer(lh * monthSched + 0.5)
       theObject@nh <- as.integer(nh * monthSched + 0.5)
-      theObject@rs <- as.integer(rs * monthSched + 0.5)
-      theObject@rl <- as.integer(rl * monthSched + 0.5)
-      theObject@rn <- as.integer(rn * monthSched + 0.5)
 
       theObject@regOT <- as.integer(regOT * monthSched + 0.5)
-      theObject@rdOT <- as.integer(rdOT * monthSched + 0.5)
       theObject@shOT <- as.integer(shOT * monthSched + 0.5)
       theObject@lhOT <- as.integer(lhOT * monthSched + 0.5)
       theObject@nhOT <- as.integer(nhOT * monthSched + 0.5)
-      theObject@rsOT <- as.integer(rsOT * monthSched + 0.5)
-      theObject@rlOT <- as.integer(rlOT * monthSched + 0.5)
-      theObject@rnOT <- as.integer(rnOT * monthSched + 0.5)
 
     }
+
+    zero <- rep(0L, times = 12)
+
+    theObject@rd <- zero
+    theObject@rs <- zero
+    theObject@rl <- zero
+    theObject@rn <- zero
+    theObject@rdOT <- zero
+    theObject@rsOT <- zero
+    theObject@rlOT <- zero
+    theObject@rnOT <- zero
 
     return(theObject)
   }
