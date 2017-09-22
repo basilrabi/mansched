@@ -24,7 +24,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          cBegin = cBegin,
                          inHouse = inHouse,
                          restday = restday,
-                         hol = hol)
+                         hol = hol,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("division_manager() works", {
   expect_equal(class(tempEmp)[1], "Division Manager")
@@ -50,7 +53,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          cBegin = cBegin,
                          inHouse = inHouse,
                          restday = restday,
-                         hol = hol)
+                         hol = hol,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("group_manager() works", {
   expect_equal(class(tempEmp)[1], "Group Manager")
@@ -76,7 +82,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          cBegin = cBegin,
                          inHouse = inHouse,
                          restday = restday,
-                         hol = hol)
+                         hol = hol,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("department_manager() works", {
   expect_equal(class(tempEmp)[1], "Department Manager")
@@ -102,7 +111,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          cBegin = cBegin,
                          inHouse = inHouse,
                          restday = restday,
-                         hol = hol)
+                         hol = hol,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("section_head() works", {
   expect_equal(class(tempEmp)[1], "Section Head")
@@ -128,7 +140,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          cBegin = cBegin,
                          inHouse = inHouse,
                          restday = restday,
-                         hol = hol)
+                         hol = hol,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("clerk() works for regular non-RF", {
   expect_equal(class(tempEmp)[1], "Clerk")
@@ -155,7 +170,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          cBegin = cBegin,
                          inHouse = inHouse,
                          restday = restday,
-                         hol = hol)
+                         hol = hol,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("clerk() works for seasonal non-RF", {
   expect_equal(class(tempEmp)[1], "Clerk")
@@ -187,7 +205,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          inHouse = inHouse,
                          restday = restday,
                          hol = hol,
-                         RF = TRUE)
+                         RF = TRUE,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("clerk() works for regular RF", {
   expect_equal(class(tempEmp)[1], "Clerk")
@@ -218,7 +239,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          inHouse = inHouse,
                          restday = restday,
                          hol = hol,
-                         RF = TRUE)
+                         RF = TRUE,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("clerk() works for seasonal RF", {
   expect_equal(class(tempEmp)[1], "Clerk")
@@ -249,7 +273,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          cBegin = cBegin,
                          inHouse = inHouse,
                          restday = restday,
-                         hol = hol)
+                         hol = hol,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("technical() works", {
   expect_equal(class(tempEmp)[1], "Technical")
@@ -275,7 +302,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          cBegin = cBegin,
                          inHouse = inHouse,
                          restday = restday,
-                         hol = hol)
+                         hol = hol,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("supervisor() works for regular", {
   expect_equal(class(tempEmp)[1], "Supervisor")
@@ -301,7 +331,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          cBegin = cBegin,
                          inHouse = inHouse,
                          restday = restday,
-                         hol = hol)
+                         hol = hol,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("laborer() works for regular", {
   expect_equal(class(tempEmp)[1], "Laborer")
@@ -332,7 +365,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          inHouse = inHouse,
                          restday = restday,
                          hol = hol,
-                         equipment = equipment)
+                         equipment = equipment,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("operator() works for regular", {
   expect_equal(class(tempEmp)[1], "Operator")
@@ -363,7 +399,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          cBegin = cBegin,
                          inHouse = inHouse,
                          restday = restday,
-                         hol = hol)
+                         hol = hol,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("supervisor() works for seasonal", {
   expect_equal(class(tempEmp)[1], "Supervisor")
@@ -391,7 +430,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          cBegin = cBegin,
                          inHouse = inHouse,
                          restday = restday,
-                         hol = hol)
+                         hol = hol,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("laborer() works for seasonal", {
   expect_equal(class(tempEmp)[1], "Laborer")
@@ -421,7 +463,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          inHouse = inHouse,
                          restday = restday,
                          hol = hol,
-                         equipment = equipment)
+                         equipment = equipment,
+                         d.rd = 5,
+                         d.ho = 5,
+                         d.rh = 5)
 
 test_that("operator() works for seasonal", {
   expect_equal(class(tempEmp)[1], "Operator")

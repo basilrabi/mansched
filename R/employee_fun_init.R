@@ -45,6 +45,12 @@ NULL
 #'
 #'   Equipment types are separated by spaces and must be in upper case.
 #' @param OT integer value defining the budgeted overtime hours
+#' @param d.rd integer value defining the number of rest days the employee
+#'   is budgeted to report to work per month
+#' @param d.ho integer value defining the number of exclusive holidays the
+#'   employee is budgeted to report to work per month
+#' @param d.rh integer value defining the number of rest days during a holiday
+#'   the employee is budgeted to report to work per month
 #' @return an \code{\link{Employee-class}} object
 #' @importFrom lubridate year
 #' @export initREmployee
@@ -64,10 +70,22 @@ setGeneric(
                  hol,
                  RF = FALSE,
                  equipment,
-                 OT = 3) {
+                 OT = 3,
+                 d.rd = NA,
+                 d.ho = NA,
+                 d.rh = NA) {
     standardGeneric("initREmployee")
   }
 )
+
+# d.rd - If the value is NA, d.rd defaults to 2.
+#      - This is based on the assumptions of Mines group.
+
+# d.ho - If the value is NA, d.ho defaults to the following:
+#      - a. 0 if regular
+#      - b. 5 if non-regular
+
+# d.rh - If the value is NA, d.rd defaults to 0.
 
 #' @describeIn initREmployee Initialize ID, name, designation, attendance,
 #'   costCode, status, cBegin, cEnd, inHouse, restday and calDays
@@ -86,7 +104,10 @@ setMethod(
                         cEnd = NA,
                         inHouse = FALSE,
                         restday = "Sunday",
-                        hol) {
+                        hol,
+                        d.rd = NA,
+                        d.ho = NA,
+                        d.rh = NA) {
     # Checking of the validity of all arguments must be done prior to calling
     #  initREmployee()
 
@@ -134,6 +155,32 @@ setMethod(
                           hol = hol,
                           restday = theObject@restday)
 
+    if (is.na(d.rd)) {
+      d.rd <- 2L
+    }
+
+    calDays$rd <- assignMH(hoursT = calDays$rd, hoursR = d.rd)$hoursA
+
+    if (theObject@status == "reg") {
+      if (is.na(d.ho)) {
+        d.ho <- 0L
+      }
+    } else {
+      if (is.na(d.ho))
+        d.ho <- 5L
+    }
+
+    calDays$sh <- assignMH(hoursT = calDays$sh, hoursR = d.ho)$hoursA
+    calDays$lh <- assignMH(hoursT = calDays$lh, hoursR = d.ho)$hoursA
+    calDays$nh <- assignMH(hoursT = calDays$nh, hoursR = d.ho)$hoursA
+
+    if (is.na(d.rh))
+      d.rh <- 0L
+
+    calDays$rs <- assignMH(hoursT = calDays$rs, hoursR = d.ho)$hoursA
+    calDays$rl <- assignMH(hoursT = calDays$rl, hoursR = d.ho)$hoursA
+    calDays$rn <- assignMH(hoursT = calDays$rn, hoursR = d.ho)$hoursA
+
     # holDays may differ between reg employees and non-reg employees
     # This must be confirmed with accounting first
 
@@ -147,6 +194,7 @@ setMethod(
     }
 
     regDays <- calDays[,c("reg")]
+
     theObject@holHours <- holDays * 8L
     theObject@maxReg <- maxRegF * 8L
 
@@ -175,7 +223,10 @@ setMethod(
                         cEnd = NA,
                         inHouse = FALSE,
                         restday = "Sunday",
-                        hol) {
+                        hol,
+                        d.rd = NA,
+                        d.ho = NA,
+                        d.rh = NA) {
 
     tempData <- callNextMethod(theObject = theObject,
                                ID = ID,
@@ -188,7 +239,10 @@ setMethod(
                                cEnd = cEnd,
                                inHouse = inHouse,
                                restday = restday,
-                               hol = hol)
+                               hol = hol,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh)
     return(tempData[[1]])
   }
 )
@@ -209,7 +263,10 @@ setMethod(
                         inHouse = FALSE,
                         restday = "Sunday",
                         hol,
-                        OT = 3) {
+                        OT = 3,
+                        d.rd = NA,
+                        d.ho = NA,
+                        d.rh = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -225,7 +282,11 @@ setMethod(
                                cEnd = cEnd,
                                inHouse = inHouse,
                                restday = restday,
-                               hol = hol)
+                               hol = hol,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh)
+
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
 
@@ -255,7 +316,10 @@ setMethod(
                         restday = "Sunday",
                         hol,
                         RF = FALSE,
-                        OT = 3) {
+                        OT = 3,
+                        d.rd = NA,
+                        d.ho = NA,
+                        d.rh = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -275,7 +339,10 @@ setMethod(
                                inHouse = inHouse,
                                restday = restday,
                                hol = hol,
-                               OT = OT)
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh)
 
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
@@ -338,7 +405,10 @@ setMethod(
                         inHouse = FALSE,
                         restday = "Sunday",
                         hol,
-                        OT = 3) {
+                        OT = 3,
+                        d.rd = NA,
+                        d.ho = NA,
+                        d.rh = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -355,7 +425,10 @@ setMethod(
                                inHouse = inHouse,
                                restday = restday,
                                hol = hol,
-                               OT = OT)
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh)
 
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
@@ -467,7 +540,10 @@ setMethod(
                         inHouse = FALSE,
                         restday = "Sunday",
                         hol,
-                        OT = 3) {
+                        OT = 3,
+                        d.rd = NA,
+                        d.ho = NA,
+                        d.rh = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -484,7 +560,10 @@ setMethod(
                                inHouse = inHouse,
                                restday = restday,
                                hol = hol,
-                               OT = OT)
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh)
 
     theObject <- tempData[[1]]
 
@@ -511,7 +590,10 @@ setMethod(
                         inHouse = FALSE,
                         restday = "Sunday",
                         hol,
-                        OT = 3) {
+                        OT = 3,
+                        d.rd = NA,
+                        d.ho = NA,
+                        d.rh = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -528,7 +610,10 @@ setMethod(
                                inHouse = inHouse,
                                restday = restday,
                                hol = hol,
-                               OT = OT)
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh)
 
     theObject <- tempData[[1]]
     theObject@isRF <- FALSE
@@ -554,7 +639,10 @@ setMethod(
                         inHouse = FALSE,
                         restday = "Sunday",
                         hol,
-                        OT = 3) {
+                        OT = 3,
+                        d.rd = NA,
+                        d.ho = NA,
+                        d.rh = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -571,7 +659,10 @@ setMethod(
                                inHouse = inHouse,
                                restday = restday,
                                hol = hol,
-                               OT = OT)
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh)
 
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
@@ -643,7 +734,10 @@ setMethod(
                         restday = "Sunday",
                         hol,
                         equipment,
-                        OT = 3) {
+                        OT = 3,
+                        d.rd = NA,
+                        d.ho = NA,
+                        d.rh = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -660,7 +754,10 @@ setMethod(
                                inHouse = inHouse,
                                restday = restday,
                                hol = hol,
-                               OT = OT)
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh)
 
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]

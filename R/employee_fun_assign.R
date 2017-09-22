@@ -37,6 +37,8 @@ assignMH <- function(hoursT, hoursR) {
   hoursData$hoursT <- hoursData$hoursT - hoursData$hoursA
   hoursData$hoursR <- hoursData$hoursR - hoursData$hoursA
 
+  hoursData <- lapply(hoursData, as.integer)
+
   return(hoursData)
 }
 

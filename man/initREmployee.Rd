@@ -16,43 +16,53 @@
 \usage{
 initREmployee(theObject, ID, name, designation, attendance = 1,
   costCode = "NONE", status = "reg", cBegin, cEnd = NA, inHouse = FALSE,
-  restday = "Sunday", hol, RF = FALSE, equipment, OT = 3)
+  restday = "Sunday", hol, RF = FALSE, equipment, OT = 3, d.rd = NA,
+  d.ho = NA, d.rh = NA)
 
 \S4method{initREmployee}{Employee}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
-  inHouse = FALSE, restday = "Sunday", hol)
+  inHouse = FALSE, restday = "Sunday", hol, d.rd = NA, d.ho = NA,
+  d.rh = NA)
 
 \S4method{initREmployee}{Staff}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
-  inHouse = FALSE, restday = "Sunday", hol)
+  inHouse = FALSE, restday = "Sunday", hol, d.rd = NA, d.ho = NA,
+  d.rh = NA)
 
 \S4method{initREmployee}{`Non Staff`}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
-  inHouse = FALSE, restday = "Sunday", hol, OT = 3)
+  inHouse = FALSE, restday = "Sunday", hol, OT = 3, d.rd = NA,
+  d.ho = NA, d.rh = NA)
 
 \S4method{initREmployee}{Clerk}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
-  inHouse = FALSE, restday = "Sunday", hol, RF = FALSE, OT = 3)
+  inHouse = FALSE, restday = "Sunday", hol, RF = FALSE, OT = 3,
+  d.rd = NA, d.ho = NA, d.rh = NA)
 
 \S4method{initREmployee}{`Operation Personnel`}(theObject, ID, name,
   designation, attendance = 1, costCode = "NONE", status = "reg", cBegin,
-  cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, OT = 3)
+  cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, OT = 3,
+  d.rd = NA, d.ho = NA, d.rh = NA)
 
 \S4method{initREmployee}{Technical}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
-  inHouse = FALSE, restday = "Sunday", hol, OT = 3)
+  inHouse = FALSE, restday = "Sunday", hol, OT = 3, d.rd = NA,
+  d.ho = NA, d.rh = NA)
 
 \S4method{initREmployee}{Supervisor}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
-  inHouse = FALSE, restday = "Sunday", hol, OT = 3)
+  inHouse = FALSE, restday = "Sunday", hol, OT = 3, d.rd = NA,
+  d.ho = NA, d.rh = NA)
 
 \S4method{initREmployee}{Laborer}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
-  inHouse = FALSE, restday = "Sunday", hol, OT = 3)
+  inHouse = FALSE, restday = "Sunday", hol, OT = 3, d.rd = NA,
+  d.ho = NA, d.rh = NA)
 
 \S4method{initREmployee}{Operator}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin, cEnd = NA,
-  inHouse = FALSE, restday = "Sunday", hol, equipment, OT = 3)
+  inHouse = FALSE, restday = "Sunday", hol, equipment, OT = 3,
+  d.rd = NA, d.ho = NA, d.rh = NA)
 }
 \arguments{
 \item{theObject}{\code{\link{Employee-class}} object}
@@ -107,6 +117,15 @@ Is the employee rank and file?}
   Equipment types are separated by spaces and must be in upper case.}
 
 \item{OT}{integer value defining the budgeted overtime hours}
+
+\item{d.rd}{integer value defining the number of rest days the employee
+is budgeted to report to work per month}
+
+\item{d.ho}{integer value defining the number of exclusive holidays the
+employee is budgeted to report to work per month}
+
+\item{d.rh}{integer value defining the number of rest days during a holiday
+the employee is budgeted to report to work per month}
 }
 \value{
 an \code{\link{Employee-class}} object
