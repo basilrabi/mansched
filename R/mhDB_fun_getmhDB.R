@@ -84,17 +84,6 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
   # Assign employees to empReq - priority
   for(i in 1:length(empReq[,1])) {
 
-    # if(.Platform$OS.type == "unix") {
-    #
-    #   cores <- detectCores()
-    #
-    #   if (cores > 1)
-    #     cores <- cores - 1
-    #
-    # } else {
-    #   cores <- 1
-    # }
-
     if (sum(getHours(listT[[i]])) == 0)
       next
 
@@ -129,23 +118,6 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
       else
         return(FALSE)
     })
-
-    # ptd <- mclapply(X = listR,
-    #                 mc.preschedule = FALSE,
-    #                 mc.cores = cores,
-    #                 FUN = function(x) {
-    #                   tempHoursR <- getHours(x)
-    #                   tempHoursT <- getHours(listT[[i]])
-    #
-    #                   tempHoursR[tempHoursT == 0] <- 0L
-    #
-    #                   tempHours <- sum(tempHoursR)
-    #
-    #                   if (tempHours > 0)
-    #                     return(TRUE)
-    #                   else
-    #                     return(FALSE)
-    #                 })
 
     # Get matching Employee-class
     empPool$matchClass <- sapply(listR, FUN = function(x) {

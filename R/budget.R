@@ -224,7 +224,7 @@ budget <- function(myFile, year, forecast = FALSE) {
     stop("Column ID in wage is not character!")
 
   if (class(wage$s) != "numeric")
-    stop("Column s in wage is not numeric")
+    wage$s <- as.numeric(wage$s)
 
   wage <- wage[wage$ID %in% empPool$ID,]
 

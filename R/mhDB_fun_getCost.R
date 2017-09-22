@@ -77,6 +77,16 @@ getCost <- function(mhDB, listR, wage, forecast) {
     stop("All ID's must have wage data")
   }
 
+  # Error if wage data is missing or zero
+  wage <- wage[wage$ID %in% empID, ]
+  tmpID <- wage$ID[which(is.na(wage$s) | wage$s < 100)]
+  if (length(tmpID) > 0) {
+    cat("Wage data of the following is either NA or less than 100 pesos:\n")
+    cat(paste(empID, collapse = "\n"))
+    stop("Check wage data.")
+  }
+
+
   # Assign if employee is RF or not
   wage$isRF <- sapply(wage$ID, FUN = function(x) {
     index <- which(empID == x)
