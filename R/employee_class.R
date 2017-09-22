@@ -93,6 +93,9 @@ employee <- setClass(
     maxReg = "integer",
     reg = "integer",
     leaveHours = "integer"
+  ),
+  prototype = list(
+    reg = rep(0L, times = 12)
   )
 )
 
@@ -190,6 +193,9 @@ non_staff <- setClass(
   slots = c(
     isRF = "logical",
     regOT = "integer"
+  ),
+  prototype = list(
+    regOT = rep(0L, times = 12)
   ),
   contains = "Employee"
 )
@@ -331,6 +337,22 @@ operation_personnel <- setClass(
     rlOT = "integer",
     rn = "integer",
     rnOT = "integer"
+  ),
+  prototype = list(
+    rd = rep(0L, times = 12),
+    rdOT = rep(0L, times = 12),
+    sh = rep(0L, times = 12),
+    shOT = rep(0L, times = 12),
+    lh = rep(0L, times = 12),
+    lhOT = rep(0L, times = 12),
+    nh = rep(0L, times = 12),
+    nhOT = rep(0L, times = 12),
+    rs = rep(0L, times = 12),
+    rsOT = rep(0L, times = 12),
+    rl = rep(0L, times = 12),
+    rlOT = rep(0L, times = 12),
+    rn = rep(0L, times = 12),
+    rnOT = rep(0L, times = 12)
   ),
   contains = "Non Staff"
 )

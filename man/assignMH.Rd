@@ -2,7 +2,7 @@
 % Please edit documentation in R/employee_fun_assign.R
 \name{assignMH}
 \alias{assignMH}
-\title{Assign man hours}
+\title{Spend all available man hours}
 \usage{
 assignMH(hoursT, hoursR)
 }
@@ -18,7 +18,7 @@ assignMH(hoursT, hoursR)
   rype.}
 }
 \value{
-a \code{\link{data.frame}} with 12 rows and 8 columns
+a \code{\link{data.frame}} with 12 rows and 4 columns
 
   Each row represents a month. The columns are defined as follows:
   \describe{

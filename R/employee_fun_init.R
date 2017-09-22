@@ -177,9 +177,9 @@ setMethod(
     if (is.na(d.rh))
       d.rh <- 0L
 
-    calDays$rs <- assignMH(hoursT = calDays$rs, hoursR = d.ho)$hoursA
-    calDays$rl <- assignMH(hoursT = calDays$rl, hoursR = d.ho)$hoursA
-    calDays$rn <- assignMH(hoursT = calDays$rn, hoursR = d.ho)$hoursA
+    calDays$rs <- assignMH(hoursT = calDays$rs, hoursR = d.rh)$hoursA
+    calDays$rl <- assignMH(hoursT = calDays$rl, hoursR = d.rh)$hoursA
+    calDays$rn <- assignMH(hoursT = calDays$rn, hoursR = d.rh)$hoursA
 
     # holDays may differ between reg employees and non-reg employees
     # This must be confirmed with accounting first
@@ -433,8 +433,6 @@ setMethod(
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
 
-    zero <- rep(0L, times = 12)
-
     if ("rd" %in% colnames(calDays)) {
       theObject@rd <- as.integer(
         calDays[,c("rd")] * theObject@attendance * 8
@@ -442,9 +440,6 @@ setMethod(
       theObject@rdOT <- as.integer(
         calDays[,c("rd")] * theObject@attendance * OT
       )
-    } else {
-      theObject@rd <- zero
-      theObject@rdOT <- zero
     }
 
     if ("sh" %in% colnames(calDays)) {
@@ -454,9 +449,6 @@ setMethod(
       theObject@shOT <- as.integer(
         calDays[,c("sh")] * theObject@attendance * OT
       )
-    } else {
-      theObject@sh <- zero
-      theObject@shOT <- zero
     }
 
     if ("lh" %in% colnames(calDays)) {
@@ -466,9 +458,6 @@ setMethod(
       theObject@lhOT <- as.integer(
         calDays[,c("lh")] * theObject@attendance * OT
       )
-    } else {
-      theObject@lh <- zero
-      theObject@lhOT <- zero
     }
 
     if ("nh" %in% colnames(calDays)) {
@@ -478,9 +467,6 @@ setMethod(
       theObject@nhOT <- as.integer(
         calDays[,c("nh")] * theObject@attendance * OT
       )
-    } else {
-      theObject@nh <- zero
-      theObject@nhOT <- zero
     }
 
     if ("rs" %in% colnames(calDays)) {
@@ -490,9 +476,6 @@ setMethod(
       theObject@rsOT <- as.integer(
         calDays[,c("rs")] * theObject@attendance * OT
       )
-    } else {
-      theObject@rs <- zero
-      theObject@rsOT <- zero
     }
 
     if ("rl" %in% colnames(calDays)) {
@@ -502,9 +485,6 @@ setMethod(
       theObject@rlOT <- as.integer(
         calDays[,c("rl")] * theObject@attendance * OT
       )
-    } else {
-      theObject@rl <- zero
-      theObject@rlOT <- zero
     }
 
     if ("rn" %in% colnames(calDays)) {
@@ -514,9 +494,6 @@ setMethod(
       theObject@rnOT <- as.integer(
         calDays[,c("rn")] * theObject@attendance * OT
       )
-    } else {
-      theObject@rn <- zero
-      theObject@rnOT <- zero
     }
 
     return(list(theObject, calDays))
@@ -981,17 +958,6 @@ setMethod(
       theObject@nhOT <- as.integer(nhOT * monthSched + 0.5)
 
     }
-
-    zero <- rep(0L, times = 12)
-
-    theObject@rd <- zero
-    theObject@rs <- zero
-    theObject@rl <- zero
-    theObject@rn <- zero
-    theObject@rdOT <- zero
-    theObject@rsOT <- zero
-    theObject@rlOT <- zero
-    theObject@rnOT <- zero
 
     return(theObject)
   }
