@@ -66,8 +66,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
   empPool$matchCostCode <- FALSE
 
   # Create vector for identifying selected employees to be used
-  empPool$choice1 <- FALSE # AviHours + Class + Equip + CostCode
-  empPool$choice2 <- FALSE # AviHours + Class + Equip - CostCode
+  empPool$choice <- FALSE
 
   # Initialize man hours database
   mhDB <- data.frame(ID = NA,
@@ -91,7 +90,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
               i,
               " out of ",
               length(empReq[,1]),
-              " requirements.\n",
+              " requirements.",
               sep = ""))
 
     tempClass <- class(listT[[i]])
@@ -108,6 +107,16 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
       tempHoursR <- getHours(x)
       tempHoursT <- getHours(listT[[i]])
+
+      tempHoursR[,"reg"] <- tempHoursR[,"reg"] + tempHoursR[,"rd"]
+      tempHoursR[,"sh"] <- tempHoursR[,"sh"] + tempHoursR[,"rs"]
+      tempHoursR[,"lh"] <- tempHoursR[,"lh"] + tempHoursR[,"rl"]
+      tempHoursR[,"nh"] <- tempHoursR[,"nh"] + tempHoursR[,"rn"]
+
+      tempHoursR[,"regOT"] <- tempHoursR[,"regOT"] + tempHoursR[,"rdOT"]
+      tempHoursR[,"shOT"] <- tempHoursR[,"shOT"] + tempHoursR[,"rsOT"]
+      tempHoursR[,"lhOT"] <- tempHoursR[,"lhOT"] + tempHoursR[,"rlOT"]
+      tempHoursR[,"nhOT"] <- tempHoursR[,"nhOT"] + tempHoursR[,"rnOT"]
 
       tempHoursR[tempHoursT == 0] <- 0L
 
@@ -154,9 +163,18 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
     })
 
     # Filter selections
-    empPool$choice <- apply(empPool[,c(14:17)], MARGIN = 1, FUN = function(x) {
-      all(x)
-    })
+    empPool$choice <- apply(
+      empPool[,colnames(empPool) %in% c("hasAviHours",
+                                        "matchClass",
+                                        "matchEquip",
+                                        "matchCostCode")],
+      MARGIN = 1,
+      FUN = function(x) {
+        all(x)
+      })
+
+    cat(paste("\nFound ",sum(empPool$choice), " qualified.\n"))
+    cat("\n")
 
     # Select choice and assign
 
@@ -174,7 +192,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
         for (j in index) {
 
           suppressMessages(
-            tempData <- assignEmp(empT = listT[[i]], empR = listR[[j]])
+            tempData <- assignEmp2(empT = listT[[i]], empR = listR[[j]])
           )
 
           listT[[i]] <- tempData[[2]]
@@ -200,7 +218,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
               i,
               " out of ",
               length(empReq[,1]),
-              " requirements.\n",
+              " requirements.",
               sep = ""))
 
     tempClass <- class(listT[[i]])
@@ -263,9 +281,18 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
     })
 
     # Filter selections
-    empPool$choice <- apply(empPool[,c(14:17)], MARGIN = 1, FUN = function(x) {
-      all(x[1:3],!x[4])
-    })
+    empPool$choice <- apply(
+      empPool[,colnames(empPool) %in% c("hasAviHours",
+                                        "matchClass",
+                                        "matchEquip",
+                                        "matchCostCode")],
+      MARGIN = 1,
+      FUN = function(x) {
+        all(x[1:3],!x[4])
+      })
+
+    cat(paste("\nFound ",sum(empPool$choice), " qualified.\n"))
+    cat("\n")
 
     # Select choice and assign
     index <- which(empPool$choice)
@@ -282,7 +309,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
         for (j in index) {
 
           suppressMessages(
-            tempData <- assignEmp(empT = listT[[i]], empR = listR[[j]])
+            tempData <- assignEmp2(empT = listT[[i]], empR = listR[[j]])
           )
 
           listT[[i]] <- tempData[[2]]

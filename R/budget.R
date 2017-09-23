@@ -108,7 +108,10 @@ budget <- function(myFile, year, forecast = FALSE) {
                         "cEnd",
                         "inHouse",
                         "restday",
-                        "isRF")
+                        "isRF",
+                        "d.rd",
+                        "d.ho",
+                        "d.rh")
 
   empPool <- readxl::read_xlsx(path = myFile,
                                sheet = "Pool")

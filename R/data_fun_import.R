@@ -102,6 +102,11 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   if (any(empPool$attendance[tempIndex] < 0.5))
     stop("Useless employee exists! \\\n attendance must be at least 0.5!")
 
+  empPool[, colnames(empPool) %in% c("d.rd", "d.ho", "d.rh")] <- lapply(
+    empPool[, colnames(empPool) %in% c("d.rd", "d.ho", "d.rh")],
+    FUN = as.integer
+  )
+
   # Pre-allocate employee list
   manPool <- rep(list(NA), times = length(empPool[,1]))
 
@@ -132,7 +137,10 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
                              restday = empPool$restday[i],
                              hol = hol,
                              RF = empPool$isRF[i],
-                             equipment = empPool$equipment[i])
+                             equipment = empPool$equipment[i],
+                             d.rd = empPool$d.rd[i],
+                             d.ho = empPool$d.ho[i],
+                             d.rh = empPool$d.rh[i])
     manPool[[i]] <- tempEmp
   }
 
