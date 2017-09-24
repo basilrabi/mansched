@@ -122,10 +122,16 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
       tempHours <- sum(tempHoursR)
 
-      if (tempHours > 0)
+      if (tempHours > 0) {
+
         return(TRUE)
-      else
+
+      } else {
+
         return(FALSE)
+
+      }
+
     })
 
     # Get matching Employee-class
@@ -341,6 +347,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
       listTN[[i]] <- tempData[[2]]
       listR[[i]] <- tempData[[3]]
+      tempData[[1]]$np <- 0L
       mhDB <- dfAppend(mhDB, tempData[[1]])
     }
 
