@@ -595,6 +595,32 @@ getCost <- function(mhDB, listR, wage, forecast) {
     dplyr::summarise(mh = sum(mh))
 
   mhDB.SB$cost <- round(mhDB.SB$mh * 0.2, digits = 2)
+
+  mhDB.SB$costCodeNew <- sapply(
+    mhDB.SB$costCode,
+    FUN = function(x) {
+
+      if (x == "13100")
+        return("13100")
+
+      if (x == "0-0")
+        return("0-0")
+
+      if (substr(x, start = 1, stop = 5) %in% c("14000",
+                                                "14100",
+                                                "14200",
+                                                "14300",
+                                                "14400",
+                                                "14500",
+                                                "14600"))
+        return("14000")
+
+      return("01100")
+    }
+  )
+
+  mhDB.SB$costCode <- mhDB.SB$costCodeNew
+
   mhDB.SB <- as.data.frame(mhDB.SB)
 
   # Compute for SSS contribution of employer
@@ -1179,7 +1205,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
   r05$row <- "Employees Allowance"
 
   # Employee Benefits
-  r06 <- mhDB.SB[, !colnames(mhDB.SB) %in% c("mh")]
+  r06 <- mhDB.SB[, !colnames(mhDB.SB) %in% c("mh", "costCodeNew")]
   r06$row <- "Employee Benefits"
 
   # Premium SSS, EC

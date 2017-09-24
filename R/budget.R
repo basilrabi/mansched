@@ -235,8 +235,6 @@ budget <- function(myFile, year, forecast = FALSE) {
 
   wage <- as.data.frame(wage)
 
-  # SavePoint
-
   costDB <- getCost(mhDB = mhDB,
                     listR = listR,
                     wage = wage,

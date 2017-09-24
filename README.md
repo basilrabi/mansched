@@ -30,16 +30,6 @@ Once devtools is installed, run the following in R console:
 devtools::install_github('basilrabi/mansched')
 ```
 
-To do
------
-
--   Make 2 separate rows for 13th month pay of seasonal and regular employees in the exported xlsx sheet
-    -   The row for the combined 13th month pay expense is still retained.
-    -   Sum of the two additional rows must be equal to the retained total 13th month pay row.
--   Make and compute for a new row containing the cost for *Bonus* applicable only to regular employees
-    -   1 month salary equivalent on May
-    -   1.5 month salary equivalent on December
-
 To do (Enhancements)
 --------------------
 
