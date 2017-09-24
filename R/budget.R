@@ -241,8 +241,19 @@ budget <- function(myFile, year, forecast = FALSE) {
                     forecast = forecast)
 
   tempFolder <- getwd()
-  dir.create(path = "./budget")
-  setwd(paste(tempFolder, "/budget", sep = ""))
+
+  if (forecast) {
+
+    dir.create(path = "./forecast")
+    setwd(paste(tempFolder, "/forecast", sep = ""))
+
+  } else {
+
+    dir.create(path = "./budget")
+    setwd(paste(tempFolder, "/budget", sep = ""))
+
+  }
+
 
   for (i in costDB[[1]]) {
 
