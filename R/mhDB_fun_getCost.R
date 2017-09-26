@@ -1229,8 +1229,8 @@ getCost <- function(mhDB, listR, wage, forecast) {
   r11$row <- "Hospital and Medical Expenses"
 
   # 13th Month Pay
-  r12 <- mhDB.13mp[, c("costCode", "month", "cost")]
-  r12$row <- "13th Month Pay"
+  # r12 <- mhDB.13mp[, c("costCode", "month", "cost")]
+  # r12$row <- "13th Month Pay"
 
   # man hours
   r13 <- as.data.frame(mhDB.mh)
@@ -1247,7 +1247,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
                                        r09,
                                        r10,
                                        r11,
-                                       r12,
+                                       # r12,
                                        r13))
 
   costDB <- costDB %>%
