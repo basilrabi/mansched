@@ -50,6 +50,10 @@ a list containing the following:
           salary.}
       }
     \item list of \code{\link{Employee-class}} objects representing the
+      theoretical employees with un-assigned man hours
+    \item list of \code{\link{Employee-class}} objects representing the
+      real employees with un-assigned man hours
+    \item list of \code{\link{Employee-class}} objects representing the
       theoretical employees with assigned man hours
     \item list of \code{\link{Employee-class}} objects representing the
       real employees with assigned man hours

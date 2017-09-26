@@ -36,8 +36,8 @@ tempData <- getmhDB(empReq = empReq,
                     year = year,
                     hol = mansched::holidays)
 
-totTf <- getHoursL(tempData[[2]])
-totRf <- getHoursL(tempData[[3]])
+totTf <- getHoursL(tempData[[4]])
+totRf <- getHoursL(tempData[[5]])
 
 test_that("getmhDB() works", {
   expect_equal(totTi + totRi,
