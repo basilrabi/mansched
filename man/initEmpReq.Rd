@@ -54,9 +54,13 @@ initEmpReq(empReq, sched, hol = NA, year = NA)
 \item{year}{integer value representing the year to be budgeted}
 }
 \value{
-list of real employees
-
-  Each element of the list is an \code{\link{Employee-class}} object.
+a list of 2:
+  \enumerate{
+    \item a list of theoretical employees\cr
+      Each element of the list is an \code{\link{Employee-class}} object.
+      Theoretical employees do not have rest days.
+    \item sanitized empReq
+  }
 }
 \description{
 Initializes the list of the employee requirements and their corresponding man

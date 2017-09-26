@@ -14,7 +14,7 @@ hol <- read_ods(path = myFile,
 
 manPool <- initEmpPool(empPool = empPool,
                        hol = hol,
-                       year = 2018)
+                       year = 2018)[[1]]
 
 test_that("initEmpPool() works", {
   expect_equal(length(manPool), 5)

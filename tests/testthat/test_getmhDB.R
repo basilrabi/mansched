@@ -24,8 +24,8 @@ hol <- read_ods(path = myFile,
                 sheet = 4)
 year <- 2018
 
-listT <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)
-listR <- initEmpPool(empPool = empPool, hol = hol, year = year)
+listT <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)[[1]]
+listR <- initEmpPool(empPool = empPool, hol = hol, year = year)[[1]]
 
 totTi <- getHoursL(listT)
 totRi <- getHoursL(listR)

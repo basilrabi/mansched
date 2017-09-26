@@ -56,8 +56,13 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
     message("Using built-in holidays list.")
   }
 
-  listR <- initEmpPool(empPool = empPool, hol = hol, year)
-  listT <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)
+  tempData <- initEmpPool(empPool = empPool, hol = hol, year)
+  listR <- tempData[[1]]
+  empPool <- tempData[[2]]
+
+  tempData <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)
+  listT <- tempData[[1]]
+  empReq <- tempData[[2]]
 
   # Create vector for indexing qualified employees
   empPool$hasAviHours <- FALSE

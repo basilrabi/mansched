@@ -57,9 +57,12 @@ initEmpPool(empPool, hol = NA, year = NA)
 \item{year}{integer value representing the year to be budgeted}
 }
 \value{
-list of real employees
-
-  Each element of the list is an \code{\link{Employee-class}} object.
+list of of 2:
+  \enumerate{
+    \item a list of real employees\cr
+      Each element of the list is an \code{\link{Employee-class}} object.
+    \item sanitized empPool
+  }
 }
 \description{
 Initializes the list of the pool of employees and their corresponding

@@ -49,9 +49,12 @@
 #'   }
 #' @param hol a \code{data.frame} similar to \code{\link{holidays}}
 #' @param year integer value representing the year to be budgeted
-#' @return list of real employees
-#'
-#'   Each element of the list is an \code{\link{Employee-class}} object.
+#' @return list of of 2:
+#'   \enumerate{
+#'     \item a list of real employees\cr
+#'       Each element of the list is an \code{\link{Employee-class}} object.
+#'     \item sanitized empPool
+#'   }
 #' @importFrom stringr str_to_lower str_to_upper
 #' @export initEmpPool
 initEmpPool <- function(empPool, hol = NA, year = NA) {
@@ -69,7 +72,6 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
 
   # Remove space for status
   empPool$status <- rmS(empPool$status)
-
 
   # Remove punctuations for costCode
   empPool$costCode <- gsub(pattern = "[[:punct:]]",
@@ -91,8 +93,10 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
 
   # Check all personnelClass if valid
   if (any(!empPool$personnelClass %in% validEmpClass)) {
-    tempIndex <- which(!empPool$Personnel %in% validEmpClass)
-    stop(paste("Invalid personnelClass in rows:", tempIndex))
+    tempIndex <- which(!empPool$personnelClass %in% validEmpClass)
+    cat(paste("Invalid personnelClass in: ",
+              empPool$ID[tempIndex], ".\n", sep = ""))
+    stop("Invalid personnelClass detected!")
   }
 
   # Check for acceptable attendance
@@ -144,7 +148,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
     manPool[[i]] <- tempEmp
   }
 
-  return(manPool)
+  return(list(manPool, empPool))
 }
 
 #' Initialize Employee Requirement
@@ -194,9 +198,13 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
 #'   activities, their corresponding row may be left blank.
 #' @param hol a \code{data.frame} similar to \code{\link{holidays}}
 #' @param year integer value representing the year to be budgeted
-#' @return list of real employees
-#'
-#'   Each element of the list is an \code{\link{Employee-class}} object.
+#' @return a list of 2:
+#'   \enumerate{
+#'     \item a list of theoretical employees\cr
+#'       Each element of the list is an \code{\link{Employee-class}} object.
+#'       Theoretical employees do not have rest days.
+#'     \item sanitized empReq
+#'   }
 #' @importFrom stringr str_to_lower str_to_upper
 #' @export initEmpReq
 initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
@@ -307,5 +315,5 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
     manReq[[i]] <- tempEmp
   }
 
-  return(manReq)
+  return(list(manReq, empReq))
 }

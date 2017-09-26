@@ -20,7 +20,7 @@ sched <- read_ods(path = myFile,
 manReq <- initEmpReq(empReq = empReq,
                      sched = sched,
                      hol = hol,
-                     year = 2018)
+                     year = 2018)[[1]]
 
 test_that("initEmpReq() works", {
   expect_equal(length(manReq), 2)
