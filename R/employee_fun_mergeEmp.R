@@ -18,6 +18,11 @@ mergeEmp <- function(x) {
 
     if (is(x[[1]], "Employee")) {
 
+      x[[1]]@ID <- paste(class(x[[1]]), x[[1]]@costCode, sep = "-")
+
+      if (is(x[[1]], "Operator"))
+        x[[1]]@ID <- paste(x[[1]]@ID, x[[1]]@equipment, sep = "-")
+
       return(x[[1]])
 
     } else {

@@ -315,5 +315,30 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
     manReq[[i]] <- tempEmp
   }
 
-  return(list(manReq, empReq))
+  empReq$equipment[is.na(empReq$equipment)] <- ""
+
+  empReq$merged <- paste(empReq$personnelClass,
+                         empReq$equipment,
+                         empReq$costCode, sep = "-")
+
+  toMerge <- unique(empReq$merged)
+
+  mergedReq <- lapply(toMerge, FUN = function(x) {
+
+    tempIndex <- which(empReq$merged == x)
+
+    tempEmp <- mergeEmp(manReq[tempIndex])
+
+    empTab <- c(tempEmp@ID, tempEmp@costCode)
+
+    return(list(empTab, tempEmp))
+  })
+
+  empReqMerged <- t(sapply(mergedReq, FUN = function(x){x[[1]]}))
+  colnames(empReqMerged) <- c("ID", "costCode")
+  empReqMerged <- as.data.frame(empReqMerged)
+
+  manReqMerged <- lapply(mergedReq, FUN = function(x){x[[2]]})
+
+  return(list(manReqMerged, empReqMerged))
 }
