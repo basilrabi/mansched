@@ -87,6 +87,11 @@ setMethod(
 #' @return an integer value
 #' @export getHoursL
 getHoursL <- function(x) {
+
+  if (length(x) == 0) {
+    return(0L)
+  }
+
   tempData <- sapply(X = x, FUN = function(x) {
     sum(getHours(x))
   })

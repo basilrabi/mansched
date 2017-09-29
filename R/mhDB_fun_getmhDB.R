@@ -48,7 +48,11 @@
 #'       real employees with assigned man hours
 #'   }
 #' @export getmhDB
+#' @importFrom tidyr gather
 getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
+
+  # Fix warning: Undefined global functions or variable
+  ID <- mh <- NULL
 
   if (is.na(year)) {
     year <- as.integer(format(Sys.Date() + 365, "%Y"))
@@ -226,7 +230,28 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
             break
         }
       }
+
+      remMH <- sapply(listR[index], FUN = function(x) {sum(getHours(x))})
+
+      toRM <- which(remMH < 1)
+
+      if (length(toRM) > 0) {
+        toRM <- index[toRM]
+        empPool <- empPool[-toRM,]
+        listR <- listR[-toRM]
+      }
+
     }
+
+  }
+
+  remMH <- sapply(listT, FUN = function(x) {sum(getHours(x))})
+
+  toRM <- which(remMH < 1)
+
+  if (length(toRM) > 0) {
+    empReq <- empReq[-toRM,]
+    listT <- listT[-toRM]
   }
 
   # Assign employees to empReq - non priority
@@ -349,7 +374,28 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
             break
         }
       }
+
+      remMH <- sapply(listR[index], FUN = function(x) {sum(getHours(x))})
+
+      toRM <- which(remMH < 1)
+
+      if (length(toRM) > 0) {
+        toRM <- index[toRM]
+        empPool <- empPool[-toRM,]
+        listR <- listR[-toRM]
+      }
+
     }
+
+  }
+
+  remMH <- sapply(listT, FUN = function(x) {sum(getHours(x))})
+
+  toRM <- which(remMH < 1)
+
+  if (length(toRM) > 0) {
+    empReq <- empReq[-toRM,]
+    listT <- listT[-toRM]
   }
 
   # Assign all other employees to empReq
@@ -472,31 +518,54 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
             break
         }
       }
+
+      remMH <- sapply(listR[index], FUN = function(x) {sum(getHours(x))})
+
+      toRM <- which(remMH < 1)
+
+      if (length(toRM) > 0) {
+        toRM <- index[toRM]
+        empPool <- empPool[-toRM,]
+        listR <- listR[-toRM]
+      }
+
     }
+
+  }
+
+  remMH <- sapply(listT, FUN = function(x) {sum(getHours(x))})
+
+  toRM <- which(remMH < 1)
+
+  if (length(toRM) > 0) {
+    empReq <- empReq[-toRM,]
+    listT <- listT[-toRM]
   }
 
   # Assign excess regular hours to a dummy cost code
 
   ## Create a theoretical employee list
-  listTN <- lapply(listR, FUN = normEmp)
+  if (length(listR) > 0) {
+    listTN <- lapply(listR, FUN = normEmp)
 
-  for (i in 1:length(listTN)) {
+    for (i in 1:length(listTN)) {
 
-    if (sum(getHours(listTN[[i]])) > 0) {
+      if (sum(getHours(listTN[[i]])) > 0) {
 
-      suppressMessages(
-        tempData <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
-      )
+        suppressMessages(
+          tempData <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
+        )
 
-      listTN[[i]] <- tempData[[2]]
-      listR[[i]] <- tempData[[3]]
-      tempData[[1]]$np <- 0L
-      mhDB <- dfAppend(mhDB, tempData[[1]])
+        listTN[[i]] <- tempData[[2]]
+        listR[[i]] <- tempData[[3]]
+        tempData[[1]]$np <- 0L
+        mhDB <- dfAppend(mhDB, tempData[[1]])
+      }
+
+      if (sum(getHours(listTN[[i]])) != 0)
+        stop("Something went wrong. :(")
+
     }
-
-    if (sum(getHours(listTN[[i]])) != 0)
-      stop("Something went wrong. :(")
-
   }
 
   # Remove NA values at the bottom
@@ -515,6 +584,12 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
   })
 
   mhReq <- data.table::rbindlist(mhReq)
+  mhReq <- mhReq %>%
+    tidyr::gather(key = "mhType",
+                  value = mh,
+                  -month,
+                  -ID)
+  mhReq <- mhReq[mhReq$mh>0,]
   mhReq <- as.data.frame(mhReq)
 
   return(list(mhDB, listT.a, listR.a, listT, listR))
