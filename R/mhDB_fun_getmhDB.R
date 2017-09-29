@@ -13,7 +13,9 @@
 #' @return a list containing the following:
 #'   \enumerate{
 #'     \item \code{data.frame} representing the man hours database of the
-#'       assigned employees. This is composed of the following columns:
+#'       assigned employees
+#'
+#'       This is composed of the following columns:
 #'       \describe{
 #'         \item{ID}{character string representing the unique identifier of the
 #'           real employee}
@@ -46,6 +48,26 @@
 #'       theoretical employees with assigned man hours
 #'     \item list of \code{\link{Employee-class}} objects representing the
 #'       real employees with assigned man hours
+#'     \item \code{\link{data.frame}} containing un-assigned man hours of the
+#'       theoretical employees
+#'
+#'       This is composed of the following columns:
+#'       \describe{
+#'         \item{month}{integer value representing the month}
+#'         \item{ID}{character string representing the employee requirement}
+#'         \item{mhType}{man hour type}
+#'         \item{mh}{integer value representing the unassigned man hours}
+#'       }
+#'     \item \code{\link{data.frame}} containing un-assigned man hours of the
+#'       real employees
+#'
+#'       This is composed of the following columns:
+#'       \describe{
+#'         \item{month}{integer value representing the month}
+#'         \item{ID}{character string representing the employee requirement}
+#'         \item{mhType}{man hour type}
+#'         \item{mh}{integer value representing the unassigned man hours}
+#'       }
 #'   }
 #' @export getmhDB
 #' @importFrom tidyr gather
@@ -544,28 +566,55 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
   # Assign excess regular hours to a dummy cost code
 
+  mhPool <- NULL
+
   ## Create a theoretical employee list
   if (length(listR) > 0) {
     listTN <- lapply(listR, FUN = normEmp)
 
-    for (i in 1:length(listTN)) {
+    mhPool <- lapply(listTN, FUN = function(x) {
 
-      if (sum(getHours(listTN[[i]])) > 0) {
+      mh <- as.data.frame(getHours(x))
+      mh$month <- 1:12
+      mh$ID <- x@ID
 
-        suppressMessages(
-          tempData <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
-        )
+      return(mh)
+    })
 
-        listTN[[i]] <- tempData[[2]]
-        listR[[i]] <- tempData[[3]]
-        tempData[[1]]$np <- 0L
-        mhDB <- dfAppend(mhDB, tempData[[1]])
+    mhPool <- data.table::rbindlist(mhPool)
+    mhPool <- mhPool %>%
+      tidyr::gather(key = "mhType",
+                    value = mh,
+                    -month,
+                    -ID)
+    mhPool <- mhPool[mhPool$mh > 0,]
+    mhPool <- as.data.frame(mhPool)
+
+    if (nrow(mhPool) > 0) {
+
+      for (i in 1:length(listTN)) {
+
+        if (sum(getHours(listTN[[i]])) > 0) {
+
+          suppressMessages(
+            tempData <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
+          )
+
+          listTN[[i]] <- tempData[[2]]
+          listR[[i]] <- tempData[[3]]
+          tempData[[1]]$np <- 0L
+          mhDB <- dfAppend(mhDB, tempData[[1]])
+        }
+
+        if (sum(getHours(listTN[[i]])) != 0)
+          stop("Something went wrong. :(")
+
       }
 
-      if (sum(getHours(listTN[[i]])) != 0)
-        stop("Something went wrong. :(")
-
+    } else {
+      mhPool <- NULL
     }
+
   }
 
   # Remove NA values at the bottom
@@ -574,23 +623,27 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
     mhDB <- mhDB[-index,]
   }
 
-  mhReq <- lapply(listT, FUN = function(x) {
+  mhReq <- NULL
 
-    mh <- as.data.frame(getHours(x))
-    mh$month <- 1:12
-    mh$ID <- x@ID
+  if (length(listT) > 0) {
+    mhReq <- lapply(listT, FUN = function(x) {
 
-    return(mh)
-  })
+      mh <- as.data.frame(getHours(x))
+      mh$month <- 1:12
+      mh$ID <- x@ID
 
-  mhReq <- data.table::rbindlist(mhReq)
-  mhReq <- mhReq %>%
-    tidyr::gather(key = "mhType",
-                  value = mh,
-                  -month,
-                  -ID)
-  mhReq <- mhReq[mhReq$mh>0,]
-  mhReq <- as.data.frame(mhReq)
+      return(mh)
+    })
 
-  return(list(mhDB, listT.a, listR.a, listT, listR))
+    mhReq <- data.table::rbindlist(mhReq)
+    mhReq <- mhReq %>%
+      tidyr::gather(key = "mhType",
+                    value = mh,
+                    -month,
+                    -ID)
+    mhReq <- mhReq[mhReq$mh > 0,]
+    mhReq <- as.data.frame(mhReq)
+  }
+
+  return(list(mhDB, listT.a, listR.a, listT, listR, mhReq, mhPool))
 }

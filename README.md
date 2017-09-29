@@ -6,6 +6,10 @@ R package with tools for manhours budgeting in Taganito Mine
 Installation
 ------------
 
+### R
+
+This packages requires an [R](https://www.r-project.org/) version of at least 3.4.0 although it is recommended to install the latest version.
+
 ### java
 
 Installation of mansched requires java ([jre](https://java.com/inc/BrowserRedirect1.jsp?locale=en)) to be installed first. 64-bit installation of R requires 64-bit installation of java while 32-bit installation of R requires 32-bit installation of java.
@@ -30,6 +34,13 @@ Once devtools is installed, run the following in R console:
 devtools::install_github('basilrabi/mansched')
 ```
 
+To do
+-----
+
+-   Introduce computation of employees under agency
+    -   Employees under agency costs 15% higher than seasonal employees
+    -   Expenses incurred for employees under agency are charged to contract fees others
+
 To do (Enhancements)
 --------------------
 
@@ -40,8 +51,4 @@ To do (Enhancements)
     -   Implement sub-priority levels of the above based on the number of authorized equipment.
     -   A personnel with only one authorized equipment shall be the highest priority while the perosnnel with more authorized equipment shall be the lowest priority.
 -   Speed up code
-    -   Processing the Mines Group template takes 30 minutes.
     -   Look into multithreading or migrate some code to other language
--   Additional exported data
-    -   Un-assigned man power requirement
-    -   Un-assigned man power pool

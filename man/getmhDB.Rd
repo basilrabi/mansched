@@ -24,7 +24,9 @@ getmhDB(empReq, empPool, sched, year = NA, hol = NA)
 a list containing the following:
   \enumerate{
     \item \code{data.frame} representing the man hours database of the
-      assigned employees. This is composed of the following columns:
+      assigned employees
+
+      This is composed of the following columns:
       \describe{
         \item{ID}{character string representing the unique identifier of the
           real employee}
@@ -57,6 +59,26 @@ a list containing the following:
       theoretical employees with assigned man hours
     \item list of \code{\link{Employee-class}} objects representing the
       real employees with assigned man hours
+    \item \code{\link{data.frame}} containing un-assigned man hours of the
+      theoretical employees
+
+      This is composed of the following columns:
+      \describe{
+        \item{month}{integer value representing the month}
+        \item{ID}{character string representing the employee requirement}
+        \item{mhType}{man hour type}
+        \item{mh}{integer value representing the unassigned man hours}
+      }
+    \item \code{\link{data.frame}} containing un-assigned man hours of the
+      real employees
+
+      This is composed of the following columns:
+      \describe{
+        \item{month}{integer value representing the month}
+        \item{ID}{character string representing the employee requirement}
+        \item{mhType}{man hour type}
+        \item{mh}{integer value representing the unassigned man hours}
+      }
   }
 }
 \description{

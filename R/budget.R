@@ -214,6 +214,8 @@ budget <- function(myFile, year, forecast = FALSE) {
 
   mhDB <- tempData[[1]]
   listR <- tempData[[3]]
+  mhReq <- tempData[[6]]
+  mhPool <- tempData[[7]]
 
   wage.colnames <- c("ID", "S", "s")
 
@@ -287,6 +289,18 @@ budget <- function(myFile, year, forecast = FALSE) {
   xlsx::write.xlsx(x = costDB[[4]],
                    file = "bonus.xlsx",
                    row.names = FALSE)
+
+  if (!is.null(mhPool)) {
+    xlsx::write.xlsx(x = mhPool,
+                     file = "pool.xlsx",
+                     row.names = FALSE)
+  }
+
+  if (!is.null(mhReq)) {
+    xlsx::write.xlsx(x = mhReq,
+                     file = "req.xlsx",
+                     row.names = FALSE)
+  }
 
   setwd(tempFolder)
 
