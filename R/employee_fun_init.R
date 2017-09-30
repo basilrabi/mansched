@@ -124,7 +124,7 @@ setMethod(
     theObject@costCode <-
       strsplit(x = costCode, split = " ", fixed = TRUE)[[1]]
 
-    # status must be an element of c("reg", "pro", "sea")
+    # status must be an element of c("reg", "pro", "sea", "age)
     theObject@status <- status
 
     theObject@cBegin <- cBegin
@@ -645,28 +645,26 @@ setMethod(
     calDays <- tempData[[2]]
     theObject@isRF <- TRUE
 
-    if (theObject@isRF) {
-      if (theObject@status == "reg") {
-        holDays <- apply(
-          calDays[, colnames(calDays) %in% c("lh",
-                                             "sh",
-                                             "nh",
-                                             "rl",
-                                             "rs",
-                                             "rn")],
-          MARGIN = 1,
-          FUN = sum
-        )
-      } else {
-        holDays <- apply(
-          calDays[, colnames(calDays) %in% c("lh", "rl")],
-          MARGIN = 1,
-          FUN = sum
-        )
-      }
-
-      theObject@holHours <- holDays * 8L
+    if (theObject@status == "reg") {
+      holDays <- apply(
+        calDays[, colnames(calDays) %in% c("lh",
+                                           "sh",
+                                           "nh",
+                                           "rl",
+                                           "rs",
+                                           "rn")],
+        MARGIN = 1,
+        FUN = sum
+      )
+    } else {
+      holDays <- apply(
+        calDays[, colnames(calDays) %in% c("lh", "rl")],
+        MARGIN = 1,
+        FUN = sum
+      )
     }
+
+    theObject@holHours <- holDays * 8L
 
     return(theObject)
   }
@@ -676,23 +674,7 @@ setMethod(
 #'
 #' \code{\link{Operator-class}} personnel may be authorized to operate multiple
 #'   types of equipment. In Taganito Mining Corporation, some of the equipment
-#'   types are:
-#'   \enumerate{
-#'     \item CRANE
-#'     \item CT (bulldozer)
-#'     \item DT (dump truck)
-#'     \item FL (fuel truck)
-#'     \item FORKLIFT
-#'     \item RG (road grader)
-#'     \item SB (service bus)
-#'     \item SP (service pickup)
-#'     \item TT (trailer truck)
-#'     \item TX (tracked excavator)
-#'     \item VC (vibrating compactor)
-#'     \item WL (wheel loader)
-#'     \item WTL (water truck)
-#'     \item WX (wheeled excavator)
-#'   }
+#'   types are listed in \code{\link{validEquipment}}.
 #'
 #'   All \code{Operator-class} employees are rank and file.
 setMethod(
@@ -741,28 +723,26 @@ setMethod(
 
     theObject@isRF <- TRUE
 
-    if (theObject@isRF) {
-      if (theObject@status == "reg") {
-        holDays <- apply(
-          calDays[, colnames(calDays) %in% c("lh",
-                                             "sh",
-                                             "nh",
-                                             "rl",
-                                             "rs",
-                                             "rn")],
-          MARGIN = 1,
-          FUN = sum
-        )
-      } else {
-        holDays <- apply(
-          calDays[, colnames(calDays) %in% c("lh", "rl")],
-          MARGIN = 1,
-          FUN = sum
-        )
-      }
-
-      theObject@holHours <- holDays * 8L
+    if (theObject@status == "reg") {
+      holDays <- apply(
+        calDays[, colnames(calDays) %in% c("lh",
+                                           "sh",
+                                           "nh",
+                                           "rl",
+                                           "rs",
+                                           "rn")],
+        MARGIN = 1,
+        FUN = sum
+      )
+    } else {
+      holDays <- apply(
+        calDays[, colnames(calDays) %in% c("lh", "rl")],
+        MARGIN = 1,
+        FUN = sum
+      )
     }
+
+    theObject@holHours <- holDays * 8L
 
     if (is.na(equipment))
       stop("No equipment authorized")
@@ -859,7 +839,9 @@ setMethod(
                                 ID = ID,
                                 costCode = costCode,
                                 spareFactor = spareFactor)
+
     theObject@reg <- as.integer(calDays[,c("reg")] * 8 * theObject@spareFactor)
+
     return(theObject)
   }
 )
@@ -885,8 +867,10 @@ setMethod(
                                 ID = ID,
                                 costCode = costCode,
                                 spareFactor = spareFactor)
+
     theObject@reg <- as.integer(calDays[,c("reg")] * 8 *
                                   theObject@spareFactor)
+
     theObject@regOT <- as.integer(calDays[,c("reg")] * OT *
                                     theObject@spareFactor)
 

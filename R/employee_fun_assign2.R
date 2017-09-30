@@ -135,16 +135,22 @@ setMethod(
                                      by = "month")
 
     if (length(results[[1]]$ID) > 0) {
+
       results[[1]]$scheme <- "m"
       results[[1]]$isReg <- isReg(empR)
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
+
       tempData <- dplyr::left_join(x = results[[1]],
                                    y = maxReg)
+
       results[[1]] <- as.data.frame(tempData)
+
     } else {
+
       results[[1]] <- NA
+
     }
 
     return(results)
@@ -188,6 +194,7 @@ setMethod(
   f = "assignEmp2",
   signature = "Clerk",
   definition = function(empT, empR) {
+
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
@@ -196,23 +203,35 @@ setMethod(
     if (length(results[[1]]$ID) > 0) {
 
       if (empR@status != "reg") {
+
         results[[1]]$sal <- "a"
+
       } else {
+
         if (empR@isRF) {
+
           results[[1]] <- dplyr::left_join(x = results[[1]],
                                            y = payB,
                                            by = "month")
+
         } else {
+
           results[[1]] <- dplyr::left_join(x = results[[1]],
                                            y = payA,
                                            by = "month")
+
         }
+
       }
 
       if (empR@isRF) {
+
         results[[1]]$scheme <- "d"
+
       } else {
+
         results[[1]]$scheme <- "m"
+
       }
 
       results[[1]]$isReg <- isReg(empR)
@@ -222,8 +241,11 @@ setMethod(
                                    y = maxReg)
 
       results[[1]] <- as.data.frame(tempData)
+
     } else {
+
       results[[1]] <- NA
+
     }
 
     return(results)
@@ -265,22 +287,33 @@ setMethod(
 
     # If a non-regular RF is assigned in a special holiday, add 8 hours per
     # special holiday assigned in holHours
+
     if (!isReg(empR) & isRF(empR)) {
+
       if (sum(tempData.sh$hoursA) + sum(tempData.rs$hoursA) > 0) {
+
         shToBeAddedA <- tempData.sh$hoursA
         shToBeAddedB <- tempData.rs$hoursA
+
         indexZeroA <- which(shToBeAddedA == 0L)
         indexZeroB <- which(shToBeAddedB == 0L)
+
         shToBeAddedA <- shToBeAddedA %/% 8
         shToBeAddedB <- shToBeAddedB %/% 8
+
         shToBeAddedA <- shToBeAddedA + 1L
         shToBeAddedB <- shToBeAddedB + 1L
+
         shToBeAddedA <- shToBeAddedA * 8L
         shToBeAddedB <- shToBeAddedB * 8L
+
         shToBeAddedA[indexZeroA] <- 0L
         shToBeAddedB[indexZeroB] <- 0L
+
         empR@holHours <- as.integer(empR@holHours + shToBeAddedA + shToBeAddedB)
+
       }
+
     }
 
     tempData.rdOT <- assignMH(hoursT = empT@regOT, hoursR = empR@rdOT)
@@ -466,12 +499,17 @@ setMethod(
     results <- callNextMethod(empT = empT, empR = empR)
 
     if (length(results[[1]]$ID) > 0) {
+
       if (empR@status != "reg") {
+
         results[[1]]$sal <- "a"
+
       } else {
+
         results[[1]] <- dplyr::left_join(x = results[[1]],
                                          y = payA,
                                          by = "month")
+
       }
 
       results[[1]]$scheme <- "m"
@@ -479,11 +517,16 @@ setMethod(
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
+
       tempData <- dplyr::left_join(x = results[[1]],
                                    y = maxReg)
+
       results[[1]] <- as.data.frame(tempData)
+
     } else {
+
       results[[1]] <- NA
+
     }
 
     return(results)
@@ -506,11 +549,15 @@ setMethod(
         mhDB$np <- as.integer((mhDB$mh * 0.5) + 0.5)
 
       } else {
+
         mhDB$np <- as.integer((mhDB$mh * (1/3)) + 0.5)
+
       }
 
     } else {
+
       mhDB <- NA
+
     }
 
     return(list(mhDB, tempData[[2]], tempData[[3]]))
@@ -523,6 +570,7 @@ setMethod(
   f = "assignEmp2",
   signature = "Supervisor",
   definition = function(empT, empR) {
+
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 

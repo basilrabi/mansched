@@ -175,9 +175,10 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
     })
 
-    # Get matching Employee-class and select only non-seasonal employees
+    # Get matching Employee-class and select only non-seasonal and non-agency
+    # employees
     empPool$matchClass <- sapply(listR, FUN = function(x) {
-      if (tempClass == class(x) & x@status != "sea")
+      if (tempClass == class(x) & (!x@status %in% c("sea", "age")))
         return(TRUE)
       else
         return(FALSE)
@@ -328,9 +329,10 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
         return(FALSE)
     })
 
-    # Get matching Employee-class and select only non-seasonal employees
+    # Get matching Employee-class and select only non-seasonal and non-agency
+    # employees
     empPool$matchClass <- sapply(listR, FUN = function(x) {
-      if (tempClass == class(x) & x@status != "sea")
+      if (tempClass == class(x) & !x@status %in% c("sea", "age"))
         return(TRUE)
       else
         return(FALSE)

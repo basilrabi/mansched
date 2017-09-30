@@ -78,7 +78,7 @@ validEmpClass <- c("division manager",
 #'
 #' @format character vector
 #' @export validEmpStatus
-validEmpStatus <- c("reg", "pro", "sea")
+validEmpStatus <- c("reg", "pro", "sea", "age")
 
 #' Payment scheme for regular non-RF
 #'

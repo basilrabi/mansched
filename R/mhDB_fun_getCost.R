@@ -53,14 +53,14 @@ NULL
 getCost <- function(mhDB, listR, wage, forecast) {
 
   # Fix for "no visible binding for global variable" note in R CMD check
-  sal <-
-    salM <-
-    ID <-
-    salH <-
-    mh <-
-    costCode <-
-    cost <-
-    XholHours <- NULL
+  costCode  <- NULL
+  cost      <- NULL
+  ID        <- NULL
+  mh        <- NULL
+  sal       <- NULL
+  salH      <- NULL
+  salM      <- NULL
+  XholHours <- NULL
 
   # Error if any ID in wage is duplicated
   if (anyDuplicated(wage$ID) > 0) {
@@ -85,7 +85,6 @@ getCost <- function(mhDB, listR, wage, forecast) {
     cat(paste(empID, collapse = "\n"))
     stop("Check wage data.")
   }
-
 
   # Assign if employee is RF or not
   wage$isRF <- sapply(wage$ID, FUN = function(x) {
@@ -140,16 +139,25 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   # Compute hourly rates
   tempData <- apply(wage[,2:6], MARGIN = 1, FUN = function(x) {
+
     sal <- c(NA, NA)
+
     if (x[2]) {
+
       sal[1] <- x[1] / 8
       sal[2] <- x[4] / 8
+
     } else {
+
       sal[1] <- x[1] / x[5]
       sal[2] <- x[4] / x[5]
+
       sal <- sal * 12
+
     }
+
     sal <- round(sal, digits = 2)
+
     return(sal)
   })
   wage$hRateA <- tempData[1,]
@@ -157,6 +165,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   wageM <- wage[, colnames(wage) %in% c("ID", "s", "sB")]
   wageH <- wage[, colnames(wage) %in% c("ID", "hRateA", "hRateB")]
+
   colnames(wageM)[c(2,3)] <- c("a", "b")
   colnames(wageH)[c(2,3)] <- c("a", "b")
 
