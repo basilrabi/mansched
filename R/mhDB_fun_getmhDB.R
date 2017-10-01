@@ -71,6 +71,7 @@
 #'   }
 #' @export getmhDB
 #' @importFrom tidyr gather
+#' @importFrom data.table rbindlist
 getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
   # Fix warning: Undefined global functions or variable
@@ -99,595 +100,52 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
   empReq <- tempData[[2]]
 
   # Create vector for indexing qualified employees
-  empPool$hasAviHours <- FALSE
-  empPool$matchClass <- FALSE
-  empPool$matchEquip <- FALSE
+  empPool$hasAviHours   <- FALSE
+  empPool$matchClass    <- FALSE
+  empPool$matchEquip    <- FALSE
   empPool$matchCostCode <- FALSE
 
   # Create vector for identifying selected employees to be used
   empPool$choice <- FALSE
 
-  # Initialize man hours database
-  mhDB <- data.frame(ID = NA,
-                     mh = NA,
-                     mhType = NA,
-                     month = NA,
-                     np = NA,
-                     costCode = NA,
-                     sal = NA,
-                     scheme = NA,
-                     status = NA,
-                     maxReg = NA)
-
-  # Assign regular and probationary employees to empReq - priority
-  for(i in 1:length(empReq[,1])) {
-
-    if (sum(getHours(listT[[i]])) == 0)
-      next
-
-    cat(paste("Priority assigning: ",
-              i,
-              " out of ",
-              length(empReq[,1]),
-              " requirements.",
-              sep = ""))
-
-    tempClass <- class(listT[[i]])
-
-    if (tempClass == "Operator") {
-
-      tempEquip <- listT[[i]]@equipment
-
-    } else {
-
-      tempEquip <- NA
-
-    }
-
-    tempCostCode <- listT[[i]]@costCode
-
-    # Get employee with available manhours
-    empPool$hasAviHours <- sapply(listR, FUN = function(x) {
-
-      tempHoursR <- getHours(x)
-
-      if (sum(tempHoursR) < 0.1)
-        return(FALSE)
-
-      tempHoursT <- getHours(listT[[i]])
-
-      tempHoursR[,"reg"] <- tempHoursR[,"reg"] + tempHoursR[,"rd"]
-      tempHoursR[,"sh"]  <- tempHoursR[,"sh"]  + tempHoursR[,"rs"]
-      tempHoursR[,"lh"]  <- tempHoursR[,"lh"]  + tempHoursR[,"rl"]
-      tempHoursR[,"nh"]  <- tempHoursR[,"nh"]  + tempHoursR[,"rn"]
-
-      tempHoursR[,"regOT"] <- tempHoursR[,"regOT"] + tempHoursR[,"rdOT"]
-      tempHoursR[,"shOT"]  <- tempHoursR[,"shOT"]  + tempHoursR[,"rsOT"]
-      tempHoursR[,"lhOT"]  <- tempHoursR[,"lhOT"]  + tempHoursR[,"rlOT"]
-      tempHoursR[,"nhOT"]  <- tempHoursR[,"nhOT"]  + tempHoursR[,"rnOT"]
-
-      tempHoursR[tempHoursT == 0] <- 0L
-
-      tempHours <- sum(tempHoursR)
-
-      if (tempHours > 0) {
-
-        return(TRUE)
-
-      } else {
-
-        return(FALSE)
-
-      }
-
-    })
-
-    # Get matching Employee-class and select only non-seasonal and non-agency
-    # employees
-    empPool$matchClass <- sapply(listR, FUN = function(x) {
-
-      if (tempClass == class(x) & (!x@status %in% c("sea", "age"))){
-
-        return(TRUE)
-
-      } else {
-
-        return(FALSE)
-
-      }
-
-    })
-
-    # Get matching equipment
-    empPool$matchEquip <- sapply(listR, FUN = function(x) {
-
-      if (tempClass != "Operator") {
-
-        return(TRUE)
-
-      } else {
-
-        if (class(x) != "Operator") {
-
-          return(FALSE)
-
-        } else {
-
-          if (tempEquip %in% x@equipment) {
-
-            return(TRUE)
-
-          } else {
-
-            return(FALSE)
-
-          }
-
-        }
-
-      }
-
-    })
-
-    # Get matching cost code
-    empPool$matchCostCode <- sapply(listR, FUN = function(x) {
-
-      if (tempCostCode %in% x@costCode) {
-
-        return(TRUE)
-
-      } else {
-
-        return(FALSE)
-
-      }
-
-
-    })
-
-    # Filter selections
-    empPool$choice <- apply(
-      empPool[,colnames(empPool) %in% c("hasAviHours",
-                                        "matchClass",
-                                        "matchEquip",
-                                        "matchCostCode")],
-      MARGIN = 1,
-      FUN = function(x) {
-        all(x)
-      }
-    )
-
-    cat(paste("\nFound ",sum(empPool$choice), " qualified.\n"))
-    cat("\n")
-
-    # Select choice and assign
-
-    index <- which(empPool$choice)
-
-    if (length(index) > 0) {
-
-      if (length(index) > 1) {
-
-        # Randomize
-        index <- sample(index)
-
-      }
-
-      # Assign
-      if (sum(getHours(listT[[i]])) > 0) {
-
-        for (j in index) {
-
-          suppressMessages(
-            tempData <- assignEmp2(empT = listT[[i]], empR = listR[[j]])
-          )
-
-          listT[[i]] <- tempData[[2]]
-          listR[[j]] <- tempData[[3]]
-
-          if (class(tempData[[1]]) != "logical")
-            mhDB <- dfAppend(mhDB, tempData[[1]])
-
-          if (sum(getHours(listT[[i]])) == 0)
-            break
-
-        }
-      }
-
-      remMH <- sapply(listR[index], FUN = function(x) {sum(getHours(x))})
-
-      toRM <- which(remMH < 1)
-
-      if (length(toRM) > 0) {
-
-        toRM    <- index[toRM]
-        empPool <- empPool[-toRM,]
-        listR   <- listR[-toRM]
-
-      }
-
-    }
-
-  }
-
-  remMH <- sapply(listT, FUN = function(x) {sum(getHours(x))})
-
-  toRM <- which(remMH < 1)
-
-  if (length(toRM) > 0) {
-
-    empReq <- empReq[-toRM,]
-    listT  <- listT[-toRM]
-
-  }
-
-  # Assign regular and probationary employees to empReq - non priority
-  for(i in 1:length(empReq[,1])) {
-
-    if (sum(getHours(listT[[i]])) == 0)
-      next
-
-    cat(paste("Non-priority assigning: ",
-              i,
-              " out of ",
-              length(empReq[,1]),
-              " requirements.",
-              sep = ""))
-
-    tempClass <- class(listT[[i]])
-
-    if (tempClass == "Operator") {
-
-      tempEquip <- listT[[i]]@equipment
-
-    } else {
-
-      tempEquip <- NA
-
-    }
-
-    tempCostCode <- listT[[i]]@costCode
-
-    # Get employee with available manhours
-    empPool$hasAviHours <- sapply(listR, FUN = function(x) {
-
-      tempHoursR <- getHours(x)
-
-      if (sum(tempHoursR) < 0.1)
-        return(FALSE)
-
-      tempHoursT <- getHours(listT[[i]])
-
-      tempHoursR[,"reg"] <- tempHoursR[,"reg"] + tempHoursR[,"rd"]
-      tempHoursR[,"sh"]  <- tempHoursR[,"sh"]  + tempHoursR[,"rs"]
-      tempHoursR[,"lh"]  <- tempHoursR[,"lh"]  + tempHoursR[,"rl"]
-      tempHoursR[,"nh"]  <- tempHoursR[,"nh"]  + tempHoursR[,"rn"]
-
-      tempHoursR[,"regOT"] <- tempHoursR[,"regOT"] + tempHoursR[,"rdOT"]
-      tempHoursR[,"shOT"]  <- tempHoursR[,"shOT"]  + tempHoursR[,"rsOT"]
-      tempHoursR[,"lhOT"]  <- tempHoursR[,"lhOT"]  + tempHoursR[,"rlOT"]
-      tempHoursR[,"nhOT"]  <- tempHoursR[,"nhOT"]  + tempHoursR[,"rnOT"]
-
-      tempHoursR[tempHoursT == 0] <- 0L
-
-      tempHours <- sum(tempHoursR)
-
-      if (tempHours > 0) {
-
-        return(TRUE)
-
-      } else {
-
-        return(FALSE)
-
-      }
-
-    })
-
-    # Get matching Employee-class and select only non-seasonal and non-agency
-    # employees
-    empPool$matchClass <- sapply(listR, FUN = function(x) {
-
-      if (tempClass == class(x) & !x@status %in% c("sea", "age")) {
-
-        return(TRUE)
-
-      } else {
-
-        return(FALSE)
-
-      }
-
-    })
-
-    # Get matching equipment
-    empPool$matchEquip <- sapply(listR, FUN = function(x) {
-
-      if (tempClass != "Operator") {
-
-        return(TRUE)
-
-      } else {
-
-        if (class(x) != "Operator") {
-
-          return(FALSE)
-
-        } else {
-
-          if (tempEquip %in% x@equipment) {
-
-            return(TRUE)
-
-          } else {
-
-            return(FALSE)
-
-          }
-
-        }
-      }
-
-    })
-
-    # Filter selections
-    empPool$choice <- apply(
-      empPool[,colnames(empPool) %in% c("hasAviHours",
-                                        "matchClass",
-                                        "matchEquip")],
-      MARGIN = 1,
-      FUN = function(x) {
-        all(x)
-      }
-    )
-
-    cat(paste("\nFound ",sum(empPool$choice), " qualified.\n"))
-    cat("\n")
-
-    # Select choice and assign
-    index <- which(empPool$choice)
-
-    if (length(index) > 0) {
-
-      if (length(index) > 1) {
-
-        # Randomize
-        index <- sample(index)
-
-      }
-
-      # Assign
-      if (sum(getHours(listT[[i]])) > 0) {
-
-        for (j in index) {
-
-          suppressMessages(
-            tempData <- assignEmp2(empT = listT[[i]], empR = listR[[j]])
-          )
-
-          listT[[i]] <- tempData[[2]]
-          listR[[j]] <- tempData[[3]]
-
-          if (class(tempData[[1]]) != "logical")
-            mhDB <- dfAppend(mhDB, tempData[[1]])
-
-          if (sum(getHours(listT[[i]])) == 0)
-            break
-
-        }
-
-      }
-
-      remMH <- sapply(listR[index], FUN = function(x) {sum(getHours(x))})
-
-      toRM <- which(remMH < 1)
-
-      if (length(toRM) > 0) {
-
-        toRM    <- index[toRM]
-        empPool <- empPool[-toRM,]
-        listR   <- listR[-toRM]
-
-      }
-
-    }
-
-  }
-
-  remMH <- sapply(listT, FUN = function(x) {sum(getHours(x))})
-
-  toRM <- which(remMH < 1)
-
-  if (length(toRM) > 0) {
-
-    empReq <- empReq[-toRM,]
-    listT  <- listT[-toRM]
-
-  }
-
-  # Assign all other employees to empReq
-  for(i in 1:length(empReq[,1])) {
-
-    if (sum(getHours(listT[[i]])) == 0)
-      next
-
-    cat(paste("All available employees assigning: ",
-              i,
-              " out of ",
-              length(empReq[,1]),
-              " requirements.",
-              sep = ""))
-
-    tempClass <- class(listT[[i]])
-
-    if (tempClass == "Operator") {
-
-      tempEquip <- listT[[i]]@equipment
-
-    } else {
-
-      tempEquip <- NA
-
-    }
-
-    tempCostCode <- listT[[i]]@costCode
-
-    # Get employee with available manhours
-    empPool$hasAviHours <- sapply(listR, FUN = function(x) {
-
-      tempHoursR <- getHours(x)
-
-      if (sum(tempHoursR) < 0.1)
-        return(FALSE)
-
-      tempHoursT <- getHours(listT[[i]])
-
-      tempHoursR[,"reg"] <- tempHoursR[,"reg"] + tempHoursR[,"rd"]
-      tempHoursR[,"sh"]  <- tempHoursR[,"sh"]  + tempHoursR[,"rs"]
-      tempHoursR[,"lh"]  <- tempHoursR[,"lh"]  + tempHoursR[,"rl"]
-      tempHoursR[,"nh"]  <- tempHoursR[,"nh"]  + tempHoursR[,"rn"]
-
-      tempHoursR[,"regOT"] <- tempHoursR[,"regOT"] + tempHoursR[,"rdOT"]
-      tempHoursR[,"shOT"]  <- tempHoursR[,"shOT"]  + tempHoursR[,"rsOT"]
-      tempHoursR[,"lhOT"]  <- tempHoursR[,"lhOT"]  + tempHoursR[,"rlOT"]
-      tempHoursR[,"nhOT"]  <- tempHoursR[,"nhOT"]  + tempHoursR[,"rnOT"]
-
-      tempHoursR[tempHoursT == 0] <- 0L
-
-      tempHours <- sum(tempHoursR)
-
-      if (tempHours > 0) {
-
-        return(TRUE)
-
-      } else {
-
-        return(FALSE)
-
-      }
-
-    })
-
-    # Get matching Employee-class
-    empPool$matchClass <- sapply(listR, FUN = function(x) {
-
-      if (tempClass == class(x)) {
-
-        return(TRUE)
-
-      } else {
-
-        return(FALSE)
-
-      }
-
-
-    })
-
-    # Get matching equipment
-    empPool$matchEquip <- sapply(listR, FUN = function(x) {
-
-      if (tempClass != "Operator") {
-
-        return(TRUE)
-
-      } else {
-
-        if (class(x) != "Operator") {
-
-          return(FALSE)
-
-        } else {
-
-          if (tempEquip %in% x@equipment) {
-
-            return(TRUE)
-
-          } else {
-
-            return(FALSE)
-
-          }
-
-        }
-
-      }
-
-    })
-
-    # Filter selections
-    empPool$choice <- apply(
-      empPool[,colnames(empPool) %in% c("hasAviHours",
-                                        "matchClass",
-                                        "matchEquip")],
-      MARGIN = 1,
-      FUN = function(x) {
-        all(x)
-      })
-
-    cat(paste("\nFound ",sum(empPool$choice), " qualified.\n"))
-    cat("\n")
-
-    # Select choice and assign
-    index <- which(empPool$choice)
-
-    if (length(index) > 0) {
-
-      if (length(index) > 1) {
-
-        # Randomize
-        index <- sample(index)
-
-      }
-
-      # Assign
-      if (sum(getHours(listT[[i]])) > 0) {
-
-        for (j in index) {
-
-          suppressMessages(
-            tempData <- assignEmp2(empT = listT[[i]], empR = listR[[j]])
-          )
-
-          listT[[i]] <- tempData[[2]]
-          listR[[j]] <- tempData[[3]]
-
-          if (class(tempData[[1]]) != "logical")
-            mhDB <- dfAppend(mhDB, tempData[[1]])
-
-          if (sum(getHours(listT[[i]])) == 0)
-            break
-
-        }
-
-      }
-
-      remMH <- sapply(listR[index], FUN = function(x) {sum(getHours(x))})
-
-      toRM <- which(remMH < 1)
-
-      if (length(toRM) > 0) {
-
-        toRM    <- index[toRM]
-        empPool <- empPool[-toRM,]
-        listR   <- listR[-toRM]
-
-      }
-
-    }
-
-  }
-
-  remMH <- sapply(listT, FUN = function(x) {sum(getHours(x))})
-
-  toRM <- which(remMH < 1)
-
-  if (length(toRM) > 0) {
-
-    empReq <- empReq[-toRM,]
-    listT  <- listT[-toRM]
-
-  }
+  tempData1 <- assignPool(empReq   = empReq,
+                          empPool  = empPool,
+                          listT    = listT,
+                          listR    = listR,
+                          prioStat = c("reg", "pro"),
+                          prioCode = TRUE)
+
+  empReq  <- tempData1[[1]]
+  empPool <- tempData1[[2]]
+  listT   <- tempData1[[3]]
+  listR   <- tempData1[[4]]
+
+  tempData2 <- assignPool(empReq   = empReq,
+                          empPool  = empPool,
+                          listT    = listT,
+                          listR    = listR,
+                          prioStat = c("reg", "pro"))
+
+  empReq  <- tempData2[[1]]
+  empPool <- tempData2[[2]]
+  listT   <- tempData2[[3]]
+  listR   <- tempData2[[4]]
+
+  tempData3 <- assignPool(empReq   = empReq,
+                          empPool  = empPool,
+                          listT    = listT,
+                          listR    = listR)
+
+  empReq  <- tempData3[[1]]
+  empPool <- tempData3[[2]]
+  listT   <- tempData3[[3]]
+  listR   <- tempData3[[4]]
+
+  mhDB <- data.table::rbindlist(l = list(tempData1[[5]],
+                                         tempData2[[5]],
+                                         tempData3[[5]]))
+
+  mhDB <- as.data.frame(mhDB)
 
   # Assign excess regular hours to a dummy cost code
 
@@ -741,9 +199,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
       }
 
     } else {
-
       mhPool <- NULL
-
     }
 
   }

@@ -185,12 +185,16 @@ setMethod(
     # This must be confirmed with accounting first
 
     if (theObject@status == "reg") {
+
       holDays <- apply(calDays[,c("lh", "sh", "nh")], MARGIN = 1, FUN = sum)
       maxRegF <- calDays[,c("reg")]
+
     } else {
+
       holDays <- apply(calDays[,c("lh", "sh")], MARGIN = 1, FUN = sum)
       # holDays <- calDays[,c("lh")]
       maxRegF <- apply(calDays[,c("reg", "nh")], MARGIN = 1, FUN = sum)
+
     }
 
     regDays <- calDays[,c("reg")]
@@ -228,21 +232,21 @@ setMethod(
                         d.ho = NA,
                         d.rh = NA) {
 
-    tempData <- callNextMethod(theObject = theObject,
-                               ID = ID,
-                               name = name,
+    tempData <- callNextMethod(theObject   = theObject,
+                               ID          = ID,
+                               name        = name,
                                designation = designation,
-                               attendance = attendance,
-                               costCode = costCode,
-                               status = status,
-                               cBegin = cBegin,
-                               cEnd = cEnd,
-                               inHouse = inHouse,
-                               restday = restday,
-                               hol = hol,
-                               d.rd = d.rd,
-                               d.ho = d.ho,
-                               d.rh = d.rh)
+                               attendance  = attendance,
+                               costCode    = costCode,
+                               status      = status,
+                               cBegin      = cBegin,
+                               cEnd        = cEnd,
+                               inHouse     = inHouse,
+                               restday     = restday,
+                               hol         = hol,
+                               d.rd        = d.rd,
+                               d.ho        = d.ho,
+                               d.rh        = d.rh)
     return(tempData[[1]])
   }
 )
@@ -271,21 +275,21 @@ setMethod(
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject = theObject,
-                               ID = ID,
-                               name = name,
+    tempData <- callNextMethod(theObject   = theObject,
+                               ID          = ID,
+                               name        = name,
                                designation = designation,
-                               attendance = attendance,
-                               costCode = costCode,
-                               status = status,
-                               cBegin = cBegin,
-                               cEnd = cEnd,
-                               inHouse = inHouse,
-                               restday = restday,
-                               hol = hol,
-                               d.rd = d.rd,
-                               d.ho = d.ho,
-                               d.rh = d.rh)
+                               attendance  = attendance,
+                               costCode    = costCode,
+                               status      = status,
+                               cBegin      = cBegin,
+                               cEnd        = cEnd,
+                               inHouse     = inHouse,
+                               restday     = restday,
+                               hol         = hol,
+                               d.rd        = d.rd,
+                               d.ho        = d.ho,
+                               d.rh        = d.rh)
 
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
@@ -327,22 +331,22 @@ setMethod(
     if (is.na(RF))
       RF <- FALSE
 
-    tempData <- callNextMethod(theObject = theObject,
-                               ID = ID,
-                               name = name,
+    tempData <- callNextMethod(theObject   = theObject,
+                               ID          = ID,
+                               name        = name,
                                designation = designation,
-                               attendance = attendance,
-                               costCode = costCode,
-                               status = status,
-                               cBegin = cBegin,
-                               cEnd = cEnd,
-                               inHouse = inHouse,
-                               restday = restday,
-                               hol = hol,
-                               OT = OT,
-                               d.rd = d.rd,
-                               d.ho = d.ho,
-                               d.rh = d.rh)
+                               attendance  = attendance,
+                               costCode    = costCode,
+                               status      = status,
+                               cBegin      = cBegin,
+                               cEnd        = cEnd,
+                               inHouse     = inHouse,
+                               restday     = restday,
+                               hol         = hol,
+                               OT          = OT,
+                               d.rd        = d.rd,
+                               d.ho        = d.ho,
+                               d.rh        = d.rh)
 
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
@@ -413,22 +417,22 @@ setMethod(
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject = theObject,
-                               ID = ID,
-                               name = name,
+    tempData <- callNextMethod(theObject   = theObject,
+                               ID          = ID,
+                               name        = name,
                                designation = designation,
-                               attendance = attendance,
-                               costCode = costCode,
-                               status = status,
-                               cBegin = cBegin,
-                               cEnd = cEnd,
-                               inHouse = inHouse,
-                               restday = restday,
-                               hol = hol,
-                               OT = OT,
-                               d.rd = d.rd,
-                               d.ho = d.ho,
-                               d.rh = d.rh)
+                               attendance  = attendance,
+                               costCode    = costCode,
+                               status      = status,
+                               cBegin      = cBegin,
+                               cEnd        = cEnd,
+                               inHouse     = inHouse,
+                               restday     = restday,
+                               hol         = hol,
+                               OT          = OT,
+                               d.rd        = d.rd,
+                               d.ho        = d.ho,
+                               d.rh        = d.rh)
 
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
@@ -525,22 +529,22 @@ setMethod(
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject = theObject,
-                               ID = ID,
-                               name = name,
+    tempData <- callNextMethod(theObject   = theObject,
+                               ID          = ID,
+                               name        = name,
                                designation = designation,
-                               attendance = attendance,
-                               costCode = costCode,
-                               status = status,
-                               cBegin = cBegin,
-                               cEnd = cEnd,
-                               inHouse = inHouse,
-                               restday = restday,
-                               hol = hol,
-                               OT = OT,
-                               d.rd = d.rd,
-                               d.ho = d.ho,
-                               d.rh = d.rh)
+                               attendance  = attendance,
+                               costCode    = costCode,
+                               status      = status,
+                               cBegin      = cBegin,
+                               cEnd        = cEnd,
+                               inHouse     = inHouse,
+                               restday     = restday,
+                               hol         = hol,
+                               OT          = OT,
+                               d.rd        = d.rd,
+                               d.ho        = d.ho,
+                               d.rh        = d.rh)
 
     theObject <- tempData[[1]]
 
@@ -575,22 +579,22 @@ setMethod(
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject = theObject,
-                               ID = ID,
-                               name = name,
+    tempData <- callNextMethod(theObject   = theObject,
+                               ID          = ID,
+                               name        = name,
                                designation = designation,
-                               attendance = attendance,
-                               costCode = costCode,
-                               status = status,
-                               cBegin = cBegin,
-                               cEnd = cEnd,
-                               inHouse = inHouse,
-                               restday = restday,
-                               hol = hol,
-                               OT = OT,
-                               d.rd = d.rd,
-                               d.ho = d.ho,
-                               d.rh = d.rh)
+                               attendance  = attendance,
+                               costCode    = costCode,
+                               status      = status,
+                               cBegin      = cBegin,
+                               cEnd        = cEnd,
+                               inHouse     = inHouse,
+                               restday     = restday,
+                               hol         = hol,
+                               OT          = OT,
+                               d.rd        = d.rd,
+                               d.ho        = d.ho,
+                               d.rh        = d.rh)
 
     theObject <- tempData[[1]]
     theObject@isRF <- FALSE
@@ -624,22 +628,22 @@ setMethod(
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject = theObject,
-                               ID = ID,
-                               name = name,
+    tempData <- callNextMethod(theObject   = theObject,
+                               ID          = ID,
+                               name        = name,
                                designation = designation,
-                               attendance = attendance,
-                               costCode = costCode,
-                               status = status,
-                               cBegin = cBegin,
-                               cEnd = cEnd,
-                               inHouse = inHouse,
-                               restday = restday,
-                               hol = hol,
-                               OT = OT,
-                               d.rd = d.rd,
-                               d.ho = d.ho,
-                               d.rh = d.rh)
+                               attendance  = attendance,
+                               costCode    = costCode,
+                               status      = status,
+                               cBegin      = cBegin,
+                               cEnd        = cEnd,
+                               inHouse     = inHouse,
+                               restday     = restday,
+                               hol         = hol,
+                               OT          = OT,
+                               d.rd        = d.rd,
+                               d.ho        = d.ho,
+                               d.rh        = d.rh)
 
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
@@ -701,22 +705,22 @@ setMethod(
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject = theObject,
-                               ID = ID,
-                               name = name,
+    tempData <- callNextMethod(theObject   = theObject,
+                               ID          = ID,
+                               name        = name,
                                designation = designation,
-                               attendance = attendance,
-                               costCode = costCode,
-                               status = status,
-                               cBegin = cBegin,
-                               cEnd = cEnd,
-                               inHouse = inHouse,
-                               restday = restday,
-                               hol = hol,
-                               OT = OT,
-                               d.rd = d.rd,
-                               d.ho = d.ho,
-                               d.rh = d.rh)
+                               attendance  = attendance,
+                               costCode    = costCode,
+                               status      = status,
+                               cBegin      = cBegin,
+                               cEnd        = cEnd,
+                               inHouse     = inHouse,
+                               restday     = restday,
+                               hol         = hol,
+                               OT          = OT,
+                               d.rd        = d.rd,
+                               d.ho        = d.ho,
+                               d.rh        = d.rh)
 
     theObject <- tempData[[1]]
     calDays <- tempData[[2]]
@@ -749,6 +753,7 @@ setMethod(
 
     # Vectorize equipment
     equipment <- strsplit(x = equipment, split = " ", fixed = TRUE)[[1]]
+    equipment <- unique(equipment)
 
     if (all(equipment %in% validEquipment)) {
       theObject@equipment <- equipment
@@ -835,9 +840,9 @@ setMethod(
     if (is.na(spareFactor))
       spareFactor <- 1
 
-    theObject <- callNextMethod(theObject = theObject,
-                                ID = ID,
-                                costCode = costCode,
+    theObject <- callNextMethod(theObject   = theObject,
+                                ID          = ID,
+                                costCode    = costCode,
                                 spareFactor = spareFactor)
 
     theObject@reg <- as.integer(calDays[,c("reg")] * 8 * theObject@spareFactor)
@@ -863,9 +868,9 @@ setMethod(
     if (is.na(spareFactor))
       spareFactor <- 1
 
-    theObject <- callNextMethod(theObject = theObject,
-                                ID = ID,
-                                costCode = costCode,
+    theObject <- callNextMethod(theObject   = theObject,
+                                ID          = ID,
+                                costCode    = costCode,
                                 spareFactor = spareFactor)
 
     theObject@reg <- as.integer(calDays[,c("reg")] * 8 *
@@ -897,9 +902,9 @@ setMethod(
     if (is.na(spareFactor))
       spareFactor <- 1
 
-    theObject <- callNextMethod(theObject = theObject,
-                                ID = ID,
-                                costCode = costCode,
+    theObject <- callNextMethod(theObject   = theObject,
+                                ID          = ID,
+                                costCode    = costCode,
                                 spareFactor = spareFactor)
 
     d.reg <- mdtProb$reg + mdtProb$rd
@@ -966,13 +971,13 @@ setMethod(
     if (is.na(spareFactor))
       spareFactor <- 1
 
-    theObject <- callNextMethod(theObject = theObject,
-                                ID = ID,
-                                costCode = costCode,
-                                OT = OT,
-                                mdtProb = mdtProb,
+    theObject <- callNextMethod(theObject   = theObject,
+                                ID          = ID,
+                                costCode    = costCode,
+                                OT          = OT,
+                                mdtProb     = mdtProb,
                                 spareFactor = spareFactor,
-                                monthSched = monthSched)
+                                monthSched  = monthSched)
 
     if (is.na(equipment))
       stop("No equipment assigned")
@@ -998,13 +1003,13 @@ setMethod(
 #' @export createEmp
 createEmp <- function(empClass) {
   switch(empClass,
-         "division manager" = division_manager(),
-         "group manager" = group_manager(),
+         "division manager"   = division_manager(),
+         "group manager"      = group_manager(),
          "department manager" = department_manager(),
-         "section head" = section_head(),
-         "clerk" = clerk(),
-         "technical" = technical(),
-         "supervisor" = supervisor(),
-         "laborer" = laborer(),
-         "operator" = operator())
+         "section head"       = section_head(),
+         "clerk"              = clerk(),
+         "technical"          = technical(),
+         "supervisor"         = supervisor(),
+         "laborer"            = laborer(),
+         "operator"           = operator())
 }
