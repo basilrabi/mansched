@@ -60,66 +60,95 @@ getCost <- function(mhDB, listR, wage, forecast) {
   sal       <- NULL
   salH      <- NULL
   salM      <- NULL
+  status    <- NULL
   XholHours <- NULL
 
   # Error if any ID in wage is duplicated
   if (anyDuplicated(wage$ID) > 0) {
+
     tempData <- wage$ID[which(duplicated(wage$ID))]
+
     cat(paste("Duplicated :", tempData, "\n", sep = ""))
     stop("There must be no duplicated ID's in wage data!")
+
   }
 
   # Error if any ID in listR is not in wage$ID
   empID <- sapply(listR, FUN = function(x) x@ID)
+
   if (any(!empID %in% wage$ID)) {
+
     empID <- empID[which(!empID %in% wage$ID)]
+
     cat(paste("No wage data for :", empID, "\n", sep = ""))
     stop("All ID's must have wage data")
+
   }
 
   # Error if wage data is missing or zero
-  wage <- wage[wage$ID %in% empID, ]
+  wage  <- wage[wage$ID %in% empID, ]
   tmpID <- wage$ID[which(is.na(wage$s) | wage$s < 100)]
+
   if (length(tmpID) > 0) {
+
     cat("Wage data of the following is either NA or less than 100 pesos:\n")
     cat(paste(empID, collapse = "\n"))
     stop("Check wage data.")
+
   }
 
   # Assign if employee is RF or not
   wage$isRF <- sapply(wage$ID, FUN = function(x) {
+
     index <- which(empID == x)
-    # index
+
     isRF(listR[[index]])
   })
 
   # Assign if employee is staff or not
   wage$isStaff <- sapply(wage$ID, FUN = function(x) {
+
     index <- which(empID == x)
+
     is(listR[[index]], "Staff")
   })
 
   # Get salary increase
   wage$sB <- apply(wage[,c(2:4)], MARGIN = 1, FUN = function(x) {
+
     sal <- NA
 
     if (forecast) {
 
-      if (x[2])
+      if (x[2]) {
+
         sal <- x[1]
-      else if (x[3])
+
+      } else if (x[3]) {
+
         sal <- x[1]
-      else
+
+      } else {
+
         sal <- x[1]
+
+      }
 
     } else {
 
-      if (x[2])
+      if (x[2]) {
+
         sal <- x[1] + 105
-      else if (x[3])
+
+      } else if (x[3]) {
+
         sal <- x[1] + 3500
-      else
+
+      } else {
+
         sal <- x[1] + 3000
+
+      }
 
     }
 
@@ -129,11 +158,11 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   # Assign totHours
   wage$totHours <- sapply(wage$ID, FUN = function(x) {
-    index <- which(empID == x)
 
+    # index <- which(empID == x)
     # sum(listR[[index]]@totHours)
-    # total days per year is 313 as advised by Accounting
 
+    # total days per year is 313 as advised by Accounting
     return(313 * 8)
   })
 
@@ -160,6 +189,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
     return(sal)
   })
+
   wage$hRateA <- tempData[1,]
   wage$hRateB <- tempData[2,]
 
@@ -192,8 +222,8 @@ getCost <- function(mhDB, listR, wage, forecast) {
                  !colnames(mhDB) %in% c("scheme")]
 
   ## Separate Regular Employees
-  mhDB.m.R <- mhDB.m[which(mhDB.m$isReg),
-                     !colnames(mhDB.m) %in% c("sal", "isReg", "maxReg")]
+  mhDB.m.R <- mhDB.m[mhDB.m$status == "reg",
+                     !colnames(mhDB.m) %in% c("sal", "status", "maxReg")]
 
   ### Get isOT.R
   suppressMessages(
@@ -303,14 +333,15 @@ getCost <- function(mhDB, listR, wage, forecast) {
   mhDB.m.R.OT$costWage <- round(
     mhDB.m.R.OT$salH * mhDB.m.R.OT$mh * mhDB.m.R.OT$premiumR, digits = 2
   )
+
   mhDB.m.R.OT$costNP <- round(
     mhDB.m.R.OT$salH * mhDB.m.R.OT$np * mhDB.m.R.OT$npR, digits = 2
   )
 
-  ## Separate Non-regular Employees
+  ## Separate probationary and seasonal employees
 
-  mhDB.m.S <- mhDB.m[which(!mhDB.m$isReg),
-                     !colnames(mhDB.m) %in% c("sal", "isReg", "maxReg")]
+  mhDB.m.S <- mhDB.m[mhDB.m$status %in% c("pro", "sea"),
+                     !colnames(mhDB.m) %in% c("sal", "status", "maxReg")]
 
   ### Get isOT.S
   suppressMessages(
@@ -386,6 +417,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
   #### These costs are purely worked
   mhDB.m.S.Reg$costWage <- round(mhDB.m.S.Reg$Xmh * mhDB.m.S.Reg$salMB,
                                  digits = 2)
+
   mhDB.m.S.Reg$costNP <- round(
     mhDB.m.S.Reg$salH * mhDB.m.S.Reg$np * mhDB.m.S.Reg$npS, digits = 2)
 
@@ -413,6 +445,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
   mhDB.m.S.OT$costWage <- round(
     mhDB.m.S.OT$salH * mhDB.m.S.OT$mh * mhDB.m.S.OT$premiumS, digits = 2
   )
+
   mhDB.m.S.OT$costNP <- round(
     mhDB.m.S.OT$salH * mhDB.m.S.OT$np * mhDB.m.S.OT$npS, digits = 2
   )
@@ -433,8 +466,8 @@ getCost <- function(mhDB, listR, wage, forecast) {
   )
 
   ## Separate Regular Employees
-  mhDB.d.R <- mhDB.d[which(mhDB.d$isReg),
-                     !colnames(mhDB.d) %in% c("isReg", "maxReg")]
+  mhDB.d.R <- mhDB.d[mhDB.d$status == "reg",
+                     !colnames(mhDB.d) %in% c("status", "maxReg")]
 
   ### Get premium
   suppressMessages(
@@ -449,6 +482,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
   mhDB.d.R$costWage <- round(
     mhDB.d.R$salH * mhDB.d.R$mh * mhDB.d.R$premiumR, digits = 2
   )
+
   mhDB.d.R$costNP <- round(
     mhDB.d.R$salH * mhDB.d.R$np * mhDB.d.R$npR, digits = 2
   )
@@ -459,9 +493,9 @@ getCost <- function(mhDB, listR, wage, forecast) {
   ### Separate OT
   mhDB.d.R.OT <- mhDB.d.R[which(mhDB.d.R$isOT.R),]
 
-  ## Separate Non-regular Employees
-  mhDB.d.S <- mhDB.d[which(!mhDB.d$isReg),
-                     !colnames(mhDB.d) %in% c("isReg", "maxReg")]
+  ## Separate probationary and seasonal employees
+  mhDB.d.S <- mhDB.d[mhDB.d$status %in% c("pro", "sea"),
+                     !colnames(mhDB.d) %in% c("status", "maxReg")]
 
   ### Get premium
   suppressMessages(
@@ -476,6 +510,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
   mhDB.d.S$costWage <- round(
     mhDB.d.S$salH * mhDB.d.S$mh * mhDB.d.S$premiumS, digits = 2
   )
+
   mhDB.d.S$costNP <- round(
     mhDB.d.S$salH * mhDB.d.S$np * mhDB.d.S$npS, digits = 2
   )
@@ -558,6 +593,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
   hol.mhDB.d <- hol.mhDB.d %>%
     dplyr::group_by(ID, month) %>%
     dplyr::mutate(totHours = sum(mh))
+
   hol.mhDB.m <- hol.mhDB.m %>%
     dplyr::group_by(ID, month) %>%
     dplyr::mutate(totHours = sum(mh))
@@ -572,11 +608,16 @@ getCost <- function(mhDB, listR, wage, forecast) {
   hol.mhDB.d$XcostWage <- round(hol.mhDB.d$X * hol.mhDB.d$costWage, digits = 2)
 
   ## Separate regular and non-regular employees
-  hol.mhDB.d.R <- hol.mhDB.d[hol.mhDB.d$isReg,]
-  hol.mhDB.d.S <- hol.mhDB.d[!hol.mhDB.d$isReg,]
+  ## Separate employees by status
+  hol.mhDB.d.R <- hol.mhDB.d[hol.mhDB.d$status == "reg",]
+  hol.mhDB.d.S <- hol.mhDB.d[hol.mhDB.d$status %in% c("pro", "sea"),]
 
   # Compute for Employee Allowances
   cat("\nComputing employee allowances.\n")
+
+  # FIXME
+  # Computing employee allowances must be separated for in-house and agency
+
   suppressMessages(
     allowance <- data.table::rbindlist(lapply(listR, getAllowance))
   )
@@ -599,6 +640,10 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   # Compute for Safety Bonus
   cat("\nComputing safety bonus.\n")
+
+  # FIXME
+  # Computing safety bonus might be separated for in-house and agency
+
   mhDB.SB <- mhDB %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(mh = sum(mh))
@@ -635,7 +680,8 @@ getCost <- function(mhDB, listR, wage, forecast) {
   # Compute for SSS contribution of employer
   cat("\nComputing SSS contribution.\n")
 
-  # savePoint2
+  # FIXME
+  # SSS contribution of agency must be separated
 
   #- SSS Contribution is fixed
   #- For monthly wagers, SSS is based on basic monthly salary
@@ -646,17 +692,25 @@ getCost <- function(mhDB, listR, wage, forecast) {
     suppressMessages(tempData <- getCM(x))
 
     if (!isReg(x)) {
+
       tempData$sal <- "a"
+
     } else {
+
       if (isRF(x)) {
+
         suppressMessages(
           tempData <- dplyr::left_join(tempData, payB)
         )
+
       } else {
+
         suppressMessages(
           tempData <- dplyr::left_join(tempData, payA)
         )
+
       }
+
     }
 
     if (isRF(x)) {
@@ -680,6 +734,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
           wageEmp[!wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")]
         )
       )
+
     }
 
     tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
@@ -715,8 +770,10 @@ getCost <- function(mhDB, listR, wage, forecast) {
   mhDB.SSS <- as.data.frame(mhDB.SSS)
 
   # Compute for Pag-ibig contribution of employer
-
   cat("\nComputing Pag-ibig contributions.\n")
+
+  # FIXME
+  # Pag-ibig contributions of agency must be separated
 
   mhDB.PI <- mhDB %>%
     dplyr::group_by(ID, month, costCode) %>%
@@ -734,16 +791,21 @@ getCost <- function(mhDB, listR, wage, forecast) {
   mhDB.PI <- as.data.frame(mhDB.PI)
 
   # Compute for Phil-Health contribution of employer
-
   cat("\nComputing Philhealth contribution.\n")
+
+  # FIXME
+  # Philhealth contribution of agency must be separated
 
   PHdb <- lapply(listR, FUN = function(x) {
 
     suppressMessages(tempData <- getCM(x))
 
     if (!isReg(x)) {
+
       tempData$sal <- "a"
+
     } else {
+
       if (isRF(x)) {
 
         suppressMessages(
@@ -757,6 +819,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
         )
 
       }
+
     }
 
     if (isRF(x)) {
@@ -771,6 +834,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
       tempData$salM <- tempData$salM2
 
       tempData <- tempData[, !colnames(tempData) %in% c("salM2")]
+
     } else {
 
       suppressMessages(
@@ -817,6 +881,9 @@ getCost <- function(mhDB, listR, wage, forecast) {
   # Compute for Leave Commutation
   cat("\nComputing leave commutation.\n")
 
+  # FIXME
+  # Leave commutation of agency may be separated
+
   ## Get maxReg
 
   maxRegDB <- lapply(listR, FUN = function(x) {
@@ -830,14 +897,14 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   ### Separate regular employees
 
-  mhDB.RH.R <- mhDB[mhDB$isReg &
+  mhDB.RH.R <- mhDB[mhDB$status == "reg" &
                       mhDB$mhType == "reg",] %>%
     dplyr::group_by(ID, month, sal) %>%
     dplyr::summarise(mh = sum(mh))
 
-  ### Separate non-regular employee
+  ### Separate probationary and seasonal employees
 
-  mhDB.RH.S <- mhDB[!mhDB$isReg &
+  mhDB.RH.S <- mhDB[mhDB$status %in% c("pro", "sea") &
                       mhDB$mhType %in% c("reg", "nh"),] %>%
     dplyr::group_by(ID, month, sal) %>%
     dplyr::summarise(mh = sum(mh))
@@ -868,13 +935,21 @@ getCost <- function(mhDB, listR, wage, forecast) {
     z$LH <- 0
 
     for (i in 1:12) {
+
       if (LC > 0) {
+
         minus <- min(z$absence[i], LC)
         z$LH[i] <- minus
         LC <- LC - minus
-      } else
+
+      } else {
+
         break
+
+      }
+
     }
+
     z$LH[4] <- z$LH[4] + LC
 
     if (sum(z$LH) != listR[[tempIndex]]@leaveHours)
@@ -919,10 +994,13 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   ## Get cost
   mhDB.LC$cost <- round(mhDB.LC$X * mhDB.LC$LC, digits = 2)
-  mhDB.LC <- as.data.frame(mhDB.LC)
+  mhDB.LC      <- as.data.frame(mhDB.LC)
 
   # Compute for Hospital and Medical Expenses
   cat("\nComputing hospital and medical expenses.\n")
+
+  # FIXME
+  # Hospital and medical expenses for agency must be separated
 
   suppressMessages(
     hm <- data.table::rbindlist(lapply(listR, getHM))
@@ -946,6 +1024,9 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   # Compute for 13th month pay
   cat("\nComputing 13th month pay.\n")
+
+  # FIXME
+  # 13th mp for agency must be separated
 
   mp13 <- data.table::rbindlist(lapply(listR, FUN = function(x) {
 
@@ -975,22 +1056,26 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   mhDB.13mp$cost <- round(mhDB.13mp$X * mhDB.13mp$mp, digits = 2)
 
-  ## Separate 13th month pay for regular and non-regular as requested by
-  ## accounting
+  ## Separate 13th month pay for regular and non-regular in-house as requested
+  ## by accounting
 
-  accr.13mp <- unique(mhDB[, colnames(mhDB) %in% c("ID", "isReg")])
+  accr.13mp <- unique(mhDB[, colnames(mhDB) %in% c("ID", "status")])
 
   suppressMessages(
     accr.13mp <- dplyr::left_join(mhDB.13mp, accr.13mp)
   )
 
   accr.13mp <- accr.13mp %>%
-    dplyr::group_by(isReg, costCode, month) %>%
+    dplyr::group_by(status, costCode, month) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     tidyr::spread(month, cost, fill = 0)
 
 
   # Sum all manhours
+
+  # FIXME
+  # manhours of agency may be separated
+
   mhDB.mh1 <- mhDB %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(mh))
@@ -1006,8 +1091,14 @@ getCost <- function(mhDB, listR, wage, forecast) {
   mhDB.mh <- data.table::rbindlist(list(mhDB.mh1, mhDB.mh2, mhDB.mh3))
 
   # Compute for Mid-year and Year-end bonus
-
   cat("\nComputing bonus.\n")
+
+  # FIXME
+  # Bonus is pro-rated.
+  # The date hired (probationary or regular, which ever came first) of the
+  #   employee is used in pro-rating.
+  # The to fully enjoy the bonus for the year, the date of hiring must be not
+  #   not later than January 01.
 
   bonus <- lapply(listR, FUN = function(x) {
 

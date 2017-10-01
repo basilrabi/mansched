@@ -50,6 +50,12 @@ initEmpPool(empPool, hol = NA, year = NA)
       the employee is not required to report to work}
     \item{isRF}{logical value \cr
       Is the employee rank and file?}
+    \item{d.rd}{integer value defining how many rest days per month the
+      employee can report to work}
+    \item{d.ho}{integer value defining how many holidays per month the
+      employee can report to work}
+    \item{d.rh}{integer value defining how many rest days on holidays per
+      month the employee can report to work}
   }}
 
 \item{hol}{a \code{data.frame} similar to \code{\link{holidays}}}

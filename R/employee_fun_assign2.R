@@ -70,8 +70,8 @@ NULL
 #'         \item{scheme}{character string defining the salary scheme
 #'
 #'           This may be \code{"m"} (monthly) or \code{"d"} (daily).}
-#'         \item{isReg}{logical\cr
-#'           Is the employee regular?}
+#'         \item{status}{character string defining the employement status of
+#'           the employee}
 #'         \item{maxReg}{integer value \cr
 #'           Number of hours the employee is required to report to enjoy full
 #'           salary.}
@@ -137,7 +137,7 @@ setMethod(
     if (length(results[[1]]$ID) > 0) {
 
       results[[1]]$scheme <- "m"
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
@@ -234,9 +234,11 @@ setMethod(
 
       }
 
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
+
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
+
       tempData <- dplyr::left_join(x = results[[1]],
                                    y = maxReg)
 
@@ -513,7 +515,7 @@ setMethod(
       }
 
       results[[1]]$scheme <- "m"
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
@@ -591,7 +593,7 @@ setMethod(
       }
 
       results[[1]]$scheme <- "m"
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
@@ -632,7 +634,7 @@ setMethod(
       }
 
       results[[1]]$scheme <- "d"
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
@@ -677,7 +679,7 @@ setMethod(
       }
 
       results[[1]]$scheme <- "d"
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)

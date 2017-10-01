@@ -109,8 +109,8 @@ assignMH <- function(hoursT, hoursR) {
 #'         \item{scheme}{character string defining the salary scheme
 #'
 #'           This may be \code{"m"} (monthly) or \code{"d"} (daily).}
-#'         \item{isReg}{logical\cr
-#'           Is the employee regular?}
+#'         \item{status}{character string defining the employement status of
+#'           the employee}
 #'         \item{maxReg}{integer value \cr
 #'           Number of hours the employee is required to report to enjoy full
 #'           salary.}
@@ -169,21 +169,28 @@ setMethod(
     # Staff has no probationary and seasonal
 
     results <- callNextMethod(empT = empT, empR = empR)
+
     results[[1]] <- dplyr::left_join(x = results[[1]],
                                      y = payA,
                                      by = "month")
 
     if (length(results[[1]]$ID) > 0) {
+
       results[[1]]$scheme <- "m"
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
+
       tempData <- dplyr::left_join(x = results[[1]],
                                    y = maxReg)
+
       results[[1]] <- as.data.frame(tempData)
+
     } else {
+
       results[[1]] <- NA
+
     }
 
     return(results)
@@ -197,6 +204,7 @@ setMethod(
   definition = function(empT, empR) {
 
     results <- callNextMethod(empT = empT, empR = empR)
+
     empT <- results[[2]]
     empR <- results[[3]]
 
@@ -227,6 +235,7 @@ setMethod(
   f = "assignEmp",
   signature = "Clerk",
   definition = function(empT, empR) {
+
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
@@ -235,8 +244,11 @@ setMethod(
     if (length(results[[1]]$ID) > 0) {
 
       if (empR@status != "reg") {
+
         results[[1]]$sal <- "a"
+
       } else {
+
         if (empR@isRF) {
           results[[1]] <- dplyr::left_join(x = results[[1]],
                                            y = payB,
@@ -254,9 +266,11 @@ setMethod(
         results[[1]]$scheme <- "m"
       }
 
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
+
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
+
       tempData <- dplyr::left_join(x = results[[1]],
                                    y = maxReg)
 
@@ -495,16 +509,21 @@ setMethod(
     results <- callNextMethod(empT = empT, empR = empR)
 
     if (length(results[[1]]$ID) > 0) {
+
       if (empR@status != "reg") {
+
         results[[1]]$sal <- "a"
+
       } else {
+
         results[[1]] <- dplyr::left_join(x = results[[1]],
                                          y = payA,
                                          by = "month")
+
       }
 
       results[[1]]$scheme <- "m"
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
@@ -568,7 +587,7 @@ setMethod(
       }
 
       results[[1]]$scheme <- "m"
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
@@ -603,7 +622,7 @@ setMethod(
       }
 
       results[[1]]$scheme <- "d"
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)
@@ -643,7 +662,7 @@ setMethod(
       }
 
       results[[1]]$scheme <- "d"
-      results[[1]]$isReg <- isReg(empR)
+      results[[1]]$status <- empR@status
 
       maxReg <- data.frame(month = 1:12,
                            maxReg = empR@maxReg)

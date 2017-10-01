@@ -167,23 +167,7 @@ employees are rank and file
 
 \code{\link{Operator-class}} personnel may be authorized to operate multiple
   types of equipment. In Taganito Mining Corporation, some of the equipment
-  types are:
-  \enumerate{
-    \item CRANE
-    \item CT (bulldozer)
-    \item DT (dump truck)
-    \item FL (fuel truck)
-    \item FORKLIFT
-    \item RG (road grader)
-    \item SB (service bus)
-    \item SP (service pickup)
-    \item TT (trailer truck)
-    \item TX (tracked excavator)
-    \item VC (vibrating compactor)
-    \item WL (wheel loader)
-    \item WTL (water truck)
-    \item WX (wheeled excavator)
-  }
+  types are listed in \code{\link{validEquipment}}.
 
   All \code{Operator-class} employees are rank and file.
 }}

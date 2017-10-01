@@ -270,11 +270,11 @@ budget <- function(myFile, year, forecast = FALSE) {
 
   accr.13mp <- costDB[[3]]
 
-  accr.13mp.R <- accr.13mp[accr.13mp$isReg,
-                           !colnames(accr.13mp) %in% c("isReg")]
+  accr.13mp.R <- accr.13mp[accr.13mp$status == "reg",
+                           !colnames(accr.13mp) %in% c("status")]
 
-  accr.13mp.S <- accr.13mp[!accr.13mp$isReg,
-                           !colnames(accr.13mp) %in% c("isReg")]
+  accr.13mp.S <- accr.13mp[accr.13mp$status %in% c("pro", "sea"),
+                           !colnames(accr.13mp) %in% c("status")]
 
   accr.13mp.R <- as.data.frame(accr.13mp.R)
   accr.13mp.S <- as.data.frame(accr.13mp.S)
