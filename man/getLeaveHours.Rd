@@ -17,8 +17,7 @@ getLeaveHours(cBegin, year, status)
 \item{status}{character string representing the employment status of the
   employee
 
-  The accepted values are \code{"reg"} (regular), \code{"pro"}
-  (probationary), and \code{"sea"} (seasonal).}
+  See \code{\link{validEmpStatus}} for accepted values.}
 }
 \value{
 integer value

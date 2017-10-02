@@ -42,15 +42,17 @@ setMethod(
     sched <- getCM(theObject)
 
     if (theObject@status != "reg") {
+
       tempIndex <- min(which(sched$allow >0))
       sched$allow[-tempIndex] <- 0
+
     }
 
     if (theObject@status == "reg") {
       cost <- 1600
     } else if (theObject@status == "pro") {
       cost <- 1000
-    } else if (theObject@status == "sea") {
+    } else if (theObject@status %in% c("sea", "age")) {
       cost <- 600
     } else {
       stop("Invalid employment status!")

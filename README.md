@@ -37,18 +37,13 @@ devtools::install_github('basilrabi/mansched')
 To do
 -----
 
--   Introduce computation of employees under agency
-    -   Employees under agency costs 15% higher than seasonal employees
-    -   Expenses incurred for employees under agency are charged to contract fees others
+-   Export cost centers into one excel file
 
 To do (Enhancements)
 --------------------
 
--   Improve assigning of operator-class employees
-    -   At present, two priority levels are implemented in assigning:
-        1.  Employees with pre-defined cost code
-        2.  Employees with no cost code
-    -   Implement sub-priority levels of the above based on the number of authorized equipment.
-    -   A personnel with only one authorized equipment shall be the highest priority while the perosnnel with more authorized equipment shall be the lowest priority.
 -   Speed up code
     -   Look into multithreading or migrate some code to other language
+    -   See similarities in code chunks using`tempData <- getCM(x)` in `getCost()`
+-   Change `something's wrong` error message
+-   Remove `suppressMessages()`

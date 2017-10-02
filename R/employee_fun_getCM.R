@@ -24,24 +24,26 @@ NULL
 #' @export getCM
 setGeneric(
   name = "getCM",
-  def = function(theObject) {
+  def  = function(theObject) {
     standardGeneric("getCM")
   }
 )
 
 #' @describeIn getCM Compute allowance multiplier
 setMethod(
-  f = "getCM",
-  signature = "Employee",
+  f          = "getCM",
+  signature  = "Employee",
   definition = function(theObject) {
-    tempYear <- substr(theObject@cEnd, start = 1, stop = 4)
-    sched <- dates(begin = paste(tempYear, "-01-01", sep = ""),
-                   end = paste(tempYear, "-12-31", sep = ""))
+
+    tempYear    <- substr(theObject@cEnd, start = 1, stop = 4)
+
+    sched       <- dates(begin = paste(tempYear, "-01-01", sep = ""),
+                         end = paste(tempYear, "-12-31", sep = ""))
 
     sched$month <- as.integer(lubridate::month(sched$date))
 
-    schedEmp <- sched[which(sched$date >= as.Date(theObject@cBegin) &
-                              sched$date <= as.Date(theObject@cEnd)),]
+    schedEmp    <- sched[which(sched$date >= as.Date(theObject@cBegin) &
+                                 sched$date <= as.Date(theObject@cEnd)),]
 
     sched <- sched %>%
       dplyr::group_by(month) %>%
@@ -51,11 +53,11 @@ setMethod(
       dplyr::group_by(month) %>%
       dplyr::summarise(daysEmp = n())
 
-    sched <- dplyr::left_join(sched, schedEmp)
+    sched               <- dplyr::left_join(sched, schedEmp, by = "month")
     sched[is.na(sched)] <- 0
-    sched$allow <- sched$daysEmp / sched$days
-    sched <- as.data.frame(sched)
-    sched$ID <- theObject@ID
+    sched$allow         <- sched$daysEmp / sched$days
+    sched               <- as.data.frame(sched)
+    sched$ID            <- theObject@ID
 
     return(sched[, colnames(sched) %in% c("month", "ID", "allow")])
   }

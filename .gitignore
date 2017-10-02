@@ -3,5 +3,6 @@
 .RData
 .Ruserdata
 inst/doc
+notes
 sim.R
 sim2.R

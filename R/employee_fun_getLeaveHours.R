@@ -15,11 +15,13 @@ NULL
 #' @param status character string representing the employment status of the
 #'   employee
 #'
-#'   The accepted values are \code{"reg"} (regular), \code{"pro"}
-#'   (probationary), and \code{"sea"} (seasonal).
+#'   See \code{\link{validEmpStatus}} for accepted values.
 #' @return integer value
 #' @export getLeaveHours
 getLeaveHours <- function(cBegin, year, status) {
+
+  if (!status %in% validEmpStatus)
+    stop("Invalid employment status!")
 
   # 5 days service incentive leave for non-regular employees
   if (status != "reg")
