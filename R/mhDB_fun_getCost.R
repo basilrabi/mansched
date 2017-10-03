@@ -492,7 +492,8 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   # Distribute holHours
 
-  hol.mhDB <- mhDB[, !colnames(mhDB) %in% c("mhType", "np", "scheme", "maxReg")]
+  hol.mhDB <- mhDB[mhDB$mhType == "reg",
+                   !colnames(mhDB) %in% c("mhType", "np", "scheme", "maxReg")]
 
   hol.mhDB <- dplyr::left_join(
     x  = hol.mhDB,
