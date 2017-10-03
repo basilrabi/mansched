@@ -37,7 +37,7 @@ devtools::install_github('basilrabi/mansched')
 To do
 -----
 
--   Export cost centers into one excel file
+-   Correct calculation of bonus
 
 To do (Enhancements)
 --------------------

@@ -14,15 +14,6 @@
 #' @importFrom stringr str_to_upper
 budget <- function(myFile, year, forecast = FALSE) {
 
-  # setwd("/home/brabi/sampleBudget/")
-  # library(magrittr)
-
-  # myFile <- "MinesBudget2018.xlsx"
-
-  # myFile <- "sampleData.xlsx"
-  # year <- 2018
-  # forecast <- FALSE
-
   empReq.colnames <- c("activity",
                        "personnelClass",
                        "quantity",
@@ -31,7 +22,7 @@ budget <- function(myFile, year, forecast = FALSE) {
                        "OT",
                        "costCode")
 
-  empReq <- readxl::read_xlsx(path = myFile,
+  empReq <- readxl::read_xlsx(path  = myFile,
                               sheet = "Requirement")
 
   empReq <- empReq[,colnames(empReq) %in% empReq.colnames]
@@ -113,10 +104,8 @@ budget <- function(myFile, year, forecast = FALSE) {
                         "d.ho",
                         "d.rh")
 
-  empPool <- readxl::read_xlsx(path = myFile,
+  empPool <- readxl::read_xlsx(path  = myFile,
                                sheet = "Pool")
-
-  # sapply(empPool, class)
 
   empPool <- empPool[, colnames(empPool) %in% empPool.colnames]
 
@@ -175,7 +164,7 @@ budget <- function(myFile, year, forecast = FALSE) {
                     "Type",
                     "Description")
 
-  hol <- readxl::read_xlsx(path = myFile,
+  hol <- readxl::read_xlsx(path  = myFile,
                            sheet = "hol")
 
   hol <- hol[, colnames(hol) %in% hol.colnames]
@@ -204,25 +193,25 @@ budget <- function(myFile, year, forecast = FALSE) {
   hol <- as.data.frame(hol)
 
   empReq$activity <- stringr::str_to_upper(empReq$activity)
-  sched$activity <- stringr::str_to_upper(sched$activity)
+  sched$activity  <- stringr::str_to_upper(sched$activity)
 
-  tempData <- getmhDB(empReq = empReq,
+  tempData <- getmhDB(empReq  = empReq,
                       empPool = empPool,
-                      sched = sched,
-                      year = year,
-                      hol = hol)
+                      sched   = sched,
+                      year    = year,
+                      hol     = hol)
 
-  mhDB <- tempData[[1]]
-  listR <- tempData[[3]]
-  mhReq <- tempData[[6]]
+  mhDB   <- tempData[[1]]
+  listR  <- tempData[[3]]
+  mhReq  <- tempData[[6]]
   mhPool <- tempData[[7]]
 
   wage.colnames <- c("ID", "S", "s")
 
-  wage <- readxl::read_xlsx(path = myFile,
+  wage <- readxl::read_xlsx(path  = myFile,
                             sheet = "Wage")
 
-  wage <- wage[, colnames(wage) %in% wage.colnames]
+  wage              <- wage[, colnames(wage) %in% wage.colnames]
   colnames(wage)[2] <- "s"
 
   if (class(wage$ID) != "character")
@@ -237,9 +226,9 @@ budget <- function(myFile, year, forecast = FALSE) {
 
   wage <- as.data.frame(wage)
 
-  costDB <- getCost(mhDB = mhDB,
-                    listR = listR,
-                    wage = wage,
+  costDB <- getCost(mhDB     = mhDB,
+                    listR    = listR,
+                    wage     = wage,
                     forecast = forecast)
 
   tempFolder <- getwd()
@@ -259,16 +248,19 @@ budget <- function(myFile, year, forecast = FALSE) {
 
   for (i in costDB[[1]]) {
 
-    xlsx::write.xlsx(x = i[[2]],
-                     file = paste(i[[1]], ".xlsx", sep = ""),
-                     row.names = FALSE)
+    xlsx::write.xlsx(x         = i[[2]],
+                     file      = "personnelCost.xlsx",
+                     row.names = FALSE,
+                     sheetName = paste(i[[1]]),
+                     append    = TRUE)
+
   }
 
-  xlsx::write.xlsx(x = costDB[[2]],
-                   file = "manhours.xlsx",
+  xlsx::write.xlsx(x         = costDB[[2]],
+                   file      = "manhours.xlsx",
                    row.names = FALSE)
 
-  accr.13mp <- costDB[[3]]
+  accr.13mp   <- costDB[[3]]
 
   accr.13mp.R <- accr.13mp[accr.13mp$status == "reg",
                            !colnames(accr.13mp) %in% c("status")]
@@ -279,26 +271,27 @@ budget <- function(myFile, year, forecast = FALSE) {
   accr.13mp.R <- as.data.frame(accr.13mp.R)
   accr.13mp.S <- as.data.frame(accr.13mp.S)
 
-  xlsx::write.xlsx(x = accr.13mp.R,
-                   file = "13mp-reg.xlsx",
-                   row.names = FALSE)
-  xlsx::write.xlsx(x = accr.13mp.S,
-                   file = "13mp-sea.xlsx",
+  xlsx::write.xlsx(x         = accr.13mp.R,
+                   file      = "13mp-reg.xlsx",
                    row.names = FALSE)
 
-  xlsx::write.xlsx(x = costDB[[4]],
-                   file = "bonus.xlsx",
+  xlsx::write.xlsx(x         = accr.13mp.S,
+                   file      = "13mp-sea.xlsx",
+                   row.names = FALSE)
+
+  xlsx::write.xlsx(x         = costDB[[4]],
+                   file      = "bonus.xlsx",
                    row.names = FALSE)
 
   if (!is.null(mhPool)) {
-    xlsx::write.xlsx(x = mhPool,
-                     file = "pool.xlsx",
+    xlsx::write.xlsx(x         = mhPool,
+                     file      = "pool.xlsx",
                      row.names = FALSE)
   }
 
   if (!is.null(mhReq)) {
-    xlsx::write.xlsx(x = mhReq,
-                     file = "req.xlsx",
+    xlsx::write.xlsx(x         = mhReq,
+                     file      = "req.xlsx",
                      row.names = FALSE)
   }
 
