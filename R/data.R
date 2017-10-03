@@ -86,9 +86,9 @@ validEmpStatus <- c("reg", "pro", "sea", "age")
 #'
 #' @format \code{\link{data.frame}} with 12 rows and two columns
 #' @export payA
-payA <- data.frame(month = 1:12,
-                   sal = c(rep("a", times = 6),
-                           rep("b", times = 6)),
+payA <- data.frame(month            = 1:12,
+                   sal              = c(rep("a", times = 6),
+                                        rep("b", times = 6)),
                    stringsAsFactors = FALSE)
 
 #' Payment scheme for regular RF
@@ -97,9 +97,8 @@ payA <- data.frame(month = 1:12,
 #'
 #' @format \code{\link{data.frame}} with 12 rows and two columns
 #' @export payB
-payB <- data.frame(month = 1:12,
-                   sal = c("a",
-                           rep("b", times = 11)),
+payB <- data.frame(month            = 1:12,
+                   sal              = c("a", rep("b", times = 11)),
                    stringsAsFactors = FALSE)
 
 #' Wage premiums

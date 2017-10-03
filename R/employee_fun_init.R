@@ -56,24 +56,24 @@ NULL
 #' @export initREmployee
 setGeneric(
   name = "initREmployee",
-  def = function(theObject,
-                 ID,
-                 name,
-                 designation,
-                 attendance = 1,
-                 costCode = "NONE",
-                 status = "reg",
-                 cBegin,
-                 cEnd = NA,
-                 inHouse = FALSE,
-                 restday = "Sunday",
-                 hol,
-                 RF = FALSE,
-                 equipment,
-                 OT = 3,
-                 d.rd = NA,
-                 d.ho = NA,
-                 d.rh = NA) {
+  def  = function(theObject,
+                  ID,
+                  name,
+                  designation,
+                  attendance = 1,
+                  costCode   = "NONE",
+                  status     = "reg",
+                  cBegin,
+                  cEnd       = NA,
+                  inHouse    = FALSE,
+                  restday    = "Sunday",
+                  hol,
+                  RF         = FALSE,
+                  equipment,
+                  OT         = 3,
+                  d.rd       = NA,
+                  d.ho       = NA,
+                  d.rh       = NA) {
     standardGeneric("initREmployee")
   }
 )
@@ -91,28 +91,28 @@ setGeneric(
 #'   costCode, status, cBegin, cEnd, inHouse, restday and calDays
 #'   (see \code{\link{getCalDays}})
 setMethod(
-  f = "initREmployee",
-  signature = "Employee",
+  f          = "initREmployee",
+  signature  = "Employee",
   definition = function(theObject,
                         ID,
                         name,
                         designation,
                         attendance = 1,
-                        costCode = "NONE",
-                        status = "reg",
+                        costCode   = "NONE",
+                        status     = "reg",
                         cBegin,
-                        cEnd = NA,
-                        inHouse = FALSE,
-                        restday = "Sunday",
+                        cEnd       = NA,
+                        inHouse    = FALSE,
+                        restday    = "Sunday",
                         hol,
-                        d.rd = NA,
-                        d.ho = NA,
-                        d.rh = NA) {
+                        d.rd       = NA,
+                        d.ho       = NA,
+                        d.rh       = NA) {
     # Checking of the validity of all arguments must be done prior to calling
     #  initREmployee()
 
-    theObject@ID <- ID
-    theObject@name <- name
+    theObject@ID          <- ID
+    theObject@name        <- name
     theObject@designation <- designation
 
     # attendance must be <= 1 but preferrabbly > 0.5
@@ -126,7 +126,6 @@ setMethod(
 
     # status must be an element of c("reg", "pro", "sea", "age)
     theObject@status <- status
-
     theObject@cBegin <- cBegin
 
     if (is.na(cEnd)) {
@@ -150,9 +149,9 @@ setMethod(
     theObject@restday <- restday
 
 
-    calDays <- getCalDays(cBegin = theObject@cBegin,
-                          cEnd = theObject@cEnd,
-                          hol = hol,
+    calDays <- getCalDays(cBegin  = theObject@cBegin,
+                          cEnd    = theObject@cEnd,
+                          hol     = hol,
                           restday = theObject@restday)
 
     if (is.na(d.rd)) {
@@ -191,21 +190,18 @@ setMethod(
 
     } else {
 
-      holDays <- apply(calDays[,c("lh", "sh")], MARGIN = 1, FUN = sum)
-      # holDays <- calDays[,c("lh")]
-      maxRegF <- apply(calDays[,c("reg", "nh")], MARGIN = 1, FUN = sum)
+      holDays <- apply(calDays[ ,c("lh", "sh")],  MARGIN = 1, FUN = sum)
+      maxRegF <- apply(calDays[ ,c("reg", "nh")], MARGIN = 1, FUN = sum)
 
     }
 
-    regDays <- calDays[,c("reg")]
-
-    theObject@holHours <- holDays * 8L
-    theObject@maxReg <- maxRegF * 8L
-
-    theObject@reg <- as.integer(regDays* 8 * theObject@attendance)
+    regDays              <- calDays[ ,c("reg")]
+    theObject@holHours   <- holDays * 8L
+    theObject@maxReg     <- maxRegF * 8L
+    theObject@reg        <- as.integer(regDays* 8 * theObject@attendance)
 
     theObject@leaveHours <- getLeaveHours(cBegin = theObject@cBegin,
-                                          year = lubridate::year(hol$date[1]),
+                                          year   = lubridate::year(hol$date[1]),
                                           status = theObject@status)
 
     return(list(theObject, calDays))
@@ -214,23 +210,23 @@ setMethod(
 
 #' @describeIn initREmployee Return only the \code{\link{Staff-class}} object
 setMethod(
-  f = "initREmployee",
-  signature = "Staff",
+  f          = "initREmployee",
+  signature  = "Staff",
   definition = function(theObject,
                         ID,
                         name,
                         designation,
                         attendance = 1,
-                        costCode = "NONE",
-                        status = "reg",
+                        costCode   = "NONE",
+                        status     = "reg",
                         cBegin,
-                        cEnd = NA,
-                        inHouse = FALSE,
-                        restday = "Sunday",
+                        cEnd       = NA,
+                        inHouse    = FALSE,
+                        restday    = "Sunday",
                         hol,
-                        d.rd = NA,
-                        d.ho = NA,
-                        d.rh = NA) {
+                        d.rd       = NA,
+                        d.ho       = NA,
+                        d.rh       = NA) {
 
     tempData <- callNextMethod(theObject   = theObject,
                                ID          = ID,
@@ -253,24 +249,24 @@ setMethod(
 
 #' @describeIn initREmployee Initialize regOT
 setMethod(
-  f = "initREmployee",
-  signature = "Non Staff",
+  f          = "initREmployee",
+  signature  = "Non Staff",
   definition = function(theObject,
                         ID,
                         name,
                         designation,
                         attendance = 1,
-                        costCode = "NONE",
-                        status = "reg",
+                        costCode   = "NONE",
+                        status     = "reg",
                         cBegin,
-                        cEnd = NA,
-                        inHouse = FALSE,
-                        restday = "Sunday",
+                        cEnd       = NA,
+                        inHouse    = FALSE,
+                        restday    = "Sunday",
                         hol,
-                        OT = 3,
-                        d.rd = NA,
-                        d.ho = NA,
-                        d.rh = NA) {
+                        OT         = 3,
+                        d.rd       = NA,
+                        d.ho       = NA,
+                        d.rh       = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -292,7 +288,7 @@ setMethod(
                                d.rh        = d.rh)
 
     theObject <- tempData[[1]]
-    calDays <- tempData[[2]]
+    calDays   <- tempData[[2]]
 
     theObject@regOT <- as.integer(
       calDays[,c("reg")] * theObject@attendance * OT
@@ -305,25 +301,25 @@ setMethod(
 #' @describeIn initREmployee Initialize RF and return only the
 #'   \code{\link{Clerk-class}} object
 setMethod(
-  f = "initREmployee",
-  signature = "Clerk",
+  f          = "initREmployee",
+  signature  = "Clerk",
   definition = function(theObject,
                         ID,
                         name,
                         designation,
                         attendance = 1,
-                        costCode = "NONE",
-                        status = "reg",
+                        costCode   = "NONE",
+                        status     = "reg",
                         cBegin,
-                        cEnd = NA,
-                        inHouse = FALSE,
-                        restday = "Sunday",
+                        cEnd       = NA,
+                        inHouse    = FALSE,
+                        restday    = "Sunday",
                         hol,
-                        RF = FALSE,
-                        OT = 3,
-                        d.rd = NA,
-                        d.ho = NA,
-                        d.rh = NA) {
+                        RF         = FALSE,
+                        OT         = 3,
+                        d.rd       = NA,
+                        d.ho       = NA,
+                        d.rh       = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -349,7 +345,7 @@ setMethod(
                                d.rh        = d.rh)
 
     theObject <- tempData[[1]]
-    calDays <- tempData[[2]]
+    calDays   <- tempData[[2]]
 
     theObject@isRF <- RF
 
@@ -369,7 +365,7 @@ setMethod(
         holDays <- apply(
           calDays[, colnames(calDays) %in% c("lh", "rl")],
           MARGIN = 1,
-          FUN = sum
+          FUN    = sum
         )
 
       }
@@ -395,24 +391,24 @@ setMethod(
 #'   rs, rsOT, rl, rlOT, rn, rnOT. Return only the
 #'   \code{\link{Operation Personnel-class}} object.
 setMethod(
-  f = "initREmployee",
-  signature = "Operation Personnel",
+  f          = "initREmployee",
+  signature  = "Operation Personnel",
   definition = function(theObject,
                         ID,
                         name,
                         designation,
                         attendance = 1,
-                        costCode = "NONE",
-                        status = "reg",
+                        costCode   = "NONE",
+                        status     = "reg",
                         cBegin,
-                        cEnd = NA,
-                        inHouse = FALSE,
-                        restday = "Sunday",
+                        cEnd       = NA,
+                        inHouse    = FALSE,
+                        restday    = "Sunday",
                         hol,
-                        OT = 3,
-                        d.rd = NA,
-                        d.ho = NA,
-                        d.rh = NA) {
+                        OT         = 3,
+                        d.rd       = NA,
+                        d.ho       = NA,
+                        d.rh       = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -435,7 +431,7 @@ setMethod(
                                d.rh        = d.rh)
 
     theObject <- tempData[[1]]
-    calDays <- tempData[[2]]
+    calDays   <- tempData[[2]]
 
     if ("rd" %in% colnames(calDays)) {
       theObject@rd <- as.integer(
@@ -514,17 +510,17 @@ setMethod(
                         name,
                         designation,
                         attendance = 1,
-                        costCode = "NONE",
-                        status = "reg",
+                        costCode   = "NONE",
+                        status     = "reg",
                         cBegin,
-                        cEnd = NA,
-                        inHouse = FALSE,
-                        restday = "Sunday",
+                        cEnd       = NA,
+                        inHouse    = FALSE,
+                        restday    = "Sunday",
                         hol,
-                        OT = 3,
-                        d.rd = NA,
-                        d.ho = NA,
-                        d.rh = NA) {
+                        OT         = 3,
+                        d.rd       = NA,
+                        d.ho       = NA,
+                        d.rh       = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -564,17 +560,17 @@ setMethod(
                         name,
                         designation,
                         attendance = 1,
-                        costCode = "NONE",
-                        status = "reg",
+                        costCode   = "NONE",
+                        status     = "reg",
                         cBegin,
-                        cEnd = NA,
-                        inHouse = FALSE,
-                        restday = "Sunday",
+                        cEnd       = NA,
+                        inHouse    = FALSE,
+                        restday    = "Sunday",
                         hol,
-                        OT = 3,
-                        d.rd = NA,
-                        d.ho = NA,
-                        d.rh = NA) {
+                        OT         = 3,
+                        d.rd       = NA,
+                        d.ho       = NA,
+                        d.rh       = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -596,8 +592,9 @@ setMethod(
                                d.ho        = d.ho,
                                d.rh        = d.rh)
 
-    theObject <- tempData[[1]]
+    theObject      <- tempData[[1]]
     theObject@isRF <- FALSE
+
     return(theObject)
   }
 )
@@ -645,8 +642,8 @@ setMethod(
                                d.ho        = d.ho,
                                d.rh        = d.rh)
 
-    theObject <- tempData[[1]]
-    calDays <- tempData[[2]]
+    theObject      <- tempData[[1]]
+    calDays        <- tempData[[2]]
     theObject@isRF <- TRUE
 
     if (theObject@status == "reg") {
@@ -689,18 +686,18 @@ setMethod(
                         name,
                         designation,
                         attendance = 1,
-                        costCode = "NONE",
-                        status = "reg",
+                        costCode   = "NONE",
+                        status     = "reg",
                         cBegin,
-                        cEnd = NA,
-                        inHouse = FALSE,
-                        restday = "Sunday",
+                        cEnd       = NA,
+                        inHouse    = FALSE,
+                        restday    = "Sunday",
                         hol,
                         equipment,
-                        OT = 3,
-                        d.rd = NA,
-                        d.ho = NA,
-                        d.rh = NA) {
+                        OT         = 3,
+                        d.rd       = NA,
+                        d.ho       = NA,
+                        d.rh       = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -722,9 +719,8 @@ setMethod(
                                d.ho        = d.ho,
                                d.rh        = d.rh)
 
-    theObject <- tempData[[1]]
-    calDays <- tempData[[2]]
-
+    theObject      <- tempData[[1]]
+    calDays        <- tempData[[2]]
     theObject@isRF <- TRUE
 
     if (theObject@status == "reg") {
@@ -742,7 +738,7 @@ setMethod(
       holDays <- apply(
         calDays[, colnames(calDays) %in% c("lh", "rl")],
         MARGIN = 1,
-        FUN = sum
+        FUN    = sum
       )
     }
 
@@ -792,23 +788,23 @@ setMethod(
 #' @export initTEmployee
 setGeneric(
   name = "initTEmployee",
-  def = function(theObject,
+  def  = function(theObject,
                  ID,
                  costCode,
                  equipment,
-                 OT = 0,
+                 OT          = 0,
                  calDays,
                  mdtProb,
                  spareFactor = 1,
-                 monthSched = NA) {
+                 monthSched  = NA) {
     standardGeneric("initTEmployee")
   }
 )
 
 #' @describeIn initTEmployee Initialize ID, costCode and spareFactor
 setMethod(
-  f = "initTEmployee",
-  signature = "Employee",
+  f          = "initTEmployee",
+  signature  = "Employee",
   definition = function(theObject,
                         ID,
                         costCode,
@@ -819,8 +815,8 @@ setMethod(
     if (is.na(spareFactor))
       spareFactor <- 1
 
-    theObject@ID <- ID
-    theObject@costCode <- costCode
+    theObject@ID          <- ID
+    theObject@costCode    <- costCode
     theObject@spareFactor <- spareFactor
 
     return(theObject)
@@ -829,8 +825,8 @@ setMethod(
 
 #' @describeIn initTEmployee Initialize reg
 setMethod(
-  f = "initTEmployee",
-  signature = "Staff",
+  f          = "initTEmployee",
+  signature  = "Staff",
   definition = function(theObject,
                         ID,
                         costCode,
@@ -853,12 +849,12 @@ setMethod(
 
 #' @describeIn initTEmployee Initialize reg and regOT
 setMethod(
-  f = "initTEmployee",
-  signature = "Clerk",
+  f          = "initTEmployee",
+  signature  = "Clerk",
   definition = function(theObject,
                         ID,
                         costCode,
-                        OT = 0,
+                        OT          = 0,
                         calDays,
                         spareFactor = 1) {
 
@@ -873,8 +869,8 @@ setMethod(
                                 costCode    = costCode,
                                 spareFactor = spareFactor)
 
-    theObject@reg <- as.integer(calDays[,c("reg")] * 8 *
-                                  theObject@spareFactor)
+    theObject@reg   <- as.integer(calDays[,c("reg")] * 8 *
+                                    theObject@spareFactor)
 
     theObject@regOT <- as.integer(calDays[,c("reg")] * OT *
                                     theObject@spareFactor)
@@ -886,15 +882,15 @@ setMethod(
 #' @describeIn initTEmployee Initialize all man hour type using man day type
 #'   probabilities
 setMethod(
-  f = "initTEmployee",
-  signature = "Operation Personnel",
+  f          = "initTEmployee",
+  signature  = "Operation Personnel",
   definition = function(theObject,
                         ID,
                         costCode,
-                        OT = 0,
+                        OT          = 0,
                         mdtProb,
                         spareFactor = 1,
-                        monthSched = NA) {
+                        monthSched  = NA) {
 
     if (is.na(OT))
       OT <- 0
@@ -908,43 +904,43 @@ setMethod(
                                 spareFactor = spareFactor)
 
     d.reg <- mdtProb$reg + mdtProb$rd
-    d.sh <- mdtProb$sh + mdtProb$rs
-    d.lh <- mdtProb$lh + mdtProb$rl
-    d.nh <- mdtProb$nh + mdtProb$rn
+    d.sh  <- mdtProb$sh  + mdtProb$rs
+    d.lh  <- mdtProb$lh  + mdtProb$rl
+    d.nh  <- mdtProb$nh  + mdtProb$rn
 
     reg <- d.reg * theObject@spareFactor * 8
-    sh <- d.sh * theObject@spareFactor * 8
-    lh <- d.lh * theObject@spareFactor * 8
-    nh <- d.nh * theObject@spareFactor * 8
+    sh  <- d.sh  * theObject@spareFactor * 8
+    lh  <- d.lh  * theObject@spareFactor * 8
+    nh  <- d.nh  * theObject@spareFactor * 8
 
     regOT <- d.reg * theObject@spareFactor * OT
-    shOT <- d.sh * theObject@spareFactor * OT
-    lhOT <- d.lh * theObject@spareFactor * OT
-    nhOT <- d.nh * theObject@spareFactor * OT
+    shOT  <- d.sh  * theObject@spareFactor * OT
+    lhOT  <- d.lh  * theObject@spareFactor * OT
+    nhOT  <- d.nh  * theObject@spareFactor * OT
 
     if (any(is.na(monthSched))) {
 
       theObject@reg <- as.integer(reg * mdtProb$days + 0.5)
-      theObject@sh <- as.integer(sh * mdtProb$days + 0.5)
-      theObject@lh <- as.integer(lh * mdtProb$days + 0.5)
-      theObject@nh <- as.integer(nh * mdtProb$days + 0.5)
+      theObject@sh  <- as.integer(sh  * mdtProb$days + 0.5)
+      theObject@lh  <- as.integer(lh  * mdtProb$days + 0.5)
+      theObject@nh  <- as.integer(nh  * mdtProb$days + 0.5)
 
       theObject@regOT <- as.integer(regOT * mdtProb$days + 0.5)
-      theObject@shOT <- as.integer(shOT * mdtProb$days + 0.5)
-      theObject@lhOT <- as.integer(lhOT * mdtProb$days + 0.5)
-      theObject@nhOT <- as.integer(nhOT * mdtProb$days + 0.5)
+      theObject@shOT  <- as.integer(shOT  * mdtProb$days + 0.5)
+      theObject@lhOT  <- as.integer(lhOT  * mdtProb$days + 0.5)
+      theObject@nhOT  <- as.integer(nhOT  * mdtProb$days + 0.5)
 
     } else {
 
       theObject@reg <- as.integer(reg * monthSched + 0.5)
-      theObject@sh <- as.integer(sh * monthSched + 0.5)
-      theObject@lh <- as.integer(lh * monthSched + 0.5)
-      theObject@nh <- as.integer(nh * monthSched + 0.5)
+      theObject@sh  <- as.integer(sh  * monthSched + 0.5)
+      theObject@lh  <- as.integer(lh  * monthSched + 0.5)
+      theObject@nh  <- as.integer(nh  * monthSched + 0.5)
 
       theObject@regOT <- as.integer(regOT * monthSched + 0.5)
-      theObject@shOT <- as.integer(shOT * monthSched + 0.5)
-      theObject@lhOT <- as.integer(lhOT * monthSched + 0.5)
-      theObject@nhOT <- as.integer(nhOT * monthSched + 0.5)
+      theObject@shOT  <- as.integer(shOT  * monthSched + 0.5)
+      theObject@lhOT  <- as.integer(lhOT  * monthSched + 0.5)
+      theObject@nhOT  <- as.integer(nhOT  * monthSched + 0.5)
 
     }
 
@@ -954,16 +950,16 @@ setMethod(
 
 #' @describeIn initTEmployee Initialize equipment
 setMethod(
-  f = "initTEmployee",
-  signature = "Operator",
+  f          = "initTEmployee",
+  signature  = "Operator",
   definition = function(theObject,
                         ID,
                         costCode,
                         equipment,
-                        OT = 0,
+                        OT          = 0,
                         mdtProb,
                         spareFactor = 1,
-                        monthSched = NA) {
+                        monthSched  = NA) {
 
     if (is.na(OT))
       OT <- 0

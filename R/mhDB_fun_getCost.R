@@ -62,6 +62,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
   salM      <- NULL
   status    <- NULL
   XholHours <- NULL
+  distType  <- c("reg", "rd", "sh", "lh", "nh", "rs", "rl", "rn")
 
   # Error if any ID in wage is duplicated
   if (anyDuplicated(wage$ID) > 0) {
@@ -578,7 +579,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   allowance <- data.table::rbindlist(lapply(listR, getAllowance))
 
-  mhDB.allow <- mhDB %>%
+  mhDB.allow <- mhDB[mhDB$mhType %in% distType, ] %>%
     dplyr::group_by(ID, month, costCode) %>%
     dplyr::summarise(mh = sum(mh))
 
@@ -588,8 +589,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   mhDB.allow <- dplyr::left_join(mhDB.allow, allowance, by = c("ID", "month"))
 
-  mhDB.allow$X <- mhDB.allow$mh / mhDB.allow$totMH
-
+  mhDB.allow$X    <- mhDB.allow$mh / mhDB.allow$totMH
   mhDB.allow$cost <- round(mhDB.allow$X * mhDB.allow$allowance, digits = 2)
 
   # Compute for Safety Bonus
@@ -684,7 +684,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   SSSdb <- data.table::rbindlist(SSSdb)
 
-  mhDB.SSS <- mhDB %>%
+  mhDB.SSS <- mhDB[mhDB$mhType %in% distType, ] %>%
     dplyr::group_by(ID, month, costCode, status) %>%
     dplyr::summarise(mh = sum(mh))
 
@@ -703,11 +703,10 @@ getCost <- function(mhDB, listR, wage, forecast) {
   mhDB.SSS.A <- mhDB.SSS[mhDB.SSS$status == "age", ]
   mhDB.SSS   <- mhDB.SSS[mhDB.SSS$status != "age", ]
 
-
   # Compute for Pag-ibig contribution of employer
   cat("\nComputing Pag-ibig contributions.\n")
 
-  mhDB.PI <- mhDB %>%
+  mhDB.PI <- mhDB[mhDB$mhType %in% distType, ] %>%
     dplyr::group_by(ID, month, costCode, status) %>%
     dplyr::summarise(mh = sum(mh))
 
@@ -777,7 +776,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   PHdb <- data.table::rbindlist(PHdb)
 
-  mhDB.PH <- mhDB %>%
+  mhDB.PH <- mhDB[mhDB$mhType %in% distType, ] %>%
     dplyr::group_by(ID, month, costCode, status) %>%
     dplyr::summarise(mh = sum(mh))
 
@@ -879,7 +878,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
   maxRegDB$LC <- maxRegDB$salH * maxRegDB$LH
 
   ## Distribute leave commutation cost
-  mhDB.LC <-mhDB %>%
+  mhDB.LC <-mhDB[mhDB$mhType %in% distType, ] %>%
     dplyr::group_by(ID, month, costCode, status) %>%
     dplyr::summarise(mh = sum(mh))
 
@@ -910,7 +909,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   hm <- data.table::rbindlist(lapply(listR, getHM))
 
-  mhDB.HM <- mhDB %>%
+  mhDB.HM <- mhDB[mhDB$mhType %in% distType, ] %>%
     dplyr::group_by(ID, month, costCode, status) %>%
     dplyr::summarise(mh = sum(mh))
 
@@ -937,7 +936,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
     tempData
   }))
 
-  mhDB.13mp <- mhDB %>%
+  mhDB.13mp <- mhDB[mhDB$mhType %in% distType, ] %>%
     dplyr::group_by(ID, month, costCode, status) %>%
     dplyr::summarise(mh = sum(mh))
 
@@ -962,7 +961,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
     dplyr::summarise(cost = sum(cost)) %>%
     tidyr::spread(month, cost, fill = 0)
 
-  # Sum all manhours except agency
+  # Sum all manhours
 
   mhDB.mh1 <- mhDB %>%
     dplyr::group_by(costCode, month) %>%
@@ -972,7 +971,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(XholHours))
 
-  mhDB.mh3 <- hol.mhDB.d[hol.mhDB.d$status != "age", ] %>%
+  mhDB.mh3 <- hol.mhDB.d %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(XholHours))
 
@@ -1034,7 +1033,7 @@ getCost <- function(mhDB, listR, wage, forecast) {
 
   bonus <- data.table::rbindlist(bonus)
 
-  mhDB.bonus <- mhDB %>%
+  mhDB.bonus <- mhDB[mhDB$mhType %in% distType, ] %>%
     dplyr::group_by(ID, month, costCode) %>%
     dplyr::summarise(mh = sum(mh))
 

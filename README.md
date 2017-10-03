@@ -38,7 +38,6 @@ To do
 -----
 
 -   Correct calculation of bonus
--   Distribute other costs to non "OT" hours
 
 To do (Enhancements)
 --------------------
