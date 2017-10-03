@@ -42,6 +42,8 @@ devtools::install_github('basilrabi/mansched')
 
 ## To do
 * Correct calculation of bonus
+* Distribute holHours to only "reg" hours
+* Distribute other costs to non "OT" hours
 
 ## To do (Enhancements)
 * Speed up code

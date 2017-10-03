@@ -129,7 +129,6 @@ assignPool <- function(empReq,
 
     }
 
-
     # Get matching equipment
     empPool$matchEquip <- sapply(listR, FUN = function(x) {
       if (tempClass != "Operator") {
@@ -162,7 +161,6 @@ assignPool <- function(empReq,
       empPool$matchCostCode <- TRUE
     }
 
-
     # Filter selections
     empPool$choice <- apply(
       empPool[,colnames(empPool) %in% c("hasAviHours",
@@ -170,9 +168,7 @@ assignPool <- function(empReq,
                                         "matchEquip",
                                         "matchCostCode")],
       MARGIN = 1,
-      FUN = function(x) {
-        all(x)
-      }
+      FUN = function(x) {all(x)}
     )
 
     cat(paste("\nFound ",sum(empPool$choice), " qualified.\n"))

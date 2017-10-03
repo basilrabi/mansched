@@ -75,9 +75,12 @@
 getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
   # Fix warning: Undefined global functions or variable
-  ID    <- NULL
-  mh    <- NULL
-  mhReq <- NULL
+  ID        <- NULL
+  mh        <- NULL
+  mhReq     <- NULL
+  tempData1 <- NULL
+  tempData2 <- NULL
+  tempData3 <- NULL
 
   if (is.na(year)) {
     year <- as.integer(format(Sys.Date() + 365, "%Y"))
@@ -90,14 +93,14 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
   }
 
   tempData <- initEmpPool(empPool = empPool, hol = hol, year)
-  listR <- tempData[[1]]
-  listR.a <- listR
-  empPool <- tempData[[2]]
+  listR    <- tempData[[1]]
+  listR.a  <- listR
+  empPool  <- tempData[[2]]
 
   tempData <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)
-  listT <- tempData[[1]]
-  listT.a <- listT
-  empReq <- tempData[[2]]
+  listT    <- tempData[[1]]
+  listT.a  <- listT
+  empReq   <- tempData[[2]]
 
   # Create vector for indexing qualified employees
   empPool$hasAviHours   <- FALSE
@@ -112,7 +115,6 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
                           empPool  = empPool,
                           listT    = listT,
                           listR    = listR,
-                          prioStat = c("reg", "pro"),
                           prioCode = TRUE)
 
   empReq  <- tempData1[[1]]
@@ -120,26 +122,34 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
   listT   <- tempData1[[3]]
   listR   <- tempData1[[4]]
 
-  tempData2 <- assignPool(empReq   = empReq,
-                          empPool  = empPool,
-                          listT    = listT,
-                          listR    = listR,
-                          prioStat = c("reg", "pro"))
+  if (length(listT) > 0 & length(listR) > 0) {
 
-  empReq  <- tempData2[[1]]
-  empPool <- tempData2[[2]]
-  listT   <- tempData2[[3]]
-  listR   <- tempData2[[4]]
+    tempData2 <- assignPool(empReq   = empReq,
+                            empPool  = empPool,
+                            listT    = listT,
+                            listR    = listR,
+                            prioStat = c("reg", "pro"))
 
-  tempData3 <- assignPool(empReq   = empReq,
-                          empPool  = empPool,
-                          listT    = listT,
-                          listR    = listR)
+    empReq  <- tempData2[[1]]
+    empPool <- tempData2[[2]]
+    listT   <- tempData2[[3]]
+    listR   <- tempData2[[4]]
 
-  empReq  <- tempData3[[1]]
-  empPool <- tempData3[[2]]
-  listT   <- tempData3[[3]]
-  listR   <- tempData3[[4]]
+  }
+
+  if (length(listT) > 0 & length(listR) > 0) {
+
+    tempData3 <- assignPool(empReq   = empReq,
+                            empPool  = empPool,
+                            listT    = listT,
+                            listR    = listR)
+
+    empReq  <- tempData3[[1]]
+    empPool <- tempData3[[2]]
+    listT   <- tempData3[[3]]
+    listR   <- tempData3[[4]]
+
+  }
 
   mhDB <- data.table::rbindlist(l = list(tempData1[[5]],
                                          tempData2[[5]],
@@ -158,9 +168,9 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
     mhPool <- lapply(listTN, FUN = function(x) {
 
-      mh <- as.data.frame(getHours(x))
+      mh       <- as.data.frame(getHours(x))
       mh$month <- 1:12
-      mh$ID <- x@ID
+      mh$ID    <- x@ID
 
       return(mh)
     })
@@ -168,7 +178,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
     mhPool <- data.table::rbindlist(mhPool)
 
     mhPool <- mhPool %>%
-      tidyr::gather(key = "mhType",
+      tidyr::gather(key   = "mhType",
                     value = mh,
                     -month,
                     -ID)

@@ -6,28 +6,28 @@ Date: 2017-10-03
 Authors@R: c(
   person("Basil Eric", "Rabi",
   email = "basil.rabi@tmc.nickelasia.com",
-  role = c("cre", "aut")))
+  role  = c("cre", "aut")))
 Description: Tools for computing the budgeted man power costs for a year in the
   operations of Taganito Mine.
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.4.0), methods
+Depends: R   (>= 3.4.0), methods
 Imports:
   data.table (>= 1.10.4),
-  dplyr (>= 0.7.2),
-  lubridate (>= 1.6.0),
-  magrittr (>= 1.5),
-  readr (>= 1.1.1),
-  readxl (>= 1.0.0),
-  stringr (>= 1.2.0),
-  tidyr (>= 0.6.3),
-  xlsx (>= 0.5.7)
+  dplyr      (>= 0.7.2),
+  lubridate  (>= 1.6.0),
+  magrittr   (>= 1.5),
+  readr      (>= 1.1.1),
+  readxl     (>= 1.0.0),
+  stringr    (>= 1.2.0),
+  tidyr      (>= 0.6.3),
+  xlsx       (>= 0.5.7)
 Suggests:
-  knitr (>= 1.16),
-  rmarkdown (>= 1.6),
+  knitr      (>= 1.16),
+  rmarkdown  (>= 1.6),
   rstudioapi (>= 0.6),
-  testthat (>= 1.0.2)
+  testthat   (>= 1.0.2)
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
     

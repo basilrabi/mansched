@@ -4,37 +4,44 @@ library(readr)
 
 myFile <- system.file("exdata", "sampleData.ods", package = "mansched")
 
-empReq <- read_ods(path = myFile,
-                   sheet = 1,
+empReq <- read_ods(path      = myFile,
+                   sheet     = 1,
                    col_types = cols(.default = col_character(),
                                     quantity = col_integer(),
                                     spareFactor = col_number(),
                                     OT = col_integer()))
-sched <- read_ods(path = myFile,
-                  sheet = 2,
+sched <- read_ods(path      = myFile,
+                  sheet     = 2,
                   col_types = cols(.default = col_integer(),
                                    activity = col_character()))
-empPool <- read_ods(path = myFile,
-                    sheet = 3,
+empPool <- read_ods(path      = myFile,
+                    sheet     = 3,
                     col_types = cols(.default = col_character(),
                                      attendance = col_integer(),
                                      inHouse = col_logical(),
                                      isRF = col_logical()))
-hol <- read_ods(path = myFile,
+hol <- read_ods(path  = myFile,
                 sheet = 4)
+
 year <- 2018
 
-listT <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)[[1]]
-listR <- initEmpPool(empPool = empPool, hol = hol, year = year)[[1]]
+listT <- initEmpReq(empReq = empReq,
+                    sched  = sched,
+                    hol    = hol,
+                    year   = year)[[1]]
+
+listR <- initEmpPool(empPool = empPool,
+                     hol     = hol,
+                     year    = year)[[1]]
 
 totTi <- getHoursL(listT)
 totRi <- getHoursL(listR)
 
-tempData <- getmhDB(empReq = empReq,
+tempData <- getmhDB(empReq  = empReq,
                     empPool = empPool,
-                    sched = sched,
-                    year = year,
-                    hol = mansched::holidays)
+                    sched   = sched,
+                    year    = year,
+                    hol     = mansched::holidays)
 
 totTf <- getHoursL(tempData[[4]])
 totRf <- getHoursL(tempData[[5]])
