@@ -1,7 +1,7 @@
 ---
 title: "readme"
 author: Basil Eric Rabi
-date: September 15, 2017
+date: October 4, 2017
 output:
   md_document:
     variant: markdown_github
@@ -50,3 +50,4 @@ devtools::install_github('basilrabi/mansched')
       `getCost()`
 * Change `something's wrong` error message
 * Remove `suppressMessages()`
+* Add visualization tools for excess pool and requirement (shiny app)

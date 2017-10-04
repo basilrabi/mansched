@@ -47,3 +47,4 @@ To do (Enhancements)
     -   See similarities in code chunks using`tempData <- getCM(x)` in `getCost()`
 -   Change `something's wrong` error message
 -   Remove `suppressMessages()`
+-   Add visualization tools for excess pool and requirement (shiny app)
