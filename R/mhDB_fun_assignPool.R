@@ -1,9 +1,9 @@
 #' Assign pool to requirement
 #'
-#' This is used in \code{\link{getmhDB}}.
+#' This is used in \code{\link{assignPrio}}.
 #'
-#' @param empReq passed from \code{\link{getmhDB}}
-#' @param empPool passed from \code{\link{getmhDB}}
+#' @param empReq passed from \code{\link{assignPrio}}
+#' @param empPool passed from \code{\link{assignPrio}}
 #' @param listT list of theoretical employees created from empReq
 #' @param listR list of real employees created fro empPool
 #' @param prioStat character vector defining the employee status that are

@@ -7,9 +7,9 @@
 assignPool(empReq, empPool, listT, listR, prioStat = NA, prioCode = FALSE)
 }
 \arguments{
-\item{empReq}{passed from \code{\link{getmhDB}}}
+\item{empReq}{passed from \code{\link{assignPrio}}}
 
-\item{empPool}{passed from \code{\link{getmhDB}}}
+\item{empPool}{passed from \code{\link{assignPrio}}}
 
 \item{listT}{list of theoretical employees created from empReq}
 
@@ -34,5 +34,5 @@ a list containing the following:
   }
 }
 \description{
-This is used in \code{\link{getmhDB}}.
+This is used in \code{\link{assignPrio}}.
 }

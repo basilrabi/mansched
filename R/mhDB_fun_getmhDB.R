@@ -74,13 +74,8 @@
 #' @importFrom data.table rbindlist
 getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
 
-  # Fix warning: Undefined global functions or variable
-  ID        <- NULL
-  mh        <- NULL
+  # Define global variables
   mhReq     <- NULL
-  tempData1 <- NULL
-  tempData2 <- NULL
-  tempData3 <- NULL
 
   if (is.na(year)) {
     year <- as.integer(format(Sys.Date() + 365, "%Y"))
@@ -107,144 +102,18 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
   empPool$matchClass    <- FALSE
   empPool$matchEquip    <- FALSE
   empPool$matchCostCode <- FALSE
+  empPool$choice        <- FALSE
 
-  # Create vector for identifying selected employees to be used
-  empPool$choice <- FALSE
+  tempData <- assignPrio(empReq  = empReq,
+                         empPool = empPool,
+                         listT   = listT,
+                         listR   = listR)
 
-  tempData1 <- assignPool(empReq   = empReq,
-                          empPool  = empPool,
-                          listT    = listT,
-                          listR    = listR,
-                          prioCode = TRUE)
-
-  empReq  <- tempData1[[1]]
-  empPool <- tempData1[[2]]
-  listT   <- tempData1[[3]]
-  listR   <- tempData1[[4]]
-
-  if (length(listT) > 0 & length(listR) > 0) {
-
-    tempData2 <- assignPool(empReq   = empReq,
-                            empPool  = empPool,
-                            listT    = listT,
-                            listR    = listR,
-                            prioStat = c("reg", "pro"))
-
-    empReq  <- tempData2[[1]]
-    empPool <- tempData2[[2]]
-    listT   <- tempData2[[3]]
-    listR   <- tempData2[[4]]
-
-  }
-
-  if (length(listT) > 0 & length(listR) > 0) {
-
-    tempData3 <- assignPool(empReq   = empReq,
-                            empPool  = empPool,
-                            listT    = listT,
-                            listR    = listR)
-
-    empReq  <- tempData3[[1]]
-    empPool <- tempData3[[2]]
-    listT   <- tempData3[[3]]
-    listR   <- tempData3[[4]]
-
-  }
-
-  mhDB <- data.table::rbindlist(l = list(tempData1[[5]],
-                                         tempData2[[5]],
-                                         tempData3[[5]]))
-
-  mhDB <- as.data.frame(mhDB)
-
-  # Assign excess regular hours to a dummy cost code
-
-  mhPool <- NULL
-
-  ## Create a theoretical employee list
-  if (length(listR) > 0) {
-
-    listTN <- lapply(listR, FUN = normEmp)
-
-    mhPool <- lapply(listTN, FUN = function(x) {
-
-      mh       <- as.data.frame(getHours(x))
-      mh$month <- 1:12
-      mh$ID    <- x@ID
-
-      return(mh)
-    })
-
-    mhPool <- data.table::rbindlist(mhPool)
-
-    mhPool <- mhPool %>%
-      tidyr::gather(key   = "mhType",
-                    value = mh,
-                    -month,
-                    -ID)
-
-    mhPool <- mhPool[mhPool$mh > 0,]
-    mhPool <- as.data.frame(mhPool)
-
-    if (nrow(mhPool) > 0) {
-
-      for (i in 1:length(listTN)) {
-
-        if (sum(getHours(listTN[[i]])) > 0) {
-
-          suppressMessages(
-            tempData <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
-          )
-
-          listTN[[i]] <- tempData[[2]]
-          listR[[i]] <- tempData[[3]]
-          tempData[[1]]$np <- 0L
-          mhDB <- dfAppend(mhDB, tempData[[1]])
-
-        }
-
-        if (sum(getHours(listTN[[i]])) != 0)
-          stop("Something went wrong. :(")
-
-      }
-
-    } else {
-      mhPool <- NULL
-    }
-
-  }
-
-  # Remove NA values at the bottom
-  if (any(is.na(mhDB[,1]))) {
-
-    index <- which(is.na(mhDB[,1]))
-    mhDB  <- mhDB[-index,]
-
-  }
-
-  if (length(listT) > 0) {
-
-    mhReq <- lapply(listT, FUN = function(x) {
-
-      mh <- as.data.frame(getHours(x))
-      mh$month <- 1:12
-      mh$ID <- x@ID
-
-      return(mh)
-    })
-
-    mhReq <- data.table::rbindlist(mhReq)
-
-    mhReq <- mhReq %>%
-      tidyr::gather(key = "mhType",
-                    value = mh,
-                    -month,
-                    -ID)
-
-    mhReq <- mhReq[mhReq$mh > 0,]
-    mhReq <- as.data.frame(mhReq)
-
-  }
+  mhDB   <- tempData[[1]]
+  listT  <- tempData[[2]]
+  listR  <- tempData[[3]]
+  mhReq  <- tempData[[4]]
+  mhPool <- tempData[[5]]
 
   return(list(mhDB, listT.a, listR.a, listT, listR, mhReq, mhPool))
 }
