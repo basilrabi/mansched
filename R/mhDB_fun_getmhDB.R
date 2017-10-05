@@ -10,6 +10,9 @@
 #'   \code{\link{initEmpReq}}
 #' @param year an integer value representing the year to be budgeted
 #' @param hol a \code{data.frame} similar to \code{\link{holidays}}
+#' @param cores an integer value defining the number cores to be used
+#'
+#'   This is only applicable to unix-like machines.
 #' @return a list containing the following:
 #'   \enumerate{
 #'     \item \code{data.frame} representing the man hours database of the
@@ -72,10 +75,13 @@
 #' @export getmhDB
 #' @importFrom tidyr gather
 #' @importFrom data.table rbindlist
-getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
+#' @importFrom parallel mclapply
+getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
 
   # Define global variables
-  mhReq     <- NULL
+  ID    <- NULL
+  mh    <- NULL
+  mhReq <- NULL
 
   if (is.na(year)) {
     year <- as.integer(format(Sys.Date() + 365, "%Y"))
@@ -104,16 +110,149 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA) {
   empPool$matchCostCode <- FALSE
   empPool$choice        <- FALSE
 
-  tempData <- assignPrio(empReq  = empReq,
-                         empPool = empPool,
-                         listT   = listT,
-                         listR   = listR)
+  # Assign only Employee-class objects that are present both in the pool and
+  #   the requirement
 
-  mhDB   <- tempData[[1]]
-  listT  <- tempData[[2]]
-  listR  <- tempData[[3]]
-  mhReq  <- tempData[[4]]
-  mhPool <- tempData[[5]]
+  classPool      <- unique(empPool$personnelClass)
+  classReq       <- unique(empReq$personnelClass)
+  personnelClass <- intersect(classPool, classReq)
+
+  indexPool <- which(empPool$personnelClass %in% personnelClass)
+  indexReq  <- which(empReq$personnelClass %in% personnelClass)
+
+  # Separate Employee-class objects that cannot be assigned
+  u.empPool <- empPool[-indexPool,]
+  u.empReq  <- empReq[-indexReq,]
+  u.listR   <- listR[-indexPool]
+  u.listT   <- listT[-indexReq]
+
+  empPool   <- empPool[indexPool,]
+  empReq    <- empReq[indexReq,]
+  listR     <- listR[indexPool]
+  listT     <- listT[indexReq]
+
+  personnelSet <- lapply(personnelClass, FUN = function(x) {
+
+    iP <- which(empPool$personnelClass == x)
+    iR <- which(empReq$personnelClass == x)
+
+    return(list(empReq[iR,], empPool[iP,], listT[iR], listR[iP]))
+  })
+
+  if(.Platform$OS.type == "unix") {
+    if (is.na(cores)) {
+      cores <- parallel::detectCores() - 1L
+      cores <- max(c(cores, 1L))
+    }
+  } else {
+    cores <- 1L
+  }
+
+  cat("Assigning employees.\n")
+
+  assignedData <- parallel::mclapply(X = personnelSet,
+                                     FUN = function(x) {
+                                       assignPrio(empReq  = x[[1]],
+                                                  empPool = x[[2]],
+                                                  listT   = x[[3]],
+                                                  listR   = x[[4]])
+                                     },
+                                     mc.cores = cores)
+
+  mhDB   <- lapply(assignedData, FUN = function(x) {x[[1]]})
+  mhReq  <- lapply(assignedData, FUN = function(x) {x[[4]]})
+  mhPool <- lapply(assignedData, FUN = function(x) {x[[5]]})
+
+  mhDB   <- as.data.frame(data.table::rbindlist(mhDB))
+  mhReq  <- as.data.frame(data.table::rbindlist(mhReq))
+  mhPool <- as.data.frame(data.table::rbindlist(mhPool))
+
+  if (nrow(mhDB) < 1)
+    mhDB <- NULL
+
+  if (nrow(mhReq) < 1)
+    mhReq <- NULL
+
+  if (nrow(mhPool) < 1)
+    mhPool <- NULL
+
+  listR <- unlist(lapply(assignedData, FUN = function(x) {x[[3]]}))
+  listT <- unlist(sapply(assignedData, FUN = function(x) {x[[2]]}))
+
+  if (length(u.listR) > 0) {
+
+    listTN   <- lapply(u.listR, FUN = normEmp)
+
+    u.mhPool <- lapply(listTN, FUN = function(x) {
+
+      mh       <- as.data.frame(getHours(x))
+      mh$month <- 1:12
+      mh$ID    <- x@ID
+
+      return(mh)
+    })
+
+    mhPool <- data.table::rbindlist(mhPool, u.mhPool)
+
+    mhPool <- mhPool %>%
+      tidyr::gather(key   = "mhType",
+                    value = mh,
+                    -month,
+                    -ID)
+
+    mhPool <- mhPool[mhPool$mh > 0,]
+    mhPool <- as.data.frame(mhPool)
+
+    if (nrow(mhPool) > 0) {
+
+      for (i in 1:length(listTN)) {
+
+        if (sum(getHours(listTN[[i]])) > 0) {
+
+          suppressMessages(
+            tempData <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
+          )
+
+          listTN[[i]] <- tempData[[2]]
+          listR[[i]] <- tempData[[3]]
+          tempData[[1]]$np <- 0L
+          mhDB <- dfAppend(mhDB, tempData[[1]])
+
+        }
+
+        if (sum(getHours(listTN[[i]])) != 0)
+          stop("All man hours in listTN not assigned!")
+
+      }
+
+    } else {
+      mhPool <- NULL
+    }
+
+  }
+
+  if (length(u.listT) > 0) {
+
+    u.mhReq <- lapply(listT, FUN = function(x) {
+
+      mh <- as.data.frame(getHours(x))
+      mh$month <- 1:12
+      mh$ID <- x@ID
+
+      return(mh)
+    })
+
+    mhReq <- data.table::rbindlist(mhReq, u.mhReq)
+
+    mhReq <- mhReq %>%
+      tidyr::gather(key = "mhType",
+                    value = mh,
+                    -month,
+                    -ID)
+
+    mhReq <- mhReq[mhReq$mh > 0,]
+    mhReq <- as.data.frame(mhReq)
+  }
 
   return(list(mhDB, listT.a, listR.a, listT, listR, mhReq, mhPool))
 }

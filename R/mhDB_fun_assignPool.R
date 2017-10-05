@@ -39,31 +39,10 @@ assignPool <- function(empReq,
                      status   = NA,
                      maxReg   = NA)
 
-
-  if (any(is.na(prioStat))) {
-    tempStr <- "Assigning all"
-  } else {
-    tempStr <- paste("Assigning",
-                     paste(prioStat, collapse = ", "))
-  }
-
-  if (prioCode) {
-    tempStr <- paste(tempStr, "with cost code priority: ")
-  } else {
-    tempStr <- paste(tempStr, "without cost code priority: ")
-  }
-
   for(i in 1:length(empReq[,1])) {
 
     if (sum(getHours(listT[[i]])) == 0)
       next
-
-    cat(paste(tempStr,
-              i,
-              " out of ",
-              length(empReq[,1]),
-              " requirements.",
-              sep = ""))
 
     tempClass <- class(listT[[i]])
 
@@ -108,25 +87,11 @@ assignPool <- function(empReq,
 
     # Get matching Employee-class
     if (any(is.na(prioStat))) {
-
-      empPool$matchClass <- sapply(listR, FUN = function(x) {
-        if (tempClass == class(x)) {
-          return(TRUE)
-        } else {
-          return(FALSE)
-        }
-      })
-
+      empPool$matchClass <- TRUE
     } else {
-
       empPool$matchClass <- sapply(listR, FUN = function(x) {
-        if (tempClass == class(x) & (x@status %in% prioStat)) {
-          return(TRUE)
-        } else {
-          return(FALSE)
-        }
+        return(x@status %in% prioStat)
       })
-
     }
 
     # Get matching equipment
@@ -170,9 +135,6 @@ assignPool <- function(empReq,
       MARGIN = 1,
       FUN = function(x) {all(x)}
     )
-
-    cat(paste("\nFound ",sum(empPool$choice), " qualified.\n"))
-    cat("\n")
 
     # Select choice and assign
 

@@ -38,19 +38,16 @@ To do
 -----
 
 -   Correct calculation of bonus
--   Introduce `dcc` (dump cost code) in `empPool`
-    -   This will be used as the default cost code where in the employee's idle man hours will be charged
-    -   This is a hack and will be used only as a final resort to assign an employee
 
 To do (Enhancements)
 --------------------
 
 -   Speed up code
-    -   Split pool assignment by Employee-class and do parallel assignment
-        -   If this is implemented, comparison of Employee-class sub-class in `assignPool()` may not be needed.
-        -   Messages in parallel must also be removed or commented out.
     -   Migrate some code to other language
     -   See similarities in code chunks using`tempData <- getCM(x)` in `getCost()`
 -   Change `something's wrong` error message
 -   Remove `suppressMessages()`
 -   Add visualization tools for excess pool and requirement (shiny app)
+-   Introduce `dcc` (dump cost code) in `empPool`
+    -   This will be used as the default cost code where in the employee's idle man hours will be charged
+    -   This is a hack and will be used only as a final resort to assign an employee

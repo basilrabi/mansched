@@ -144,7 +144,7 @@ assignPrio <- function(empReq, empPool, listT, listR) {
         }
 
         if (sum(getHours(listTN[[i]])) != 0)
-          stop("Something went wrong. :(")
+          stop("All man hours in listTN not assigned!")
 
       }
 
@@ -152,6 +152,8 @@ assignPrio <- function(empReq, empPool, listT, listR) {
       mhPool <- NULL
     }
 
+  } else {
+    listR <- NULL
   }
 
   # Remove NA values at the bottom
@@ -184,6 +186,9 @@ assignPrio <- function(empReq, empPool, listT, listR) {
     mhReq <- mhReq[mhReq$mh > 0,]
     mhReq <- as.data.frame(mhReq)
 
+  } else {
+    listT <- NULL
+    mhReq <- NULL
   }
 
   return(list(mhDB, listT, listR, mhReq, mhPool))

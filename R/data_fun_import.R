@@ -68,47 +68,55 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   # Error if any ID is duplicated
   if (anyDuplicated(empPool$ID) > 0) {
     tempData <- empPool$ID[which(duplicated(empPool$ID))]
-    stop(paste("Duplicated;",tempData))
+    stop(paste("Duplicated;", tempData))
   }
 
   # Remove white spaces (including leading and trailing spaces)
   empPool[,c("personnelClass", "equipment", "costCode")] <- lapply(
     empPool[,c("personnelClass", "equipment", "costCode")],
-    FUN = rmWS)
+    FUN = rmWS
+  )
 
   # Remove space for status
   empPool$status <- rmS(empPool$status)
 
   # Remove punctuations for costCode
-  empPool$costCode <- gsub(pattern = "[[:punct:]]",
+  empPool$costCode <- gsub(pattern     = "[[:punct:]]",
                            replacement = "",
-                           x = empPool$costCode)
+                           x           = empPool$costCode)
 
   # Convert to lower case
   empPool[,c("personnelClass", "status")] <- lapply(
     empPool[,c("personnelClass", "status")],
-    FUN = stringr::str_to_lower)
+    FUN = stringr::str_to_lower
+  )
 
   # Change to upper case
   empPool[,c("equipment", "costCode")] <- lapply(
     empPool[,c("equipment", "costCode")],
-    FUN = stringr::str_to_upper)
+    FUN = stringr::str_to_upper
+  )
 
   # Get only the first 3 characters for employee status
   empPool$status <- substr(x = empPool$status, start = 1L, stop = 3L)
 
   # Check all personnelClass if valid
   if (any(!empPool$personnelClass %in% validEmpClass)) {
+
     tempIndex <- which(!empPool$personnelClass %in% validEmpClass)
+
     cat(paste("Invalid personnelClass in: ",
               empPool$ID[tempIndex], ".\n", sep = ""))
+
     stop("Invalid personnelClass detected!")
   }
 
   # Check for acceptable attendance
   tempIndex <- which(!is.na(empPool$attendance))
+
   if (any(empPool$attendance[tempIndex] > 1))
     stop("attendance must be less than or equal to 1")
+
   if (any(empPool$attendance[tempIndex] < 0.5))
     stop("Useless employee exists! \\\n attendance must be at least 0.5!")
 
@@ -134,23 +142,23 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
 
   for (i in 1:length(empPool[,1])) {
     tempEmp <- createEmp(empPool$personnelClass[i])
-    tempEmp <- initREmployee(theObject = tempEmp,
-                             ID = empPool$ID[i],
-                             name = empPool$name[i],
+    tempEmp <- initREmployee(theObject   = tempEmp,
+                             ID          = empPool$ID[i],
+                             name        = empPool$name[i],
                              designation = empPool$designation[i],
-                             attendance = empPool$attendance[i],
-                             costCode = empPool$costCode[i],
-                             status = empPool$status[i],
-                             cBegin = empPool$cBegin[i],
-                             cEnd = empPool$cEnd[i],
-                             inHouse = empPool$inHouse[i],
-                             restday = empPool$restday[i],
-                             hol = hol,
-                             RF = empPool$isRF[i],
-                             equipment = empPool$equipment[i],
-                             d.rd = empPool$d.rd[i],
-                             d.ho = empPool$d.ho[i],
-                             d.rh = empPool$d.rh[i])
+                             attendance  = empPool$attendance[i],
+                             costCode    = empPool$costCode[i],
+                             status      = empPool$status[i],
+                             cBegin      = empPool$cBegin[i],
+                             cEnd        = empPool$cEnd[i],
+                             inHouse     = empPool$inHouse[i],
+                             restday     = empPool$restday[i],
+                             hol         = hol,
+                             RF          = empPool$isRF[i],
+                             equipment   = empPool$equipment[i],
+                             d.rd        = empPool$d.rd[i],
+                             d.ho        = empPool$d.ho[i],
+                             d.rh        = empPool$d.rh[i])
     manPool[[i]] <- tempEmp
   }
 
@@ -223,28 +231,36 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
 
   # Error if assigned activity is not scheduled
   if (!all(unique(empReq$activity) %in% sched$activity)) {
+
     tempData <- unique(empReq$activity)
     tempIndex <- which(!tempData %in% sched$activity)
+
     stop(paste("No schedule:", tempData[tempIndex]))
   }
 
   # Warning if scheduled activity has no personnel assigned
   if (!all(sched$activity %in% unique(empReq$activity))) {
+
     tempData <- sched$activity[
       which(!sched$activity %in% unique(empReq$activity))]
+
     cat(paste("No personnel assigned: ", tempData, "\n", sep = ""))
+
     warning("Schedules without employees detected!")
   }
 
   # Error if personnel assignment is duplicated
   if (anyDuplicated(empReq) > 0) {
+
     tempIndex <- which(duplicated(empReq))
+
     cat(paste("Duplicate row:",
               empReq$activity[tempIndex],
               empReq$personnelClass[tempIndex],
               empReq$costCode[tempIndex],
               "\n",
               sep = " "))
+
     stop("Check duplicate!")
   }
 
@@ -258,9 +274,9 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   )
 
   # Remove punctuations for costCode
-  empReq$costCode <- gsub(pattern = "[[:punct:]]",
+  empReq$costCode <- gsub(pattern     = "[[:punct:]]",
                           replacement = '',
-                          x = empReq$costCode)
+                          x           = empReq$costCode)
 
   # Change to lower case
   empReq$personnelClass <- stringr::str_to_lower(empReq$personnelClass)
@@ -278,10 +294,12 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   }
 
   # Initialize premium probabilities
-  hol <- getHol(hol = hol, year = year)
-  calDays <- getCalDays(cBegin = paste(year,"-01-01", sep = ""),
-                        hol = hol,
+  hol     <- getHol(hol = hol, year = year)
+
+  calDays <- getCalDays(cBegin  = paste(year,"-01-01", sep = ""),
+                        hol     = hol,
                         restday = "Sunday")
+
   mdtProb <- getMDTProb(hol = hol)
 
   # Pre-allocate list of Employee-class objects
@@ -305,18 +323,19 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
     if (is.na(empReq$OT[i]))
       empReq$OT[i] <- 0
 
-    tempEmp <- initTEmployee(theObject = tempEmp,
-                             ID = paste(empReq$activity[i],
-                                        empReq$personnelClass[i],
-                                        sep = "-"),
-                             costCode = empReq$costCode[i],
-                             equipment = empReq$equipment[i],
-                             OT = empReq$OT[i],
-                             calDays = calDays,
-                             mdtProb = mdtProb,
-                             spareFactor = empReq$spareFactor[i] *
-                               empReq$quantity[i],
-                             monthSched = workSched)
+    tempEmp <- initTEmployee(
+      theObject   = tempEmp,
+      ID          = paste(empReq$activity[i],
+                          empReq$personnelClass[i],
+                          sep = "-"),
+      costCode    = empReq$costCode[i],
+      equipment   = empReq$equipment[i],
+      OT          = empReq$OT[i],
+      calDays     = calDays,
+      mdtProb     = mdtProb,
+      spareFactor = empReq$spareFactor[i] * empReq$quantity[i],
+      monthSched  = workSched
+    )
 
     manReq[[i]] <- tempEmp
   }
@@ -332,19 +351,20 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   mergedReq <- lapply(toMerge, FUN = function(x) {
 
     tempIndex <- which(empReq$merged == x)
-
-    tempEmp <- mergeEmp(manReq[tempIndex])
-
-    empTab <- c(tempEmp@ID, tempEmp@costCode)
+    tempEmp   <- mergeEmp(manReq[tempIndex])
+    empTab    <- c(tempEmp@ID,
+                   tempEmp@costCode,
+                   tolower(as.character(class(tempEmp))))
 
     return(list(empTab, tempEmp))
   })
 
-  empReqMerged <- t(sapply(mergedReq, FUN = function(x){x[[1]]}))
-  colnames(empReqMerged) <- c("ID", "costCode")
-  empReqMerged <- as.data.frame(empReqMerged)
+  empReqMerged           <- t(sapply(mergedReq, FUN = function(x) {x[[1]]}))
+  colnames(empReqMerged) <- c("ID", "costCode", "personnelClass")
+  empReqMerged           <- as.data.frame(empReqMerged,
+                                          stringsAsFactors = FALSE)
 
-  manReqMerged <- lapply(mergedReq, FUN = function(x){x[[2]]})
+  manReqMerged <- lapply(mergedReq, FUN = function(x) {x[[2]]})
 
   return(list(manReqMerged, empReqMerged))
 }

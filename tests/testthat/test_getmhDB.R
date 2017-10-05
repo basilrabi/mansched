@@ -41,7 +41,8 @@ tempData <- getmhDB(empReq  = empReq,
                     empPool = empPool,
                     sched   = sched,
                     year    = year,
-                    hol     = mansched::holidays)
+                    hol     = mansched::holidays,
+                    cores   = 2)
 
 totTf <- getHoursL(tempData[[4]])
 totRf <- getHoursL(tempData[[5]])
