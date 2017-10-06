@@ -8,8 +8,8 @@ addons:
             - graphviz
 
 r_github_packages:
+    - basilrabi/readODS
     - jimhester/covr
-    - basilrabi /mansched
 
 after_success:
     - Rscript -e 'covr::codecov()'
