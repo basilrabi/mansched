@@ -7,9 +7,5 @@ addons:
         packages:
             - graphviz
 
-r_github_packages:
-    - basilrabi/readODS
-    - jimhester/covr
-
 after_success:
     - Rscript -e 'covr::codecov()'
