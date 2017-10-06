@@ -5,3 +5,4 @@
 ^sim\.R$
 ^sim2\.R$
 ^notes$
+^\.travis\.yml$

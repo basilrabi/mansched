@@ -9,6 +9,7 @@ addons:
 
 r_github_packages:
   - jimhester/covr
+  - basilrabi/readODS
 
 after_success:
   - Rscript -e 'covr::codecov()'
