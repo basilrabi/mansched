@@ -28,15 +28,15 @@ NULL
 #' @export getHM
 setGeneric(
   name = "getHM",
-  def = function(theObject) {
+  def  = function(theObject) {
     standardGeneric("getHM")
   }
 )
 
 #' @describeIn getHM Compute allowance multiplier
 setMethod(
-  f = "getHM",
-  signature = "Employee",
+  f          = "getHM",
+  signature  = "Employee",
   definition = function(theObject) {
 
     sched <- getCM(theObject)
@@ -45,7 +45,6 @@ setMethod(
 
       tempIndex <- min(which(sched$allow >0))
       sched$allow[-tempIndex] <- 0
-
     }
 
     if (theObject@status == "reg") {
@@ -59,8 +58,7 @@ setMethod(
     }
 
     sched$cost <- cost
-
-    sched$HM <- round(sched$cost * sched$allow, digits = 2)
+    sched$HM   <- round(sched$cost * sched$allow, digits = 2)
 
     return(sched[, colnames(sched) %in% c("month", "ID", "HM")])
   }

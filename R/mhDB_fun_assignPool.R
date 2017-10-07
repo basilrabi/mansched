@@ -69,19 +69,17 @@ assignPool <- function(empReq,
 
       tempHoursT <- getHours(listT[[i]])
 
-      tempHoursR[,"reg"] <- tempHoursR[,"reg"] + tempHoursR[,"rd"]
-      tempHoursR[,"sh"]  <- tempHoursR[,"sh"]  + tempHoursR[,"rs"]
-      tempHoursR[,"lh"]  <- tempHoursR[,"lh"]  + tempHoursR[,"rl"]
-      tempHoursR[,"nh"]  <- tempHoursR[,"nh"]  + tempHoursR[,"rn"]
-
-      tempHoursR[,"regOT"] <- tempHoursR[,"regOT"] + tempHoursR[,"rdOT"]
-      tempHoursR[,"shOT"]  <- tempHoursR[,"shOT"]  + tempHoursR[,"rsOT"]
-      tempHoursR[,"lhOT"]  <- tempHoursR[,"lhOT"]  + tempHoursR[,"rlOT"]
-      tempHoursR[,"nhOT"]  <- tempHoursR[,"nhOT"]  + tempHoursR[,"rnOT"]
+      tempHoursR[, "reg"  ] <- tempHoursR[, "reg"  ] + tempHoursR[, "rd"  ]
+      tempHoursR[, "sh"   ] <- tempHoursR[, "sh"   ] + tempHoursR[, "rs"  ]
+      tempHoursR[, "lh"   ] <- tempHoursR[, "lh"   ] + tempHoursR[, "rl"  ]
+      tempHoursR[, "nh"   ] <- tempHoursR[, "nh"   ] + tempHoursR[, "rn"  ]
+      tempHoursR[, "regOT"] <- tempHoursR[, "regOT"] + tempHoursR[, "rdOT"]
+      tempHoursR[, "shOT" ] <- tempHoursR[, "shOT" ] + tempHoursR[, "rsOT"]
+      tempHoursR[, "lhOT" ] <- tempHoursR[, "lhOT" ] + tempHoursR[, "rlOT"]
+      tempHoursR[, "nhOT" ] <- tempHoursR[, "nhOT" ] + tempHoursR[, "rnOT"]
 
       tempHoursR[tempHoursT == 0] <- 0L
-
-      tempHours <- sum(tempHoursR)
+      tempHours                   <- sum(tempHoursR)
 
       if (tempHours > 0) {
         return(TRUE)
@@ -163,7 +161,6 @@ assignPool <- function(empReq,
 
           index <- tempData[, 1]
         }
-
       }
 
       # Assign
@@ -171,9 +168,7 @@ assignPool <- function(empReq,
 
         for (j in index) {
 
-          suppressMessages(
-            tempData <- assignEmp2(empT = listT[[i]], empR = listR[[j]])
-          )
+          tempData <- assignEmp2(empT = listT[[i]], empR = listR[[j]])
 
           listT[[i]] <- tempData[[2]]
           listR[[j]] <- tempData[[3]]
@@ -198,20 +193,16 @@ assignPool <- function(empReq,
         listR   <- listR[-toRM]
 
       }
-
     }
-
   }
 
   remMH <- sapply(listT, FUN = function(x) {sum(getHours(x))})
-
-  toRM <- which(remMH < 1)
+  toRM  <- which(remMH < 1)
 
   if (length(toRM) > 0) {
 
     empReq <- empReq[-toRM,]
     listT  <- listT[-toRM]
-
   }
 
   # Remove NA values at the bottom
@@ -219,7 +210,6 @@ assignPool <- function(empReq,
 
     index <- which(is.na(mhDB[,1]))
     mhDB  <- mhDB[-index,]
-
   }
 
   return(list(empReq, empPool, listT, listR, mhDB))

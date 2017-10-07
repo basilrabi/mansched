@@ -209,20 +209,15 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
 
         if (sum(getHours(listTN[[i]])) > 0) {
 
-          suppressMessages(
-            tempData <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
-          )
-
-          listTN[[i]] <- tempData[[2]]
-          listR[[i]] <- tempData[[3]]
+          tempData         <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
+          listTN[[i]]      <- tempData[[2]]
+          listR[[i]]       <- tempData[[3]]
           tempData[[1]]$np <- 0L
-          mhDB <- dfAppend(mhDB, tempData[[1]])
-
+          mhDB             <- dfAppend(mhDB, tempData[[1]])
         }
 
         if (sum(getHours(listTN[[i]])) != 0)
           stop("All man hours in listTN not assigned!")
-
       }
 
     } else {

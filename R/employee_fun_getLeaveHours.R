@@ -27,31 +27,35 @@ getLeaveHours <- function(cBegin, year, status) {
   if (status != "reg")
     return(as.integer(5 * 8))
 
-  cBegin <- as.Date(cBegin, origin = "1970-01-01")
-
+  cBegin    <- as.Date(cBegin, origin = "1970-01-01")
   yearBegin <- paste(year, "-01-01", sep = "")
   yearBegin <- as.Date(yearBegin)
-
-  yearEnd <- paste(year, "-12-31", sep = "")
-  yearEnd <- as.Date(yearEnd)
+  yearEnd   <- paste(year, "-12-31", sep = "")
+  yearEnd   <- as.Date(yearEnd)
 
   if (cBegin <= yearBegin) {
-    days <- as.numeric(difftime(yearEnd, cBegin, units = "days")) + 1
-    years <- (days * 10000) %/% 3652422
+
+    days      <- as.numeric(difftime(yearEnd, cBegin, units = "days")) + 1
+    years     <- (days * 10000) %/% 3652422
     leaveDays <- NA
-    if (years < 6)
+
+    if (years < 6) {
       leaveDays <- 30
-    else if (years < 10)
+    } else if (years < 10) {
       leaveDays <- 32
-    else if (years < 20)
+    } else if (years < 20) {
       leaveDays <- 34
-    else if (years < 25)
+    } else if (years < 25) {
       leaveDays <- 40
-    else
+    } else {
       leaveDays <- 44
+    }
+
   } else {
+
     monthDiff <- which(month.name == months(yearEnd)) -
       which(month.name == months(cBegin)) + 1
+
     leaveDays <- monthDiff * 2.5
   }
 

@@ -10,15 +10,15 @@ NULL
 #' @export isReg
 setGeneric(
   name = "isReg",
-  def = function(theObject) {
+  def  = function(theObject) {
     standardGeneric("isReg")
   }
 )
 
 #' @describeIn isReg Throws an error if employment status is not valid.
 setMethod(
-  f = "isReg",
-  signature = "Employee",
+  f          = "isReg",
+  signature  = "Employee",
   definition = function(theObject) {
     if (!theObject@status %in% validEmpStatus)
       stop("Invalid employment status!")

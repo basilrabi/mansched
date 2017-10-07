@@ -4,10 +4,9 @@
 #'
 #' @param x a character string
 #' @return a string of at least 26 length having only digits as characters
-#' @importFrom stringr str_to_upper
 getLetterCount <- function(x) {
 
-  x <- stringr::str_to_upper(x)
+  x <- toupper(x)
 
   letterCounts       <- NULL
   letterCounts[1:26] <- 0L
@@ -20,7 +19,8 @@ getLetterCount <- function(x) {
   }
 
   letterCounts <- as.character(letterCounts)
-  paste(letterCounts, collapse = "")
+
+  return(paste(letterCounts, collapse = ""))
 }
 
 # Function to determine if a letter combination is a subset of another
@@ -74,7 +74,7 @@ identifyEquipment <- function(x) {
     # TACOPHIL
     return("TACOPHIL")
   } else if (str_detect(x, pattern = "PACE ") |
-             str_detect(x, pattern = "PRI?N?CE ACE")) {
+             str_detect(x, pattern = "PRI?N?CE ?ACE")) {
     # PrinceAce Corporation
     return("PACE")
   } else if (str_detect(x, pattern = "BRGY") |

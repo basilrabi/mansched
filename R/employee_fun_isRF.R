@@ -10,15 +10,15 @@ NULL
 #' @export isRF
 setGeneric(
   name = "isRF",
-  def = function(theObject) {
+  def  = function(theObject) {
     standardGeneric("isRF")
   }
 )
 
 #' @describeIn isRF Set \code{NA} as default value
 setMethod(
-  f = "isRF",
-  signature = "Employee",
+  f          = "isRF",
+  signature  = "Employee",
   definition = function(theObject) {
     return(NA)
   }
@@ -26,8 +26,8 @@ setMethod(
 
 #' @describeIn isRF All staff are not rank and file
 setMethod(
-  f = "isRF",
-  signature = "Staff",
+  f          = "isRF",
+  signature  = "Staff",
   definition = function(theObject) {
     return(FALSE)
   }
@@ -35,9 +35,10 @@ setMethod(
 
 #' @describeIn isRF All \code{\link{Non Staff-class}} objects have isRF slot
 setMethod(
-  f = "isRF",
-  signature = "Non Staff",
+  f          = "isRF",
+  signature  = "Non Staff",
   definition = function(theObject) {
+
     RF <- theObject@isRF
 
     if (length(RF) != 1)
@@ -54,8 +55,8 @@ setMethod(
 
 #' @describeIn isRF Clerks may or may not be rank and file
 setMethod(
-  f = "isRF",
-  signature = "Clerk",
+  f          = "isRF",
+  signature  = "Clerk",
   definition = function(theObject) {
     return(callNextMethod(theObject))
   }
@@ -63,13 +64,13 @@ setMethod(
 
 #' @describeIn isRF Technical personnel are not rank and file
 setMethod(
-  f = "isRF",
-  signature = "Technical",
+  f          = "isRF",
+  signature  = "Technical",
   definition = function(theObject) {
     RF <- callNextMethod(theObject)
 
     if (RF)
-      stop("A Technical-class was declared rank and file.")
+      stop(paste(theObject@ID, "was declared rank and file."))
 
     return(FALSE)
   }
@@ -77,13 +78,14 @@ setMethod(
 
 #' @describeIn isRF Supervisors are not rank and file
 setMethod(
-  f = "isRF",
-  signature = "Supervisor",
+  f          = "isRF",
+  signature  = "Supervisor",
   definition = function(theObject) {
+
     RF <- callNextMethod(theObject)
 
     if (RF)
-      stop("A Supervisor-class was declared rank and file.")
+      stop(paste(theObject@ID, "was declared rank and file."))
 
     return(FALSE)
   }
@@ -91,13 +93,13 @@ setMethod(
 
 #' @describeIn isRF Laborers are rank and file
 setMethod(
-  f = "isRF",
-  signature = "Laborer",
+  f          = "isRF",
+  signature  = "Laborer",
   definition = function(theObject) {
     RF <- callNextMethod(theObject)
 
     if (!RF)
-      stop("A Laborer-class was not declared rank and file.")
+      stop(paste(theObject@ID, "was not declared rank and file."))
 
     return(TRUE)
   }
@@ -105,13 +107,13 @@ setMethod(
 
 #' @describeIn isRF Operators are rank and file
 setMethod(
-  f = "isRF",
-  signature = "Operator",
+  f          = "isRF",
+  signature  = "Operator",
   definition = function(theObject) {
     RF <- callNextMethod(theObject)
 
     if (!RF)
-      stop("An Operator-class was not declared rank and file.")
+      stop(paste(theObject@ID, "was not declared rank and file."))
 
     return(TRUE)
   }

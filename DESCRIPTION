@@ -1,14 +1,13 @@
 Package: mansched
 Type: Package
-Title: Man Hours Database Calculator for Budgeting
+Title: Manpower Scheduler and Personnel Cost Calculator for Taganito Mine
 Version: 0.1.0.9000
 Date: 2017-10-07
 Authors@R: c(
   person("Basil Eric", "Rabi",
   email = "basil.rabi@tmc.nickelasia.com",
   role  = c("cre", "aut")))
-Description: Tools for computing the budgeted man power costs for a year in the
-  operations of Taganito Mine.
+Description: Tools for computing man power costs in Taganito Mine.
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true

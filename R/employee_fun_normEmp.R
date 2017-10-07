@@ -13,15 +13,15 @@ NULL
 #' @export normEmp
 setGeneric(
   name = "normEmp",
-  def = function(theObject) {
+  def  = function(theObject) {
     standardGeneric("normEmp")
   }
 )
 
 #' @describeIn normEmp Assign dummy cost code
 setMethod(
-  f = "normEmp",
-  signature = "Employee",
+  f          = "normEmp",
+  signature  = "Employee",
   definition = function(theObject) {
     theObject@costCode <- "0-0"
     return(theObject)
@@ -30,11 +30,11 @@ setMethod(
 
 #' @describeIn normEmp Assign zero to regOT
 setMethod(
-  f = "normEmp",
-  signature = "Non Staff",
+  f          = "normEmp",
+  signature  = "Non Staff",
   definition = function(theObject) {
 
-    theObject <- callNextMethod(theObject)
+    theObject       <- callNextMethod(theObject)
     theObject@regOT <- rep(0L, times = 12)
 
     return(theObject)
@@ -46,8 +46,8 @@ setMethod(
 #'   \code{nhOT}, \code{rsOT}, \code{rlOT}, \code{rnOT}. If the employee is
 #'   regular, also assign zero to \code{nh}.
 setMethod(
-  f = "normEmp",
-  signature = "Operation Personnel",
+  f          = "normEmp",
+  signature  = "Operation Personnel",
   definition = function(theObject) {
 
     theObject <- callNextMethod(theObject)
@@ -68,9 +68,8 @@ setMethod(
     theObject@rlOT <- zero
     theObject@rnOT <- zero
 
-    if (isReg(theObject = theObject)) {
+    if (isReg(theObject = theObject))
       theObject@nh <- zero
-    }
 
     return(theObject)
   }
@@ -78,11 +77,11 @@ setMethod(
 
 #' @describeIn normEmp Take only one equipment
 setMethod(
-  f = "normEmp",
-  signature = "Operator",
+  f          = "normEmp",
+  signature  = "Operator",
   definition = function(theObject) {
 
-    theObject <- callNextMethod(theObject)
+    theObject           <- callNextMethod(theObject)
     theObject@equipment <- theObject@equipment[1]
 
     return(theObject)

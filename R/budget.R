@@ -11,7 +11,6 @@
 #' @export budget
 #' @importFrom readxl read_xlsx
 #' @importFrom xlsx write.xlsx
-#' @importFrom stringr str_to_upper
 budget <- function(myFile, year, forecast = FALSE) {
 
   empReq.colnames <- c("activity",
@@ -196,8 +195,8 @@ budget <- function(myFile, year, forecast = FALSE) {
 
   hol <- as.data.frame(hol)
 
-  empReq$activity <- stringr::str_to_upper(empReq$activity)
-  sched$activity  <- stringr::str_to_upper(sched$activity)
+  empReq$activity <- toupper(empReq$activity)
+  sched$activity  <- toupper(sched$activity)
 
   tempData <- getmhDB(empReq  = empReq,
                       empPool = empPool,
@@ -224,11 +223,9 @@ budget <- function(myFile, year, forecast = FALSE) {
   if (class(wage$s) != "numeric")
     wage$s <- as.numeric(wage$s)
 
-  wage <- wage[wage$ID %in% empPool$ID,]
-
+  wage                  <- wage[wage$ID %in% empPool$ID,]
   wage$s[is.na(wage$s)] <- 0
-
-  wage <- as.data.frame(wage)
+  wage                  <- as.data.frame(wage)
 
   costDB <- getCost(mhDB     = mhDB,
                     listR    = listR,

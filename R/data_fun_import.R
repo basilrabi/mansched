@@ -61,7 +61,6 @@
 #'       Each element of the list is an \code{\link{Employee-class}} object.
 #'     \item sanitized empPool
 #'   }
-#' @importFrom stringr str_to_lower str_to_upper
 #' @export initEmpPool
 initEmpPool <- function(empPool, hol = NA, year = NA) {
 
@@ -72,8 +71,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   }
 
   # Remove white spaces (including leading and trailing spaces)
-  empPool[,c("personnelClass", "equipment", "costCode", "dcc")] <- lapply(
-    empPool[,c("personnelClass", "equipment", "costCode", "dcc")],
+  empPool[, c("personnelClass", "equipment", "costCode", "dcc")] <- lapply(
+    empPool[, c("personnelClass", "equipment", "costCode", "dcc")],
     FUN = rmWS
   )
 
@@ -81,8 +80,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   empPool$status <- rmS(empPool$status)
 
   # Remove punctuations for costCode and dcc
-  empPool[,c("costCode", "dcc")] <- lapply(
-    X   = empPool[,c("costCode", "dcc")],
+  empPool[ ,c("costCode", "dcc")] <- lapply(
+    X   = empPool[, c("costCode", "dcc")],
     FUN = function(x) {
       gsub(pattern     = "[[:punct:]]",
            replacement = "",
@@ -91,15 +90,13 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   )
 
   # Convert to lower case
-  empPool[,c("personnelClass", "status")] <- lapply(
-    empPool[,c("personnelClass", "status")],
-    FUN = stringr::str_to_lower
+  empPool[, c("personnelClass", "status")] <- lapply(
+    empPool[, c("personnelClass", "status")], FUN = tolower
   )
 
   # Change to upper case
-  empPool[,c("equipment", "costCode", "dcc")] <- lapply(
-    empPool[,c("equipment", "costCode", "dcc")],
-    FUN = stringr::str_to_upper
+  empPool[, c("equipment", "costCode", "dcc")] <- lapply(
+    empPool[, c("equipment", "costCode", "dcc")], FUN = toupper
   )
 
   # Get only the first 3 characters for employee status
@@ -110,8 +107,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
 
     tempIndex <- which(!empPool$personnelClass %in% validEmpClass)
 
-    cat(paste("Invalid personnelClass in: ",
-              empPool$ID[tempIndex], ".\n", sep = ""))
+    for (i in tempIndex)
+      cat(paste("Invalid personnelClass in: ", empPool$ID[i], ".\n", sep = ""))
 
     stop("Invalid personnelClass detected!")
   }
@@ -123,7 +120,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
     stop("attendance must be less than or equal to 1")
 
   if (any(empPool$attendance[tempIndex] < 0.5))
-    stop("Useless employee exists! \\\n attendance must be at least 0.5!")
+    stop("Attendance must be at least 0.5!")
 
   empPool[, colnames(empPool) %in% c("d.rd", "d.ho", "d.rh")] <- lapply(
     empPool[, colnames(empPool) %in% c("d.rd", "d.ho", "d.rh")],
@@ -146,6 +143,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   hol <- getHol(hol = hol, year = year)
 
   for (i in 1:length(empPool[,1])) {
+
     tempEmp <- createEmp(empPool$personnelClass[i])
 
     tempEmp <- initREmployee(theObject   = tempEmp,
@@ -226,7 +224,6 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
 #'       Theoretical employees do not have rest days.
 #'     \item sanitized empReq
 #'   }
-#' @importFrom stringr str_to_lower str_to_upper
 #' @export initEmpReq
 initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
 
@@ -239,20 +236,22 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   # Error if assigned activity is not scheduled
   if (!all(unique(empReq$activity) %in% sched$activity)) {
 
-    tempData <- unique(empReq$activity)
+    tempData  <- unique(empReq$activity)
     tempIndex <- which(!tempData %in% sched$activity)
 
-    stop(paste("No schedule:", tempData[tempIndex]))
+    for (i in tempIndex)
+      cat(paste("No schedule: ", tempData[i], "\n", sep = ""))
+
+    stop("Activities without schedules detected!")
   }
 
   # Warning if scheduled activity has no personnel assigned
   if (!all(sched$activity %in% unique(empReq$activity))) {
 
-    tempData <- sched$activity[
-      which(!sched$activity %in% unique(empReq$activity))]
+    tempData <- sched$activity[!sched$activity %in% unique(empReq$activity)]
 
-    for (tmpStr in tempData)
-      cat(paste("No personnel assigned: ", tmpStr, "\n", sep = ""))
+    for (i in tempData)
+      cat(paste("No personnel assigned: ", i, "\n", sep = ""))
 
     warning("Schedules without employees detected!")
   }
@@ -276,8 +275,8 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   empReq$personnelClass <- rmWS(empReq$personnelClass)
 
   # Remove spaces for costCode and equipment
-  empReq[,c("equipment", "costCode")] <- lapply(
-    empReq[,c("equipment", "costCode")],
+  empReq[, c("equipment", "costCode")] <- lapply(
+    empReq[, c("equipment", "costCode")],
     FUN = rmS
   )
 
@@ -287,12 +286,11 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
                           x           = empReq$costCode)
 
   # Change to lower case
-  empReq$personnelClass <- stringr::str_to_lower(empReq$personnelClass)
+  empReq$personnelClass <- tolower(empReq$personnelClass)
 
   # Change to upper case
   empReq[,c("equipment", "costCode")] <- lapply(
-    empReq[,c("equipment", "costCode")],
-    FUN = stringr::str_to_upper
+    empReq[,c("equipment", "costCode")], FUN = toupper
   )
 
   # Check accepted employee class
@@ -316,12 +314,12 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   for (i in 1:length(empReq[,1])) {
 
     schedIndex <- which(sched$activity == empReq$activity[i])
-    tempEmp <- createEmp(empReq$personnelClass[i])
+    tempEmp    <- createEmp(empReq$personnelClass[i])
 
     if (all(is.na(sched[schedIndex,c(2:13)]))) {
       workSched <- NA
     } else {
-      workSched <- as.integer(sched[schedIndex,c(2:13)])
+      workSched                   <- as.integer(sched[schedIndex,c(2:13)])
       workSched[is.na(workSched)] <- 0L
     }
 
@@ -352,9 +350,10 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
 
   empReq$merged <- paste(empReq$personnelClass,
                          empReq$equipment,
-                         empReq$costCode, sep = "-")
+                         empReq$costCode,
+                         sep = "-")
 
-  toMerge <- unique(empReq$merged)
+  toMerge   <- unique(empReq$merged)
 
   mergedReq <- lapply(toMerge, FUN = function(x) {
 

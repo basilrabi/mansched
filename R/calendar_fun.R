@@ -9,9 +9,11 @@
 #' @return a \code{data.frame} with only one column (\code{"date"})
 #' @export dates
 dates <- function(begin, end) {
+
   begin <- as.Date(begin)
-  end <- as.Date(end)
-  date <- as.Date(begin:end, origin = "1970-01-01")
+  end   <- as.Date(end)
+  date  <- as.Date(begin:end, origin = "1970-01-01")
+
   return(data.frame(date = date))
 }
 
@@ -42,33 +44,37 @@ dates <- function(begin, end) {
 #' @export getHol
 getHol <- function(hol, year) {
 
-  yBegin <- paste(year, "01-01", sep = "-")
-  yEnd <- paste(year, "12-31", sep = "-")
+  yBegin   <- paste(year, "01-01", sep = "-")
+  yEnd     <- paste(year, "12-31", sep = "-")
   tempData <- dates(begin = yBegin, end = yEnd)
 
   tempData$weekday <- weekdays(tempData$date)
-  tempData$is.sh <- tempData$is.lh <- tempData$is.nh <- NA
+
+  tempData$is.sh <- NA
+  tempData$is.lh <- NA
+  tempData$is.nh <- NA
 
   hol$nMonth <- apply(hol, MARGIN = 1, FUN = function(x){
     which(month.name == x[1])
   })
+
   hol$date <- paste(year, sprintf("%02i-%02i", hol$nMonth, hol$Day), sep = "-")
   hol$date <- as.Date(hol$date)
-  hol <- hol[, c("date", "Type")]
+  hol      <- hol[, c("date", "Type")]
 
   # Set Negotiated holidays
   tempDate <- hol$date[which(hol$Type == "Negotiated")]
-  tempData$is.nh[which(tempData$date %in% tempDate)] <- TRUE
+  tempData$is.nh[which(tempData$date %in% tempDate)]  <- TRUE
   tempData$is.nh[which(!tempData$date %in% tempDate)] <- FALSE
 
   # Set Legal holidays
   tempDate <- hol$date[which(hol$Type == "Legal")]
-  tempData$is.lh[which(tempData$date %in% tempDate)] <- TRUE
+  tempData$is.lh[which(tempData$date %in% tempDate)]  <- TRUE
   tempData$is.lh[which(!tempData$date %in% tempDate)] <- FALSE
 
   # Set Special holidays
   tempDate <- hol$date[which(hol$Type == "Special")]
-  tempData$is.sh[which(tempData$date %in% tempDate)] <- TRUE
+  tempData$is.sh[which(tempData$date %in% tempDate)]  <- TRUE
   tempData$is.sh[which(!tempData$date %in% tempDate)] <- FALSE
 
   return(tempData)
@@ -107,13 +113,8 @@ getHol <- function(hol, year) {
 #' @export getCalDays
 getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
 
-  # hol <- getHol(holidays, 2018)
-  # cBegin <- "2018-06-01"
-  # restday <- "Sunday"
-  # cEnd <- NA
-
-  year <- lubridate::year(hol$date[1])
-  cBegin <- as.Date(cBegin)
+  year        <- lubridate::year(hol$date[1])
+  cBegin      <- as.Date(cBegin)
   cBegin.temp <- as.Date(paste(year, "01-01", sep = "-"))
 
   if (cBegin < cBegin.temp)
@@ -129,6 +130,7 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
 
   hol$is.rd <- FALSE
   hol$is.rd[which(hol$weekday == restday)] <- TRUE
+
   hol$mdType <- apply(X = hol[,c(3:6)], MARGIN = 1,FUN = function(x) {
     if (sum(x) == 0) {
       return("reg") # regular day
@@ -142,7 +144,7 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
       } else if (x[1]) {
         return("nh") # negotiated holiday
       } else {
-        stop("Somethings wrong with holidays.")
+        stop("Unknown day!")
       }
     } else if (sum(x) == 2) {
       if (x[4] & x[2]) {
@@ -152,32 +154,35 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
       } else if (x[4] & x[1]) {
         return("rn") # rest day and negotiated holiday
       }
-    } else
-      stop("Somethings wrong with holidays.")
+    } else {
+      stop("Unknown day!")
+    }
   })
 
   hol$month <- lubridate::month(hol$date)
-  hol <- hol[,c("month", "mdType")]
-  hol <- table(hol)
-
+  hol       <- hol[,c("month", "mdType")]
+  hol       <- table(hol)
   hol <- as.data.frame.matrix(hol)
 
   # Ensure all 12 rows are present
+
   hol$month <- row.names(hol)
-  misMonth <- which(!(1:12) %in% hol$month)
-  numRows <- length(misMonth)
-  numCols <- length(hol)
+  misMonth  <- which(!(1:12) %in% hol$month)
+  numRows   <- length(misMonth)
+  numCols   <- length(hol)
+
   misMonthMat <- matrix(data = 0L,
                         nrow = numRows,
                         ncol = numCols)
-  misMonthMat[, numCols] <- misMonth
-  colnames(misMonthMat) <- colnames(hol)
-  hol <- rbind(hol, misMonthMat)
-  hol$month <- as.integer(hol$month)
-  hol <- hol[order(hol$month),]
-  hol$month <- NULL
 
-  mhType <- c("reg", "rd", "sh", "lh", "nh", "rs", "rl", "rn")
+  misMonthMat[, numCols] <- misMonth
+  colnames(misMonthMat)  <- colnames(hol)
+  hol                    <- rbind(hol, misMonthMat)
+  hol$month              <- as.integer(hol$month)
+  hol                    <- hol[order(hol$month),]
+  hol$month              <- NULL
+
+  mhType     <- c("reg", "rd", "sh", "lh", "nh", "rs", "rl", "rn")
   mis.mhType <- mhType[which(!mhType %in% colnames(hol))]
 
   if (length(mis.mhType) > 0) {
@@ -187,7 +192,7 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
     }
   }
 
-  hol <- as.data.frame(hol)
+  hol            <- as.data.frame(hol)
   row.names(hol) <- NULL
 
   return(hol)
@@ -219,30 +224,31 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
 getMDTProb <- function(hol) {
 
   if (any(hol$is.nh + hol$is.lh + hol$is.sh > 1))
-    stop(paste("Multiple holidays at the same day!",
-               "I can't handle that yet!",
-               sep = " "))
+    stop("Multiple holidays at the same day!")
 
   hol$type <- apply(hol[,c(3:5)], MARGIN = 1, FUN = function(x) {
-    if (x[1])
+    if (x[1]) {
       return("nh")
-    else if (x[2])
+    } else if (x[2]) {
       return("lh")
-    else if (x[3])
+    }else if (x[3]) {
       return("sh")
-    else
+    } else {
       return("reg")
+    }
   })
 
   # Get the number of holidays per month
   hol$month <- lubridate::month(hol$date)
-  hol <- hol[,c("month", "type")]
-  hol <- table(hol)
+  hol       <- hol[,c("month", "type")]
+  hol       <- table(hol)
+
   sched <- data.frame(month = as.integer(rownames(hol)),
-                      reg = hol[, "reg"],
-                      sh = hol[, "sh"],
-                      lh = hol[, "lh"],
-                      nh = hol[, "nh"])
+                      reg   = hol[, "reg"],
+                      sh    = hol[, "sh"],
+                      lh    = hol[, "lh"],
+                      nh    = hol[, "nh"])
+
   sched$days <- sched$reg + sched$sh + sched$lh + sched$nh
 
   # Compute for the probability of rd and all holiday types
@@ -271,9 +277,10 @@ getMDTProb <- function(hol) {
   sched <- sched[,c(7:14, 6)]
 
   # Truncate column names
-  colnames(sched)[1:8] <- gsub(pattern = "prob.",
-                          replacement = "",
-                          x = colnames(sched)[1:8],
-                          fixed = TRUE)
+  colnames(sched)[1:8] <- gsub(pattern     = "prob.",
+                               replacement = "",
+                               x           = colnames(sched)[1:8],
+                               fixed       = TRUE)
+
   return(sched)
 }

@@ -183,8 +183,9 @@ setMethod(
       maxReg   <- data.frame(month  = 1:12,
                              maxReg = empR@maxReg)
 
-      tempData <- dplyr::left_join(x = results[[1]],
-                                   y = maxReg)
+      tempData <- dplyr::left_join(x  = results[[1]],
+                                   y  = maxReg,
+                                   by = "month")
 
       results[[1]] <- as.data.frame(tempData)
 
@@ -267,8 +268,9 @@ setMethod(
       maxReg   <- data.frame(month  = 1:12,
                              maxReg = empR@maxReg)
 
-      tempData <- dplyr::left_join(x = results[[1]],
-                                   y = maxReg)
+      tempData <- dplyr::left_join(x  = results[[1]],
+                                   y  = maxReg,
+                                   by = "month")
 
       results[[1]] <- as.data.frame(tempData)
     } else {
@@ -527,8 +529,9 @@ setMethod(
       maxReg   <- data.frame(month  = 1:12,
                              maxReg = empR@maxReg)
 
-      tempData <- dplyr::left_join(x = results[[1]],
-                                   y = maxReg)
+      tempData <- dplyr::left_join(x  = results[[1]],
+                                   y  = maxReg,
+                                   by = "month")
 
       results[[1]] <- as.data.frame(tempData)
 
@@ -592,8 +595,9 @@ setMethod(
       maxReg   <- data.frame(month  = 1:12,
                              maxReg = empR@maxReg)
 
-      tempData <- dplyr::left_join(x = results[[1]],
-                                   y = maxReg)
+      tempData <- dplyr::left_join(x  = results[[1]],
+                                   y  = maxReg,
+                                   by = "month")
 
       results[[1]] <- as.data.frame(tempData)
     }
@@ -630,8 +634,9 @@ setMethod(
       maxReg   <- data.frame(month   = 1:12,
                              maxReg  = empR@maxReg)
 
-      tempData <- dplyr::left_join(x = results[[1]],
-                                   y = maxReg)
+      tempData <- dplyr::left_join(x  = results[[1]],
+                                   y  = maxReg,
+                                   by = "month")
 
       results[[1]] <- as.data.frame(tempData)
     }
@@ -670,8 +675,9 @@ setMethod(
       maxReg   <- data.frame(month  = 1:12,
                              maxReg = empR@maxReg)
 
-      tempData <- dplyr::left_join(x = results[[1]],
-                                   y = maxReg)
+      tempData <- dplyr::left_join(x  = results[[1]],
+                                   y  = maxReg,
+                                   by = "month")
 
       results[[1]] <- as.data.frame(tempData)
     }

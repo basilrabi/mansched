@@ -73,7 +73,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
     cat(paste("Duplicated :", tempData, "\n", sep = ""))
     stop("There must be no duplicated ID's in wage data!")
-
   }
 
   # Error if any ID in listR is not in wage$ID
@@ -85,7 +84,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
     cat(paste("No wage data for :", empID, "\n", sep = ""))
     stop("All ID's must have wage data")
-
   }
 
   # Error if wage data is missing or zero
@@ -97,22 +95,17 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     cat("Wage data of the following is either NA or less than 100 pesos:\n")
     cat(paste(empID, collapse = "\n"))
     stop("Check wage data.")
-
   }
 
   # Assign if employee is RF or not
   wage$isRF <- sapply(wage$ID, FUN = function(x) {
-
     index <- which(empID == x)
-
     isRF(listR[[index]])
   })
 
   # Assign if employee is staff or not
   wage$isStaff <- sapply(wage$ID, FUN = function(x) {
-
     index <- which(empID == x)
-
     is(listR[[index]], "Staff")
   })
 
@@ -168,7 +161,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
       sal[2] <- x[4] / x[5]
 
       sal <- sal * 12
-
     }
 
     sal <- round(sal, digits = 2)
@@ -669,7 +661,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
         y  = wageEmp[!wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
         by = c("ID", "sal")
       )
-
     }
 
     tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
@@ -753,7 +744,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
       tempData$salM2 <- round(tempData$salM * 313 / 12, digits = 2)
       tempData$salM  <- tempData$salM2
       tempData       <- tempData[, !colnames(tempData) %in% c("salM2")]
-
     } else {
 
       tempData <- dplyr::left_join(
@@ -761,7 +751,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
         y  = wageEmp[!wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
         by = c("ID", "sal")
       )
-
     }
 
     tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
@@ -853,11 +842,9 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
         minus   <- min(z$absence[i], LC)
         z$LH[i] <- minus
         LC      <- LC - minus
-
       } else {
         break
       }
-
     }
 
     z$LH[4] <- z$LH[4] + LC
@@ -865,7 +852,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     if (sum(z$LH) != listR[[tempIndex]]@leaveHours)
       stop("Leave hours do not match!")
 
-    z
+    return(z)
   })
 
   maxRegDB <- data.table::rbindlist(maxRegDB)
@@ -935,7 +922,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     tempSal   <- wageEmp$salH[tempIndex]
     tempData  <- get13mp(theObject = x, sal = tempSal)
 
-    tempData
+    return(tempData)
   }))
 
   mhDB.13mp <- mhDB[mhDB$mhType %in% distType, ] %>%

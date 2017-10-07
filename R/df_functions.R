@@ -7,10 +7,13 @@
 #' @return \code{data.frame} with \code{NA} values at the lower half rows
 #' @export expandDF
 expandDF <- function(x) {
+
   tempData <- matrix(NA,
                      nrow = length(x[,1]),
                      ncol = length(x))
+
   colnames(tempData) <- colnames(x)
+
   rbind(x, tempData)
 }
 
@@ -25,15 +28,17 @@ expandDF <- function(x) {
 #'   \code{dfLength}.
 #' @export capacityEnough
 capacityEnough <- function(x, dfLength) {
-  remainingSlots <-
-    length(x[,1]) - suppressWarnings(max(which(!is.na(x[,1]))))
-  if (is.infinite(remainingSlots)) {
+
+  remainingSlots <- length(x[,1]) - suppressWarnings(max(which(!is.na(x[,1]))))
+
+  if (is.infinite(remainingSlots))
     remainingSlots <- length(x[,1])
-  }
-  if (remainingSlots > dfLength)
+
+  if (remainingSlots > dfLength) {
     return(TRUE)
-  else
+  } else {
     return(FALSE)
+  }
 }
 
 #' Test and Expand \code{data.frame}
@@ -47,10 +52,12 @@ capacityEnough <- function(x, dfLength) {
 #' @return \code{data.frame} with NA rows at the bottom
 #' @export testAndExpand
 testAndExpand <- function(x, dfLength) {
+
   while (!capacityEnough(x, dfLength)) {
     x <- expandDF(x)
   }
-  x
+
+  return(x)
 }
 
 #' Append data.frame
@@ -62,16 +69,20 @@ testAndExpand <- function(x, dfLength) {
 #' @return \code{data.frame} which may contain NA rows at the bottom
 #' @export dfAppend
 dfAppend <- function(x, y) {
+
   lengthY <- length(y[,1])
-  x <- testAndExpand(x = x, dfLength = lengthY)
+  x       <- testAndExpand(x = x, dfLength = lengthY)
+
   if (is.infinite(suppressWarnings(max(which(!is.na(x[,1])))))) {
     x[1:lengthY,] <- y
-  }
-  else {
+  } else {
+
     tempIndex <- 1L + max(which(!is.na(x[,1])))
+
     x[(tempIndex):(tempIndex + lengthY - 1),] <- y
   }
-  x
+
+  return(x)
 }
 
 #' Remove white space
@@ -81,12 +92,13 @@ dfAppend <- function(x, y) {
 #'
 #' @param x character vector
 #' @return character vector without 2 adjacent space characters
-#' @importFrom stringr str_trim
 #' @export rmWS
 rmWS <- function(x) {
+
   x <- gsub(pattern = "\\s+", replacement = " ", x = x)
-  x <- stringr::str_trim(x)
-  x
+  x <- trimws(x)
+
+  return(x)
 }
 
 #' Remove space
@@ -97,6 +109,8 @@ rmWS <- function(x) {
 #' @return character vector without 2 adjacent space characters
 #' @export rmS
 rmS <- function(x) {
+
   x <- gsub(pattern = "\\s+", replacement = "", x = x)
-  x
+
+  return(x)
 }

@@ -28,30 +28,28 @@ NULL
 #' @export getAllowance
 setGeneric(
   name = "getAllowance",
-  def = function(theObject) {
+  def  = function(theObject) {
     standardGeneric("getAllowance")
   }
 )
 
 #' @describeIn getAllowance Compute allowance multiplier
 setMethod(
-  f = "getAllowance",
-  signature = "Employee",
+  f          = "getAllowance",
+  signature  = "Employee",
   definition = function(theObject) {
-
     return(getCM(theObject))
-
   }
 )
 
 #' @describeIn getAllowance Compute monthly allowance
 setMethod(
-  f = "getAllowance",
-  signature = "Staff",
+  f          = "getAllowance",
+  signature  = "Staff",
   definition = function(theObject) {
 
     allowance <- callNextMethod(theObject)
-    cost <- 0
+    cost      <- 0
 
     if(!theObject@inHouse)
       cost <- cost + 1900 + 1100 # for food and lighting
@@ -66,12 +64,12 @@ setMethod(
 
 #' @describeIn getAllowance Compute monthly allowance
 setMethod(
-  f = "getAllowance",
-  signature = "Non Staff",
+  f          = "getAllowance",
+  signature  = "Non Staff",
   definition = function(theObject) {
 
     allowance <- callNextMethod(theObject)
-    cost <- 0
+    cost      <- 0
 
     if (isRF(theObject = theObject)) {
 

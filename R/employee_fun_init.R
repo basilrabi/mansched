@@ -159,9 +159,8 @@ setMethod(
                           hol     = hol,
                           restday = theObject@restday)
 
-    if (is.na(d.rd)) {
+    if (is.na(d.rd))
       d.rd <- 2L
-    }
 
     calDays$rd <- assignMH(hoursT = calDays$rd, hoursR = d.rd)$hoursA
 
@@ -361,7 +360,9 @@ setMethod(
     theObject@isRF <- RF
 
     if (theObject@isRF) {
+
       if (theObject@status == "reg") {
+
         holDays <- apply(
           calDays[, colnames(calDays) %in% c("lh",
                                              "sh",
@@ -372,7 +373,9 @@ setMethod(
           MARGIN = 1,
           FUN = sum
         )
+
       } else {
+
         holDays <- apply(
           calDays[, colnames(calDays) %in% c("lh", "rl")],
           MARGIN = 1,
@@ -674,13 +677,13 @@ setMethod(
                                            "rs",
                                            "rn")],
         MARGIN = 1,
-        FUN = sum
+        FUN    = sum
       )
     } else {
       holDays <- apply(
         calDays[, colnames(calDays) %in% c("lh", "rl")],
         MARGIN = 1,
-        FUN = sum
+        FUN    = sum
       )
     }
 
@@ -745,6 +748,7 @@ setMethod(
     theObject@isRF <- TRUE
 
     if (theObject@status == "reg") {
+
       holDays <- apply(
         calDays[, colnames(calDays) %in% c("lh",
                                            "sh",
@@ -755,12 +759,15 @@ setMethod(
         MARGIN = 1,
         FUN = sum
       )
+
     } else {
+
       holDays <- apply(
         calDays[, colnames(calDays) %in% c("lh", "rl")],
         MARGIN = 1,
         FUN    = sum
       )
+
     }
 
     theObject@holHours <- holDays * 8L

@@ -13,25 +13,38 @@ NULL
 #' @export getHours
 setGeneric(
   name = "getHours",
-  def = function(theObject) {
+  def  = function(theObject) {
     standardGeneric("getHours")
   }
 )
 
 #' @describeIn getHours Save \code{reg} hours
 setMethod(
-  f = "getHours",
-  signature = "Employee",
+  f          = "getHours",
+  signature  = "Employee",
   definition = function(theObject) {
 
-    mh <- matrix(data = rep(0L, times = 192),
-                 nrow = 12,
+    mh <- matrix(data     = rep(0L, times = 192),
+                 nrow     = 12,
                  dimnames = list(c(1:12),
-                                 c("reg", "rd", "lh", "sh", "nh", "rl", "rs",
-                                   "rn", "regOT", "rdOT", "lhOT", "shOT",
-                                   "nhOT", "rlOT", "rsOT", "rnOT")))
+                                 c("reg",
+                                   "rd",
+                                   "lh",
+                                   "sh",
+                                   "nh",
+                                   "rl",
+                                   "rs",
+                                   "rn",
+                                   "regOT",
+                                   "rdOT",
+                                   "lhOT",
+                                   "shOT",
+                                   "nhOT",
+                                   "rlOT",
+                                   "rsOT",
+                                   "rnOT")))
 
-    mh[,"reg"] <- theObject@reg
+    mh[, "reg"] <- theObject@reg
 
     return(mh)
   }
@@ -39,12 +52,12 @@ setMethod(
 
 #' @describeIn getHours Save \code{regOT}
 setMethod(
-  f = "getHours",
-  signature = "Non Staff",
+  f          = "getHours",
+  signature  = "Non Staff",
   definition = function(theObject) {
 
-    mh <- callNextMethod(theObject)
-    mh[,"regOT"] <- theObject@regOT
+    mh            <- callNextMethod(theObject)
+    mh[, "regOT"] <- theObject@regOT
 
     return(mh)
   }
@@ -56,23 +69,21 @@ setMethod(
   signature = "Operation Personnel",
   definition = function(theObject) {
 
-    mh <- callNextMethod(theObject)
-
-    mh[,"rd"] <- theObject@rd
-    mh[,"sh"] <- theObject@sh
-    mh[,"lh"] <- theObject@lh
-    mh[,"nh"] <- theObject@nh
-    mh[,"rs"] <- theObject@rs
-    mh[,"rl"] <- theObject@rl
-    mh[,"rn"] <- theObject@rn
-
-    mh[,"rdOT"] <- theObject@rdOT
-    mh[,"shOT"] <- theObject@shOT
-    mh[,"lhOT"] <- theObject@lhOT
-    mh[,"nhOT"] <- theObject@nhOT
-    mh[,"rsOT"] <- theObject@rsOT
-    mh[,"rlOT"] <- theObject@rlOT
-    mh[,"rnOT"] <- theObject@rnOT
+    mh           <- callNextMethod(theObject)
+    mh[, "rd"  ] <- theObject@rd
+    mh[, "sh"  ] <- theObject@sh
+    mh[, "lh"  ] <- theObject@lh
+    mh[, "nh"  ] <- theObject@nh
+    mh[, "rs"  ] <- theObject@rs
+    mh[, "rl"  ] <- theObject@rl
+    mh[, "rn"  ] <- theObject@rn
+    mh[, "rdOT"] <- theObject@rdOT
+    mh[, "shOT"] <- theObject@shOT
+    mh[, "lhOT"] <- theObject@lhOT
+    mh[, "nhOT"] <- theObject@nhOT
+    mh[, "rsOT"] <- theObject@rsOT
+    mh[, "rlOT"] <- theObject@rlOT
+    mh[, "rnOT"] <- theObject@rnOT
 
     return(mh)
   }
@@ -88,12 +99,10 @@ setMethod(
 #' @export getHoursL
 getHoursL <- function(x) {
 
-  if (length(x) == 0) {
+  if (length(x) == 0)
     return(0L)
-  }
 
-  tempData <- sapply(X = x, FUN = function(x) {
-    sum(getHours(x))
-  })
-  sum(tempData)
+  tempData <- sapply(X = x, FUN = function(x) {sum(getHours(x))})
+
+  return(sum(tempData))
 }

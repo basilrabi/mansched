@@ -1,7 +1,7 @@
 mansched
 ========
 
-R package with tools for manhours budgeting in Taganito Mine
+R package with tools for manpower cost computation in Taganito Mine
 
 Installation
 ------------
@@ -45,6 +45,4 @@ To do (Enhancements)
 -   Speed up code
     -   Migrate some code to other language
     -   See similarities in code chunks using`tempData <- getCM(x)` in `getCost()`
--   Change `something's wrong` error message
--   Remove `suppressMessages()`
 -   Add visualization tools for excess pool and requirement (shiny app)

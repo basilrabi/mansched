@@ -108,8 +108,7 @@ assignPrio <- function(empReq, empPool, listT, listR) {
     listR.dcc <- listR[tempIndex]
     empPool   <- empPool[-tempIndex,]
     listR     <- listR[-tempIndex]
-
-    listR.dcc <- lapply(listR.dcc, FUN = function(x) {
+    listR.dcc <- sapply(listR.dcc, FUN = function(x) {
 
       y          <- normEmp(theObject = x)
       y@costCode <- x@dcc
@@ -117,11 +116,13 @@ assignPrio <- function(empReq, empPool, listT, listR) {
       return(y)
     })
 
+    aviHours  <- sapply(listR.dcc, FUN = function(x) {sum(getHours(x))})
+    listR.dcc <- listR.dcc[which(aviHours > 0)]
+
     for (i in listR.dcc) {
-      tempMHDB  <- assignEmp(empT = i, empR = i)
+      tempMHDB  <- assignEmp(empT = i, empR = i)[[1]]
       tempData4 <- dfAppend(tempData4, tempMHDB)
     }
-
   }
 
   mhDB <- data.table::rbindlist(l = list(tempData1[[5]],
@@ -176,7 +177,6 @@ assignPrio <- function(empReq, empPool, listT, listR) {
     } else {
       mhPool <- NULL
     }
-
   } else {
     listR <- NULL
   }
@@ -186,7 +186,6 @@ assignPrio <- function(empReq, empPool, listT, listR) {
 
     index <- which(is.na(mhDB[,1]))
     mhDB  <- mhDB[-index,]
-
   }
 
   if (length(listT) > 0) {
@@ -210,7 +209,6 @@ assignPrio <- function(empReq, empPool, listT, listR) {
 
     mhReq <- mhReq[mhReq$mh > 0,]
     mhReq <- as.data.frame(mhReq)
-
   } else {
     listT <- NULL
     mhReq <- NULL

@@ -1,7 +1,9 @@
-#' Tools for generating man hours database budget for TMC Mines Group
+#' Tools for generating man power cost for budgeting and forecasting in
+#'   Taganito Mine
 #'
-#' This packages contains \code{R} functions that may help the computation of
-#'   man hours of TMC Mines Group personnel during budget season.
+#' This packages contains \code{R} functions that can automate man power
+#'   assignments and computation of personnel costs. This can be helpful during
+#'   forecasting and budgeting.
 #'
 #' Budget season in Taganito Mine means sleepless nights for its personnel,
 #'  especially the personnel from the Mine Engineering Department. Man hours

@@ -23,15 +23,15 @@ NULL
 #' @export get13mp
 setGeneric(
   name = "get13mp",
-  def = function(theObject, sal) {
+  def  = function(theObject, sal) {
     standardGeneric("get13mp")
   }
 )
 
 #' @describeIn get13mp Compute 13 month pay
 setMethod(
-  f = "get13mp",
-  signature = "Employee",
+  f          = "get13mp",
+  signature  = "Employee",
   definition = function(theObject, sal) {
 
     sched <- getCM(theObject)
@@ -42,11 +42,9 @@ setMethod(
       cost <- sal[2]
     }
 
-    cost <- cost * 8 * 313 / (12 * 12)
-
+    cost       <- cost * 8 * 313 / (12 * 12)
     sched$cost <- cost
-
-    sched$mp <- round(sched$cost * sched$allow, digits = 2)
+    sched$mp   <- round(sched$cost * sched$allow, digits = 2)
 
     return(sched[, colnames(sched) %in% c("month", "ID", "mp")])
   }
