@@ -66,8 +66,8 @@ budget <- function(myFile, year, forecast = FALSE) {
   empReq <- empReq[!is.na(empReq$quantity),]
   empReq <- empReq[!empReq$quantity == 0,]
 
-  sched <- readxl::read_xlsx(path = myFile,
-                             sheet = "Schedule",
+  sched <- readxl::read_xlsx(path      = myFile,
+                             sheet     = "Schedule",
                              col_types = c("text",
                                            "numeric",
                                            "numeric",
@@ -102,7 +102,8 @@ budget <- function(myFile, year, forecast = FALSE) {
                         "isRF",
                         "d.rd",
                         "d.ho",
-                        "d.rh")
+                        "d.rh",
+                        "dcc")
 
   empPool <- readxl::read_xlsx(path  = myFile,
                                sheet = "Pool")
@@ -136,6 +137,9 @@ budget <- function(myFile, year, forecast = FALSE) {
 
   if (!all(is.na(empPool$equipment)) & class(empPool$costCode) != "character")
     stop("Column costCode in Pool is not character!")
+
+  if (!all(is.na(empPool$dcc)) & class(empPool$dcc) != "character")
+    stop("Column dcc in Pool is not character!")
 
   if (class(empPool$status) != "character")
     stop("Column status in Pool is not character!")

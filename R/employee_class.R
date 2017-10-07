@@ -73,30 +73,31 @@ NULL
 #'   employee can enjoy
 #'
 #'   This equates to paid vacation or sick leave.
+#' @slot dcc character string defining the cost code wherein the excess regular
+#'   man hours of the employee will be charged
 #' @examples employee()
 #' @export employee
 employee <- setClass(
   "Employee",
   slots = c(
-    ID = "character",
-    name = "character",
+    ID          = "character",
+    name        = "character",
     designation = "character",
-    attendance = "numeric",
+    attendance  = "numeric",
     spareFactor = "numeric",
-    costCode = "character",
-    status = "character",
-    cBegin = "character",
-    cEnd = "character",
-    inHouse = "logical",
-    restday = "character",
-    holHours = "integer",
-    maxReg = "integer",
-    reg = "integer",
-    leaveHours = "integer"
+    costCode    = "character",
+    status      = "character",
+    cBegin      = "character",
+    cEnd        = "character",
+    inHouse     = "logical",
+    restday     = "character",
+    holHours    = "integer",
+    maxReg      = "integer",
+    reg         = "integer",
+    leaveHours  = "integer",
+    dcc         = "character"
   ),
-  prototype = list(
-    reg = rep(0L, times = 12)
-  )
+  prototype = list(reg = rep(0L, times = 12))
 )
 
 #' An S4 class representing a staff
@@ -113,7 +114,7 @@ employee <- setClass(
 #' @export staff
 staff <- setClass(
   "Staff",
-  slots = character(0),
+  slots    = character(0),
   contains = "Employee"
 )
 
@@ -127,7 +128,7 @@ staff <- setClass(
 #' @export division_manager
 division_manager <- setClass(
   "Division Manager",
-  slots = character(0),
+  slots    = character(0),
   contains = "Staff"
 )
 
@@ -141,7 +142,7 @@ division_manager <- setClass(
 #' @export group_manager
 group_manager <- setClass(
   "Group Manager",
-  slots = character(0),
+  slots    = character(0),
   contains = "Staff"
 )
 
@@ -155,7 +156,7 @@ group_manager <- setClass(
 #' @export department_manager
 department_manager <- setClass(
   "Department Manager",
-  slots = character(0),
+  slots    = character(0),
   contains = "Staff"
 )
 
@@ -170,7 +171,7 @@ department_manager <- setClass(
 #' @export section_head
 section_head <- setClass(
   "Section Head",
-  slots = character(0),
+  slots    = character(0),
   contains = "Staff"
 )
 
@@ -191,13 +192,11 @@ section_head <- setClass(
 non_staff <- setClass(
   "Non Staff",
   slots = c(
-    isRF = "logical",
+    isRF  = "logical",
     regOT = "integer"
   ),
-  prototype = list(
-    regOT = rep(0L, times = 12)
-  ),
-  contains = "Employee"
+  prototype = list(regOT = rep(0L, times = 12)),
+  contains  = "Employee"
 )
 
 #' An S4 class representing a clerk
@@ -211,7 +210,7 @@ non_staff <- setClass(
 #' @export clerk
 clerk <- setClass(
   "Clerk",
-  slots = character(0),
+  slots    = character(0),
   contains = "Non Staff"
 )
 
@@ -323,35 +322,35 @@ clerk <- setClass(
 operation_personnel <- setClass(
   "Operation Personnel",
   slots = c(
-    rd = "integer",
+    rd   = "integer",
     rdOT = "integer",
-    sh = "integer",
+    sh   = "integer",
     shOT = "integer",
-    lh = "integer",
+    lh   = "integer",
     lhOT = "integer",
-    nh = "integer",
+    nh   = "integer",
     nhOT = "integer",
-    rs = "integer",
+    rs   = "integer",
     rsOT = "integer",
-    rl = "integer",
+    rl   = "integer",
     rlOT = "integer",
-    rn = "integer",
+    rn   = "integer",
     rnOT = "integer"
   ),
   prototype = list(
-    rd = rep(0L, times = 12),
+    rd   = rep(0L, times = 12),
     rdOT = rep(0L, times = 12),
-    sh = rep(0L, times = 12),
+    sh   = rep(0L, times = 12),
     shOT = rep(0L, times = 12),
-    lh = rep(0L, times = 12),
+    lh   = rep(0L, times = 12),
     lhOT = rep(0L, times = 12),
-    nh = rep(0L, times = 12),
+    nh   = rep(0L, times = 12),
     nhOT = rep(0L, times = 12),
-    rs = rep(0L, times = 12),
+    rs   = rep(0L, times = 12),
     rsOT = rep(0L, times = 12),
-    rl = rep(0L, times = 12),
+    rl   = rep(0L, times = 12),
     rlOT = rep(0L, times = 12),
-    rn = rep(0L, times = 12),
+    rn   = rep(0L, times = 12),
     rnOT = rep(0L, times = 12)
   ),
   contains = "Non Staff"
@@ -368,7 +367,7 @@ operation_personnel <- setClass(
 #' @export technical
 technical <- setClass(
   "Technical",
-  slots = character(0),
+  slots    = character(0),
   contains = "Operation Personnel"
 )
 
@@ -384,7 +383,7 @@ technical <- setClass(
 #' @export production_personnel
 production_personnel <- setClass(
   "Production Personnel",
-  slots = character(0),
+  slots    = character(0),
   contains = "Operation Personnel"
 )
 
@@ -400,7 +399,7 @@ production_personnel <- setClass(
 #' @export supervisor
 supervisor <- setClass(
   "Supervisor",
-  slots = character(0),
+  slots    = character(0),
   contains = "Production Personnel"
 )
 
@@ -414,7 +413,7 @@ supervisor <- setClass(
 #' @export laborer
 laborer <- setClass(
   "Laborer",
-  slots = character(0),
+  slots    = character(0),
   contains = "Production Personnel"
 )
 
@@ -430,8 +429,6 @@ laborer <- setClass(
 #' @export operator
 operator <- setClass(
   "Operator",
-  slots = c(
-    equipment = "character"
-  ),
+  slots    = c(equipment = "character"),
   contains = "Production Personnel"
 )

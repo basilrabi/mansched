@@ -72,18 +72,23 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   }
 
   # Remove white spaces (including leading and trailing spaces)
-  empPool[,c("personnelClass", "equipment", "costCode")] <- lapply(
-    empPool[,c("personnelClass", "equipment", "costCode")],
+  empPool[,c("personnelClass", "equipment", "costCode", "dcc")] <- lapply(
+    empPool[,c("personnelClass", "equipment", "costCode", "dcc")],
     FUN = rmWS
   )
 
   # Remove space for status
   empPool$status <- rmS(empPool$status)
 
-  # Remove punctuations for costCode
-  empPool$costCode <- gsub(pattern     = "[[:punct:]]",
-                           replacement = "",
-                           x           = empPool$costCode)
+  # Remove punctuations for costCode and dcc
+  empPool[,c("costCode", "dcc")] <- lapply(
+    X   = empPool[,c("costCode", "dcc")],
+    FUN = function(x) {
+      gsub(pattern     = "[[:punct:]]",
+           replacement = "",
+           x           = x)
+    }
+  )
 
   # Convert to lower case
   empPool[,c("personnelClass", "status")] <- lapply(
@@ -92,8 +97,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   )
 
   # Change to upper case
-  empPool[,c("equipment", "costCode")] <- lapply(
-    empPool[,c("equipment", "costCode")],
+  empPool[,c("equipment", "costCode", "dcc")] <- lapply(
+    empPool[,c("equipment", "costCode", "dcc")],
     FUN = stringr::str_to_upper
   )
 
@@ -142,6 +147,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
 
   for (i in 1:length(empPool[,1])) {
     tempEmp <- createEmp(empPool$personnelClass[i])
+
     tempEmp <- initREmployee(theObject   = tempEmp,
                              ID          = empPool$ID[i],
                              name        = empPool$name[i],
@@ -158,7 +164,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
                              equipment   = empPool$equipment[i],
                              d.rd        = empPool$d.rd[i],
                              d.ho        = empPool$d.ho[i],
-                             d.rh        = empPool$d.rh[i])
+                             d.rh        = empPool$d.rh[i],
+                             dcc         = empPool$dcc[i])
     manPool[[i]] <- tempEmp
   }
 
@@ -244,7 +251,8 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
     tempData <- sched$activity[
       which(!sched$activity %in% unique(empReq$activity))]
 
-    cat(paste("No personnel assigned: ", tempData, "\n", sep = ""))
+    for (tmpStr in tempData)
+      cat(paste("No personnel assigned: ", tmpStr, "\n", sep = ""))
 
     warning("Schedules without employees detected!")
   }

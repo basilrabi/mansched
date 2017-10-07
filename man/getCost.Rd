@@ -4,7 +4,7 @@
 \alias{getCost}
 \title{Compute Personnel Cost}
 \usage{
-getCost(mhDB, listR, wage, forecast)
+getCost(mhDB, listR, wage, forecast = FALSE)
 }
 \arguments{
 \item{mhDB}{a \code{\link{data.frame}} similar to \code{mhDB} return by
@@ -28,12 +28,16 @@ employee pool}
 Compute cost for forecast?}
 }
 \value{
-list
+a list containing the following:
 
-  Each element of the list contains a list of 2:
   \enumerate{
-    \item cost code
-    \item personnel costs table for the whole year
+    \item a list of personnel cost list
+
+       The personnel list is comprised by the cost code and the tabulated
+       monthly cost.
+    \item tabulated total man hours per month per cost code
+    \item tabulated 13th month pay per month per cost code
+    \item tabulated bonus cost per month per cost code
   }
 }
 \description{
@@ -53,6 +57,4 @@ Calculates monthly personnel cost for each cost code. Personnel costs are
     \item{521017}{Hospital and Medical Expenses}
     \item{521009}{13th Month Pay}
   }
-  After computation, an ODS file is written. Each sheet denotes a cost
-  code. Personnel costs are tabulated by month.
 }

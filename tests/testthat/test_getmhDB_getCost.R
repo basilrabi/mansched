@@ -6,20 +6,22 @@ myFile <- system.file("exdata", "sampleData.ods", package = "mansched")
 
 empReq <- read_ods(path      = myFile,
                    sheet     = 1,
-                   col_types = cols(.default = col_character(),
-                                    quantity = col_integer(),
+                   col_types = cols(.default    = col_character(),
+                                    quantity    = col_integer(),
                                     spareFactor = col_number(),
-                                    OT = col_integer()))
+                                    OT          = col_integer()))
+
 sched <- read_ods(path      = myFile,
                   sheet     = 2,
                   col_types = cols(.default = col_integer(),
                                    activity = col_character()))
+
 empPool <- read_ods(path      = myFile,
                     sheet     = 3,
-                    col_types = cols(.default = col_character(),
+                    col_types = cols(.default   = col_character(),
                                      attendance = col_integer(),
-                                     inHouse = col_logical(),
-                                     isRF = col_logical()))
+                                     inHouse    = col_logical(),
+                                     isRF       = col_logical()))
 hol <- read_ods(path  = myFile,
                 sheet = 4)
 
@@ -55,3 +57,30 @@ test_that("getmhDB() works", {
   expect_equal(sum(tempData[[1]]$mh),
                totTi - totTf)
 })
+
+wage <- read_ods(path      = myFile,
+                 sheet     = 5,
+                 col_types = cols(ID = col_character(),
+                                  s  = col_number()))
+
+tempData <- getCost(mhDB  = tempData[[1]],
+                    listR = listR,
+                    wage  = wage)
+
+c14000 <- tempData[[1]][[1]][[2]]
+c14100 <- tempData[[1]][[2]][[2]]
+
+mh14000 <- sum(c14000[c14000$row == "man-hours", c(as.character(1:12))])
+mh14100 <- sum(c14100[c14100$row == "man-hours", c(as.character(1:12))])
+totMH   <- sum(tempData[[2]][,c(as.character(1:12))])
+
+PI14000 <- sum(c14000[c14000$row == "Prem-HDMF (Pag-ibig)",
+                      c(as.character(1:12))])
+PI14100 <- sum(c14100[c14100$row == "Prem-HDMF (Pag-ibig)",
+                      c(as.character(1:12))])
+
+test_that("getCost() works", {
+  expect_equal(mh14000 + mh14100, totMH)
+  expect_equal(PI14000 + PI14100, 500 * 12)
+})
+

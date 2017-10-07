@@ -51,6 +51,8 @@ NULL
 #'   employee is budgeted to report to work per month
 #' @param d.rh integer value defining the number of rest days during a holiday
 #'   the employee is budgeted to report to work per month
+#' @param dcc character string defining the cost code wherein the excess regular
+#'   man hours of the employee will be charged
 #' @return an \code{\link{Employee-class}} object
 #' @importFrom lubridate year
 #' @export initREmployee
@@ -73,7 +75,8 @@ setGeneric(
                   OT         = 3,
                   d.rd       = NA,
                   d.ho       = NA,
-                  d.rh       = NA) {
+                  d.rh       = NA,
+                  dcc        = "NA") {
     standardGeneric("initREmployee")
   }
 )
@@ -107,13 +110,15 @@ setMethod(
                         hol,
                         d.rd       = NA,
                         d.ho       = NA,
-                        d.rh       = NA) {
+                        d.rh       = NA,
+                        dcc        = "NA") {
     # Checking of the validity of all arguments must be done prior to calling
     #  initREmployee()
 
     theObject@ID          <- ID
     theObject@name        <- name
     theObject@designation <- designation
+    theObject@dcc         <- dcc
 
     # attendance must be <= 1 but preferrabbly > 0.5
     theObject@attendance <- attendance
@@ -226,7 +231,8 @@ setMethod(
                         hol,
                         d.rd       = NA,
                         d.ho       = NA,
-                        d.rh       = NA) {
+                        d.rh       = NA,
+                        dcc        = "NA") {
 
     tempData <- callNextMethod(theObject   = theObject,
                                ID          = ID,
@@ -242,7 +248,8 @@ setMethod(
                                hol         = hol,
                                d.rd        = d.rd,
                                d.ho        = d.ho,
-                               d.rh        = d.rh)
+                               d.rh        = d.rh,
+                               dcc         = dcc)
     return(tempData[[1]])
   }
 )
@@ -266,7 +273,8 @@ setMethod(
                         OT         = 3,
                         d.rd       = NA,
                         d.ho       = NA,
-                        d.rh       = NA) {
+                        d.rh       = NA,
+                        dcc        = "NA") {
 
     if (is.na(OT))
       OT <- 3
@@ -285,7 +293,8 @@ setMethod(
                                hol         = hol,
                                d.rd        = d.rd,
                                d.ho        = d.ho,
-                               d.rh        = d.rh)
+                               d.rh        = d.rh,
+                               dcc         = dcc)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -319,7 +328,8 @@ setMethod(
                         OT         = 3,
                         d.rd       = NA,
                         d.ho       = NA,
-                        d.rh       = NA) {
+                        d.rh       = NA,
+                        dcc        = "NA") {
 
     if (is.na(OT))
       OT <- 3
@@ -342,7 +352,8 @@ setMethod(
                                OT          = OT,
                                d.rd        = d.rd,
                                d.ho        = d.ho,
-                               d.rh        = d.rh)
+                               d.rh        = d.rh,
+                               dcc         = dcc)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -408,7 +419,8 @@ setMethod(
                         OT         = 3,
                         d.rd       = NA,
                         d.ho       = NA,
-                        d.rh       = NA) {
+                        d.rh       = NA,
+                        dcc        = "NA") {
 
     if (is.na(OT))
       OT <- 3
@@ -428,7 +440,8 @@ setMethod(
                                OT          = OT,
                                d.rd        = d.rd,
                                d.ho        = d.ho,
-                               d.rh        = d.rh)
+                               d.rh        = d.rh,
+                               dcc         = dcc)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -520,7 +533,8 @@ setMethod(
                         OT         = 3,
                         d.rd       = NA,
                         d.ho       = NA,
-                        d.rh       = NA) {
+                        d.rh       = NA,
+                        dcc        = "NA") {
 
     if (is.na(OT))
       OT <- 3
@@ -540,7 +554,8 @@ setMethod(
                                OT          = OT,
                                d.rd        = d.rd,
                                d.ho        = d.ho,
-                               d.rh        = d.rh)
+                               d.rh        = d.rh,
+                               dcc         = dcc)
 
     theObject <- tempData[[1]]
 
@@ -570,7 +585,8 @@ setMethod(
                         OT         = 3,
                         d.rd       = NA,
                         d.ho       = NA,
-                        d.rh       = NA) {
+                        d.rh       = NA,
+                        dcc        = "NA") {
 
     if (is.na(OT))
       OT <- 3
@@ -590,7 +606,8 @@ setMethod(
                                OT          = OT,
                                d.rd        = d.rd,
                                d.ho        = d.ho,
-                               d.rh        = d.rh)
+                               d.rh        = d.rh,
+                               dcc         = dcc)
 
     theObject      <- tempData[[1]]
     theObject@isRF <- FALSE
@@ -610,17 +627,18 @@ setMethod(
                         name,
                         designation,
                         attendance = 1,
-                        costCode = "NONE",
-                        status = "reg",
+                        costCode   = "NONE",
+                        status     = "reg",
                         cBegin,
-                        cEnd = NA,
-                        inHouse = FALSE,
-                        restday = "Sunday",
+                        cEnd       = NA,
+                        inHouse    = FALSE,
+                        restday    = "Sunday",
                         hol,
-                        OT = 3,
-                        d.rd = NA,
-                        d.ho = NA,
-                        d.rh = NA) {
+                        OT         = 3,
+                        d.rd       = NA,
+                        d.ho       = NA,
+                        d.rh       = NA,
+                        dcc        = "NA") {
 
     if (is.na(OT))
       OT <- 3
@@ -640,7 +658,8 @@ setMethod(
                                OT          = OT,
                                d.rd        = d.rd,
                                d.ho        = d.ho,
-                               d.rh        = d.rh)
+                               d.rh        = d.rh,
+                               dcc         = dcc)
 
     theObject      <- tempData[[1]]
     calDays        <- tempData[[2]]
@@ -697,7 +716,8 @@ setMethod(
                         OT         = 3,
                         d.rd       = NA,
                         d.ho       = NA,
-                        d.rh       = NA) {
+                        d.rh       = NA,
+                        dcc        = "NA") {
 
     if (is.na(OT))
       OT <- 3
@@ -717,7 +737,8 @@ setMethod(
                                OT          = OT,
                                d.rd        = d.rd,
                                d.ho        = d.ho,
-                               d.rh        = d.rh)
+                               d.rh        = d.rh,
+                               dcc         = dcc)
 
     theObject      <- tempData[[1]]
     calDays        <- tempData[[2]]

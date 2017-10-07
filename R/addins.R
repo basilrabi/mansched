@@ -1,7 +1,7 @@
 insertCodeLink <- function() {
-  rstudioapi::insertText("\\code{\\link{}}")
+  rstudioapi::insertText("\\code{\\link{}}") # nocov
 }
 
 insertItem <- function() {
-  rstudioapi::insertText("\\item{}{}")
+  rstudioapi::insertText("\\item{}{}")       # nocov
 }

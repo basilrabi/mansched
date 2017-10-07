@@ -94,6 +94,9 @@ employee is not required to report to work}
   employee can enjoy
 
   This equates to paid vacation or sick leave.}
+
+\item{\code{dcc}}{character string defining the cost code wherein the excess regular
+man hours of the employee will be charged}
 }}
 
 \examples{

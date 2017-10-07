@@ -39,10 +39,15 @@ assignPool <- function(empReq,
                      status   = NA,
                      maxReg   = NA)
 
-  for(i in 1:length(empReq[,1])) {
+  for (i in 1:length(empReq[,1])) {
 
     if (sum(getHours(listT[[i]])) == 0)
       next
+
+    if (length(listR) < 1) {
+      listR <- NULL
+      break
+    }
 
     tempClass <- class(listT[[i]])
 

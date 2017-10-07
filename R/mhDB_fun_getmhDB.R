@@ -235,9 +235,9 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
 
     u.mhReq <- lapply(listT, FUN = function(x) {
 
-      mh <- as.data.frame(getHours(x))
+      mh       <- as.data.frame(getHours(x))
       mh$month <- 1:12
-      mh$ID <- x@ID
+      mh$ID    <- x@ID
 
       return(mh)
     })

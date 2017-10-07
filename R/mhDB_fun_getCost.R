@@ -19,8 +19,6 @@ NULL
 #'     \item{521017}{Hospital and Medical Expenses}
 #'     \item{521009}{13th Month Pay}
 #'   }
-#'   After computation, an ODS file is written. Each sheet denotes a cost
-#'   code. Personnel costs are tabulated by month.
 #'
 #' @param mhDB a \code{\link{data.frame}} similar to \code{mhDB} return by
 #'   \code{\link{getmhDB}}
@@ -38,19 +36,23 @@ NULL
 #'   }
 #' @param forecast logical value \cr
 #'   Compute cost for forecast?
-#' @return list
+#' @return a list containing the following:
 #'
-#'   Each element of the list contains a list of 2:
 #'   \enumerate{
-#'     \item cost code
-#'     \item personnel costs table for the whole year
+#'     \item a list of personnel cost list
+#'
+#'        The personnel list is comprised by the cost code and the tabulated
+#'        monthly cost.
+#'     \item tabulated total man hours per month per cost code
+#'     \item tabulated 13th month pay per month per cost code
+#'     \item tabulated bonus cost per month per cost code
 #'   }
 #' @export getCost
 #' @importFrom dplyr left_join group_by summarise mutate
 #' @importFrom magrittr "%>%"
 #' @importFrom data.table rbindlist
 #' @importFrom tidyr gather spread
-getCost <- function(mhDB, listR, wage, forecast) {
+getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   # Fix for "no visible binding for global variable" note in R CMD check
   costCode  <- NULL
