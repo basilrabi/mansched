@@ -54,13 +54,12 @@ setMethod(
 
     zero <- rep(0L, times = 12)
 
-    theObject@rd <- zero
-    theObject@sh <- zero
-    theObject@lh <- zero
-    theObject@rs <- zero
-    theObject@rl <- zero
-    theObject@rn <- zero
-
+    theObject@rd   <- zero
+    theObject@sh   <- zero
+    theObject@lh   <- zero
+    theObject@rs   <- zero
+    theObject@rl   <- zero
+    theObject@rn   <- zero
     theObject@rdOT <- zero
     theObject@shOT <- zero
     theObject@lhOT <- zero

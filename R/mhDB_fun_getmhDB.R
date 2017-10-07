@@ -134,7 +134,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
   personnelSet <- lapply(personnelClass, FUN = function(x) {
 
     iP <- which(empPool$personnelClass == x)
-    iR <- which(empReq$personnelClass == x)
+    iR <- which( empReq$personnelClass == x)
 
     return(list(empReq[iR,], empPool[iP,], listT[iR], listR[iP]))
   })
@@ -163,8 +163,8 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
   mhReq  <- lapply(assignedData, FUN = function(x) {x[[4]]})
   mhPool <- lapply(assignedData, FUN = function(x) {x[[5]]})
 
-  mhDB   <- as.data.frame(data.table::rbindlist(mhDB))
-  mhReq  <- as.data.frame(data.table::rbindlist(mhReq))
+  mhDB   <- as.data.frame(data.table::rbindlist(mhDB  ))
+  mhReq  <- as.data.frame(data.table::rbindlist(mhReq ))
   mhPool <- as.data.frame(data.table::rbindlist(mhPool))
 
   if (nrow(mhDB) < 1)

@@ -48,6 +48,3 @@ To do (Enhancements)
 -   Change `something's wrong` error message
 -   Remove `suppressMessages()`
 -   Add visualization tools for excess pool and requirement (shiny app)
--   Introduce `dcc` (dump cost code) in `empPool`
-    -   This will be used as the default cost code where in the employee's idle man hours will be charged
-    -   This is a hack and will be used only as a final resort to assign an employee

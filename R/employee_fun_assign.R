@@ -31,7 +31,7 @@ assignMH <- function(hoursT, hoursR) {
   hoursData <- data.frame(hoursT = hoursT,
                           hoursR = hoursR,
                           hoursA = 0,
-                          month = c(1:12))
+                          month  = c(1:12))
 
   hoursData$hoursA <- apply(hoursData[,c(1,2)], MARGIN = 1, FUN = min)
   hoursData$hoursT <- hoursData$hoursT - hoursData$hoursA
@@ -125,15 +125,15 @@ assignMH <- function(hoursT, hoursR) {
 #' @export assignEmp
 setGeneric(
   name = "assignEmp",
-  def = function(empT, empR) {
+  def  = function(empT, empR) {
     standardGeneric("assignEmp")
   }
 )
 
 #' @describeIn assignEmp Assign \code{reg} hours
 setMethod(
-  f = "assignEmp",
-  signature = "Employee",
+  f          = "assignEmp",
+  signature  = "Employee",
   definition = function(empT, empR) {
 
     tempData <- assignMH(hoursT = empT@reg,
@@ -142,12 +142,12 @@ setMethod(
     empT@reg <- tempData$hoursT
     empR@reg <- tempData$hoursR
 
-    mhDB <- data.frame(ID = empR@ID,
-                       mh = tempData$hoursA,
-                       mhType = "reg",
-                       month = tempData$month,
-                       np = 0,
-                       costCode = empT@costCode,
+    mhDB <- data.frame(ID               = empR@ID,
+                       mh               = tempData$hoursA,
+                       mhType           = "reg",
+                       month            = tempData$month,
+                       np               = 0,
+                       costCode         = empT@costCode,
                        stringsAsFactors = FALSE)
 
     mhDB <- mhDB[which(mhDB$mh > 0),]
@@ -159,19 +159,20 @@ setMethod(
 #' @describeIn assignEmp Check for incompatible \code{\link{Staff-class}}
 #'   objects
 setMethod(
-  f = "assignEmp",
-  signature = "Staff",
+  f          = "assignEmp",
+  signature  = "Staff",
   definition = function(empT, empR) {
+
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
     # Assign hourly salary
     # Staff has no probationary and seasonal
 
-    results <- callNextMethod(empT = empT, empR = empR)
+    results      <- callNextMethod(empT = empT, empR = empR)
 
-    results[[1]] <- dplyr::left_join(x = results[[1]],
-                                     y = payA,
+    results[[1]] <- dplyr::left_join(x  = results[[1]],
+                                     y  = payA,
                                      by = "month")
 
     if (length(results[[1]]$ID) > 0) {
@@ -179,8 +180,8 @@ setMethod(
       results[[1]]$scheme <- "m"
       results[[1]]$status <- empR@status
 
-      maxReg <- data.frame(month = 1:12,
-                           maxReg = empR@maxReg)
+      maxReg   <- data.frame(month  = 1:12,
+                             maxReg = empR@maxReg)
 
       tempData <- dplyr::left_join(x = results[[1]],
                                    y = maxReg)
@@ -188,9 +189,7 @@ setMethod(
       results[[1]] <- as.data.frame(tempData)
 
     } else {
-
       results[[1]] <- NA
-
     }
 
     return(results)
@@ -199,8 +198,8 @@ setMethod(
 
 #' @describeIn assignEmp Assign \code{regOT} hours
 setMethod(
-  f = "assignEmp",
-  signature = "Non Staff",
+  f          = "assignEmp",
+  signature  = "Non Staff",
   definition = function(empT, empR) {
 
     results <- callNextMethod(empT = empT, empR = empR)
@@ -213,16 +212,15 @@ setMethod(
     empT@regOT <- tempData$hoursT
     empR@regOT <- tempData$hoursR
 
-    mhDB <- data.frame(ID = empR@ID,
-                       mh = tempData$hoursA,
-                       mhType = "regOT",
-                       month = tempData$month,
-                       np = 0,
-                       costCode = empT@costCode,
+    mhDB <- data.frame(ID               = empR@ID,
+                       mh               = tempData$hoursA,
+                       mhType           = "regOT",
+                       month            = tempData$month,
+                       np               = 0,
+                       costCode         = empT@costCode,
                        stringsAsFactors = FALSE)
 
     mhDB <- mhDB[which(mhDB$mh > 0),]
-
     mhDB <- rbind(results[[1]], mhDB)
 
     return(list(mhDB, empT, empR))
@@ -232,8 +230,8 @@ setMethod(
 #' @describeIn assignEmp Check for incompatible \code{\link{Clerk-class}}
 #'   objects
 setMethod(
-  f = "assignEmp",
-  signature = "Clerk",
+  f          = "assignEmp",
+  signature  = "Clerk",
   definition = function(empT, empR) {
 
     if (class(empT) != class(empR))
@@ -244,18 +242,16 @@ setMethod(
     if (length(results[[1]]$ID) > 0) {
 
       if (empR@status != "reg") {
-
         results[[1]]$sal <- "a"
-
       } else {
 
         if (empR@isRF) {
-          results[[1]] <- dplyr::left_join(x = results[[1]],
-                                           y = payB,
+          results[[1]] <- dplyr::left_join(x  = results[[1]],
+                                           y  = payB,
                                            by = "month")
         } else {
-          results[[1]] <- dplyr::left_join(x = results[[1]],
-                                           y = payA,
+          results[[1]] <- dplyr::left_join(x  = results[[1]],
+                                           y  = payA,
                                            by = "month")
         }
       }
@@ -268,8 +264,8 @@ setMethod(
 
       results[[1]]$status <- empR@status
 
-      maxReg <- data.frame(month = 1:12,
-                           maxReg = empR@maxReg)
+      maxReg   <- data.frame(month  = 1:12,
+                             maxReg = empR@maxReg)
 
       tempData <- dplyr::left_join(x = results[[1]],
                                    y = maxReg)
@@ -306,21 +302,28 @@ setMethod(
     # If a non-regular RF is assigned in a special holiday, add 8 hours per
     # special holiday assigned in holHours
     if (!isReg(empR) & isRF(empR)) {
+
       if (sum(tempData.sh$hoursA) + sum(tempData.rs$hoursA) > 0) {
+
         shToBeAddedA <- tempData.sh$hoursA
         shToBeAddedB <- tempData.rs$hoursA
+
         indexZeroA <- which(shToBeAddedA == 0L)
         indexZeroB <- which(shToBeAddedB == 0L)
+
         shToBeAddedA <- shToBeAddedA %/% 8
         shToBeAddedB <- shToBeAddedB %/% 8
         shToBeAddedA <- shToBeAddedA + 1L
         shToBeAddedB <- shToBeAddedB + 1L
         shToBeAddedA <- shToBeAddedA * 8L
         shToBeAddedB <- shToBeAddedB * 8L
+
         shToBeAddedA[indexZeroA] <- 0L
         shToBeAddedB[indexZeroB] <- 0L
+
         empR@holHours <- as.integer(empR@holHours + shToBeAddedA + shToBeAddedB)
       }
+
     }
 
     tempData.rdOT <- assignMH(hoursT = empT@rdOT, hoursR = empR@rdOT)
@@ -363,117 +366,117 @@ setMethod(
     empR@rlOT <- tempData.rlOT$hoursR
     empR@rnOT <- tempData.rnOT$hoursR
 
-    mhDB.rd <- data.frame(ID = empR@ID,
-                          mh = tempData.rd$hoursA,
-                          mhType = "rd",
-                          month = tempData.rd$month,
-                          np = 0,
-                          costCode = empT@costCode,
+    mhDB.rd <- data.frame(ID               = empR@ID,
+                          mh               = tempData.rd$hoursA,
+                          mhType           = "rd",
+                          month            = tempData.rd$month,
+                          np               = 0,
+                          costCode         = empT@costCode,
                           stringsAsFactors = FALSE)
 
-    mhDB.sh <- data.frame(ID = empR@ID,
-                          mh = tempData.sh$hoursA,
-                          mhType = "sh",
-                          month = tempData.sh$month,
-                          np = 0,
-                          costCode = empT@costCode,
+    mhDB.sh <- data.frame(ID               = empR@ID,
+                          mh               = tempData.sh$hoursA,
+                          mhType           = "sh",
+                          month            = tempData.sh$month,
+                          np               = 0,
+                          costCode         = empT@costCode,
                           stringsAsFactors = FALSE)
 
-    mhDB.lh <- data.frame(ID = empR@ID,
-                          mh = tempData.lh$hoursA,
-                          mhType = "lh",
-                          month = tempData.lh$month,
-                          np = 0,
-                          costCode = empT@costCode,
+    mhDB.lh <- data.frame(ID               = empR@ID,
+                          mh               = tempData.lh$hoursA,
+                          mhType           = "lh",
+                          month            = tempData.lh$month,
+                          np               = 0,
+                          costCode         = empT@costCode,
                           stringsAsFactors = FALSE)
 
-    mhDB.nh <- data.frame(ID = empR@ID,
-                          mh = tempData.nh$hoursA,
-                          mhType = "nh",
-                          month = tempData.nh$month,
-                          np = 0,
-                          costCode = empT@costCode,
+    mhDB.nh <- data.frame(ID               = empR@ID,
+                          mh               = tempData.nh$hoursA,
+                          mhType           = "nh",
+                          month            = tempData.nh$month,
+                          np               = 0,
+                          costCode         = empT@costCode,
                           stringsAsFactors = FALSE)
 
-    mhDB.rs <- data.frame(ID = empR@ID,
-                          mh = tempData.rs$hoursA,
-                          mhType = "rs",
-                          month = tempData.rs$month,
-                          np = 0,
-                          costCode = empT@costCode,
+    mhDB.rs <- data.frame(ID               = empR@ID,
+                          mh               = tempData.rs$hoursA,
+                          mhType           = "rs",
+                          month            = tempData.rs$month,
+                          np               = 0,
+                          costCode         = empT@costCode,
                           stringsAsFactors = FALSE)
 
-    mhDB.rl <- data.frame(ID = empR@ID,
-                          mh = tempData.rl$hoursA,
-                          mhType = "rl",
-                          month = tempData.rl$month,
-                          np = 0,
-                          costCode = empT@costCode,
+    mhDB.rl <- data.frame(ID               = empR@ID,
+                          mh               = tempData.rl$hoursA,
+                          mhType           = "rl",
+                          month            = tempData.rl$month,
+                          np               = 0,
+                          costCode         = empT@costCode,
                           stringsAsFactors = FALSE)
 
-    mhDB.rn <- data.frame(ID = empR@ID,
-                          mh = tempData.rn$hoursA,
-                          mhType = "rn",
-                          month = tempData.rn$month,
-                          np = 0,
-                          costCode = empT@costCode,
+    mhDB.rn <- data.frame(ID               = empR@ID,
+                          mh               = tempData.rn$hoursA,
+                          mhType           = "rn",
+                          month            = tempData.rn$month,
+                          np               = 0,
+                          costCode         = empT@costCode,
                           stringsAsFactors = FALSE)
 
-    mhDB.rdOT <- data.frame(ID = empR@ID,
-                          mh = tempData.rdOT$hoursA,
-                          mhType = "rdOT",
-                          month = tempData.rdOT$month,
-                          np = 0,
-                          costCode = empT@costCode,
-                          stringsAsFactors = FALSE)
+    mhDB.rdOT <- data.frame(ID               = empR@ID,
+                            mh               = tempData.rdOT$hoursA,
+                            mhType           = "rdOT",
+                            month            = tempData.rdOT$month,
+                            np               = 0,
+                            costCode         = empT@costCode,
+                            stringsAsFactors = FALSE)
 
-    mhDB.shOT <- data.frame(ID = empR@ID,
-                          mh = tempData.shOT$hoursA,
-                          mhType = "shOT",
-                          month = tempData.shOT$month,
-                          np = 0,
-                          costCode = empT@costCode,
-                          stringsAsFactors = FALSE)
+    mhDB.shOT <- data.frame(ID               = empR@ID,
+                            mh               = tempData.shOT$hoursA,
+                            mhType           = "shOT",
+                            month            = tempData.shOT$month,
+                            np               = 0,
+                            costCode         = empT@costCode,
+                            stringsAsFactors = FALSE)
 
-    mhDB.lhOT <- data.frame(ID = empR@ID,
-                          mh = tempData.lhOT$hoursA,
-                          mhType = "lhOT",
-                          month = tempData.lhOT$month,
-                          np = 0,
-                          costCode = empT@costCode,
-                          stringsAsFactors = FALSE)
+    mhDB.lhOT <- data.frame(ID               = empR@ID,
+                            mh               = tempData.lhOT$hoursA,
+                            mhType           = "lhOT",
+                            month            = tempData.lhOT$month,
+                            np               = 0,
+                            costCode         = empT@costCode,
+                            stringsAsFactors = FALSE)
 
-    mhDB.nhOT <- data.frame(ID = empR@ID,
-                          mh = tempData.nhOT$hoursA,
-                          mhType = "nhOT",
-                          month = tempData.nhOT$month,
-                          np = 0,
-                          costCode = empT@costCode,
-                          stringsAsFactors = FALSE)
+    mhDB.nhOT <- data.frame(ID               = empR@ID,
+                            mh               = tempData.nhOT$hoursA,
+                            mhType           = "nhOT",
+                            month            = tempData.nhOT$month,
+                            np               = 0,
+                            costCode         = empT@costCode,
+                            stringsAsFactors = FALSE)
 
-    mhDB.rsOT <- data.frame(ID = empR@ID,
-                          mh = tempData.rsOT$hoursA,
-                          mhType = "rsOT",
-                          month = tempData.rsOT$month,
-                          np = 0,
-                          costCode = empT@costCode,
-                          stringsAsFactors = FALSE)
+    mhDB.rsOT <- data.frame(ID               = empR@ID,
+                            mh               = tempData.rsOT$hoursA,
+                            mhType           = "rsOT",
+                            month            = tempData.rsOT$month,
+                            np               = 0,
+                            costCode         = empT@costCode,
+                            stringsAsFactors = FALSE)
 
-    mhDB.rlOT <- data.frame(ID = empR@ID,
-                          mh = tempData.rlOT$hoursA,
-                          mhType = "rlOT",
-                          month = tempData.rlOT$month,
-                          np = 0,
-                          costCode = empT@costCode,
-                          stringsAsFactors = FALSE)
+    mhDB.rlOT <- data.frame(ID               = empR@ID,
+                            mh               = tempData.rlOT$hoursA,
+                            mhType           = "rlOT",
+                            month            = tempData.rlOT$month,
+                            np               = 0,
+                            costCode         = empT@costCode,
+                            stringsAsFactors = FALSE)
 
-    mhDB.rnOT <- data.frame(ID = empR@ID,
-                          mh = tempData.rnOT$hoursA,
-                          mhType = "rnOT",
-                          month = tempData.rnOT$month,
-                          np = 0,
-                          costCode = empT@costCode,
-                          stringsAsFactors = FALSE)
+    mhDB.rnOT <- data.frame(ID               = empR@ID,
+                            mh               = tempData.rnOT$hoursA,
+                            mhType           = "rnOT",
+                            month            = tempData.rnOT$month,
+                            np               = 0,
+                            costCode         = empT@costCode,
+                            stringsAsFactors = FALSE)
 
     mhDB <- data.table::rbindlist(list(results[[1]],
                                        mhDB.rd,
@@ -500,36 +503,35 @@ setMethod(
 #' @describeIn assignEmp Check for incompatible \code{\link{Technical-class}}
 #'   objects
 setMethod(
-  f = "assignEmp",
+  f          = "assignEmp",
   signature = "Technical",
   definition = function(empT, empR) {
+
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
     results <- callNextMethod(empT = empT, empR = empR)
 
     if (length(results[[1]]$ID) > 0) {
-
       if (empR@status != "reg") {
-
         results[[1]]$sal <- "a"
-
       } else {
-
-        results[[1]] <- dplyr::left_join(x = results[[1]],
-                                         y = payA,
+        results[[1]] <- dplyr::left_join(x  = results[[1]],
+                                         y  = payA,
                                          by = "month")
-
       }
 
       results[[1]]$scheme <- "m"
       results[[1]]$status <- empR@status
 
-      maxReg <- data.frame(month = 1:12,
-                           maxReg = empR@maxReg)
+      maxReg   <- data.frame(month  = 1:12,
+                             maxReg = empR@maxReg)
+
       tempData <- dplyr::left_join(x = results[[1]],
                                    y = maxReg)
+
       results[[1]] <- as.data.frame(tempData)
+
     } else {
       results[[1]] <- NA
     }
@@ -540,23 +542,20 @@ setMethod(
 
 #' @describeIn assignEmp Compute for working hours with night premium pay
 setMethod(
-  f= "assignEmp",
-  signature = "Production Personnel",
+  f          = "assignEmp",
+  signature  = "Production Personnel",
   definition = function(empT, empR) {
+
     tempData <- callNextMethod(empT = empT, empR = empR)
 
     mhDB <- tempData[[1]]
 
     if (length(mhDB$ID) > 0) {
-
       if (tempData[[3]]@status == "reg") {
-
         mhDB$np <- as.integer((mhDB$mh * 0.5) + 0.5)
-
       } else {
         mhDB$np <- as.integer((mhDB$mh * (1/3)) + 0.5)
       }
-
     } else {
       mhDB <- NA
     }
@@ -568,9 +567,10 @@ setMethod(
 #' @describeIn assignEmp Check for incompatible \code{\link{Supervisor-class}}
 #'   objects
 setMethod(
-  f = "assignEmp",
-  signature = "Supervisor",
+  f          = "assignEmp",
+  signature  = "Supervisor",
   definition = function(empT, empR) {
+
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
@@ -581,18 +581,20 @@ setMethod(
       if (empR@status != "reg") {
         results[[1]]$sal <- "a"
       } else {
-        results[[1]] <- dplyr::left_join(x = results[[1]],
-                                         y = payA,
+        results[[1]] <- dplyr::left_join(x  = results[[1]],
+                                         y  = payA,
                                          by = "month")
       }
 
       results[[1]]$scheme <- "m"
       results[[1]]$status <- empR@status
 
-      maxReg <- data.frame(month = 1:12,
-                           maxReg = empR@maxReg)
+      maxReg   <- data.frame(month  = 1:12,
+                             maxReg = empR@maxReg)
+
       tempData <- dplyr::left_join(x = results[[1]],
                                    y = maxReg)
+
       results[[1]] <- as.data.frame(tempData)
     }
 
@@ -603,9 +605,10 @@ setMethod(
 #' @describeIn assignEmp Check for incompatible \code{\link{Laborer-class}}
 #'   objects
 setMethod(
-  f = "assignEmp",
-  signature = "Laborer",
+  f          = "assignEmp",
+  signature  = "Laborer",
   definition = function(empT, empR) {
+
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
@@ -616,18 +619,20 @@ setMethod(
       if (empR@status != "reg") {
         results[[1]]$sal <- "a"
       } else {
-        results[[1]] <- dplyr::left_join(x = results[[1]],
-                                         y = payB,
+        results[[1]] <- dplyr::left_join(x  = results[[1]],
+                                         y  = payB,
                                          by = "month")
       }
 
       results[[1]]$scheme <- "d"
       results[[1]]$status <- empR@status
 
-      maxReg <- data.frame(month = 1:12,
-                           maxReg = empR@maxReg)
+      maxReg   <- data.frame(month   = 1:12,
+                             maxReg  = empR@maxReg)
+
       tempData <- dplyr::left_join(x = results[[1]],
                                    y = maxReg)
+
       results[[1]] <- as.data.frame(tempData)
     }
 
@@ -638,8 +643,8 @@ setMethod(
 #' @describeIn assignEmp Check for incompatible \code{\link{Operator-class}}
 #'   objects
 setMethod(
-  f = "assignEmp",
-  signature = "Operator",
+  f          = "assignEmp",
+  signature  = "Operator",
   definition = function(empT, empR) {
 
     if (class(empT) != class(empR))
@@ -651,23 +656,23 @@ setMethod(
     results <- callNextMethod(empT = empT, empR = empR)
 
     if (class(results[[1]]) != "logical") {
-    # if (!is.na(results[[1]])) {
-
       if (empR@status != "reg") {
         results[[1]]$sal <- "a"
       } else {
-        results[[1]] <- dplyr::left_join(x = results[[1]],
-                                         y = payB,
+        results[[1]] <- dplyr::left_join(x  = results[[1]],
+                                         y  = payB,
                                          by = "month")
       }
 
       results[[1]]$scheme <- "d"
       results[[1]]$status <- empR@status
 
-      maxReg <- data.frame(month = 1:12,
-                           maxReg = empR@maxReg)
+      maxReg   <- data.frame(month  = 1:12,
+                             maxReg = empR@maxReg)
+
       tempData <- dplyr::left_join(x = results[[1]],
                                    y = maxReg)
+
       results[[1]] <- as.data.frame(tempData)
     }
 

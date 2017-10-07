@@ -91,9 +91,43 @@ assignPrio <- function(empReq, empPool, listT, listR) {
 
   }
 
+  tempData4 <- data.frame(ID       = NA,
+                          mh       = NA,
+                          mhType   = NA,
+                          month    = NA,
+                          np       = NA,
+                          costCode = NA,
+                          sal      = NA,
+                          scheme   = NA,
+                          status   = NA,
+                          maxReg   = NA)
+
+  if (length(listR) > 0 & !all(is.na(empPool$dcc))) {
+
+    tempIndex <- which(!is.na(empPool$dcc))
+    listR.dcc <- listR[tempIndex]
+    empPool   <- empPool[-tempIndex,]
+    listR     <- listR[-tempIndex]
+
+    listR.dcc <- lapply(listR.dcc, FUN = function(x) {
+
+      y          <- normEmp(theObject = x)
+      y@costCode <- x@dcc
+
+      return(y)
+    })
+
+    for (i in listR.dcc) {
+      tempMHDB  <- assignEmp(empT = i, empR = i)
+      tempData4 <- dfAppend(tempData4, tempMHDB)
+    }
+
+  }
+
   mhDB <- data.table::rbindlist(l = list(tempData1[[5]],
                                          tempData2[[5]],
-                                         tempData3[[5]]))
+                                         tempData3[[5]],
+                                         tempData4))
 
   mhDB <- as.data.frame(mhDB)
 
@@ -129,25 +163,16 @@ assignPrio <- function(empReq, empPool, listT, listR) {
     if (nrow(mhPool) > 0) {
 
       for (i in 1:length(listTN)) {
-
         if (sum(getHours(listTN[[i]])) > 0) {
 
-          suppressMessages(
-            tempData <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
-          )
-
-          listTN[[i]] <- tempData[[2]]
-          listR[[i]] <- tempData[[3]]
+          tempData         <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
+          listTN[[i]]      <- tempData[[2]]
+          listR[[i]]       <- tempData[[3]]
           tempData[[1]]$np <- 0L
+
           mhDB <- dfAppend(mhDB, tempData[[1]])
-
         }
-
-        if (sum(getHours(listTN[[i]])) != 0)
-          stop("All man hours in listTN not assigned!")
-
       }
-
     } else {
       mhPool <- NULL
     }
