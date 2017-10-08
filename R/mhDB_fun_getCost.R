@@ -1299,10 +1299,11 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     return(list(x, tempData))
   })
 
-  export.mh <- costDB[costDB$code == 999999,
-                      !colnames(costDB) %in% c("row", "code")]
-  export.mh <- as.data.frame(export.mh)
-  export.mh <- export.mh[order(export.mh$costCode),]
+  export.mh     <- costDB[costDB$code == 999999,
+                          !colnames(costDB) %in% c("row", "code")]
+  export.mh     <- as.data.frame(export.mh)
+  export.mh     <- export.mh[order(export.mh$costCode),]
+  export.mh$SUM <- apply(export.mh[, 2:13], MARGIN = 1, FUN = sum)
 
   return(list(export, export.mh, accr.13mp, mhDB.bonus))
 }

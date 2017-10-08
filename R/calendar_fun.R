@@ -162,7 +162,7 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
   hol$month <- lubridate::month(hol$date)
   hol       <- hol[,c("month", "mdType")]
   hol       <- table(hol)
-  hol <- as.data.frame.matrix(hol)
+  hol       <- as.data.frame.matrix(hol)
 
   # Ensure all 12 rows are present
 
@@ -239,16 +239,14 @@ getMDTProb <- function(hol) {
   })
 
   # Get the number of holidays per month
-  hol$month <- lubridate::month(hol$date)
-  hol       <- hol[,c("month", "type")]
-  hol       <- table(hol)
-
-  sched <- data.frame(month = as.integer(rownames(hol)),
-                      reg   = hol[, "reg"],
-                      sh    = hol[, "sh"],
-                      lh    = hol[, "lh"],
-                      nh    = hol[, "nh"])
-
+  hol$month  <- lubridate::month(hol$date)
+  hol        <- hol[,c("month", "type")]
+  hol        <- table(hol)
+  sched      <- data.frame(month = as.integer(rownames(hol)),
+                           reg   = hol[, "reg"],
+                           sh    = hol[, "sh" ],
+                           lh    = hol[, "lh" ],
+                           nh    = hol[, "nh" ])
   sched$days <- sched$reg + sched$sh + sched$lh + sched$nh
 
   # Compute for the probability of rd and all holiday types
