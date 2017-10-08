@@ -11,7 +11,17 @@
 #' @export budget
 #' @importFrom readxl read_xlsx
 #' @importFrom xlsx write.xlsx
+#' @importFrom dplyr left_join group_by summarise
+#' @importFrom magrittr "%>%"
+#' @importFrom tidyr spread
 budget <- function(myFile, year, forecast = FALSE) {
+
+  # Define global variables
+  equipment      <- NULL
+  ID             <- NULL
+  mh             <- NULL
+  personnelClass <- NULL
+
 
   empReq.colnames <- c("activity",
                        "personnelClass",
@@ -285,12 +295,32 @@ budget <- function(myFile, year, forecast = FALSE) {
                    row.names = FALSE)
 
   if (!is.null(mhPool)) {
+
+    mhPool <- dplyr::left_join(
+      x  = mhPool,
+      y  = empPool[, colnames(empPool) %in% c("ID",
+                                              "personnelClass",
+                                              "equipment"),],
+      by = "ID"
+    )
+
+    mhPool <- mhPool %>%
+      dplyr::group_by(ID, month, personnelClass, equipment) %>%
+      dplyr::summarise(mh = sum(mh))
+
+    mhPool <- mhPool %>%  tidyr::spread(month, mh, fill = 0)
+    mhPool <- as.data.frame(mhPool)
+
     xlsx::write.xlsx(x         = mhPool,
                      file      = "pool.xlsx",
                      row.names = FALSE)
   }
 
   if (!is.null(mhReq)) {
+
+    mhReq <- mhReq %>% tidyr::spread(month, mh, fill = 0)
+    mhReq <- as.data.frame(mhReq)
+
     xlsx::write.xlsx(x         = mhReq,
                      file      = "req.xlsx",
                      row.names = FALSE)
