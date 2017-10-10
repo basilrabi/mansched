@@ -110,28 +110,38 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   })
 
   # Get salary increase
-  wage$sB <- apply(wage[,c(2:4)], MARGIN = 1, FUN = function(x) {
+  IDs     <- sapply(listR, FUN = function(x) {x@ID})
+  wage$sB <- apply(wage[, 1:4], MARGIN = 1, FUN = function(x) {
 
-    sal <- NA
+    x     <- sapply(x, trimws)
+    sal   <- as.numeric(x[2])
+    RF    <- as.logical(x[3])
+    Staff <- as.logical(x[4])
 
     if (forecast) {
-      if (x[2]) {
-        sal <- x[1]
-      } else if (x[3]) {
-        sal <- x[1]
-      } else {
-        sal <- x[1]
-      }
+      return(sal)
     } else {
-      if (x[2]) {
-        sal <- x[1] + 105
-      } else if (x[3]) {
-        sal <- x[1] + 3500
-      } else {
-        sal <- x[1] + 3000
+
+      tempIndex <- which(IDs == x[1])
+      cBegin    <- listR[[tempIndex]]@cBegin
+      cEnd      <- listR[[tempIndex]]@cEnd
+      year      <- substr(cEnd, start = 1L, stop = 4L)
+      cBegin    <- as.Date(cBegin)
+      cEnd      <- as.Date(cEnd)
+
+      if (RF) {
+        if (as.Date(paste(year, "-02-01", sep = "")) > cBegin) {
+          sal <- sal + 105
+        }
+      } else if ((as.Date(paste(year, "-07-01", sep = "")) > cBegin)) {
+        if (Staff) {
+          sal <- sal + 3500
+        } else {
+          sal <- sal + 3000
+        }
       }
+      return(sal)
     }
-    return(sal)
   })
   cat("\nEstimated salary increase.\n")
 
