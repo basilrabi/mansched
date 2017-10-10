@@ -781,45 +781,29 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   mhDB.PH$cost <- round(mhDB.PH$X * mhDB.PH$PH, digits = 2)
 
-  mhDB.PH <- as.data.frame(mhDB.PH)
-
+  mhDB.PH   <- as.data.frame(mhDB.PH)
   mhDB.PH.A <- mhDB.PH[mhDB.PH$status == "age", ]
   mhDB.PH   <- mhDB.PH[mhDB.PH$status != "age", ]
 
   # Compute for Leave Commutation
   cat("\nComputing leave commutation.\n")
 
-  ## Get maxReg
+  ## Separate regular employees
 
-  maxRegDB <- lapply(listR, FUN = function(x) {
+  ### Extract maximum regular hours for each employee
+  maxRegDB <- lapply(listR[sapply(listR, isReg)], FUN = function(x) {
     data.frame(ID               = x@ID,
                month            = 1:12,
                maxReg           = x@maxReg,
                stringsAsFactors = FALSE)
   })
 
-  ## Get total reg hours attendance (RH)
-
-  ### Separate regular employees
-
-  mhDB.RH.R <- mhDB[mhDB$status == "reg" & mhDB$mhType == "reg", ] %>%
+  ### Get total reg hours attendance (RH)
+  mhDB.RH <- mhDB[mhDB$status == "reg" & mhDB$mhType == "reg", ] %>%
     dplyr::group_by(ID, month, sal) %>%
     dplyr::summarise(mh = sum(mh))
 
-  ### Separate probationary, seasonal and agency employees
-  ###   These must be separated since they are not entitled to negotiated
-  ###   holiday premium.
-
-  mhDB.RH.S <- mhDB[mhDB$status %in% c("pro", "sea", "age") &
-                      mhDB$mhType %in% c("reg", "nh"), ] %>%
-    dplyr::group_by(ID, month, sal) %>%
-    dplyr::summarise(mh = sum(mh))
-
-  ### Merge regular and non-regular
-
-  mhDB.RH <- data.table::rbindlist(l = list(mhDB.RH.R, mhDB.RH.S))
-
-  ## Combine RH to maxRegDB then compute leave hours (LH) per month
+  ### Join RH to maxRegDB then compute leave hours (LH) per month
   maxRegDB <- lapply(maxRegDB, FUN = function(z) {
 
     z <- dplyr::left_join(x = z, y = mhDB.RH, by = c("ID", "month"))
@@ -836,9 +820,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     z$LH      <- 0
 
     for (i in 1:12) {
-
       if (LC > 0) {
-
         minus   <- min(z$absence[i], LC)
         z$LH[i] <- minus
         LC      <- LC - minus
@@ -857,41 +839,87 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   maxRegDB <- data.table::rbindlist(maxRegDB)
 
+  ### Compute LC cost
   maxRegDB <- dplyr::left_join(
     x  = maxRegDB,
     y  = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")],
     by = c("ID", "sal")
   )
-
-
   maxRegDB$LC <- maxRegDB$salH * maxRegDB$LH
 
-  ## Distribute leave commutation cost
-  mhDB.LC <-mhDB[mhDB$mhType %in% distType, ] %>%
-    dplyr::group_by(ID, month, costCode, status) %>%
+  ### Distribute LC cost for regular employees
+  mhDB.LC.R <-mhDB[mhDB$mhType %in% distType & mhDB$status == "reg", ] %>%
+    dplyr::group_by(ID, month, costCode) %>%
     dplyr::summarise(mh = sum(mh))
 
-  mhDB.LC <- mhDB.LC %>%
-    dplyr::group_by(ID, month, status) %>%
+  mhDB.LC.R <- mhDB.LC.R %>%
+    dplyr::group_by(ID, month) %>%
     dplyr::mutate(totMH = sum(mh))
 
-  mhDB.LC$X <- mhDB.LC$mh / mhDB.LC$totMH
-
-  if (any(mhDB.LC$X > 1))
-    stop("Man hours fraction must not be greater than one!")
-
-  mhDB.LC <- dplyr::left_join(
-    x  = mhDB.LC,
+  mhDB.LC.R$X <- mhDB.LC.R$mh / mhDB.LC.R$totMH
+  mhDB.LC.R   <- dplyr::left_join(
+    x  = mhDB.LC.R,
     y  = maxRegDB[, colnames(maxRegDB) %in% c("ID", "month", "LC")],
     by = c("ID", "month")
   )
 
-  ## Get cost
-  mhDB.LC$cost <- round(mhDB.LC$X * mhDB.LC$LC, digits = 2)
-  mhDB.LC      <- as.data.frame(mhDB.LC)
+  mhDB.LC.R$cost <- round(mhDB.LC.R$X * mhDB.LC.R$LC, digits = 2)
 
-  mhDB.LC.A <- mhDB.LC[mhDB.LC$status == "age", ]
-  mhDB.LC   <- mhDB.LC[mhDB.LC$status != "age", ]
+  ## Separate seasonal and agency employees
+  ##- These must be separated since they are not entitled to negotiated
+  ##- holiday premium.
+  ##- Probationary employees have no leave commutation.
+
+  ### Get leave hours
+  LH <- lapply(listR[sapply(listR, FUN = function(x) {
+    x@status %in% c("sea", "age")
+  })], FUN = function(x) {
+    data.frame(ID  = x@ID,
+               LH  = x@leaveHours,
+               sal = "a",
+               stringsAsFactors = FALSE)
+  })
+  LH <- data.table::rbindlist(LH)
+
+  ### Get LC cost per employee for the whole year
+  LH <- dplyr::left_join(x  = LH,
+                         y  = wageEmp[ ,
+                                       !colnames(wageEmp) %in% c("salM",
+                                                                 "isRF")],
+                         by = c("ID", "sal"))
+
+  LH$LC <- LH$LH * LH$salH
+
+  ### Distribute LC throught the year
+  mhDB.LC.S <- mhDB[mhDB$status %in% c("sea", "age") &
+                      mhDB$mhType %in% distType, ] %>%
+    dplyr::group_by(ID, month, costCode, status) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.LC.S <- mhDB.LC.S %>%
+    dplyr::group_by(ID) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.LC.S$X <- mhDB.LC.S$mh / mhDB.LC.S$totMH
+  mhDB.LC.S   <- dplyr::left_join(
+    x  = mhDB.LC.S,
+    y  = LH[, colnames(LH) %in% c("ID", "LC")],
+    by = "ID"
+  )
+
+  mhDB.LC.S$cost <- round(mhDB.LC.S$X * mhDB.LC.S$LC, digits = 2)
+
+  ## Get cost
+  mhDB.LC <- data.table::rbindlist(l = list(
+    mhDB.LC.R[, colnames(mhDB.LC.R) %in% c("costCode", "month", "cost")],
+    mhDB.LC.S[mhDB.LC.S$status == "sea",
+              colnames(mhDB.LC.S) %in% c("costCode", "month", "cost")]
+  ))
+
+  mhDB.LC.A <- mhDB.LC.S[mhDB.LC.S$status == "age",
+                         colnames(mhDB.LC.S) %in% c("costCode",
+                                                    "month",
+                                                    "cost")]
 
   # Compute for Hospital and Medical Expenses
   cat("\nComputing hospital and medical expenses.\n")
