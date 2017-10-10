@@ -276,14 +276,22 @@ budget <- function(myFile, year, forecast = FALSE) {
   accr.13mp.R <- accr.13mp[accr.13mp$status == "reg",
                            !colnames(accr.13mp) %in% c("status")]
 
-  accr.13mp.S <- accr.13mp[accr.13mp$status %in% c("pro", "sea"),
+  accr.13mp.P <- accr.13mp[accr.13mp$status == "pro",
+                           !colnames(accr.13mp) %in% c("status")]
+
+  accr.13mp.S <- accr.13mp[accr.13mp$status == "sea",
                            !colnames(accr.13mp) %in% c("status")]
 
   accr.13mp.R <- as.data.frame(accr.13mp.R)
+  accr.13mp.P <- as.data.frame(accr.13mp.P)
   accr.13mp.S <- as.data.frame(accr.13mp.S)
 
   xlsx::write.xlsx(x         = accr.13mp.R,
                    file      = "13mp-reg.xlsx",
+                   row.names = FALSE)
+
+  xlsx::write.xlsx(x         = accr.13mp.P,
+                   file      = "13mp-pro.xlsx",
                    row.names = FALSE)
 
   xlsx::write.xlsx(x         = accr.13mp.S,
