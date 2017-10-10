@@ -11,6 +11,10 @@ NULL
 #'   contract of the employee began
 #'
 #'   The accepted format is \code{"yyyy-mm-dd"}.
+#' @param cEnd  character string defining the date wherein the employment
+#'   contract of the employee will end
+#'
+#'   The accepted format is \code{"yyyy-mm-dd"}.
 #' @param year numeric value representing the year to be computed
 #' @param status character string representing the employment status of the
 #'   employee
@@ -18,14 +22,29 @@ NULL
 #'   See \code{\link{validEmpStatus}} for accepted values.
 #' @return integer value
 #' @export getLeaveHours
-getLeaveHours <- function(cBegin, year, status) {
+getLeaveHours <- function(cBegin, cEnd = NA, year, status) {
 
   if (!status %in% validEmpStatus)
     stop("Invalid employment status!")
 
-  # 5 days service incentive leave for non-regular employees
-  if (status != "reg")
-    return(as.integer(5 * 8))
+  # No leaves for probationary
+  if (status == "pro")
+    return(0L)
+
+  # 5 days service incentive leave per year for agency and seasonal
+  if (status %in% c("sea", "age")) {
+
+    if (is.na(cEnd))
+      stop("cEnd must be present for agency and seasonal employees.")
+
+    schedA   <- dates(begin = paste(year, "-01-01", sep = ""),
+                      end   = paste(year, "-12-31", sep = ""))
+    schedB   <- dates(begin = cBegin, end = cEnd)
+    totDays  <- sum(schedB$date %in% schedA$date)
+    totDays  <- totDays / nrow(schedA)
+
+    return(as.integer((totDays * 5 * 8) + 0.5))
+  }
 
   cBegin    <- as.Date(cBegin, origin = "1970-01-01")
   yearBegin <- paste(year, "-01-01", sep = "")

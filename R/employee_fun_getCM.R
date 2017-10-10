@@ -38,7 +38,7 @@ setMethod(
     tempYear    <- substr(theObject@cEnd, start = 1, stop = 4)
 
     sched       <- dates(begin = paste(tempYear, "-01-01", sep = ""),
-                         end = paste(tempYear, "-12-31", sep = ""))
+                         end   = paste(tempYear, "-12-31", sep = ""))
 
     sched$month <- as.integer(lubridate::month(sched$date))
 

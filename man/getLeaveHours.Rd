@@ -4,11 +4,16 @@
 \alias{getLeaveHours}
 \title{Compute Leave Hours}
 \usage{
-getLeaveHours(cBegin, year, status)
+getLeaveHours(cBegin, cEnd = NA, year, status)
 }
 \arguments{
 \item{cBegin}{character string defining the date wherein the employment
   contract of the employee began
+
+  The accepted format is \code{"yyyy-mm-dd"}.}
+
+\item{cEnd}{character string defining the date wherein the employment
+  contract of the employee will end
 
   The accepted format is \code{"yyyy-mm-dd"}.}
 

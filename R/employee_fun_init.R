@@ -205,6 +205,7 @@ setMethod(
     theObject@reg        <- as.integer(regDays* 8 * theObject@attendance)
 
     theObject@leaveHours <- getLeaveHours(cBegin = theObject@cBegin,
+                                          cEnd   = theObject@cEnd,
                                           year   = lubridate::year(hol$date[1]),
                                           status = theObject@status)
 
