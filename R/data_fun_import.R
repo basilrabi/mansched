@@ -66,8 +66,13 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
 
   # Error if any ID is duplicated
   if (anyDuplicated(empPool$ID) > 0) {
+
     tempData <- empPool$ID[which(duplicated(empPool$ID))]
-    stop(paste("Duplicated;", tempData))
+
+    for (i in tempData)
+      cat(paste("Duplicated pool: ", i, "\n",sep = ""))
+
+    stop(paste("Duplicated ID in pool!"))
   }
 
   # Remove white spaces (including leading and trailing spaces)
@@ -229,8 +234,13 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
 
   # Error if scheduled any scheduled activity is duplicated
   if (anyDuplicated(sched$activity) > 0) {
+
     tempData <- sched$activity[which(duplicated(sched$activity))]
-    stop(paste("Duplicated:",tempData))
+
+    for (i in tempData)
+      cat(paste("Duplicated sched: ", i, "\n",sep = ""))
+
+    stop(paste("Duplicated activity in schedule!"))
   }
 
   # Error if assigned activity is not scheduled
