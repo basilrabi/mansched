@@ -1,8 +1,6 @@
 #' @import methods
 NULL
 
-# theObject <- listR[[1]]
-
 #' Compute the monthly allowance of employee
 #'
 #' Depending on the attributes of the employee, his or her monthly allowances

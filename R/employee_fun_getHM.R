@@ -1,8 +1,6 @@
 #' @import methods
 NULL
 
-# theObject <- listR[[1]]
-
 #' Compute monthly hospital and medical expenses budgeted for employee
 #'
 #' Depending on the employment statys of the employee, his or her monthly

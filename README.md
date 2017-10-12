@@ -37,9 +37,6 @@ devtools::install_github('basilrabi/mansched')
 To do
 -----
 
--   Do not adjust salary on the following case:
-    -   RF is regularized after February
-    -   Non-RF is regularized after July
 -   Correct calculation of bonus
 
 To do (Enhancements)

@@ -1025,8 +1025,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
     if (isRF(x)) {
 
-      tempData <- dplyr::left_join(x = tempData, y = payB,by = "month")
-
+      tempData <- dplyr::left_join(x = tempData, y = payB, by = "month")
       tempData <- dplyr::left_join(
         x  = tempData,
         y  = wageEmp[wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
@@ -1040,7 +1039,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     } else {
 
       tempData <- dplyr::left_join(x = tempData, y = payA, by = "month")
-
       tempData <- dplyr::left_join(
         x  = tempData,
         y  = wageEmp[!wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
@@ -1055,7 +1053,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "bonus")]
     tempData <- as.data.frame(tempData)
 
-    tempData
+    return(tempData)
   })
 
   bonus <- data.table::rbindlist(bonus)
@@ -1069,20 +1067,49 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     dplyr::mutate(totMH = sum(mh))
 
   mhDB.bonus$X <- mhDB.bonus$mh / mhDB.bonus$totMH
-
-  mhDB.bonus <- dplyr::left_join(x  = mhDB.bonus,
-                                 y  = bonus,
-                                 by = c("ID", "month"))
+  mhDB.bonus   <- dplyr::left_join(x  = mhDB.bonus,
+                                   y  = bonus,
+                                   by = c("ID", "month"))
 
   mhDB.bonus$cost <- round(mhDB.bonus$X * mhDB.bonus$bonus, digits = 2)
   mhDB.bonus      <- mhDB.bonus[!is.na(mhDB.bonus$cost),]
-
-  mhDB.bonus <- mhDB.bonus %>%
+  mhDB.bonus      <- mhDB.bonus %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     tidyr::spread(month, cost, fill = 0)
 
   mhDB.bonus <- as.data.frame(mhDB.bonus)
+
+  # Compute for Rice Subsidy for Agency
+  cat("\nComputing rice subsidy.\n")
+
+  listR.A <- listR[sapply(listR, function(x) {return(x@status == "age")})]
+
+  if (length(listR.A) > 0) {
+
+    ## Get rice subsidy per month per employee
+    riceSub.A <- lapply(listR.A, FUN = getRiceSub)
+    riceSub.A <- data.table::rbindlist(riceSub.A)
+
+    ## Distibute rice subsidy
+    mhDB.riceSub.A <- mhDB[mhDB$mhType %in% distType &
+                             mhDB$status == "age",] %>%
+      dplyr::group_by(ID, month, costCode) %>%
+      dplyr::summarise(mh = sum(mh))
+
+    mhDB.riceSub.A <- mhDB.riceSub.A %>%
+      dplyr::group_by(ID, month) %>%
+      dplyr::mutate(totMH = sum(mh))
+
+    mhDB.riceSub.A$X <- mhDB.riceSub.A$mh / mhDB.riceSub.A$totMH
+    mhDB.riceSub.A   <- dplyr::left_join(x  = mhDB.riceSub.A,
+                                         y  = riceSub.A,
+                                         by = c("ID", "month"))
+
+    mhDB.riceSub.A$cost <- mhDB.riceSub.A$X * mhDB.riceSub.A$riceSub
+  } else {
+    mhDB.riceSub.A <- NULL
+  }
 
   cat("\nMerging costs.\n")
 
@@ -1279,6 +1306,10 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     data.frame(costCode         = mhDB.13mp.A$costCode,
                month            = mhDB.13mp.A$month,
                cost             = mhDB.13mp.A$cost,
+               stringsAsFactors = FALSE),
+    data.frame(costCode         = mhDB.riceSub.A$costCode,
+               month            = mhDB.riceSub.A$month,
+               cost             = mhDB.riceSub.A$cost,
                stringsAsFactors = FALSE)
   ))
 
