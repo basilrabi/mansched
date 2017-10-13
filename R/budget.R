@@ -22,7 +22,6 @@ budget <- function(myFile, year, forecast = FALSE) {
   mh             <- NULL
   personnelClass <- NULL
 
-
   empReq.colnames <- c("activity",
                        "personnelClass",
                        "quantity",
@@ -256,15 +255,12 @@ budget <- function(myFile, year, forecast = FALSE) {
 
   }
 
-
   for (i in costDB[[1]]) {
-
     xlsx::write.xlsx(x         = i[[2]],
                      file      = "personnelCost.xlsx",
                      row.names = FALSE,
                      sheetName = paste(i[[1]]),
                      append    = TRUE)
-
   }
 
   xlsx::write.xlsx(x         = costDB[[2]],
@@ -272,35 +268,36 @@ budget <- function(myFile, year, forecast = FALSE) {
                    row.names = FALSE)
 
   accr.13mp   <- costDB[[3]]
-
   accr.13mp.R <- accr.13mp[accr.13mp$status == "reg",
                            !colnames(accr.13mp) %in% c("status")]
-
   accr.13mp.P <- accr.13mp[accr.13mp$status == "pro",
                            !colnames(accr.13mp) %in% c("status")]
-
   accr.13mp.S <- accr.13mp[accr.13mp$status == "sea",
                            !colnames(accr.13mp) %in% c("status")]
 
-  accr.13mp.R <- as.data.frame(accr.13mp.R)
-  accr.13mp.P <- as.data.frame(accr.13mp.P)
-  accr.13mp.S <- as.data.frame(accr.13mp.S)
+  if (nrow(accr.13mp.R) > 0) {
+    xlsx::write.xlsx(x         = as.data.frame(accr.13mp.R),
+                     file      = "13mp-reg.xlsx",
+                     row.names = FALSE)
+  }
 
-  xlsx::write.xlsx(x         = accr.13mp.R,
-                   file      = "13mp-reg.xlsx",
-                   row.names = FALSE)
+  if (nrow(accr.13mp.P) > 0) {
+    xlsx::write.xlsx(x         = as.data.frame(accr.13mp.P),
+                     file      = "13mp-pro.xlsx",
+                     row.names = FALSE)
+  }
 
-  xlsx::write.xlsx(x         = accr.13mp.P,
-                   file      = "13mp-pro.xlsx",
-                   row.names = FALSE)
+  if (nrow(accr.13mp.S) > 0) {
+    xlsx::write.xlsx(x         = as.data.frame(accr.13mp.S),
+                     file      = "13mp-sea.xlsx",
+                     row.names = FALSE)
+  }
 
-  xlsx::write.xlsx(x         = accr.13mp.S,
-                   file      = "13mp-sea.xlsx",
-                   row.names = FALSE)
-
-  xlsx::write.xlsx(x         = costDB[[4]],
-                   file      = "bonus.xlsx",
-                   row.names = FALSE)
+  if (nrow(costDB[[4]]) > 0) {
+    xlsx::write.xlsx(x         = as.data.frame(costDB[[4]]),
+                     file      = "bonus.xlsx",
+                     row.names = FALSE)
+  }
 
   if (!is.null(mhPool)) {
 
@@ -317,9 +314,8 @@ budget <- function(myFile, year, forecast = FALSE) {
       dplyr::summarise(mh = sum(mh))
 
     mhPool <- mhPool %>%  tidyr::spread(month, mh, fill = 0)
-    mhPool <- as.data.frame(mhPool)
 
-    xlsx::write.xlsx(x         = mhPool,
+    xlsx::write.xlsx(x         = as.data.frame(mhPool),
                      file      = "pool.xlsx",
                      row.names = FALSE)
   }
@@ -327,9 +323,8 @@ budget <- function(myFile, year, forecast = FALSE) {
   if (!is.null(mhReq)) {
 
     mhReq <- mhReq %>% tidyr::spread(month, mh, fill = 0)
-    mhReq <- as.data.frame(mhReq)
 
-    xlsx::write.xlsx(x         = mhReq,
+    xlsx::write.xlsx(x         = as.data.frame(mhReq),
                      file      = "req.xlsx",
                      row.names = FALSE)
   }

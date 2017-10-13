@@ -570,7 +570,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   ## Compute for distributed holHours and costWage
   hol.mhDB.d$XholHours <- hol.mhDB.d$X * hol.mhDB.d$holHours
   hol.mhDB.m$XholHours <- hol.mhDB.m$X * hol.mhDB.m$holHours
-
   hol.mhDB.d$XcostWage <- round(hol.mhDB.d$X * hol.mhDB.d$costWage, digits = 2)
 
   ## Separate employees by status
@@ -581,8 +580,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   # Compute for Employee Allowances
   cat("\nComputing employee allowances.\n")
 
-  allowance <- data.table::rbindlist(lapply(listR, getAllowance))
-
+  allowance  <- data.table::rbindlist(lapply(listR, getAllowance))
   mhDB.allow <- mhDB[mhDB$mhType %in% distType, ] %>%
     dplyr::group_by(ID, month, costCode) %>%
     dplyr::summarise(mh = sum(mh))
@@ -609,7 +607,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     mhDB.SB$costCode,
     FUN = function(x) {
 
-      if (x == "13100")
+      if (substr(x, start = 1, stop = 5) == "13100")
         return("13100")
 
       if (x == "0-0")
@@ -629,8 +627,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   )
 
   mhDB.SB$costCode <- mhDB.SB$costCodeNew
-
-  mhDB.SB <- as.data.frame(mhDB.SB)
 
   # Compute for SSS contribution of employer
   cat("\nComputing SSS contribution.\n")
@@ -695,16 +691,14 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh))
 
-  mhDB.SSS$X <- mhDB.SSS$mh / mhDB.SSS$totMH
-
-  mhDB.SSS <- dplyr::left_join(x = mhDB.SSS, y = SSSdb, by = c("ID", "month"))
+  mhDB.SSS$X    <- mhDB.SSS$mh / mhDB.SSS$totMH
+  mhDB.SSS      <- dplyr::left_join(x = mhDB.SSS,
+                                    y = SSSdb,
+                                    by = c("ID", "month"))
 
   mhDB.SSS$cost <- round(mhDB.SSS$X * mhDB.SSS$SSS, digits = 2)
-
-  mhDB.SSS <- as.data.frame(mhDB.SSS)
-
-  mhDB.SSS.A <- mhDB.SSS[mhDB.SSS$status == "age", ]
-  mhDB.SSS   <- mhDB.SSS[mhDB.SSS$status != "age", ]
+  mhDB.SSS.A    <- mhDB.SSS[mhDB.SSS$status == "age", ]
+  mhDB.SSS      <- mhDB.SSS[mhDB.SSS$status != "age", ]
 
   # Compute for Pag-ibig contribution of employer
   cat("\nComputing Pag-ibig contributions.\n")
@@ -714,18 +708,14 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     dplyr::summarise(mh = sum(mh))
 
   mhDB.PI$PI <- 100
-
-  mhDB.PI <- mhDB.PI %>%
+  mhDB.PI    <- mhDB.PI %>%
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh))
 
-  mhDB.PI$X <- mhDB.PI$mh / mhDB.PI$totMH
-
+  mhDB.PI$X    <- mhDB.PI$mh / mhDB.PI$totMH
   mhDB.PI$cost <- round(mhDB.PI$X * mhDB.PI$PI, digits = 2)
-  mhDB.PI      <- as.data.frame(mhDB.PI)
-
-  mhDB.PI.A <- mhDB.PI[mhDB.PI$status == "age", ]
-  mhDB.PI   <- mhDB.PI[mhDB.PI$status != "age", ]
+  mhDB.PI.A    <- mhDB.PI[mhDB.PI$status == "age", ]
+  mhDB.PI      <- mhDB.PI[mhDB.PI$status != "age", ]
 
   # Compute for Phil-Health contribution of employer
   cat("\nComputing Philhealth contribution.\n")
@@ -785,15 +775,12 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh))
 
-  mhDB.PH$X <- mhDB.PH$mh / mhDB.PH$totMH
-
-  mhDB.PH <- dplyr::left_join(x = mhDB.PH, y = PHdb, by = c("ID", "month"))
-
+  mhDB.PH$X    <- mhDB.PH$mh / mhDB.PH$totMH
+  mhDB.PH      <- dplyr::left_join(x = mhDB.PH, y = PHdb, by = c("ID", "month"))
   mhDB.PH$cost <- round(mhDB.PH$X * mhDB.PH$PH, digits = 2)
 
-  mhDB.PH   <- as.data.frame(mhDB.PH)
-  mhDB.PH.A <- mhDB.PH[mhDB.PH$status == "age", ]
-  mhDB.PH   <- mhDB.PH[mhDB.PH$status != "age", ]
+  mhDB.PH.A    <- mhDB.PH[mhDB.PH$status == "age", ]
+  mhDB.PH      <- mhDB.PH[mhDB.PH$status != "age", ]
 
   # Compute for Leave Commutation
   cat("\nComputing leave commutation.\n")
@@ -976,9 +963,40 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.13mp <- dplyr::left_join(x = mhDB.13mp, y = mp13, by = c("ID", "month"))
 
   mhDB.13mp$cost <- round(mhDB.13mp$X * mhDB.13mp$mp, digits = 2)
+  mhDB.13mp      <- mhDB.13mp %>%
+    dplyr::group_by(costCode, status, month) %>%
+    dplyr::summarise(cost = sum(cost))
 
   mhDB.13mp.A <- mhDB.13mp[mhDB.13mp$status == "age", ]
   mhDB.13mp   <- mhDB.13mp[mhDB.13mp$status != "age", ]
+
+  mhDB.13mp$costCodeNew <- sapply(
+    mhDB.13mp$costCode,
+    FUN = function(x) {
+
+      if (substr(x, start = 1, stop = 5) == "13100")
+        return("13100")
+
+      if (x == "0-0")
+        return("0-0")
+
+      if (substr(x, start = 1, stop = 5) %in% c("14000",
+                                                "14100",
+                                                "14200",
+                                                "14300",
+                                                "14400",
+                                                "14500",
+                                                "14600"))
+        return("14000")
+
+      return("01100")
+    }
+  )
+
+  mhDB.13mp$costCode <- mhDB.13mp$costCodeNew
+  mhDB.13mp          <- mhDB.13mp %>%
+    dplyr::group_by(costCode, status, month) %>%
+    dplyr::summarise(cost = sum(cost))
 
   ## Separate 13th month pay for regular and non-regular in-house as requested
   ## by accounting
@@ -1075,10 +1093,36 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.bonus      <- mhDB.bonus[!is.na(mhDB.bonus$cost),]
   mhDB.bonus      <- mhDB.bonus %>%
     dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost))
+
+  mhDB.bonus$costCodeNew <- sapply(
+    mhDB.bonus$costCode,
+    FUN = function(x) {
+
+      if (substr(x, start = 1, stop = 5) == "13100")
+        return("13100")
+
+      if (x == "0-0")
+        return("0-0")
+
+      if (substr(x, start = 1, stop = 5) %in% c("14000",
+                                                "14100",
+                                                "14200",
+                                                "14300",
+                                                "14400",
+                                                "14500",
+                                                "14600"))
+        return("14000")
+
+      return("01100")
+    }
+  )
+
+  mhDB.bonus$costCode <- mhDB.bonus$costCodeNew
+  mhDB.bonus          <- mhDB.bonus %>%
+    dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     tidyr::spread(month, cost, fill = 0)
-
-  mhDB.bonus <- as.data.frame(mhDB.bonus)
 
   # Compute for Rice Subsidy for Agency
   cat("\nComputing rice subsidy.\n")
@@ -1266,8 +1310,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r11$row <- "Hospital and Medical Expenses"
 
   # 13th Month Pay
-  # r12 <- mhDB.13mp[, c("costCode", "month", "cost")]
-  # r12$row <- "13th Month Pay"
+  r12 <- mhDB.13mp[, c("costCode", "month", "cost")]
+  r12$row <- "13th Month Pay"
 
   # man hours
   r13     <- as.data.frame(mhDB.mh)
@@ -1339,7 +1383,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                        r09,
                                        r10,
                                        r11,
-                                       # r12,
+                                       r12,
                                        r13,
                                        r14))
 
