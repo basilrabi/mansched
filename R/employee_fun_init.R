@@ -133,9 +133,14 @@ setMethod(
     theObject@status <- status
     theObject@cBegin <- cBegin
 
+    year     <- lubridate::year(hol$date[1])
+    tempCEnd <- paste(year, "12-31", sep = "-")
+
     if (is.na(cEnd)) {
-      year <- lubridate::year(hol$date[1])
-      cEnd <- paste(year, "12-31", sep = "-")
+      cEnd <- tempCEnd
+    } else {
+      if (as.Date(cEnd) > as.Date(tempCEnd))
+        cEnd <- tempCEnd
     }
 
     theObject@cEnd <- cEnd
@@ -818,14 +823,14 @@ setMethod(
 setGeneric(
   name = "initTEmployee",
   def  = function(theObject,
-                 ID,
-                 costCode,
-                 equipment,
-                 OT          = 0,
-                 calDays,
-                 mdtProb,
-                 spareFactor = 1,
-                 monthSched  = NA) {
+                  ID,
+                  costCode,
+                  equipment,
+                  OT          = 0,
+                  calDays,
+                  mdtProb,
+                  spareFactor = 1,
+                  monthSched  = NA) {
     standardGeneric("initTEmployee")
   }
 )
