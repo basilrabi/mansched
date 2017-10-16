@@ -331,5 +331,5 @@ budget <- function(myFile, year, forecast = FALSE) {
 
   setwd(tempFolder)
 
-  return(NULL)
+  invisible(NULL)
 }
