@@ -192,14 +192,14 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
       return(mh)
     })
 
-    mhPool <- data.table::rbindlist(mhPool, u.mhPool)
-
-    mhPool <- mhPool %>%
-      tidyr::gather(key   = "mhType",
+    u.mhPool <- data.table::rbindlist(u.mhPool)
+    u.mhPool <- u.mhPool %>%
+      tidyr::gather(key = "mhType",
                     value = mh,
                     -month,
                     -ID)
 
+    mhPool <- data.table::rbindlist(list(mhPool, u.mhPool))
     mhPool <- mhPool[mhPool$mh > 0,]
     mhPool <- as.data.frame(mhPool)
 
@@ -228,7 +228,7 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
 
   if (length(u.listT) > 0) {
 
-    u.mhReq <- lapply(listT, FUN = function(x) {
+    u.mhReq <- lapply(u.listT, FUN = function(x) {
 
       mh       <- as.data.frame(getHours(x))
       mh$month <- 1:12
@@ -237,14 +237,14 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
       return(mh)
     })
 
-    mhReq <- data.table::rbindlist(mhReq, u.mhReq)
-
-    mhReq <- mhReq %>%
+    u.mhReq <- data.table::rbindlist(u.mhReq)
+    u.mhReq <- u.mhReq %>%
       tidyr::gather(key = "mhType",
                     value = mh,
                     -month,
                     -ID)
 
+    mhReq <- data.table::rbindlist(list(mhReq, u.mhReq))
     mhReq <- mhReq[mhReq$mh > 0,]
     mhReq <- as.data.frame(mhReq)
   }
