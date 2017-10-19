@@ -305,9 +305,111 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     mhDB.m.R.OT$salH * mhDB.m.R.OT$np * mhDB.m.R.OT$npR, digits = 2
   )
 
-  ## Separate probationary and seasonal employees
+  ## Separate probationary employees
 
-  mhDB.m.S <- mhDB.m[mhDB.m$status %in% c("pro", "sea"),
+  mhDB.m.P <- mhDB.m[mhDB.m$status == "pro",
+                     !colnames(mhDB.m) %in% c("sal", "status", "maxReg")]
+
+  ### Get isOT.S
+  mhDB.m.P <- dplyr::left_join(x  = mhDB.m.P,
+                               y  = premium.nonRF[, c("isOT.S",
+                                                     "premiumS",
+                                                     "npS",
+                                                     "mhType")],
+                               by = "mhType")
+
+  ### Separate non-OT
+  mhDB.m.P.Reg <- mhDB.m.P[which(!mhDB.m.P$isOT.S),
+                           !colnames(mhDB.m.P) %in% c("mhType",
+                                                      "isOT.S",
+                                                      "premiumS")]
+
+  #### Get monthly wage minux absences
+
+  mhDB.m.P.Reg.M <- mhDB.m.P.Reg %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::summarise(mhTot = sum(mh))
+
+  mhDB.m.P.Reg.M <- dplyr::left_join(
+    x  = mhDB.m.P.Reg.M,
+    y  = unique(mhDB[, c("ID", "month", "maxReg")]),
+    by = c("ID", "month")
+  )
+
+  ##### Get absences hours
+  mhDB.m.P.Reg.M$abHours <- mhDB.m.P.Reg.M$maxReg - mhDB.m.P.Reg.M$mhTot
+
+  ##### Get salary scheme
+  mhDB.m.P.Reg.M <- dplyr::left_join(
+    x  = mhDB.m.P.Reg.M,
+    y  = unique(mhDB[, c("ID", "month", "sal")]),
+    by = c("ID", "month")
+  )
+
+  ##### Get monthly and hourly salary
+  mhDB.m.P.Reg.M <- dplyr::left_join(
+    x = mhDB.m.P.Reg.M,
+    y = wageEmp[, !colnames(wageEmp) %in% c("isRF")],
+    by = c("ID", "sal")
+  )
+
+  ##### Get absences cost
+  mhDB.m.P.Reg.M$abCost <- round(
+    mhDB.m.P.Reg.M$salH * mhDB.m.P.Reg.M$abHours, digits = 2
+  )
+
+  ##### monthly wage minus absences = salMB
+  mhDB.m.P.Reg.M$salMB <- mhDB.m.P.Reg.M$salM - mhDB.m.P.Reg.M$abCost
+
+  #### Combine salMB
+  mhDB.m.P.Reg <- dplyr::left_join(
+    x  = mhDB.m.P.Reg,
+    y  = mhDB.m.P.Reg.M[, c("ID", "month", "mhTot", "salH", "salMB")],
+    by = c("ID", "month")
+  )
+
+  #### Get man hour fraction of each cost code per month
+  mhDB.m.P.Reg$Xmh <- mhDB.m.P.Reg$mh / mhDB.m.P.Reg$mhTot
+
+  #### Compute Costs
+  #### These costs are purely worked
+  mhDB.m.P.Reg$costWage <- round(mhDB.m.P.Reg$Xmh * mhDB.m.P.Reg$salMB,
+                                 digits = 2)
+
+  mhDB.m.P.Reg$costNP   <- round(
+    mhDB.m.P.Reg$salH * mhDB.m.P.Reg$np * mhDB.m.P.Reg$npS, digits = 2
+  )
+
+  ### Separate OT
+  mhDB.m.P.OT <- mhDB.m.P[which(mhDB.m.P$isOT.S),
+                          !colnames(mhDB.m.P) %in% c("mhType")]
+
+  #### Get salary scheme
+  mhDB.m.P.OT <- dplyr::left_join(
+    x  = mhDB.m.P.OT,
+    y  = unique(mhDB[, c("ID", "month", "sal")]),
+    by = c("ID", "month")
+  )
+
+  #### Get hourly wage
+  mhDB.m.P.OT <- dplyr::left_join(
+    x = mhDB.m.P.OT,
+    y = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")],
+    by = c("ID", "sal")
+  )
+
+  #### Compute costs
+  mhDB.m.P.OT$costWage <- round(
+    mhDB.m.P.OT$salH * mhDB.m.P.OT$mh * mhDB.m.P.OT$premiumS, digits = 2
+  )
+
+  mhDB.m.P.OT$costNP   <- round(
+    mhDB.m.P.OT$salH * mhDB.m.P.OT$np * mhDB.m.P.OT$npS, digits = 2
+  )
+
+  ## Separate seasonal employees
+
+  mhDB.m.S <- mhDB.m[mhDB.m$status == "sea",
                      !colnames(mhDB.m) %in% c("sal", "status", "maxReg")]
 
   ### Get isOT.S
@@ -447,8 +549,34 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   ### Separate OT
   mhDB.d.R.OT <- mhDB.d.R[which(mhDB.d.R$isOT.R),]
 
-  ## Separate probationary and seasonal employees
-  mhDB.d.S <- mhDB.d[mhDB.d$status %in% c("pro", "sea"),
+  ## Separate probationary employees
+  mhDB.d.P <- mhDB.d[mhDB.d$status == "pro",
+                     !colnames(mhDB.d) %in% c("status", "maxReg")]
+
+  ### Get premium
+  mhDB.d.P <- dplyr::left_join(
+    x  = mhDB.d.P,
+    y  = premium.RF[, c("isOT.S", "premiumS", "npS", "mhType")],
+    by = "mhType"
+  )
+
+  ### Get cost
+  mhDB.d.P$costWage <- round(
+    mhDB.d.P$salH * mhDB.d.P$mh * mhDB.d.P$premiumS, digits = 2
+  )
+
+  mhDB.d.P$costNP   <- round(
+    mhDB.d.P$salH * mhDB.d.P$np * mhDB.d.P$npS , digits = 2
+  )
+
+  ### Separate non-OT
+  mhDB.d.P.Reg <- mhDB.d.P[which(!mhDB.d.P$isOT.S),]
+
+  ### Separate OT
+  mhDB.d.P.OT <- mhDB.d.P[which(mhDB.d.P$isOT.S),]
+
+  ## Separate seasonal employees
+  mhDB.d.S <- mhDB.d[mhDB.d$status == "sea",
                      !colnames(mhDB.d) %in% c("status", "maxReg")]
 
   ### Get premium
@@ -573,8 +701,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   hol.mhDB.d$XcostWage <- round(hol.mhDB.d$X * hol.mhDB.d$costWage, digits = 2)
 
   ## Separate employees by status
-  hol.mhDB.d.R <- hol.mhDB.d[hol.mhDB.d$status == "reg",]
-  hol.mhDB.d.S <- hol.mhDB.d[hol.mhDB.d$status %in% c("pro", "sea"),]
+  hol.mhDB.d.R <- hol.mhDB.d[hol.mhDB.d$status %in% c("reg", "pro"),]
+  hol.mhDB.d.S <- hol.mhDB.d[hol.mhDB.d$status == "sea",]
   hol.mhDB.d.A <- hol.mhDB.d[hol.mhDB.d$status == "age",]
 
   # Compute for Employee Allowances
@@ -1173,10 +1301,27 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                        cost             = hol.mhDB.d.R$XcostWage,
                        stringsAsFactors = FALSE)
 
+  r01.04 <- data.frame(costCode         = mhDB.m.P.Reg$costCode,
+                       month            = mhDB.m.P.Reg$month,
+                       cost             = mhDB.m.P.Reg$costWage,
+                       stringsAsFactors = FALSE)
+
+  r01.05 <- data.frame(costCode         = mhDB.d.P.Reg$costCode,
+                       month            = mhDB.d.P.Reg$month,
+                       cost             = mhDB.d.P.Reg$costWage,
+                       stringsAsFactors = FALSE)
+
   r01 <- as.data.frame(data.table::rbindlist(l = list(r01.01,
                                                       r01.02,
-                                                      r01.03)))
-  r01$row <- "Salaries-Regular"
+                                                      r01.03,
+                                                      r01.04,
+                                                      r01.05)))
+
+  if (nrow(r01) > 0) {
+    r01$row <- "Salaries-Regular"
+  } else {
+    r01 <- NULL
+  }
 
   # OT Pay - Regular
   r02.01 <- data.frame(costCode         = mhDB.m.R.Reg$costCode,
@@ -1209,13 +1354,54 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                        cost             = mhDB.d.R.OT$costNP,
                        stringsAsFactors = FALSE)
 
+  r02.07 <- data.frame(costCode         = mhDB.m.P.Reg$costCode,
+                       month            = mhDB.m.P.Reg$month,
+                       cost             = mhDB.m.P.Reg$costNP,
+                       stringsAsFactors = FALSE)
+
+  r02.08 <- data.frame(costCode         = mhDB.m.P.OT$costCode,
+                       month            = mhDB.m.P.OT$month,
+                       cost             = mhDB.m.P.OT$costWage,
+                       stringsAsFactors = FALSE)
+
+  r02.09 <- data.frame(costCode         = mhDB.m.P.OT$costCode,
+                       month            = mhDB.m.P.OT$month,
+                       cost             = mhDB.m.P.OT$costNP,
+                       stringsAsFactors = FALSE)
+
+  r02.10 <- data.frame(costCode         = mhDB.d.P.Reg$costCode,
+                       month            = mhDB.d.P.Reg$month,
+                       cost             = mhDB.d.P.Reg$costNP,
+                       stringsAsFactors = FALSE)
+
+  r02.11 <- data.frame(costCode         = mhDB.d.P.OT$costCode,
+                       month            = mhDB.d.P.OT$month,
+                       cost             = mhDB.d.P.OT$costWage,
+                       stringsAsFactors = FALSE)
+
+  r02.12 <- data.frame(costCode         = mhDB.d.P.OT$costCode,
+                       month            = mhDB.d.P.OT$month,
+                       cost             = mhDB.d.P.OT$costNP,
+                       stringsAsFactors = FALSE)
+
   r02 <- as.data.frame(data.table::rbindlist(l = list(r02.01,
                                                       r02.02,
                                                       r02.03,
                                                       r02.04,
                                                       r02.05,
-                                                      r02.06)))
-  r02$row <- "OT Pay - Regular"
+                                                      r02.06,
+                                                      r02.07,
+                                                      r02.08,
+                                                      r02.09,
+                                                      r02.10,
+                                                      r02.11,
+                                                      r02.12)))
+
+  if (nrow(r02) > 0) {
+    r02$row <- "OT Pay - Regular"
+  } else {
+    r02 <- NULL
+  }
 
   # Salaries-Seasonal
   r03.01 <- data.frame(costCode         = mhDB.m.S.Reg$costCode,
@@ -1236,7 +1422,12 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r03 <- as.data.frame(data.table::rbindlist(l = list(r03.01,
                                                       r03.02,
                                                       r03.03)))
-  r03$row <- "Salaries-Seasonal"
+
+  if (nrow(r03) > 0) {
+    r03$row <- "Salaries-Seasonal"
+  } else {
+    r03 <- NULL
+  }
 
   # OT Pay - Seasonal
   r04.01 <- data.frame(costCode         = mhDB.m.S.Reg$costCode,
@@ -1275,47 +1466,97 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                                       r04.04,
                                                       r04.05,
                                                       r04.06)))
-  r04$row <- "OT Pay - Seasonal"
+
+  if (nrow(r04) > 0) {
+    r04$row <- "OT Pay - Seasonal"
+  } else {
+    r04 <- NULL
+  }
 
   # Employee Allowance
   r05 <- mhDB.allow %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
-  r05     <- as.data.frame(r05)
-  r05$row <- "Employees Allowance"
+  r05 <- as.data.frame(r05)
+
+  if (nrow(r05) > 0) {
+    r05$row <- "Employees Allowance"
+  } else {
+    r05 <- NULL
+  }
 
   # Employee Benefits
-  r06     <- mhDB.SB[, !colnames(mhDB.SB) %in% c("mh", "costCodeNew")]
-  r06$row <- "Employee Benefits"
+  r06 <- mhDB.SB[, !colnames(mhDB.SB) %in% c("mh", "costCodeNew")]
+
+  if (nrow(r06) > 0) {
+    r06$row <- "Employee Benefits"
+  } else {
+    r06 <- NULL
+  }
 
   # Premium SSS, EC
-  r07     <- mhDB.SSS[, c("costCode", "month", "cost")]
-  r07$row <- "Premium SSS, EC"
+  r07 <- mhDB.SSS[, c("costCode", "month", "cost")]
+
+  if (nrow(r07) > 0) {
+    r07$row <- "Premium SSS, EC"
+  } else {
+    r07 <- NULL
+  }
 
   # Prem-HDMF (Pag-ibig)
-  r08     <- mhDB.PI[, c("costCode", "month", "cost")]
-  r08$row <- "Prem-HDMF (Pag-ibig)"
+  r08 <- mhDB.PI[, c("costCode", "month", "cost")]
+
+  if (nrow(r08) > 0) {
+    r08$row <- "Prem-HDMF (Pag-ibig)"
+  } else {
+    r08 <- NULL
+  }
 
   # Philhealth
-  r09     <- mhDB.PH[, c("costCode", "month", "cost")]
-  r09$row <- "Philhealth"
+  r09 <- mhDB.PH[, c("costCode", "month", "cost")]
+
+  if (nrow(r09) > 0) {
+    r09$row <- "Philhealth"
+  } else {
+    r09 <- NULL
+  }
 
   # Leave Commutation
-  r10     <- mhDB.LC[, c("costCode", "month", "cost")]
-  r10$row <- "Leave Commutation"
+  r10 <- mhDB.LC[, c("costCode", "month", "cost")]
+
+  if (nrow(r10) > 0) {
+    r10$row <- "Leave Commutation"
+  } else {
+    r10 <- NULL
+  }
 
   # Hospital and Medical Expenses
-  r11     <- mhDB.HM[, c("costCode", "month", "cost")]
-  r11$row <- "Hospital and Medical Expenses"
+  r11 <- mhDB.HM[, c("costCode", "month", "cost")]
+
+  if (nrow(r11) > 0) {
+    r11$row <- "Hospital and Medical Expenses"
+  } else {
+    r11 <- NULL
+  }
 
   # 13th Month Pay
   r12 <- mhDB.13mp[, c("costCode", "month", "cost")]
-  r12$row <- "13th Month Pay"
+
+  if (nrow(r12) > 0) {
+    r12$row <- "13th Month Pay"
+  } else {
+    r12 <- NULL
+  }
 
   # man hours
-  r13     <- as.data.frame(mhDB.mh)
-  r13$row <- "man-hours"
+  r13 <- as.data.frame(mhDB.mh)
+
+  if (nrow(r13) > 0) {
+    r13$row <- "man-hours"
+  } else {
+    r13 <- NULL
+  }
 
   # CF Others
   r14 <- data.table::rbindlist(l = list(
@@ -1398,7 +1639,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   costCode <- unique(costDB$costCode)
 
-  cat("\nExporting data as xlsx.\n")
+  cat("\nExporting data.\n")
 
   export <- lapply(costCode, FUN = function(x) {
 
