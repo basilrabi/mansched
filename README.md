@@ -8,11 +8,11 @@ Installation
 
 ### R
 
-This packages requires an [R](https://www.r-project.org/) version of at least 3.4.0 although it is recommended to install the latest version.
+This package requires an [R](https://www.r-project.org/) version of at least 3.4.0 although it is recommended to install the latest version.
 
 ### java
 
-Installation of mansched requires java ([jre](https://java.com/inc/BrowserRedirect1.jsp?locale=en)) to be installed first. 64-bit installation of R requires 64-bit installation of java while 32-bit installation of R requires 32-bit installation of java.
+Installation of mansched requires java ([jre](https://java.com/inc/BrowserRedirect1.jsp?locale=en)) to be installed first. A 64-bit installation of R requires 64-bit installation of java while a 32-bit installation of R requires 32-bit installation of java.
 
 Install the appropriate version of java.
 

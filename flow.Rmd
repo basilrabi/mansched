@@ -1,0 +1,130 @@
+---
+title: "flow"
+author: Basil Eric Rabi
+date: October 20, 2017
+output:
+  md_document:
+    variant: markdown_github
+---
+
+# budget() Function Flow
+```{dot, echo=FALSE}
+digraph budget {
+
+node [shape = box]
+  
+a [label = "budget()"]
+b [label = "import 'Requirement' sheet"]
+c [label = "import 'Schedule' sheet"]
+d [label = "import 'Pool' sheet"]
+e [label = "import 'hol' sheet"]
+f [label = "getmhDB()"]
+g [label = "initialize employee pool"]
+h [label = "initialize employee requirements"]
+i [label = "separate pool and requirements by personnel class"]
+
+j [label = "Staff"]
+k [label = "Clerk"]
+l [label = "Technical"]
+m [label = "Supervisor"]
+n [label = "Laborer"]
+o [label = "Operator"]
+
+p [label = "assignPrio()"]
+q [label = "..."]
+r [label = "..."]
+s [label = "..."]
+t [label = "..."]
+u [label = "..."]
+
+v [label = "assignPool(): select only matching costCode"]
+w [label = "assignPool(): select only reg and pro"]
+x [label = "assignPool(): select all available"]
+y [label = "assign to dcc"]
+z [label = "assign all remaining to '0-0' "]
+
+aa [label = "..."]
+ab [label = "..."]
+ac [label = "..."]
+ad [label = "..."]
+ae [label = "..."]
+
+af [label = "..."]
+ag [label = "..."]
+ah [label = "..."]
+ai [label = "..."]
+aj [label = "..."]
+
+ak [label = "..."]
+al [label = "..."]
+am [label = "..."]
+an [label = "..."]
+ao [label = "..."]
+
+ap [label = "..."]
+aq [label = "..."]
+ar [label = "..."]
+as [label = "..."]
+at [label = "..."]
+
+au [label = "..."]
+av [label = "..."]
+aw [label = "..."]
+ax [label = "..."]
+ay [label = "..."]
+
+az [label = "merge assigned man hours database"]
+aaa [label = "import Wage"]
+aab [label = "getCost()"]
+
+a -> b -> c -> d -> e -> f -> g -> h -> i -> {j, k, l, m, n, o}
+
+j -> p -> v  -> w  -> x  -> y  -> z
+k -> q -> aa -> ab -> ac -> ad -> ae
+l -> r -> af -> ag -> ah -> ai -> aj
+m -> s -> ak -> al -> am -> an -> ao
+n -> t -> ap -> aq -> ar -> as -> at
+o -> u -> au -> av -> aw -> ax -> ay
+
+{z, ae, aj, ao, at, ay} -> az -> aaa -> aab
+
+}
+```
+
+# assignPool() Function Flow
+```{dot, echo=FALSE}
+digraph assignPool {
+
+node [shape = box]
+
+  pA [label = "import list of Requirement"]
+  pB [label = "import list of Employees"]
+  pC [label = "i = 1"]
+  pD [label = "empReq = Requirement[[i]]"]
+  pE [label = "Employees <- Employees[with matching costCode]"]
+  pF [label = "Employees <- Employees"]
+  pG [label = "Employees <- Employees[with qualified status]"]
+  pH [label = "Employees <- Employees"]
+  pI [label = "assign Employees to empReq"]
+  pJ [label = "return manhours assignment"]
+  pK [label = "i = i + 1"]
+  
+  
+node [shape = diamond]
+
+  dA [label = "Is costCode prioritized?"]
+  dB [label = "Is there a prioritized Status?"]
+  dC [label = "Is it the final Requirement?"]
+
+pA -> pB -> pC -> pD -> dA
+dA -> pE [label = "yes"]
+dA -> pF [label = "no"]
+{pE, pF} -> dB
+dB -> pG [label = "yes"]
+dB -> pH [label = "no"]
+{pG, pH} -> pI -> dC
+dC -> pJ [label = yes]
+dC -> pK [label = no]
+pK -> pD
+}
+```

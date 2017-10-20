@@ -6,3 +6,6 @@
 ^sim2\.R$
 ^notes$
 ^\.travis\.yml$
+^flow\.Rmd$
+^flow_files$
+^flow\.md$
