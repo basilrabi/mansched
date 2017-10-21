@@ -65,6 +65,9 @@ budget <- function(myFile, year, forecast = FALSE) {
   if (class(empReq$costCode) != "character")
     stop("Column costCode in Requirement is not character!")
 
+  if (any(is.na(empReq$costCode)))
+    stop("Requirement without cost code detected!")
+
   empReq[, colnames(empReq) %in% c("quantity", "OT")] <- lapply(
     empReq[, colnames(empReq) %in% c("quantity", "OT")], FUN = as.integer
   )
