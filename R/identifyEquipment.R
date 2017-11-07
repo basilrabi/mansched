@@ -23,11 +23,6 @@ getLetterCount <- function(x) {
   return(paste(letterCounts, collapse = ""))
 }
 
-# Function to determine if a letter combination is a subset of another
-#   letter combination via getLetterCount()
-#   x = the letter combination to be tested
-#   y = the getLetterCount() output of primary letter combination
-
 #' Is the string a subset?
 #'
 #' Test whether the string \code{x} is a subset of another string.

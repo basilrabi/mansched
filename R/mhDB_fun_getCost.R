@@ -929,6 +929,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     dplyr::summarise(mh = sum(mh))
 
   ### Join RH to maxRegDB then compute leave hours (LH) per month
+  tempID   <- sapply(listR, FUN = function(x) {x@ID})
   maxRegDB <- lapply(maxRegDB, FUN = function(z) {
 
     z <- dplyr::left_join(x = z, y = mhDB.RH, by = c("ID", "month"))
@@ -939,7 +940,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     if (any(z$absence) < 0)
       stop("Absence must not be less than 0!")
 
-    tempID    <- sapply(listR, FUN = function(x) {x@ID})
     tempIndex <- which(tempID == z$ID[1])
     LC        <- listR[[tempIndex]]@leaveHours
     z$LH      <- 0

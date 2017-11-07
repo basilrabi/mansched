@@ -75,6 +75,10 @@ getLeaveHours <- function(cBegin, cEnd = NA, year, status) {
     monthDiff <- which(month.name == months(yearEnd)) -
       which(month.name == months(cBegin)) + 1
 
+    if (length(monthDiff) == 0) {
+      stop("Undetermined month, system time language might not be in English.")
+    }
+
     leaveDays <- monthDiff * 2.5
   }
 
