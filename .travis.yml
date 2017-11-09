@@ -1,17 +1,20 @@
 language: r
-sudo: false
+sudo: required
+dist: trusty
 cache: packages
 
 addons:
     apt:
-        sources:
-            - ubuntu-toolchain-r-test
         packages:
-            - g++-7
             - graphviz
+
+before_install:
+  - curl -OLs https://eddelbuettel.github.io/r-travis/run.sh && chmod 0755 run.sh
+  - ./run.sh bootstrap
+
+install:
+  - ./run.sh install_aptget  r-cran-rcpp r-cran-runit
+
 
 after_success:
     - Rscript -e 'covr::codecov()'
-
-compiler:
-    - g++
