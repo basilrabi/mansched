@@ -28,7 +28,7 @@ Install the appropriate version of java.
 If you are using a windows machine, installation of
 [Rtools](https://cran.r-project.org/bin/windows/Rtools/) is required.
 
-If you are using OS X, installation of
+If you are using macOS, installation of
 [Xcode](https://developer.apple.com/xcode/) is required.
 
 ### devtools
@@ -52,7 +52,7 @@ devtools::install_github('basilrabi/mansched')
 
 ## To do (Enhancements)
 * Speed up code
-    + Migrate some code to other language
+    + Migrate some code to C++ (WIP)
     + See similarities in  code chunks using`tempData <- getCM(x)` in 
       `getCost()`
 * Add visualization tools for excess pool and requirement (shiny app)
