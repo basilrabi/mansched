@@ -4,7 +4,10 @@ cache: packages
 
 addons:
     apt:
+        sources:
+            - ubuntu-toolchain-r-test
         packages:
+            - g++-7
             - graphviz
 
 after_success:
