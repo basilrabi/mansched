@@ -3,7 +3,7 @@ NULL
 
 #' An S4 class defining an employee
 #'
-#' This class is based on the organizational structure ofTaganito Mining
+#' This class is based on the organizational structure of Taganito Mining
 #'   Corporation's (TMC) Mines Group. This can be used in representing
 #'   both real and theoretical employees.
 #'
@@ -37,7 +37,7 @@ NULL
 #' @slot cEnd character string defining the date of end of employment of the
 #'   employee
 #' @slot inHouse logical value \cr
-#'   Is the employee's accomodation given by the company?
+#'   Is the employee's accommodation given by the company?
 #' @slot restday character string defining the day of the week wherein the
 #'   employee is not required to report to work
 #' @slot holHours integer vector with length of 12

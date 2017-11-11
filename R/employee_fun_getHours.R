@@ -91,7 +91,7 @@ setMethod(
 
 #' Get remaining working hours of list of \code{\link{Employee-class}} objects
 #'
-#' This function returns the sum of all remaning man hours of a list of
+#' This function returns the sum of all remaining man hours of a list of
 #'   \code{Employee-class} objects including overtime
 #'
 #' @param x a list of \code{\link{Employee-class}} objects

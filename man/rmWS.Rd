@@ -13,6 +13,6 @@ rmWS(x)
 character vector without 2 adjacent space characters
 }
 \description{
-Spaces with more than 2-character length are removed and are replaced wth 1
+Spaces with more than 2-character length are removed and are replaced with 1
   space. Trailing and leading spaces are also removed.
 }

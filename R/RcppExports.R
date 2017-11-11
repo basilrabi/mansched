@@ -3,7 +3,77 @@
 
 #' Identify asset group
 #'
-#' Identifies the asset group of a given equipment from accounting data.
+#' Identifies the asset group of a given equipment (or entity) which is the
+#'   recipient of the item withdrawn from warehouse.
+#'   This data can be seen from warehouse issuance slips.
+#'
+#'   Below are the identified groups:
+#'   \itemize{
+#'   \item Contractors
+#'     \describe{
+#'     \item{HPK}{}
+#'     \item{NBC}{Nickel Base Corporation}
+#'     \item{PACE}{PrinceAce Corporation}
+#'     \item{SDMC}{Southernphil Development and Marketing Corporation
+#'       (FITZ-SDMC)}
+#'     \item{SMCC}{Sumitomo-Mitsui Construction Company}
+#'     \item{TACOPHIL}{}
+#'     \item{TRGC}{Tango Romeo General Construction}
+#'     }
+#'   \item Equipment
+#'     \describe{
+#'     \item{CT}{bulldozer}
+#'     \item{DT}{dump truck}
+#'     \item{FASTCRAFT}{}
+#'     \item{FL}{fuel lorry}
+#'     \item{FORKLIFT}{}
+#'     \item{FS}{flying squid}
+#'     \item{FT}{fire truck}
+#'     \item{FTR}{farm tractors}
+#'     \item{GS}{power generator set}
+#'     \item{MC}{motorcycle}
+#'     \item{ML}{man lift}
+#'     \item{MOC}{mobile crusher}
+#'     \item{MT}{maintenance truck}
+#'     \item{MWL}{mini wheeled pay loader}
+#'     \item{PATROLBOAT}{}
+#'     \item{PB}{pump boat}
+#'     \item{RG}{road grader}
+#'     \item{SB}{service bus}
+#'     \item{SP}{service pickup}
+#'     \item{ST}{service truck}
+#'     \item{TL}{tracked pay loader}
+#'     \item{TWL}{tower light}
+#'     \item{TX}{tracked excavator}
+#'     \item{VC}{vibrating compactor}
+#'     \item{WL}{wheeled pay loader}
+#'     \item{WP}{water pump}
+#'     \item{WTL}{water lorry}
+#'     \item{WX}{wheeled excavator}
+#'     \item{YBM}{Yoshida Boring Machine}
+#'     }
+#'   \item Fixed assets
+#'     \describe{
+#'     \item{ADMIN}{Admin building}
+#'     \item{EQ}{Engineer's Quarters}
+#'     \item{CIP}{construction in-progress}
+#'     }
+#'   \item Other parties
+#'     \describe{
+#'     \item{LGU}{local government unit}
+#'     \item{MKTG}{marketing}
+#'     \item{SECURITY}{}
+#'     }
+#'   \item Unknown
+#'     \itemize{
+#'     \item CM
+#'     \item GT
+#'     \item LM
+#'     \item PMT
+#'     \item WC
+#'     \item ZZZ
+#'     }
+#'   }
 #'
 #' @param x a character vector representing the equipment
 #' @return a character vector representing the asset group

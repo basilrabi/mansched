@@ -22,7 +22,7 @@
     \item{TT}{prime mover (trailer truck)}
     \item{TX}{tracked excavator}
     \item{VC}{vibrating compactor}
-    \item{WL}{wheeled payloader}
+    \item{WL}{wheeled pay loader}
     \item{WTL}{water truck}
     \item{WX}{wheeled excavator}
   }}

@@ -7,7 +7,7 @@
 \format{\code{\link{data.frame}} with 16 rows and 7 columns
 
   Each row represents the premium pay for a man hour type. The columns are
-  cosisted by:
+  consisted by:
   \describe{
     \item{mhType}{character value representing the man hour type (see
       \code{\link{assignEmp}})}

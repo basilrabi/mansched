@@ -9,13 +9,13 @@ assignMH(hoursT, hoursR)
 \arguments{
 \item{hoursT}{integer vector of length 12
 
-  This represents the man hours from a theroretical employee with a certian
+  This represents the man hours from a theoretical employee with a certain
   man hour type.}
 
 \item{hoursR}{integer vector of length 12
 
   This represents the man hours from a real employee with a certain man hour
-  rype.}
+  type.}
 }
 \value{
 a \code{\link{data.frame}} with 12 rows and 4 columns

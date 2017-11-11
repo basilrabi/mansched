@@ -13,6 +13,6 @@ getHoursL(x)
 an integer value
 }
 \description{
-This function returns the sum of all remaning man hours of a list of
+This function returns the sum of all remaining man hours of a list of
   \code{Employee-class} objects including overtime
 }

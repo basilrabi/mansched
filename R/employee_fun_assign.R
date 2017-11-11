@@ -10,12 +10,12 @@ NULL
 #'
 #' @param hoursT integer vector of length 12
 #'
-#'   This represents the man hours from a theroretical employee with a certian
+#'   This represents the man hours from a theoretical employee with a certain
 #'   man hour type.
 #' @param hoursR integer vector of length 12
 #'
 #'   This represents the man hours from a real employee with a certain man hour
-#'   rype.
+#'   type.
 #' @return a \code{\link{data.frame}} with 12 rows and 4 columns
 #'
 #'   Each row represents a month. The columns are defined as follows:
@@ -109,7 +109,7 @@ assignMH <- function(hoursT, hoursR) {
 #'         \item{scheme}{character string defining the salary scheme
 #'
 #'           This may be \code{"m"} (monthly) or \code{"d"} (daily).}
-#'         \item{status}{character string defining the employement status of
+#'         \item{status}{character string defining the employment status of
 #'           the employee}
 #'         \item{maxReg}{integer value \cr
 #'           Number of hours the employee is required to report to enjoy full

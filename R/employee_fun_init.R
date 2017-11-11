@@ -28,7 +28,7 @@ NULL
 #'
 #'   The accepted format is \code{"yyyy-mm-dd"}.
 #' @param cEnd character string defining the date wherein the employment
-#'   contract of the emplyee will end
+#'   contract of the employee will end
 #'
 #'   The accepted format is \code{"yyyy-mm-dd"}.
 #' @param inHouse logical value \cr
@@ -120,11 +120,11 @@ setMethod(
     theObject@designation <- designation
     theObject@dcc         <- dcc
 
-    # attendance must be <= 1 but preferrabbly > 0.5
+    # attendance must be <= 1 but preferably > 0.5
     theObject@attendance <- attendance
 
     # Vectorize costCode
-    #  This is done under the assumption that white spaces and punctuations are
+    #  This is done under the assumption that white spaces and punctuation are
     #  already removed. Also, all characters are in upper case.
     theObject@costCode <-
       strsplit(x = costCode, split = " ", fixed = TRUE)[[1]]
@@ -798,7 +798,7 @@ setMethod(
 #' Initialize theoretical employee
 #'
 #' Initialize employee data and its working hours. This function can be applied
-#'   only to theoretical employees. Theoretica employees represent the manpower
+#'   only to theoretical employees. Theoretical employees represent the manpower
 #'   requirement for a scheduled activity.
 #'
 #' @param theObject \code{\link{Employee-class}} object

@@ -2,9 +2,9 @@
 #'
 #' Creates a \code{\link{data.frame}} of one column containing a range of dates.
 #'
-#' @param begin a character string defing the start date\cr
+#' @param begin a character string defining the start date\cr
 #'   The accepted format is \code{"yyyy-mm-dd"}.
-#' @param end a character string defing the end date\cr
+#' @param end a character string defining the end date\cr
 #'   The accepted format is \code{"yyyy-mm-dd"}.
 #' @return a \code{data.frame} with only one column (\code{"date"})
 #' @export dates
@@ -106,7 +106,7 @@ getHol <- function(hol, year) {
 #'  \item{sh}{special holiday}
 #'  \item{nh}{negotiated holiday}
 #'  \item{rl}{rest day and legal holiday}
-#'  \item{rs}{rest day abd special holiday}
+#'  \item{rs}{rest day and special holiday}
 #'  \item{rn}{rest day and negotiated holiday}
 #' }
 #' @importFrom lubridate year month
@@ -206,7 +206,7 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
 #' @return a \code{\link{data.frame}} with 12 rows and 9 columns
 #'
 #'   Each row represents a month. The first 8 columns represent the probability
-#'   of occurence of each man day type while the last column represents the
+#'   of occurrence of each man day type while the last column represents the
 #'   number of days per month. The column names are as follows:
 #'   \describe{
 #'     \item{rd}{probability of having a rest day}

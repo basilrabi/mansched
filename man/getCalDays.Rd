@@ -32,7 +32,7 @@ Each row represents a month while each column represents a man day type.
  \item{sh}{special holiday}
  \item{nh}{negotiated holiday}
  \item{rl}{rest day and legal holiday}
- \item{rs}{rest day abd special holiday}
+ \item{rs}{rest day and special holiday}
  \item{rn}{rest day and negotiated holiday}
 }
 }

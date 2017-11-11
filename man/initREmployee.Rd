@@ -94,7 +94,7 @@ employee will be charged}
   The accepted format is \code{"yyyy-mm-dd"}.}
 
 \item{cEnd}{character string defining the date wherein the employment
-  contract of the emplyee will end
+  contract of the employee will end
 
   The accepted format is \code{"yyyy-mm-dd"}.}
 

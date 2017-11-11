@@ -324,7 +324,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                                       "isOT.S",
                                                       "premiumS")]
 
-  #### Get monthly wage minux absences
+  #### Get monthly wage minus absences
 
   mhDB.m.P.Reg.M <- mhDB.m.P.Reg %>%
     dplyr::group_by(ID, month) %>%
@@ -1015,7 +1015,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   LH$LC <- LH$LH * LH$salH
 
-  ### Distribute LC throught the year
+  ### Distribute LC throughout the year
   mhDB.LC.S <- mhDB[mhDB$status %in% c("sea", "age") &
                       mhDB$mhType %in% distType, ] %>%
     dplyr::group_by(ID, month, costCode, status) %>%
@@ -1134,7 +1134,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     dplyr::summarise(cost = sum(cost)) %>%
     tidyr::spread(month, cost, fill = 0)
 
-  # Sum all manhours
+  # Sum all man-hours
 
   mhDB.mh1 <- mhDB %>%
     dplyr::group_by(costCode, month) %>%
@@ -1263,7 +1263,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     riceSub.A <- lapply(listR.A, FUN = getRiceSub)
     riceSub.A <- data.table::rbindlist(riceSub.A)
 
-    ## Distibute rice subsidy
+    ## Distribute rice subsidy
     mhDB.riceSub.A <- mhDB[mhDB$mhType %in% distType &
                              mhDB$status == "age",] %>%
       dplyr::group_by(ID, month, costCode) %>%

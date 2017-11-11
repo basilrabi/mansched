@@ -59,7 +59,7 @@ hours multiplier}
 }
 \description{
 Initialize employee data and its working hours. This function can be applied
-  only to theoretical employees. Theoretica employees represent the manpower
+  only to theoretical employees. Theoretical employees represent the manpower
   requirement for a scheduled activity.
 }
 \section{Methods (by class)}{

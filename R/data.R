@@ -33,7 +33,7 @@
 #'     \item{TT}{prime mover (trailer truck)}
 #'     \item{TX}{tracked excavator}
 #'     \item{VC}{vibrating compactor}
-#'     \item{WL}{wheeled payloader}
+#'     \item{WL}{wheeled pay loader}
 #'     \item{WTL}{water truck}
 #'     \item{WX}{wheeled excavator}
 #'   }
@@ -111,7 +111,7 @@ payB <- data.frame(month            = 1:12,
 #' @format \code{\link{data.frame}} with 16 rows and 7 columns
 #'
 #'   Each row represents the premium pay for a man hour type. The columns are
-#'   cosisted by:
+#'   consisted by:
 #'   \describe{
 #'     \item{mhType}{character value representing the man hour type (see
 #'       \code{\link{assignEmp}})}

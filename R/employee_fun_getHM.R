@@ -3,7 +3,7 @@ NULL
 
 #' Compute monthly hospital and medical expenses budgeted for employee
 #'
-#' Depending on the employment statys of the employee, his or her monthly
+#' Depending on the employment status of the employee, his or her monthly
 #'   hospital and medical allowances may be the following:
 #'   \enumerate{
 #'     \item 1,600 PhP monthly (reg)

@@ -87,7 +87,7 @@ dfAppend <- function(x, y) {
 
 #' Remove white space
 #'
-#' Spaces with more than 2-character length are removed and are replaced wth 1
+#' Spaces with more than 2-character length are removed and are replaced with 1
 #'   space. Trailing and leading spaces are also removed.
 #'
 #' @param x character vector

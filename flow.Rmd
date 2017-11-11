@@ -106,7 +106,7 @@ node [shape = box]
   pG [label = "Employees <- Employees[with qualified status]"]
   pH [label = "Employees <- Employees"]
   pI [label = "assign Employees to empReq"]
-  pJ [label = "return manhours assignment"]
+  pJ [label = "return man-hours assignment"]
   pK [label = "i = i + 1"]
   
   

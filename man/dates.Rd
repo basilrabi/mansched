@@ -7,10 +7,10 @@
 dates(begin, end)
 }
 \arguments{
-\item{begin}{a character string defing the start date\cr
+\item{begin}{a character string defining the start date\cr
 The accepted format is \code{"yyyy-mm-dd"}.}
 
-\item{end}{a character string defing the end date\cr
+\item{end}{a character string defining the end date\cr
 The accepted format is \code{"yyyy-mm-dd"}.}
 }
 \value{

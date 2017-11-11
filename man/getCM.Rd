@@ -26,7 +26,7 @@ a \code{\link{data.frame}} with 12 rows and 3 columns
 }
 \description{
 Based on the period of employment of the personnel, his or her cost
-  multipliers throught the year is computed.
+  multipliers throughout the year is computed.
   This multiplier is used for SSS, 13th month pay, and hospital and medical
   expenses.
 }

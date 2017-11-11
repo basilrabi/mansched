@@ -13,7 +13,7 @@ getMDTProb(hol)
 a \code{\link{data.frame}} with 12 rows and 9 columns
 
   Each row represents a month. The first 8 columns represent the probability
-  of occurence of each man day type while the last column represents the
+  of occurrence of each man day type while the last column represents the
   number of days per month. The column names are as follows:
   \describe{
     \item{rd}{probability of having a rest day}

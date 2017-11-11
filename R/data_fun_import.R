@@ -84,7 +84,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   # Remove space for status
   empPool$status <- rmS(empPool$status)
 
-  # Remove punctuations for costCode and dcc
+  # Remove punctuation for costCode and dcc
   empPool[ ,c("costCode", "dcc")] <- lapply(
     X   = empPool[, c("costCode", "dcc")],
     FUN = function(x) {
@@ -290,7 +290,7 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
     FUN = rmS
   )
 
-  # Remove punctuations for costCode
+  # Remove punctuation for costCode
   empReq$costCode <- gsub(pattern     = "[[:punct:]]",
                           replacement = '',
                           x           = empReq$costCode)

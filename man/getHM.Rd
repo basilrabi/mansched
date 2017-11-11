@@ -27,7 +27,7 @@ a \code{\link{data.frame}} with 12 rows and 3 columns representing
   }
 }
 \description{
-Depending on the employment statys of the employee, his or her monthly
+Depending on the employment status of the employee, his or her monthly
   hospital and medical allowances may be the following:
   \enumerate{
     \item 1,600 PhP monthly (reg)

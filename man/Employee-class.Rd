@@ -6,7 +6,7 @@
 \alias{employee}
 \title{An S4 class defining an employee}
 \description{
-This class is based on the organizational structure ofTaganito Mining
+This class is based on the organizational structure of Taganito Mining
   Corporation's (TMC) Mines Group. This can be used in representing
   both real and theoretical employees.
 }
@@ -53,7 +53,7 @@ employee}
 employee}
 
 \item{\code{inHouse}}{logical value \cr
-Is the employee's accomodation given by the company?}
+Is the employee's accommodation given by the company?}
 
 \item{\code{restday}}{character string defining the day of the week wherein the
 employee is not required to report to work}

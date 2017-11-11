@@ -12,7 +12,7 @@
 #' @param hol a \code{data.frame} similar to \code{\link{holidays}}
 #' @param cores an integer value defining the number cores to be used
 #'
-#'   This is only applicable to unix-like machines.
+#'   This is only applicable to UNIX-like machines.
 #' @return a list containing the following:
 #'   \enumerate{
 #'     \item \code{data.frame} representing the man hours database of the
@@ -37,7 +37,7 @@
 #'         \item{scheme}{character string defining the salary scheme
 #'
 #'           This may be \code{"m"} (monthly) or \code{"d"} (daily).}
-#'         \item{status}{character string defining the employement status of
+#'         \item{status}{character string defining the employment status of
 #'           the employee}
 #'         \item{maxReg}{integer value \cr
 #'           Number of hours the employee is required to report to enjoy full
