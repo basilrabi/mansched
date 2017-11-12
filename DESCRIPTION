@@ -13,16 +13,12 @@ Encoding: UTF-8
 LazyData: true
 Depends: R   (>= 3.4.0), methods
 Imports:
-  covr,
   data.table (>= 1.10.4),
   dplyr      (>= 0.7.2),
   lubridate  (>= 1.6.0),
   magrittr   (>= 1.5),
   parallel   (>= 3.4.0),
-  readODS,
-  readr      (>= 1.1.1),
   readxl     (>= 1.0.0),
-  stringr    (>= 1.2.0),
   tidyr      (>= 0.6.3),
   xlsx       (>= 0.5.7),
   Rcpp

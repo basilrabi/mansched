@@ -1,5 +1,9 @@
 library(mansched)
 
+cat("This is to test idAssetGroup()")
+print(idAssetGroup(NA))
+print(idAssetGroup("ADMIN"))
+
 test_that("idAssetGroup() works", {
   expect_equal(idAssetGroup(NA)           , as.character(NA))
   expect_equal(idAssetGroup("ADMIN")      , "ADMIN")
