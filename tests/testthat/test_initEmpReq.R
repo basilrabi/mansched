@@ -1,26 +1,36 @@
 library(mansched)
-library(readODS)
-library(readr)
+library(readxl)
 
-myFile <- system.file("exdata", "sampleData.ods", package = "mansched")
-empReq <- read_ods(path      = myFile,
-                   sheet     = 1,
-                   col_types = cols(.default    = col_character(),
-                                    quantity    = col_integer(),
-                                    spareFactor = col_number(),
-                                    OT          = col_integer()))
-hol   <- read_ods(path  = myFile,
-                  sheet = 4)
+myFile <- system.file("exdata", "sampleData.xlsx", package = "mansched")
 
-sched <- read_ods(path      = myFile,
-                  sheet     = 2,
-                  col_types = cols(.default = col_integer(),
-                                   activity = col_character()))
+empReq <- readxl::read_xlsx(path  = myFile,
+                            sheet = "Requirement")
 
+sched <- readxl::read_xlsx(path      = myFile,
+                           sheet     = "Schedule",
+                           col_types = c("text",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric"))
 
-manReq <- initEmpReq(empReq = empReq,
-                     sched  = sched,
-                     hol    = hol,
+empPool <- readxl::read_xlsx(path  = myFile,
+                             sheet = "Pool")
+
+hol <- readxl::read_xlsx(path  = myFile,
+                         sheet = "hol")
+
+manReq <- initEmpReq(empReq = as.data.frame(empReq),
+                     sched  = as.data.frame(sched),
+                     hol    = as.data.frame(hol),
                      year   = 2018)[[1]]
 
 test_that("initEmpReq() works", {

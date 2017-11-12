@@ -1,31 +1,45 @@
 library(mansched)
-library(readODS)
-library(readr)
+library(readxl)
 
-myFile <- system.file("exdata", "sampleData.ods", package = "mansched")
+myFile <- system.file("exdata", "sampleData.xlsx", package = "mansched")
 
-empReq <- read_ods(path      = myFile,
-                   sheet     = 1,
-                   col_types = cols(.default    = col_character(),
-                                    quantity    = col_integer(),
-                                    spareFactor = col_number(),
-                                    OT          = col_integer()))
+empReq <- readxl::read_xlsx(path  = myFile,
+                            sheet = "Requirement")
 
-sched <- read_ods(path      = myFile,
-                  sheet     = 2,
-                  col_types = cols(.default = col_integer(),
-                                   activity = col_character()))
+sched <- readxl::read_xlsx(path      = myFile,
+                           sheet     = "Schedule",
+                           col_types = c("text",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric",
+                                         "numeric"))
 
-empPool <- read_ods(path      = myFile,
-                    sheet     = 3,
-                    col_types = cols(.default   = col_character(),
-                                     attendance = col_integer(),
-                                     inHouse    = col_logical(),
-                                     isRF       = col_logical()))
-hol <- read_ods(path  = myFile,
-                sheet = 4)
+empPool <- readxl::read_xlsx(path  = myFile,
+                             sheet = "Pool")
+
+hol <- readxl::read_xlsx(path  = myFile,
+                         sheet = "hol")
 
 year <- 2018
+
+empReq  <- as.data.frame(empReq)
+empPool <- as.data.frame(empPool)
+sched   <- as.data.frame(sched)
+hol     <- as.data.frame(hol)
+
+empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
+                                         as.character)
+
+empPool[, c("inHouse", "isRF")] <- lapply(empPool[, c("inHouse", "isRF")],
+                                          as.logical)
 
 listT <- initEmpReq(empReq = empReq,
                     sched  = sched,
@@ -43,7 +57,7 @@ tempData <- getmhDB(empReq  = empReq,
                     empPool = empPool,
                     sched   = sched,
                     year    = year,
-                    hol     = mansched::holidays,
+                    hol     = hol,
                     cores   = 2)
 
 totTf <- getHoursL(tempData[[4]])
@@ -58,10 +72,8 @@ test_that("getmhDB() works", {
                totTi - totTf)
 })
 
-wage <- read_ods(path      = myFile,
-                 sheet     = 5,
-                 col_types = cols(ID = col_character(),
-                                  s  = col_number()))
+wage <- readxl::read_xlsx(path  = myFile,
+                          sheet = "Wage")
 
 tempData <- getCost(mhDB  = tempData[[1]],
                     listR = listR,

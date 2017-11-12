@@ -1,16 +1,21 @@
 library(mansched)
-library(readODS)
-library(readr)
 
-myFile <- system.file("exdata", "sampleData.ods", package = "mansched")
-empPool <- read_ods(path = myFile,
-                    sheet = 3,
-                    col_types = cols(.default = col_character(),
-                                     attendance = col_integer(),
-                                     inHouse = col_logical(),
-                                     isRF = col_logical()))
-hol <- read_ods(path = myFile,
-                sheet = 4)
+myFile <- system.file("exdata", "sampleData.xlsx", package = "mansched")
+
+empPool <- readxl::read_xlsx(path  = myFile,
+                             sheet = "Pool")
+
+empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
+                                         as.character)
+
+empPool[, c("inHouse", "isRF")] <- lapply(empPool[, c("inHouse", "isRF")],
+                                          as.logical)
+
+hol <- readxl::read_xlsx(path  = myFile,
+                         sheet = "hol")
+
+empPool <- as.data.frame(empPool)
+hol     <- as.data.frame(hol)
 
 manPool <- initEmpPool(empPool = empPool,
                        hol = hol,

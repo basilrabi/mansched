@@ -16,9 +16,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// assignPool2
+List assignPool2(DataFrame empReq, DataFrame empPool, List listT, List listR, String prioStat, bool prioCode);
+RcppExport SEXP _mansched_assignPool2(SEXP empReqSEXP, SEXP empPoolSEXP, SEXP listTSEXP, SEXP listRSEXP, SEXP prioStatSEXP, SEXP prioCodeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type empReq(empReqSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type empPool(empPoolSEXP);
+    Rcpp::traits::input_parameter< List >::type listT(listTSEXP);
+    Rcpp::traits::input_parameter< List >::type listR(listRSEXP);
+    Rcpp::traits::input_parameter< String >::type prioStat(prioStatSEXP);
+    Rcpp::traits::input_parameter< bool >::type prioCode(prioCodeSEXP);
+    rcpp_result_gen = Rcpp::wrap(assignPool2(empReq, empPool, listT, listR, prioStat, prioCode));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_mansched_idAssetGroup", (DL_FUNC) &_mansched_idAssetGroup, 1},
+    {"_mansched_assignPool2", (DL_FUNC) &_mansched_assignPool2, 6},
     {NULL, NULL, 0}
 };
 
