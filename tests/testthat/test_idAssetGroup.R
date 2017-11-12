@@ -1,6 +1,3 @@
-# https://github.com/jyypma/nloptr/commit/422c98cc9ad8195bf5eb2e46f39fa80f9a7b37c8
-Sys.setenv("R_TESTS" = "")
-
 library(mansched)
 
 test_that("idAssetGroup() works", {
