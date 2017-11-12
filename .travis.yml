@@ -1,19 +1,36 @@
 language: r
-sudo: required
+#sudo: required
 cache: packages
+compiler: g++
 
-script:
-    - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
-    - gcc --version
-
-addons:
-    apt:
-        sources:
+matrix:
+  include:
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
             - ubuntu-toolchain-r-test
-        packages:
-            - graphviz
-            - gcc-5
-            - g++-5
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+
+before_install:
+    - eval "${MATRIX_EVAL}"
+
+#script:
+#    - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
+#    - gcc --version
+
+#addons:
+#    apt:
+#        sources:
+#            - ubuntu-toolchain-r-test
+#        packages:
+#            - graphviz
+#            - gcc-5
+#            - g++-5
 
 after_success:
     - Rscript -e 'covr::codecov()'
