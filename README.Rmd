@@ -1,7 +1,7 @@
 ---
 title: "readme"
 author: Basil Eric Rabi
-date: November 9, 2017
+date: November 12, 2017
 output:
   md_document:
     variant: markdown_github
@@ -24,12 +24,29 @@ a 32-bit installation of R requires 32-bit installation of java.
 
 Install the appropriate version of java.
 
-### Rtools and XCode
-If you are using a windows machine, installation of
+### Compilers
+
+#### Windows
+Installation of
 [Rtools](https://cran.r-project.org/bin/windows/Rtools/) is required.
 
-If you are using macOS, installation of
+#### macOS
+Installation of
 [Xcode](https://developer.apple.com/xcode/) is required.
+Additionally, you might need to
+[reconfigure](https://stackoverflow.com/questions/34971966/how-does-one-configure-rjava-on-osx-to-select-the-right-jvm-jinit-failing)
+the java installation.
+
+In the terminal, run the following commands:
+```{bash, eval = FALSE}
+sudo ln -s $(/usr/libexec/java_home)/jre/lib/server/libjvm.dylib /usr/local/lib
+sudo R CMD javareconf
+```
+
+Then in R console, run:
+```{r, eval = FALSE}
+install.packages("rJava",type='source')
+```
 
 ### devtools
 mansched is only available via github.
@@ -37,7 +54,7 @@ To facilitate the installation of mansched, install
 [devtools](https://github.com/hadley/devtools).
 
 To install devtools, in R console, run:
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 install.packages("devtools")
 ```
 

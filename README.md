@@ -16,11 +16,28 @@ Installation of mansched requires java ([jre](https://java.com/inc/BrowserRedire
 
 Install the appropriate version of java.
 
-### Rtools and XCode
+### Compilers
 
-If you are using a windows machine, installation of [Rtools](https://cran.r-project.org/bin/windows/Rtools/) is required.
+#### Windows
 
-If you are using macOS, installation of [Xcode](https://developer.apple.com/xcode/) is required.
+Installation of [Rtools](https://cran.r-project.org/bin/windows/Rtools/) is required.
+
+#### macOS
+
+Installation of [Xcode](https://developer.apple.com/xcode/) is required. Additionally, you might need to [reconfigure](https://stackoverflow.com/questions/34971966/how-does-one-configure-rjava-on-osx-to-select-the-right-jvm-jinit-failing) the java installation.
+
+In the terminal, run the following commands:
+
+``` bash
+sudo ln -s $(/usr/libexec/java_home)/jre/lib/server/libjvm.dylib /usr/local/lib
+sudo R CMD javareconf
+```
+
+Then in R console, run:
+
+``` r
+install.packages("rJava",type='source')
+```
 
 ### devtools
 
