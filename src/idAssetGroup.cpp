@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include <regex>
+#include <boost/regex.hpp>
 
 using namespace Rcpp;
 
@@ -78,7 +78,7 @@ String getLetterCount(std::string x) {
   for (i = 0; i < x.length(); i++) {
     tempChar = x[i];
 
-    if (std::regex_match(tempChar, std::regex("[[:upper:]]")))
+    if (boost::regex_match(tempChar, boost::regex("[[:upper:]]")))
       letterCounts[letterCounts.findName(tempChar)]++;
   }
 
@@ -209,27 +209,27 @@ StringVector idAssetGroup(StringVector x) {
     testChar = a.get_cstring();
     b = getLetterCount(b);
 
-    if (std::regex_match(testChar, std::regex(".*TACOPHIL.*"))) {
+    if (boost::regex_match(testChar, boost::regex(".*TACOPHIL.*"))) {
       equip[i] = "TACOPHIL";
-    } else if (std::regex_match(testChar, std::regex(".*PACE.*")) ||
-      std::regex_match(testChar, std::regex(".*PRI?N?CE *ACE.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*PACE.*")) ||
+      boost::regex_match(testChar, boost::regex(".*PRI?N?CE *ACE.*"))) {
       // PrinceAce Corporation
       equip[i] = "PACE";
-    } else if (std::regex_match(testChar, std::regex(".*BRGY.*")) ||
-      std::regex_match(testChar, std::regex(".*BGRY.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*BRGY.*")) ||
+      boost::regex_match(testChar, boost::regex(".*BGRY.*"))) {
       // Local Government Unit
       equip[i] = "LGU";
-    } else if (std::regex_match(testChar, std::regex(".*SMCC.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*SMCC.*"))) {
       // Sumitomo-Mitsui Construction Company
       equip[i] = "SMCC";
-    } else if (std::regex_match(testChar, std::regex(".*ADMIN.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*ADMIN.*"))) {
       // Admin Building
       equip[i] = "ADMIN";
-    } else if (std::regex_match(testChar, std::regex(".*CIK?P.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*CIK?P.*"))) {
       // Construction in progress
       equip[i] = "CIP";
     } else if (b == getLetterCount("CM")) {
-      if (std::regex_match(testChar, std::regex(".*MC.*"))) {
+      if (boost::regex_match(testChar, boost::regex(".*MC.*"))) {
         // Motorcycle
         equip[i] = "MC";
       } else {
@@ -247,7 +247,7 @@ StringVector idAssetGroup(StringVector x) {
       // Dump truck
       equip[i] = "DT";
     } else if (b == getLetterCount("EQ") ||
-      (std::regex_match(testChar, std::regex(".*EQ\\s*[[:digit:]].*")))) {
+      (boost::regex_match(testChar, boost::regex(".*EQ\\s*[[:digit:]].*")))) {
       // Engineer's quarters
       equip[i] = "EQ";
     } else if (isSubset("FASTCRAFT", b)) {
@@ -258,8 +258,8 @@ StringVector idAssetGroup(StringVector x) {
     } else if (b == getLetterCount("FORKLIFT")) {
       equip[i] = "FORKLIFT";
     } else if ((b == getLetterCount("FS") &&
-      std::regex_match(testChar, std::regex(".*F\\s*S.*"))) ||
-      std::regex_match(testChar, std::regex(".*SQUID.*"))) {
+      boost::regex_match(testChar, boost::regex(".*F\\s*S.*"))) ||
+      boost::regex_match(testChar, boost::regex(".*SQUID.*"))) {
       // Flying Squid
       equip[i] = "FS";
     } else if (b == getLetterCount("FT")) {
@@ -269,33 +269,33 @@ StringVector idAssetGroup(StringVector x) {
       // Farm tractors
       equip[i] = "FTR";
     } else if (b == getLetterCount("GS") ||
-      std::regex_match(testChar, std::regex(".*GEN\\s*SET.*")) ||
-      std::regex_match(testChar, std::regex(".*GENERATOR.*"))) {
+      boost::regex_match(testChar, boost::regex(".*GEN\\s*SET.*")) ||
+      boost::regex_match(testChar, boost::regex(".*GENERATOR.*"))) {
       // Power generator set
       equip[i] = "GS";
     } else if (b == getLetterCount("GT")) {
       // Not described in shop data
       equip[i] = "GT";
-    } else if (std::regex_match(testChar, std::regex(".*HPK.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*HPK.*"))) {
       equip[i] = "HPK";
     } else if (b == getLetterCount("LM")) {
-      if (std::regex_match(testChar, std::regex(".*L\\s*M.*"))) {
+      if (boost::regex_match(testChar, boost::regex(".*L\\s*M.*"))) {
         // Not described in shop data
         equip[i] = "LM";
       } else {
         // Man lift
         equip[i] = "ML";
       }
-    } else if (std::regex_match(testChar, std::regex(".*MANLIFT.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*MANLIFT.*"))) {
       equip[i] = "ML";
     } else if (b == getLetterCount("MDT")) {
       // Mini dump truck
       equip[i] = "MDT";
-    } else if (std::regex_match(testChar, std::regex(".*MA?R?KE?TI?N?G.*")) ||
-      std::regex_match(testChar, std::regex(".*MKGT.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*MA?R?KE?TI?N?G.*")) ||
+      boost::regex_match(testChar, boost::regex(".*MKGT.*"))) {
       // Supplies during shipment loading
       equip[i] = "MKTG";
-    } else if (std::regex_match(testChar, std::regex(".*CRU?SHE?E?R.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*CRU?SHE?E?R.*"))) {
       // Mobile crusher
       equip[i] = "MOC";
     } else if (b == getLetterCount("MT")) {
@@ -304,13 +304,13 @@ StringVector idAssetGroup(StringVector x) {
     } else if (b == getLetterCount("MWL")) {
       // Mini wheel loader
       equip[i] = "MWL";
-    } else if (std::regex_match(testChar, std::regex(".*NBC.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*NBC.*"))) {
       // Nickel Base Corporation
       equip[i] = "NBC";
-    } else if (std::regex_match(testChar, std::regex(".*PATROL\\s*BOAT.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*PATROL\\s*BOAT.*"))) {
       equip[i] = "PATROLBOAT";
     } else if (b == getLetterCount("PB") ||
-      std::regex_match(testChar, std::regex(".*PUMP\\s*BOAT.*"))) {
+      boost::regex_match(testChar, boost::regex(".*PUMP\\s*BOAT.*"))) {
       equip[i] = "PB";
     } else if (b == getLetterCount("PMT")) {
       // Not described in shop data
@@ -321,8 +321,8 @@ StringVector idAssetGroup(StringVector x) {
     } else if (b == getLetterCount("SB")) {
       // Service bus
       equip[i] = "SB";
-    } else if (std::regex_match(testChar, std::regex(".*SD(M|N)\\s*C.*")) ||
-      std::regex_match(testChar, std::regex("SMDC"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*SD(M|N)\\s*C.*")) ||
+      boost::regex_match(testChar, boost::regex("SMDC"))) {
       // Southernphil Development and Marketing Corporation (FITZ-SDMC)
       equip[i] = "SDMC";
     } else if (b == getLetterCount("SECURITY")) {
@@ -336,11 +336,11 @@ StringVector idAssetGroup(StringVector x) {
     } else if (b == getLetterCount("TL")) {
       // Tracked loader
       equip[i] = "TL";
-    } else if (std::regex_match(testChar, std::regex(".*TRG?C.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*TRG?C.*"))) {
       // Tango Romeo ?General ?Construction
       equip[i] = "TRGC";
     } else if (b == getLetterCount("TX") ||
-      std::regex_match(testChar, std::regex("\\s*TX\\s*")) ||
+      boost::regex_match(testChar, boost::regex("\\s*TX\\s*")) ||
       b == getLetterCount("TZ") ||
       b == getLetterCount("X")) {
       // Tracked excavator
@@ -357,27 +357,27 @@ StringVector idAssetGroup(StringVector x) {
       // Wheeled pay loader
       equip[i] = "WL";
     } else if (b == getLetterCount("WP") ||
-      std::regex_match(testChar, std::regex(".*H2(0|O)\\s*PUMP.*")) ||
+      boost::regex_match(testChar, boost::regex(".*H2(0|O)\\s*PUMP.*")) ||
       b == getLetterCount("WTLWP") ||
       isSubset("WATER PUMP", b)) {
       equip[i] = "WP";
     } else if (b == getLetterCount("WTL")) {
-      if (std::regex_match(testChar, std::regex(".*WTL.*"))) {
+      if (boost::regex_match(testChar, boost::regex(".*WTL.*"))) {
         // Water truck
         equip[i] = "WTL";
-      } else if (std::regex_match(testChar, std::regex(".*TWL.*"))) {
+      } else if (boost::regex_match(testChar, boost::regex(".*TWL.*"))) {
         // Tower light
         equip[i] = "TWL";
       } else {
         // Not yet classified
         equip[i] = "ZZZ";
       }
-    } else if (std::regex_match(testChar, std::regex(".*WX.*")) ||
+    } else if (boost::regex_match(testChar, boost::regex(".*WX.*")) ||
       b == getLetterCount("WX")) {
       // Wheeled excavator
       equip[i] = "WX";
     } else if (b == getLetterCount("YBM") ||
-      std::regex_match(testChar, std::regex(".*YBM.*"))) {
+      boost::regex_match(testChar, boost::regex(".*YBM.*"))) {
       // Yoshida boring machine
       equip[i] = "YBM";
     } else {

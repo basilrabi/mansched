@@ -2,21 +2,13 @@ language: r
 cache: packages
 compiler: g++
 
-matrix:
-  include:
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
+addons:
+    apt:
+        packages:
             - graphviz
-            - g++-7
-      env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-
-before_install:
-    - eval "${MATRIX_EVAL}"
+            - g++
+            - libboost-dev
+            - libboost-regex-dev
 
 after_success:
     - Rscript -e 'covr::codecov()'
