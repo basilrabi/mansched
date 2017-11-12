@@ -9,6 +9,7 @@ addons:
             - g++
             - libboost-dev
             - libboost-regex-dev
+            - libboost-system-dev
 
 after_success:
     - Rscript -e 'covr::codecov()'
