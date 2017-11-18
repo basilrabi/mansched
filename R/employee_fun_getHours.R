@@ -6,8 +6,7 @@ NULL
 #' This function returns all remaining man hour types including overtime.
 #'
 #' @param theObject an \code{\link{Employee-class}} object
-#' @return a 12 by 16 \code{\link{matrix}} representing the remaining man hours
-#'
+#' @return a \code{\link{data.frame}} representing the remaining man hours
 #'
 #'   Each row represents a month while each column represents a man hour type.
 #' @export getHours
@@ -24,27 +23,24 @@ setMethod(
   signature  = "Employee",
   definition = function(theObject) {
 
-    mh <- matrix(data     = rep(0L, times = 192),
-                 nrow     = 12,
-                 dimnames = list(c(1:12),
-                                 c("reg",
-                                   "rd",
-                                   "lh",
-                                   "sh",
-                                   "nh",
-                                   "rl",
-                                   "rs",
-                                   "rn",
-                                   "regOT",
-                                   "rdOT",
-                                   "lhOT",
-                                   "shOT",
-                                   "nhOT",
-                                   "rlOT",
-                                   "rsOT",
-                                   "rnOT")))
+    tempData <- rep(0L, times = 12)
 
-    mh[, "reg"] <- theObject@reg
+    mh <- data.frame(reg   = theObject@reg,
+                     rd    = tempData,
+                     lh    = tempData,
+                     sh    = tempData,
+                     nh    = tempData,
+                     rl    = tempData,
+                     rs    = tempData,
+                     rn    = tempData,
+                     regOT = tempData,
+                     rdOT  = tempData,
+                     lhOT  = tempData,
+                     shOT  = tempData,
+                     nhOT  = tempData,
+                     rlOT  = tempData,
+                     rsOT  = tempData,
+                     rnOT  = tempData)
 
     return(mh)
   }
@@ -102,7 +98,10 @@ getHoursL <- function(x) {
   if (length(x) == 0)
     return(0L)
 
-  tempData <- sapply(X = x, FUN = function(x) {sum(getHours(x))})
+  tempData <- sapply(x, FUN = function(x) {
+    tempHours <- getHours(x)
+    sum(tempHours)
+  })
 
   return(sum(tempData))
 }

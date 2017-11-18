@@ -20,8 +20,7 @@ getHours(theObject)
 \item{theObject}{an \code{\link{Employee-class}} object}
 }
 \value{
-a 12 by 16 \code{\link{matrix}} representing the remaining man hours
-
+a \code{\link{data.frame}} representing the remaining man hours
 
   Each row represents a month while each column represents a man hour type.
 }
