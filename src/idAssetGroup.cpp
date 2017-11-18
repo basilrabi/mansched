@@ -41,17 +41,13 @@ String str_to_upper(String x) {
   return x;
 }
 
-// https://stackoverflow.com/questions/35330439/collapse-vectors-in-rcpp
 String concat(IntegerVector x) {
+  String z;
 
-  int nChar = x.size();
   CharacterVector y = as<CharacterVector>(x);
-  std::ostringstream ossOut;
+  z = collapse(y);
 
-  for (int i = 0; i < nChar; i++)
-    ossOut << y[i];
-
-  return ossOut.str();
+  return z;
 }
 
 // Get letter count
