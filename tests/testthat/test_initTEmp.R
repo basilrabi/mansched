@@ -127,3 +127,5 @@ test_that("operator() works", {
   expect_equal(abs((sum(getHours(tempEmp)) / 10) - 365) < 1,
                TRUE)
 })
+
+rm(list = ls())

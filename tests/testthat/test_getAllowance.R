@@ -111,3 +111,5 @@ test_that("getAllowance() works", {
   expect_equal(sum(getAllowance(tempEmp5)$allowance), 0)
   expect_equal(sum(getAllowance(tempEmp6)$allowance), 1800 * 7)
 })
+
+rm(list = ls())

@@ -96,3 +96,4 @@ test_that("getCost() works", {
   expect_equal(PI14000 + PI14100, 500 * 12)
 })
 
+rm(list = ls())

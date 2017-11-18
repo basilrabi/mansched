@@ -110,3 +110,5 @@ test_that("getRiceSub() works", {
   expect_equal(sum(getRiceSub(tempEmp5)$riceSub), 2200 * 9)
   expect_equal(sum(getRiceSub(tempEmp6)$riceSub), 2200 * 7)
 })
+
+rm(list = ls())

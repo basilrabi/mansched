@@ -34,3 +34,5 @@ test_that("getLeaveHours() works", {
                              year   = 2017,
                              status = "sea"))
 })
+
+rm(list = ls())

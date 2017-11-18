@@ -46,3 +46,5 @@ test_that("idAssetGroup() works", {
   expect_equal(idAssetGroup("YBM 96")     , "YBM")
   expect_equal(idAssetGroup("XXX")        , "ZZZ")
 })
+
+rm(list = ls())

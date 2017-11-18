@@ -36,3 +36,5 @@ manReq <- initEmpReq(empReq = as.data.frame(empReq),
 test_that("initEmpReq() works", {
   expect_equal(length(manReq), 3)
 })
+
+rm(list = ls())

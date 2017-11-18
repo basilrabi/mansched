@@ -225,3 +225,5 @@ test_that("assignment of operator works", {
   expect_equal(preHours,
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))
 })
+
+rm(list = ls())

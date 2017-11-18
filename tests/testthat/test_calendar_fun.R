@@ -8,3 +8,5 @@ test_that("getMDTProb() returns the correct total prob", {
   expect_equal(sum(mdtProb[,c(1:8)]),
                12)
 })
+
+rm(list = ls())

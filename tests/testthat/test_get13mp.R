@@ -116,3 +116,5 @@ test_that("getHM() works", {
   expect_equal(sum(get13mp(tempEmp6, sal)$mp),
                round(100 * 8 * 313 / (12 * 12), digits = 2) * 9)
 })
+
+rm(list = ls())

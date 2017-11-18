@@ -483,3 +483,5 @@ test_that("operator() works for seasonal", {
                                                         "rl")],
                      MARGIN = 1, FUN = sum))
 })
+
+rm(list = ls())

@@ -24,3 +24,5 @@ manPool <- initEmpPool(empPool = empPool,
 test_that("initEmpPool() works", {
   expect_equal(length(manPool), 5)
 })
+
+rm(list = ls())

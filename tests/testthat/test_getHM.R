@@ -109,3 +109,5 @@ test_that("getHM() works", {
   expect_equal(sum(getHM(tempEmp5)$HM), 600 * 1)
   expect_equal(sum(getHM(tempEmp6)$HM), 1000 * 1)
 })
+
+rm(list = ls())

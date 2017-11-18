@@ -203,3 +203,5 @@ test_that("mergeEmp() works", {
   expect_equal(mergeEmp(empListI)@ID, "Operator-C01-DT")
   expect_equal(mergeEmp(empListI)@costCode, "C01")
 })
+
+rm(list = ls())
