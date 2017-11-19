@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <boost/regex.hpp>
+#include <algorithm>
 
 using namespace Rcpp;
 
@@ -9,36 +10,12 @@ using namespace Rcpp;
 //
 // @param x a character string
 // @return a character string without lower case
-String str_to_upper(String x) {
+std::string str_to_upper(std::string x) {
 
-  x = x.replace_all("a", "A");
-  x = x.replace_all("b", "B");
-  x = x.replace_all("c", "C");
-  x = x.replace_all("d", "D");
-  x = x.replace_all("e", "E");
-  x = x.replace_all("f", "F");
-  x = x.replace_all("g", "G");
-  x = x.replace_all("h", "H");
-  x = x.replace_all("i", "I");
-  x = x.replace_all("j", "J");
-  x = x.replace_all("k", "K");
-  x = x.replace_all("l", "L");
-  x = x.replace_all("m", "M");
-  x = x.replace_all("n", "N");
-  x = x.replace_all("o", "O");
-  x = x.replace_all("p", "P");
-  x = x.replace_all("q", "Q");
-  x = x.replace_all("r", "R");
-  x = x.replace_all("s", "S");
-  x = x.replace_all("t", "T");
-  x = x.replace_all("u", "U");
-  x = x.replace_all("v", "V");
-  x = x.replace_all("w", "W");
-  x = x.replace_all("x", "X");
-  x = x.replace_all("y", "Y");
-  x = x.replace_all("z", "Z");
+  std::string data = x;
+  std::transform(data.begin(), data.end(), data.begin(), ::toupper);
 
-  return x;
+  return data;
 }
 
 String concat(IntegerVector x) {
@@ -61,7 +38,7 @@ String getLetterCount(std::string x) {
   unsigned int i;
   std::string tempChar;
 
-  x = str_to_upper(String(x));
+  std::transform(x.begin(), x.end(), x.begin(), ::toupper);
 
   // 26-element vector representing the alphabet counts
   IntegerVector letterCounts {0,0,0,0,0,0,0,0,0,0,0,0,0,

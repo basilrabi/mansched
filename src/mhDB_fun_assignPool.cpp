@@ -1,6 +1,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+#define asVI as<IntegerVector>
+#define asDF as<DataFrame>
+
 Environment pkg      = Environment::namespace_env("mansched");
 
 Function getHours = pkg["getHours"];
@@ -13,17 +16,41 @@ LogicalVector hasAviHours(List listR, S4 empT) {
 
   LogicalVector z (vecLength);
   DataFrame     hoursR;
-  IntegerMatrix hoursT = as<IntegerMatrix>(getHours(empT));
+  DataFrame     hoursT = asDF(getHours(empT));
+  IntegerVector tempCol (12);
 
   for (R_xlen_t i = 0; i < vecLength; i++) {
 
-    hoursR = as<DataFrame>(getHours(listR[i]));
+    hoursR = asDF(getHours(listR[i]));
 
-    if (as<int>(getSum(hoursR)) < 1)
+    if (as<int>(getSum(hoursR)) < 1) {
       z[i] = false;
+      continue;
+    }
 
-    // hoursR["reg"] = hoursR["reg"] + hoursR["rd"];
+    hoursR["reg"  ] = asVI(hoursR["reg"  ]) + asVI(hoursR["rd"]);
+    hoursR["sh"   ] = asVI(hoursR["sh"   ]) + asVI(hoursR["rd"]);
+    hoursR["lh"   ] = asVI(hoursR["lh"   ]) + asVI(hoursR["rd"]);
+    hoursR["nh"   ] = asVI(hoursR["nh"   ]) + asVI(hoursR["rd"]);
+    hoursR["regOT"] = asVI(hoursR["regOT"]) + asVI(hoursR["rd"]);
+    hoursR["shOT" ] = asVI(hoursR["shOT" ]) + asVI(hoursR["rd"]);
+    hoursR["lhOT" ] = asVI(hoursR["lhOT" ]) + asVI(hoursR["rd"]);
+    hoursR["nhOT" ] = asVI(hoursR["nhOT" ]) + asVI(hoursR["rd"]);
 
+    for (unsigned int j = 0; j < 16; j++) {
+      tempCol = asVI(hoursR[j]);
+      for (unsigned int k = 0; k < 12; k++) {
+        if (asVI(hoursT[j])[k] == 0)
+          tempCol[k] = 0;
+      }
+      hoursR[j] = tempCol;
+    }
+
+    if (as<int>(getSum(hoursR)) > 0) {
+      z[i] = true;
+    } else {
+      z[i] = false;
+    }
 
   }
 
@@ -119,6 +146,10 @@ List assignPool2(DataFrame empReq              ,
     }
 
     tempCostCode = as<String>(as<S4>(listT[i]).slot("costCode"));
+
+    empPool["hasAviHours"] = hasAviHours(listR, as<S4>(listT[i]));
+
+
 
   }
 
