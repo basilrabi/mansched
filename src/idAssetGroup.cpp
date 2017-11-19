@@ -188,12 +188,12 @@ bool isSubset(std::string x, std::string y) {
 // [[Rcpp::export]]
 StringVector idAssetGroup(StringVector x) {
 
-  unsigned int n = x.length();
+  R_xlen_t n = x.length();
   StringVector equip = x;
   String a, b;
   std::string testChar;
 
-  for (unsigned int i = 0; i < n; i++) {
+  for (R_xlen_t i = 0; i < n; i++) {
 
     if (x[i] == NA_STRING)
       continue;

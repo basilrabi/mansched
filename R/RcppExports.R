@@ -82,7 +82,7 @@ idAssetGroup <- function(x) {
     .Call('_mansched_idAssetGroup', PACKAGE = 'mansched', x)
 }
 
-#' Assign pool to requirement2
+#' Assign pool to requirement2 (WIP)
 #'
 #' This is used in \code{\link{assignPrio}}.
 #'

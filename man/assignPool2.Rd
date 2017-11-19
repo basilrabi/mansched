@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{assignPool2}
 \alias{assignPool2}
-\title{Assign pool to requirement2}
+\title{Assign pool to requirement2 (WIP)}
 \usage{
 assignPool2(empReq, empPool, listT, listR, prioStat = NA_character_,
   prioCode = FALSE)

@@ -1,7 +1,36 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-//' Assign pool to requirement2
+Environment pkg      = Environment::namespace_env("mansched");
+
+Function getHours = pkg["getHours"];
+Function getSum     ("sum");
+Function getClass   ("class");
+
+LogicalVector hasAviHours(List listR, S4 empT) {
+
+  R_xlen_t vecLength = listR.length();
+
+  LogicalVector z (vecLength);
+  DataFrame     hoursR;
+  IntegerMatrix hoursT = as<IntegerMatrix>(getHours(empT));
+
+  for (R_xlen_t i = 0; i < vecLength; i++) {
+
+    hoursR = as<DataFrame>(getHours(listR[i]));
+
+    if (as<int>(getSum(hoursR)) < 1)
+      z[i] = false;
+
+    // hoursR["reg"] = hoursR["reg"] + hoursR["rd"];
+
+
+  }
+
+  return z;
+}
+
+//' Assign pool to requirement2 (WIP)
 //'
 //' This is used in \code{\link{assignPrio}}.
 //'
@@ -31,6 +60,12 @@ List assignPool2(DataFrame empReq              ,
                  List      listR               ,
                  String    prioStat = NA_STRING,
                  bool      prioCode = false     ) {
+
+  String tempClass;
+  String tempCostCode;
+  String tempEquip;
+
+  unsigned int dLength = empReq.nrows();
 
   CharacterVector ID       (1);
   IntegerVector   mh       (1);
@@ -64,6 +99,28 @@ List assignPool2(DataFrame empReq              ,
                                      Named("scheme"  ) = clone(scheme  ),
                                      Named("status"  ) = clone(status  ),
                                      Named("maxReg"  ) = clone(maxReg  ));
+
+  for (R_xlen_t i = 0; i < dLength; i++) {
+
+    if (getSum(getHours(listT[i])) == 0)
+      continue;
+
+    if(listR.length() < 1) {
+      listR = R_NilValue;
+      break;
+    }
+
+    tempClass = as<String>(getClass(listT[i]));
+
+    if (tempClass == "Operator") {
+      tempEquip = as<String>(as<S4>(listT[i]).slot("equipment"));
+    }  else {
+      tempEquip = NA_STRING;
+    }
+
+    tempCostCode = as<String>(as<S4>(listT[i]).slot("costCode"));
+
+  }
 
   return List::create(empReq, empPool, listT, listR, mhDB);
 }
