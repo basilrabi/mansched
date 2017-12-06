@@ -314,7 +314,7 @@ StringVector idAssetGroup(StringVector x) {
       // Tango Romeo ?General ?Construction
       equip[i] = "TRGC";
     } else if (b == getLetterCount("TX") ||
-      boost::regex_match(testChar, boost::regex("\\s*TX\\s*")) ||
+      boost::regex_match(testChar, boost::regex("^TX\\s+.*")) ||
       b == getLetterCount("TZ") ||
       b == getLetterCount("X")) {
       // Tracked excavator
