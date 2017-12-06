@@ -243,7 +243,8 @@ StringVector idAssetGroup(StringVector x) {
       equip[i] = "FTR";
     } else if (b == getLetterCount("GS") ||
       boost::regex_match(testChar, boost::regex(".*GEN\\s*SET.*")) ||
-      boost::regex_match(testChar, boost::regex(".*GENERATOR.*"))) {
+      boost::regex_match(testChar, boost::regex(".*GENERATOR.*")) ||
+      boost::regex_match(testChar, boost::regex("^GS\\s*\\d*.*"))) {
       // Power generator set
       equip[i] = "GS";
     } else if (b == getLetterCount("GT")) {
