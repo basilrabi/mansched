@@ -9,3 +9,5 @@
 ^flow\.Rmd$
 ^flow_files$
 ^flow\.md$
+^\.git
+^\.gitignore$

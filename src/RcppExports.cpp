@@ -17,7 +17,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // assignPool2
-List assignPool2(DataFrame empReq, DataFrame empPool, List listT, List listR, String prioStat, bool prioCode);
+List assignPool2(DataFrame empReq, DataFrame empPool, List listT, List listR, CharacterVector prioStat, bool prioCode);
 RcppExport SEXP _mansched_assignPool2(SEXP empReqSEXP, SEXP empPoolSEXP, SEXP listTSEXP, SEXP listRSEXP, SEXP prioStatSEXP, SEXP prioCodeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -26,7 +26,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type empPool(empPoolSEXP);
     Rcpp::traits::input_parameter< List >::type listT(listTSEXP);
     Rcpp::traits::input_parameter< List >::type listR(listRSEXP);
-    Rcpp::traits::input_parameter< String >::type prioStat(prioStatSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type prioStat(prioStatSEXP);
     Rcpp::traits::input_parameter< bool >::type prioCode(prioCodeSEXP);
     rcpp_result_gen = Rcpp::wrap(assignPool2(empReq, empPool, listT, listR, prioStat, prioCode));
     return rcpp_result_gen;

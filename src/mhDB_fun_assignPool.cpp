@@ -1,8 +1,11 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#define asVI as<IntegerVector>
+#define asCV as<CharacterVector>
 #define asDF as<DataFrame>
+#define asIV as<IntegerVector>
+#define asLV as<LogicalVector>
+#define asST as<std::string>
 
 Environment pkg      = Environment::namespace_env("mansched");
 
@@ -28,19 +31,19 @@ LogicalVector hasAviHours(List listR, S4 empT) {
       continue;
     }
 
-    hoursR["reg"  ] = asVI(hoursR["reg"  ]) + asVI(hoursR["rd"]);
-    hoursR["sh"   ] = asVI(hoursR["sh"   ]) + asVI(hoursR["rd"]);
-    hoursR["lh"   ] = asVI(hoursR["lh"   ]) + asVI(hoursR["rd"]);
-    hoursR["nh"   ] = asVI(hoursR["nh"   ]) + asVI(hoursR["rd"]);
-    hoursR["regOT"] = asVI(hoursR["regOT"]) + asVI(hoursR["rd"]);
-    hoursR["shOT" ] = asVI(hoursR["shOT" ]) + asVI(hoursR["rd"]);
-    hoursR["lhOT" ] = asVI(hoursR["lhOT" ]) + asVI(hoursR["rd"]);
-    hoursR["nhOT" ] = asVI(hoursR["nhOT" ]) + asVI(hoursR["rd"]);
+    hoursR["reg"  ] = asIV(hoursR["reg"  ]) + asIV(hoursR["rd"]);
+    hoursR["sh"   ] = asIV(hoursR["sh"   ]) + asIV(hoursR["rd"]);
+    hoursR["lh"   ] = asIV(hoursR["lh"   ]) + asIV(hoursR["rd"]);
+    hoursR["nh"   ] = asIV(hoursR["nh"   ]) + asIV(hoursR["rd"]);
+    hoursR["regOT"] = asIV(hoursR["regOT"]) + asIV(hoursR["rd"]);
+    hoursR["shOT" ] = asIV(hoursR["shOT" ]) + asIV(hoursR["rd"]);
+    hoursR["lhOT" ] = asIV(hoursR["lhOT" ]) + asIV(hoursR["rd"]);
+    hoursR["nhOT" ] = asIV(hoursR["nhOT" ]) + asIV(hoursR["rd"]);
 
     for (unsigned int j = 0; j < 16; j++) {
-      tempCol = asVI(hoursR[j]);
+      tempCol = asIV(hoursR[j]);
       for (unsigned int k = 0; k < 12; k++) {
-        if (asVI(hoursT[j])[k] == 0)
+        if (asIV(hoursT[j])[k] == 0)
           tempCol[k] = 0;
       }
       hoursR[j] = tempCol;
@@ -52,6 +55,102 @@ LogicalVector hasAviHours(List listR, S4 empT) {
       z[i] = false;
     }
 
+  }
+
+  return z;
+}
+
+LogicalVector matchClass(List listR, CharacterVector prioStat) {
+
+  R_xlen_t      vecLength  = listR.length();
+  unsigned int  testLength = prioStat.length();
+  LogicalVector z            (vecLength);
+
+  if (prioStat[0] == NA_STRING) {
+    z = rep(LogicalVector(true), vecLength);
+  } else {
+    for (R_xlen_t i = 0; i < vecLength; i++) {
+      for (unsigned int j = 0; j < testLength; j++) {
+        if (asST(prioStat[j]) == asST(as<S4>(listR[i]).slot("status"))) {
+          z[i] = true;
+          break;
+        }
+      }
+    }
+  }
+
+  return z;
+}
+
+LogicalVector matchEquip(std::string tempClass,
+                         std::string equipment,
+                         List        listR     ) {
+
+  R_xlen_t        vecLength   = listR.length();
+  CharacterVector empEquip    = NA_STRING;
+  LogicalVector   z             (vecLength);
+
+  if (tempClass != "Operator") {
+    z = rep(LogicalVector(true), vecLength);
+  } else {
+    for (R_xlen_t i = 0; i < vecLength; i++) {
+      if (asST(getClass(as<S4>(listR[i]))) == "Operator") {
+        empEquip = asCV(as<S4>(listR[i]).slot("equipment"));
+        for (unsigned int j = 0; j < empEquip.length(); j++) {
+          if (equipment == asST(empEquip[j])) {
+            z[i] = true;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return z;
+}
+
+LogicalVector matchCostCode(std::string tempCostCode,
+                            List        listR,
+                            bool        prioCode) {
+
+  R_xlen_t        vecLength   = listR.length();
+  CharacterVector empCostCode = NA_STRING;
+  LogicalVector   z             (vecLength);
+
+  if (!prioCode) {
+    z = rep(LogicalVector(true), vecLength);
+  } else {
+    for (R_xlen_t i = 0; i < vecLength; i++) {
+      empCostCode = asCV(as<S4>(listR[i]).slot("costCode"));
+      for (unsigned int j = 0; j < empCostCode.length(); j++) {
+        if (tempCostCode == asST(empCostCode[j])) {
+          z[i] = true;
+          break;
+        }
+      }
+    }
+  }
+
+  return z;
+}
+
+LogicalVector getChoice(LogicalVector Ca,
+                        LogicalVector Cb,
+                        LogicalVector Cc,
+                        LogicalVector Cd) {
+
+  R_xlen_t      pLength = Ca.length();
+  LogicalVector z         (pLength);
+  LogicalVector tempZ     (4);
+
+  for (R_xlen_t i = 0; i < pLength; i++) {
+
+    tempZ[0] = Ca[i];
+    tempZ[1] = Cb[i];
+    tempZ[2] = Cc[i];
+    tempZ[3] = Cd[i];
+
+    z[i] = is_true(all(tempZ));
   }
 
   return z;
@@ -81,18 +180,19 @@ LogicalVector hasAviHours(List listR, S4 empT) {
 //'   }
 //' @export
 // [[Rcpp::export]]
-List assignPool2(DataFrame empReq              ,
-                 DataFrame empPool             ,
-                 List      listT               ,
-                 List      listR               ,
-                 String    prioStat = NA_STRING,
-                 bool      prioCode = false     ) {
+List assignPool2(DataFrame       empReq              ,
+                 DataFrame       empPool             ,
+                 List            listT               ,
+                 List            listR               ,
+                 CharacterVector prioStat = NA_STRING,
+                 bool            prioCode = false     ) {
 
   String tempClass;
   String tempCostCode;
   String tempEquip;
 
-  unsigned int dLength = empReq.nrows();
+  R_xlen_t rLength = empReq.nrows();
+  // R_xlen_t pLength = empReq.nrows();
 
   CharacterVector ID       (1);
   IntegerVector   mh       (1);
@@ -127,7 +227,11 @@ List assignPool2(DataFrame empReq              ,
                                      Named("status"  ) = clone(status  ),
                                      Named("maxReg"  ) = clone(maxReg  ));
 
-  for (R_xlen_t i = 0; i < dLength; i++) {
+  for (R_xlen_t i = 0; i < rLength; i++) {
+
+    if (i % 50 == 0){
+      checkUserInterrupt();
+    }
 
     if (getSum(getHours(listT[i])) == 0)
       continue;
@@ -147,7 +251,15 @@ List assignPool2(DataFrame empReq              ,
 
     tempCostCode = as<String>(as<S4>(listT[i]).slot("costCode"));
 
-    empPool["hasAviHours"] = hasAviHours(listR, as<S4>(listT[i]));
+    empPool["hasAviHours"  ] = hasAviHours(listR, as<S4>(listT[i]));
+    empPool["matchClass"   ] = matchClass(listR, prioStat);
+    empPool["matchEquip"   ] = matchEquip(tempClass, tempEquip, listR);
+    empPool["matchCostCode"] = matchCostCode(tempCostCode, listR, prioCode);
+
+    empPool["choice"] = getChoice(empPool["hasAviHours"],
+                            empPool["matchClass"],
+                                   empPool["matchEquip"],
+                                          empPool["matchCostCode"]);
 
 
 

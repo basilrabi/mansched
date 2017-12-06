@@ -166,7 +166,7 @@ bool isSubset(std::string x, std::string y) {
 StringVector idAssetGroup(StringVector x) {
 
   R_xlen_t n = x.length();
-  StringVector equip = x;
+  StringVector equip(clone(x));
   String a, b;
   std::string testChar;
 

@@ -6,3 +6,4 @@ inst/doc
 notes
 sim.R
 sim2.R
+*.log
