@@ -170,6 +170,48 @@ StringVector idAssetGroup(StringVector x) {
   String a, b;
   std::string testChar;
 
+  // declare getLetterCount constants to avoid repeating in the loop
+  String glc_MC        = getLetterCount("CM");
+  String glc_CT        = getLetterCount("CT");
+  String glc_DT1       = getLetterCount("DT");
+  String glc_DT2       = getLetterCount("D");
+  String glc_DT3       = getLetterCount("DTUP");
+  String glc_DT4       = getLetterCount("DTPDT");
+  String glc_DT5       = getLetterCount("DTT");
+  String glc_EQ        = getLetterCount("EQ");
+  String glc_FL        = getLetterCount("FL");
+  String glc_FORKLIFT  = getLetterCount("FORKLIFT");
+  String glc_FT        = getLetterCount("FT");
+  String glc_FTR       = getLetterCount("FTR");
+  String glc_GS        = getLetterCount("GS");
+  String glc_GT        = getLetterCount("GT");
+  String glc_LM        = getLetterCount("LM");
+  String glc_MDT       = getLetterCount("MDT");
+  String glc_MT        = getLetterCount("MT");
+  String glc_MWL       = getLetterCount("MWL");
+  String glc_PB        = getLetterCount("PB");
+  String glc_PMT       = getLetterCount("PMT");
+  String glc_RG        = getLetterCount("RG");
+  String glc_SB        = getLetterCount("SB");
+  String glc_SECURITY  = getLetterCount("SECURITY");
+  String glc_SP        = getLetterCount("SP");
+  String glc_ST        = getLetterCount("ST");
+  String glc_TL        = getLetterCount("TL");
+  String glc_TX1       = getLetterCount("TX");
+  String glc_TX2       = getLetterCount("TZ");
+  String glc_TX3       = getLetterCount("X");
+  String glc_VC        = getLetterCount("VC");
+  String glc_WC        = getLetterCount("WC");
+  String glc_WL1       = getLetterCount("WL");
+  String glc_WL2       = getLetterCount("W");
+  String glc_WL3       = getLetterCount("WLRGCT");
+  String glc_WP1       = getLetterCount("WP");
+  String glc_WP2       = getLetterCount("WTLWP");
+  String glc_WTL       = getLetterCount("WTL");
+  String glc_WX        = getLetterCount("WX");
+  String glc_YBM       = getLetterCount("YBM");
+
+
   for (R_xlen_t i = 0; i < n; i++) {
 
     if (x[i] == NA_STRING)
@@ -201,7 +243,7 @@ StringVector idAssetGroup(StringVector x) {
     } else if (boost::regex_match(testChar, boost::regex(".*CIK?P.*"))) {
       // Construction in progress
       equip[i] = "CIP";
-    } else if (b == getLetterCount("CM")) {
+    } else if (b == glc_MC) {
       if (boost::regex_match(testChar, boost::regex(".*MC.*"))) {
         // Motorcycle
         equip[i] = "MC";
@@ -209,50 +251,49 @@ StringVector idAssetGroup(StringVector x) {
         // Not described in shop data
         equip[i] = "CM";
       }
-    } else if (b == getLetterCount("CT")) {
+    } else if (b == glc_CT) {
       // Bulldozer
       equip[i] = "CT";
-    } else if (b == getLetterCount("DT") ||
-      b == getLetterCount("D") ||
-      b == getLetterCount("DTUP") ||
-      b == getLetterCount("DTPDT") ||
-      b == getLetterCount("DTT")) {
+    } else if (b == glc_DT1 ||
+      b == glc_DT2 ||
+      b == glc_DT3 ||
+      b == glc_DT4 ||
+      b == glc_DT5) {
       // Dump truck
       equip[i] = "DT";
-    } else if (b == getLetterCount("EQ") ||
+    } else if (b == glc_EQ ||
       (boost::regex_match(testChar, boost::regex(".*EQ\\s*[[:digit:]].*")))) {
       // Engineer's quarters
       equip[i] = "EQ";
     } else if (isSubset("FASTCRAFT", b)) {
       equip[i] = "FASTCRAFT";
-    } else if (b == getLetterCount("FL")) {
+    } else if (b == glc_FL) {
       // Fuel lorry
       equip[i] = "FL";
-    } else if (b == getLetterCount("FORKLIFT")) {
+    } else if (b == glc_FORKLIFT) {
       equip[i] = "FORKLIFT";
-    } else if ((b == getLetterCount("FS") &&
-      boost::regex_match(testChar, boost::regex(".*F\\s*S.*"))) ||
+    } else if (boost::regex_match(testChar, boost::regex("^F\\s*S.*")) ||
       boost::regex_match(testChar, boost::regex(".*SQUID.*"))) {
       // Flying Squid
       equip[i] = "FS";
-    } else if (b == getLetterCount("FT")) {
+    } else if (b == glc_FT) {
       // Fire truck
       equip[i] = "FT";
-    } else if (b == getLetterCount("FTR")) {
+    } else if (b == glc_FTR) {
       // Farm tractors
       equip[i] = "FTR";
-    } else if (b == getLetterCount("GS") ||
+    } else if (b == glc_GS ||
       boost::regex_match(testChar, boost::regex(".*GEN\\s*SET.*")) ||
       boost::regex_match(testChar, boost::regex(".*GENERATOR.*")) ||
       boost::regex_match(testChar, boost::regex("^GS\\s*\\d*.*"))) {
       // Power generator set
       equip[i] = "GS";
-    } else if (b == getLetterCount("GT")) {
+    } else if (b == glc_GT) {
       // Not described in shop data
       equip[i] = "GT";
     } else if (boost::regex_match(testChar, boost::regex(".*HPK.*"))) {
       equip[i] = "HPK";
-    } else if (b == getLetterCount("LM")) {
+    } else if (b == glc_LM) {
       if (boost::regex_match(testChar, boost::regex(".*L\\s*M.*"))) {
         // Not described in shop data
         equip[i] = "LM";
@@ -262,7 +303,7 @@ StringVector idAssetGroup(StringVector x) {
       }
     } else if (boost::regex_match(testChar, boost::regex(".*MANLIFT.*"))) {
       equip[i] = "ML";
-    } else if (b == getLetterCount("MDT")) {
+    } else if (b == glc_MDT) {
       // Mini dump truck
       equip[i] = "MDT";
     } else if (boost::regex_match(testChar, boost::regex(".*MA?R?KE?TI?N?G.*")) ||
@@ -272,10 +313,10 @@ StringVector idAssetGroup(StringVector x) {
     } else if (boost::regex_match(testChar, boost::regex(".*CRU?SHE?E?R.*"))) {
       // Mobile crusher
       equip[i] = "MOC";
-    } else if (b == getLetterCount("MT")) {
+    } else if (b == glc_MT) {
       // Maintenance truck
       equip[i] = "MT";
-    } else if (b == getLetterCount("MWL")) {
+    } else if (b == glc_MWL) {
       // Mini wheel loader
       equip[i] = "MWL";
     } else if (boost::regex_match(testChar, boost::regex(".*NBC.*"))) {
@@ -283,59 +324,59 @@ StringVector idAssetGroup(StringVector x) {
       equip[i] = "NBC";
     } else if (boost::regex_match(testChar, boost::regex(".*PATROL\\s*BOAT.*"))) {
       equip[i] = "PATROLBOAT";
-    } else if (b == getLetterCount("PB") ||
+    } else if (b == glc_PB ||
       boost::regex_match(testChar, boost::regex(".*PUMP\\s*BOAT.*"))) {
       equip[i] = "PB";
-    } else if (b == getLetterCount("PMT")) {
+    } else if (b == glc_PMT) {
       // Not described in shop data
       equip[i] = "PMT";
-    } else if (b == getLetterCount("RG")) {
+    } else if (b == glc_RG) {
       // Road grader
       equip[i] = "RG";
-    } else if (b == getLetterCount("SB")) {
+    } else if (b == glc_SB) {
       // Service bus
       equip[i] = "SB";
     } else if (boost::regex_match(testChar, boost::regex(".*SD(M|N)\\s*C.*")) ||
       boost::regex_match(testChar, boost::regex("SMDC"))) {
       // Southernphil Development and Marketing Corporation (FITZ-SDMC)
       equip[i] = "SDMC";
-    } else if (b == getLetterCount("SECURITY")) {
+    } else if (b == glc_SECURITY) {
       equip[i] = "SECURITY";
-    } else if (b == getLetterCount("SP")) {
+    } else if (b == glc_SP) {
       // Service pickup
       equip[i] = "SP";
-    } else if (b == getLetterCount("ST")) {
+    } else if (b == glc_ST) {
       // Service truck
       equip[i] = "ST";
-    } else if (b == getLetterCount("TL")) {
+    } else if (b == glc_TL) {
       // Tracked loader
       equip[i] = "TL";
     } else if (boost::regex_match(testChar, boost::regex(".*TRG?C.*"))) {
       // Tango Romeo ?General ?Construction
       equip[i] = "TRGC";
-    } else if (b == getLetterCount("TX") ||
+    } else if (b == glc_TX1 ||
       boost::regex_match(testChar, boost::regex("^TX\\s+.*")) ||
-      b == getLetterCount("TZ") ||
-      b == getLetterCount("X")) {
+      b == glc_TX2 ||
+      b == glc_TX3) {
       // Tracked excavator
       equip[i] = "TX";
-    } else if (b == getLetterCount("VC")) {
+    } else if (b == glc_VC) {
       // Vibrating compactor
       equip[i] = "VC";
-    } else if (b == getLetterCount("WC")) {
+    } else if (b == glc_WC) {
       // Not described in shop data
       equip[i] = "WC";
-    } else if (b == getLetterCount("WL") ||
-      b == getLetterCount("W") ||
-      b == getLetterCount("WLRGCT")) {
+    } else if (b == glc_WL1 ||
+      b == glc_WL2 ||
+      b == glc_WL3) {
       // Wheeled pay loader
       equip[i] = "WL";
-    } else if (b == getLetterCount("WP") ||
+    } else if (b == glc_WP1 ||
       boost::regex_match(testChar, boost::regex(".*H2(0|O)\\s*PUMP.*")) ||
-      b == getLetterCount("WTLWP") ||
+      b == glc_WP2 ||
       isSubset("WATER PUMP", b)) {
       equip[i] = "WP";
-    } else if (b == getLetterCount("WTL")) {
+    } else if (b == glc_WTL) {
       if (boost::regex_match(testChar, boost::regex(".*WTL.*"))) {
         // Water truck
         equip[i] = "WTL";
@@ -347,10 +388,10 @@ StringVector idAssetGroup(StringVector x) {
         equip[i] = "ZZZ";
       }
     } else if (boost::regex_match(testChar, boost::regex(".*WX.*")) ||
-      b == getLetterCount("WX")) {
+      b == glc_WX) {
       // Wheeled excavator
       equip[i] = "WX";
-    } else if (b == getLetterCount("YBM") ||
+    } else if (b == glc_YBM ||
       boost::regex_match(testChar, boost::regex(".*YBM.*"))) {
       // Yoshida boring machine
       equip[i] = "YBM";
