@@ -207,7 +207,8 @@ StringVector idAssetGroup(StringVector x) {
   String glc_WL3       = getLetterCount("WLRGCT");
   String glc_WP1       = getLetterCount("WP");
   String glc_WP2       = getLetterCount("WTLWP");
-  String glc_WTL       = getLetterCount("WTL");
+  String glc_WTL1      = getLetterCount("WT");
+  String glc_WTL2      = getLetterCount("WTL");
   String glc_WX        = getLetterCount("WX");
   String glc_YBM       = getLetterCount("YBM");
 
@@ -376,8 +377,9 @@ StringVector idAssetGroup(StringVector x) {
       b == glc_WP2 ||
       isSubset("WATER PUMP", b)) {
       equip[i] = "WP";
-    } else if (b == glc_WTL) {
-      if (boost::regex_match(testChar, boost::regex(".*WTL.*"))) {
+    } else if (b == glc_WTL2) {
+      if (boost::regex_match(testChar, boost::regex(".*WTL.*")) ||
+          boost::regex_match(testChar, boost::regex(".*WLT.*"))) {
         // Water truck
         equip[i] = "WTL";
       } else if (boost::regex_match(testChar, boost::regex(".*TWL.*"))) {
@@ -387,6 +389,9 @@ StringVector idAssetGroup(StringVector x) {
         // Not yet classified
         equip[i] = "ZZZ";
       }
+    } else if (b == glc_WTL1) {
+      // Water truck
+      equip[i] = "WTL";
     } else if (boost::regex_match(testChar, boost::regex(".*WX.*")) ||
       b == glc_WX) {
       // Wheeled excavator
