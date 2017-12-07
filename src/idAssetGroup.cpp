@@ -237,7 +237,12 @@ StringVector idAssetGroup(StringVector x) {
     } else if (boost::regex_match(testChar, boost::regex(".*SMCC.*"))) {
       // Sumitomo-Mitsui Construction Company
       equip[i] = "SMCC";
-    } else if (boost::regex_match(testChar, boost::regex(".*ADMIN.*"))) {
+    } else if (
+        boost::regex_match(
+          testChar,
+          boost::regex("(.*[^[:alpha:]]|\\s)*ADMIN.*")
+        )
+    ) {
       // Admin Building
       equip[i] = "ADMIN";
     } else if (boost::regex_match(testChar, boost::regex(".*CIK?P.*"))) {

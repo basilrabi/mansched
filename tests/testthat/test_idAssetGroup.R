@@ -3,6 +3,7 @@ library(mansched)
 test_that("idAssetGroup() works", {
   expect_equal(idAssetGroup(NA)                 , as.character(NA))
   expect_equal(idAssetGroup("ADMIN")            , "ADMIN")
+  expect_equal(idAssetGroup("GEN ADMIN")        , "ADMIN")
   expect_equal(idAssetGroup("BRGY")             , "LGU")
   expect_equal(idAssetGroup("CIP XX")           , "CIP")
   expect_equal(idAssetGroup("CM 2")             , "CM")
