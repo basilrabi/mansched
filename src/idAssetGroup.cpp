@@ -304,7 +304,8 @@ StringVector idAssetGroup(StringVector x) {
       }
     } else if (boost::regex_match(testChar, boost::regex(".*MANLIFT.*"))) {
       equip[i] = "ML";
-    } else if (b == glc_MDT) {
+    } else if (b == glc_MDT ||
+      boost::regex_match(testChar, boost::regex(".*MD+T.*"))) {
       // Mini dump truck
       equip[i] = "MDT";
     } else if (boost::regex_match(testChar, boost::regex(".*MA?R?KE?TI?N?G.*")) ||
@@ -314,7 +315,8 @@ StringVector idAssetGroup(StringVector x) {
     } else if (boost::regex_match(testChar, boost::regex(".*CRU?SHE?E?R.*"))) {
       // Mobile crusher
       equip[i] = "MOC";
-    } else if (b == glc_MT) {
+    } else if (b == glc_MT ||
+      boost::regex_match(testChar, boost::regex("^MT\\s*\\d+.*"))) {
       // Maintenance truck
       equip[i] = "MT";
     } else if (b == glc_MWL) {
