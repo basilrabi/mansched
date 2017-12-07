@@ -42,6 +42,7 @@ Below are the identified groups:
     \item{FT}{fire truck}
     \item{FTR}{farm tractors}
     \item{GS}{power generator set}
+    \item{LM}{lawn mower}
     \item{MC}{motorcycle}
     \item{ML}{man lift}
     \item{MOC}{mobile crusher}
@@ -79,7 +80,6 @@ Below are the identified groups:
     \itemize{
     \item CM
     \item GT
-    \item LM
     \item PMT
     \item WC
     \item ZZZ

@@ -115,6 +115,7 @@ bool isSubset(std::string x, std::string y) {
 //'     \item{FT}{fire truck}
 //'     \item{FTR}{farm tractors}
 //'     \item{GS}{power generator set}
+//'     \item{LM}{lawn mower}
 //'     \item{MC}{motorcycle}
 //'     \item{ML}{man lift}
 //'     \item{MOC}{mobile crusher}
@@ -152,7 +153,6 @@ bool isSubset(std::string x, std::string y) {
 //'     \itemize{
 //'     \item CM
 //'     \item GT
-//'     \item LM
 //'     \item PMT
 //'     \item WC
 //'     \item ZZZ
@@ -211,7 +211,6 @@ StringVector idAssetGroup(StringVector x) {
   String glc_WTL2      = getLetterCount("WTL");
   String glc_WX        = getLetterCount("WX");
   String glc_YBM       = getLetterCount("YBM");
-
 
   for (R_xlen_t i = 0; i < n; i++) {
 
@@ -296,13 +295,17 @@ StringVector idAssetGroup(StringVector x) {
       equip[i] = "HPK";
     } else if (b == glc_LM) {
       if (boost::regex_match(testChar, boost::regex(".*L\\s*M.*"))) {
-        // Not described in shop data
+        // Lawn Mower
         equip[i] = "LM";
       } else {
         // Man lift
         equip[i] = "ML";
       }
-    } else if (boost::regex_match(testChar, boost::regex(".*MANLIFT.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*LAWN\\s*MOW?ER.*"))) {
+      // Lawn Mower
+      equip[i] = "LM";
+    }else if (boost::regex_match(testChar, boost::regex(".*MANLIFT.*"))) {
+      // Man lift
       equip[i] = "ML";
     } else if (b == glc_MDT ||
       boost::regex_match(testChar, boost::regex(".*MD+T.*"))) {
