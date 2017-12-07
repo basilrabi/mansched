@@ -33,6 +33,7 @@ Below are the identified groups:
     }
   \item Equipment
     \describe{
+    \item{CM}{concrete mixer}
     \item{CT}{bulldozer}
     \item{DT}{dump truck}
     \item{FASTCRAFT}{}
@@ -78,7 +79,6 @@ Below are the identified groups:
     }
   \item Unknown
     \itemize{
-    \item CM
     \item GT
     \item PMT
     \item WC

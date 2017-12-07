@@ -106,6 +106,7 @@ bool isSubset(std::string x, std::string y) {
 //'     }
 //'   \item Equipment
 //'     \describe{
+//'     \item{CM}{concrete mixer}
 //'     \item{CT}{bulldozer}
 //'     \item{DT}{dump truck}
 //'     \item{FASTCRAFT}{}
@@ -151,7 +152,6 @@ bool isSubset(std::string x, std::string y) {
 //'     }
 //'   \item Unknown
 //'     \itemize{
-//'     \item CM
 //'     \item GT
 //'     \item PMT
 //'     \item WC
@@ -248,9 +248,12 @@ StringVector idAssetGroup(StringVector x) {
         // Motorcycle
         equip[i] = "MC";
       } else {
-        // Not described in shop data
+        // Concrete mixer
         equip[i] = "CM";
       }
+    } else if (boost::regex_match(testChar, boost::regex(".*MIXE?R.*"))) {
+      // Concrete mixer
+      equip[i] = "CM";
     } else if (b == glc_CT) {
       // Bulldozer
       equip[i] = "CT";
