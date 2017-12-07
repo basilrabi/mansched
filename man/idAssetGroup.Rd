@@ -43,6 +43,7 @@ Below are the identified groups:
     \item{FT}{fire truck}
     \item{FTR}{farm tractors}
     \item{GS}{power generator set}
+    \item{GT}{garbage truck}
     \item{LM}{lawn mower}
     \item{MC}{motorcycle}
     \item{ML}{man lift}
@@ -79,7 +80,6 @@ Below are the identified groups:
     }
   \item Unknown
     \itemize{
-    \item GT
     \item PMT
     \item WC
     \item ZZZ

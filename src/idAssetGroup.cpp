@@ -116,6 +116,7 @@ bool isSubset(std::string x, std::string y) {
 //'     \item{FT}{fire truck}
 //'     \item{FTR}{farm tractors}
 //'     \item{GS}{power generator set}
+//'     \item{GT}{garbage truck}
 //'     \item{LM}{lawn mower}
 //'     \item{MC}{motorcycle}
 //'     \item{ML}{man lift}
@@ -152,7 +153,6 @@ bool isSubset(std::string x, std::string y) {
 //'     }
 //'   \item Unknown
 //'     \itemize{
-//'     \item GT
 //'     \item PMT
 //'     \item WC
 //'     \item ZZZ
@@ -409,6 +409,12 @@ StringVector idAssetGroup(StringVector x) {
       boost::regex_match(testChar, boost::regex(".*YBM.*"))) {
       // Yoshida boring machine
       equip[i] = "YBM";
+    }  else if (boost::regex_match(testChar, boost::regex(".*VOLVO\\s*DT.*"))) {
+      // Dump truck
+      equip[i] = "DT";
+    }  else if (boost::regex_match(testChar, boost::regex("^MC\\s*\\d+.*"))) {
+      // Motorcycle
+      equip[i] = "MC";
     } else {
       // Not yet classified
       equip[i] = "ZZZ";
