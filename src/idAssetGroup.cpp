@@ -320,7 +320,8 @@ StringVector idAssetGroup(StringVector x) {
     } else if (b == glc_MWL) {
       // Mini wheel loader
       equip[i] = "MWL";
-    } else if (boost::regex_match(testChar, boost::regex(".*NBC.*"))) {
+    } else if (boost::regex_match(testChar, boost::regex(".*NBC.*")) ||
+      boost::regex_match(testChar, boost::regex("^NB?C?\\s+.*"))) {
       // Nickel Base Corporation
       equip[i] = "NBC";
     } else if (boost::regex_match(testChar, boost::regex(".*PATROL\\s*BOAT.*"))) {
