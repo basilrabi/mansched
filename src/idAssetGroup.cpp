@@ -337,7 +337,7 @@ StringVector idAssetGroup(StringVector x) {
       // Service bus
       equip[i] = "SB";
     } else if (boost::regex_match(testChar, boost::regex(".*SD(M|N)\\s*C.*")) ||
-      boost::regex_match(testChar, boost::regex("SMDC"))) {
+      boost::regex_match(testChar, boost::regex(".*SMDC.*"))) {
       // Southernphil Development and Marketing Corporation (FITZ-SDMC)
       equip[i] = "SDMC";
     } else if (b == glc_SECURITY) {

@@ -32,6 +32,7 @@ test_that("idAssetGroup() works", {
   expect_equal(idAssetGroup("RG 15")      , "RG")
   expect_equal(idAssetGroup("SB 15")      , "SB")
   expect_equal(idAssetGroup("SDMC DT 15") , "SDMC")
+  expect_equal(idAssetGroup("SMDC DT 15") , "SDMC")
   expect_equal(idAssetGroup("Security")   , "SECURITY")
   expect_equal(idAssetGroup("SMCC")       , "SMCC")
   expect_equal(idAssetGroup("SP 96")      , "SP")
