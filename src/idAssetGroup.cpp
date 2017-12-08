@@ -315,7 +315,7 @@ StringVector idAssetGroup(StringVector x) {
     } else if (b == glc_GS ||
       boost::regex_match(testChar, boost::regex(".*GEN\\s*SET.*")) ||
       boost::regex_match(testChar, boost::regex(".*GENERATOR.*")) ||
-      boost::regex_match(testChar, boost::regex("^GS\\s*\\d*.*"))) {
+      boost::regex_match(testChar, boost::regex("^GS\\s+\\d+.*"))) {
 
       equip[i] = "GS";
 
