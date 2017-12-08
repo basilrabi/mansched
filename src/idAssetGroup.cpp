@@ -224,200 +224,275 @@ StringVector idAssetGroup(StringVector x) {
     testChar = a.get_cstring();
     b = getLetterCount(b);
 
+    // FIXME
+    // Re-arrange according to frequency in data
+
     if (boost::regex_match(testChar, boost::regex(".*TACOPHIL.*"))) {
+
       equip[i] = "TACOPHIL";
+
     } else if (boost::regex_match(testChar, boost::regex(".*PACE.*")) ||
       boost::regex_match(testChar, boost::regex(".*PRI?N?CE *ACE.*"))) {
-      // PrinceAce Corporation
+
       equip[i] = "PACE";
+
     } else if (boost::regex_match(testChar, boost::regex(".*BRGY.*")) ||
       boost::regex_match(testChar, boost::regex(".*BGRY.*"))) {
-      // Local Government Unit
+
       equip[i] = "LGU";
+
     } else if (boost::regex_match(testChar, boost::regex(".*SMCC.*"))) {
-      // Sumitomo-Mitsui Construction Company
+
       equip[i] = "SMCC";
-    } else if (boost::regex_match(testChar, boost::regex("(^|(.*\\s+))ADMIN.*"))) {
-      // Admin Building
+
+    } else if (boost::regex_match(testChar,
+                                  boost::regex("(^|(.*\\s+))ADMIN.*"))) {
+
       equip[i] = "ADMIN";
+
     } else if (boost::regex_match(testChar, boost::regex(".*CIK?P.*"))) {
-      // Construction in progress
+
       equip[i] = "CIP";
+
     } else if (b == glc_MC) {
+
       if (boost::regex_match(testChar, boost::regex(".*MC.*"))) {
-        // Motorcycle
+
         equip[i] = "MC";
+
       } else {
-        // Concrete mixer
+
         equip[i] = "CM";
+
       }
+
     } else if (boost::regex_match(testChar, boost::regex(".*MIXE?R.*"))) {
-      // Concrete mixer
+
       equip[i] = "CM";
+
     } else if (b == glc_CT) {
-      // Bulldozer
+
       equip[i] = "CT";
+
     } else if (b == glc_DT1 ||
       b == glc_DT2 ||
       b == glc_DT3 ||
       b == glc_DT4 ||
       b == glc_DT5) {
-      // Dump truck
+
       equip[i] = "DT";
+
     } else if (b == glc_EQ ||
       (boost::regex_match(testChar, boost::regex(".*EQ\\s*[[:digit:]].*")))) {
-      // Engineer's quarters
+
       equip[i] = "EQ";
+
     } else if (isSubset("FASTCRAFT", b)) {
+
       equip[i] = "FASTCRAFT";
+
     } else if (b == glc_FL) {
-      // Fuel lorry
+
       equip[i] = "FL";
+
     } else if (b == glc_FORKLIFT) {
+
       equip[i] = "FORKLIFT";
+
     } else if (boost::regex_match(testChar, boost::regex("^F\\s*S.*")) ||
       boost::regex_match(testChar, boost::regex(".*SQUID.*"))) {
-      // Flying Squid
+
       equip[i] = "FS";
+
     } else if (b == glc_FT) {
-      // Fire truck
+
       equip[i] = "FT";
+
     } else if (b == glc_FTR) {
-      // Farm tractors
+
       equip[i] = "FTR";
+
     } else if (b == glc_GS ||
       boost::regex_match(testChar, boost::regex(".*GEN\\s*SET.*")) ||
       boost::regex_match(testChar, boost::regex(".*GENERATOR.*")) ||
       boost::regex_match(testChar, boost::regex("^GS\\s*\\d*.*"))) {
-      // Power generator set
+
       equip[i] = "GS";
+
     } else if (b == glc_GT) {
-      // Not described in shop data
+
       equip[i] = "GT";
+
     } else if (boost::regex_match(testChar, boost::regex(".*HPK.*"))) {
+
       equip[i] = "HPK";
+
     } else if (b == glc_LM) {
+
       if (boost::regex_match(testChar, boost::regex(".*L\\s*M.*"))) {
-        // Lawn Mower
+
         equip[i] = "LM";
+
       } else {
-        // Man lift
+
         equip[i] = "ML";
+
       }
-    } else if (boost::regex_match(testChar, boost::regex(".*LAWN\\s*MOW?ER.*"))) {
-      // Lawn Mower
+
+    } else if (boost::regex_match(testChar,
+                                  boost::regex(".*LAWN\\s*MOW?ER.*"))) {
+
       equip[i] = "LM";
+
     }else if (boost::regex_match(testChar, boost::regex(".*MANLIFT.*"))) {
-      // Man lift
+
       equip[i] = "ML";
+
     } else if (b == glc_MDT ||
       boost::regex_match(testChar, boost::regex(".*MD+T.*"))) {
-      // Mini dump truck
+
       equip[i] = "MDT";
-    } else if (boost::regex_match(testChar, boost::regex(".*MA?R?KE?TI?N?G.*")) ||
+
+    } else if (boost::regex_match(testChar,
+                                  boost::regex(".*MA?R?KE?TI?N?G.*")) ||
       boost::regex_match(testChar, boost::regex(".*MKGT.*"))) {
-      // Supplies during shipment loading
+
       equip[i] = "MKTG";
+
     } else if (boost::regex_match(testChar, boost::regex(".*CRU?SHE?E?R.*"))) {
-      // Mobile crusher
+
       equip[i] = "MOC";
+
     } else if (b == glc_MT ||
       boost::regex_match(testChar, boost::regex("^MT\\s*\\d+.*"))) {
-      // Maintenance truck
+
       equip[i] = "MT";
+
     } else if (b == glc_MWL) {
-      // Mini wheel loader
+
       equip[i] = "MWL";
+
     } else if (boost::regex_match(testChar, boost::regex(".*NBC.*")) ||
       boost::regex_match(testChar, boost::regex("^NB?C?\\s+.*"))) {
-      // Nickel Base Corporation
+
       equip[i] = "NBC";
-    } else if (boost::regex_match(testChar, boost::regex(".*PATROL\\s*BOAT.*"))) {
+
+    } else if (boost::regex_match(testChar,
+                                  boost::regex(".*PATROL\\s*BOAT.*"))) {
+
       equip[i] = "PATROLBOAT";
+
     } else if (b == glc_PB ||
       boost::regex_match(testChar, boost::regex(".*PUMP\\s*BOAT.*"))) {
+
       equip[i] = "PB";
+
     } else if (b == glc_PMT) {
-      // Not described in shop data
+
       equip[i] = "PMT";
+
     } else if (b == glc_RG) {
-      // Road grader
+
       equip[i] = "RG";
+
     } else if (b == glc_SB) {
-      // Service bus
+
       equip[i] = "SB";
+
     } else if (boost::regex_match(testChar, boost::regex(".*SD(M|N)\\s*C.*")) ||
       boost::regex_match(testChar, boost::regex(".*SMDC.*"))) {
-      // Southernphil Development and Marketing Corporation (FITZ-SDMC)
+
       equip[i] = "SDMC";
+
     } else if (b == glc_SECURITY) {
+
       equip[i] = "SECURITY";
+
     } else if (b == glc_SP) {
-      // Service pickup
+
       equip[i] = "SP";
+
     } else if (b == glc_ST) {
-      // Service truck
+
       equip[i] = "ST";
+
     } else if (b == glc_TL) {
-      // Tracked loader
+
       equip[i] = "TL";
+
     } else if (boost::regex_match(testChar, boost::regex(".*TRG?C.*"))) {
-      // Tango Romeo ?General ?Construction
+
       equip[i] = "TRGC";
+
     } else if (b == glc_TX1 ||
       boost::regex_match(testChar, boost::regex("^TX\\s+.*")) ||
       b == glc_TX2 ||
       b == glc_TX3) {
-      // Tracked excavator
+
       equip[i] = "TX";
+
     } else if (b == glc_VC) {
-      // Vibrating compactor
+
       equip[i] = "VC";
+
     } else if (b == glc_WC) {
-      // Not described in shop data
+
       equip[i] = "WC";
-    } else if (b == glc_WL1 ||
-      b == glc_WL2 ||
-      b == glc_WL3) {
-      // Wheeled pay loader
+
+    } else if (b == glc_WL1 || b == glc_WL2 || b == glc_WL3) {
+
       equip[i] = "WL";
+
     } else if (b == glc_WP1 ||
       boost::regex_match(testChar, boost::regex(".*H2(0|O)\\s*PUMP.*")) ||
       b == glc_WP2 ||
       isSubset("WATER PUMP", b)) {
+
       equip[i] = "WP";
+
     } else if (b == glc_WTL2) {
+
       if (boost::regex_match(testChar, boost::regex(".*WTL.*")) ||
           boost::regex_match(testChar, boost::regex(".*WLT.*"))) {
-        // Water truck
+
         equip[i] = "WTL";
+
       } else if (boost::regex_match(testChar, boost::regex(".*TWL.*"))) {
-        // Tower light
+
         equip[i] = "TWL";
+
       } else {
-        // Not yet classified
+
         equip[i] = "ZZZ";
+
       }
+
     } else if (b == glc_WTL1) {
-      // Water truck
+
       equip[i] = "WTL";
+
     } else if (boost::regex_match(testChar, boost::regex(".*WX.*")) ||
       b == glc_WX) {
-      // Wheeled excavator
+
       equip[i] = "WX";
+
     } else if (b == glc_YBM ||
       boost::regex_match(testChar, boost::regex(".*YBM.*"))) {
-      // Yoshida boring machine
+
       equip[i] = "YBM";
+
     }  else if (boost::regex_match(testChar, boost::regex(".*VOLVO\\s*DT.*"))) {
-      // Dump truck
+
       equip[i] = "DT";
+
     }  else if (boost::regex_match(testChar, boost::regex("^MC\\s*\\d+.*"))) {
-      // Motorcycle
+
       equip[i] = "MC";
+
     } else {
-      // Not yet classified
+
       equip[i] = "ZZZ";
+
     }
 
   }
