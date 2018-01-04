@@ -1,15 +1,20 @@
+dist: trusty
+sudo: require
 language: r
 cache: packages
 compiler: g++
 
 addons:
     apt:
+        sources:
+            - ubuntu-toolchain-r-test
         packages:
-            - graphviz
-            - g++
-            - libboost-dev
-            - libboost-regex-dev
-            - libboost-system-dev
+            - gcc-7
+            - g++-7
+
+script:
+    - sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
+    - sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++
 
 after_success:
     - Rscript -e 'covr::codecov()'

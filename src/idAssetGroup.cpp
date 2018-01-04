@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include <boost/regex.hpp>
+#include <regex>
 #include <algorithm>
 
 using namespace Rcpp;
@@ -51,7 +51,7 @@ String getLetterCount(std::string x) {
   for (i = 0; i < x.length(); i++) {
     tempChar = x[i];
 
-    if (boost::regex_match(tempChar, boost::regex("[[:upper:]]")))
+    if (std::regex_match(tempChar, std::regex("[[:upper:]]")))
       letterCounts[letterCounts.findName(tempChar)]++;
   }
 
@@ -227,36 +227,36 @@ StringVector idAssetGroup(StringVector x) {
     // FIXME
     // Re-arrange according to frequency in data
 
-    if (boost::regex_match(testChar, boost::regex(".*TACOPHIL.*"))) {
+    if (std::regex_match(testChar, std::regex(".*TACOPHIL.*"))) {
 
       equip[i] = "TACOPHIL";
 
-    } else if (boost::regex_match(testChar, boost::regex(".*PACE.*")) ||
-      boost::regex_match(testChar, boost::regex(".*PRI?N?CE *ACE.*"))) {
+    } else if (std::regex_match(testChar, std::regex(".*PACE.*")) ||
+      std::regex_match(testChar, std::regex(".*PRI?N?CE *ACE.*"))) {
 
       equip[i] = "PACE";
 
-    } else if (boost::regex_match(testChar, boost::regex(".*BRGY.*")) ||
-      boost::regex_match(testChar, boost::regex(".*BGRY.*"))) {
+    } else if (std::regex_match(testChar, std::regex(".*BRGY.*")) ||
+      std::regex_match(testChar, std::regex(".*BGRY.*"))) {
 
       equip[i] = "LGU";
 
-    } else if (boost::regex_match(testChar, boost::regex(".*SMCC.*"))) {
+    } else if (std::regex_match(testChar, std::regex(".*SMCC.*"))) {
 
       equip[i] = "SMCC";
 
-    } else if (boost::regex_match(testChar,
-                                  boost::regex("(^|(.*\\s+))ADMIN.*"))) {
+    } else if (std::regex_match(testChar,
+                                  std::regex("(^|(.*\\s+))ADMIN.*"))) {
 
       equip[i] = "ADMIN";
 
-    } else if (boost::regex_match(testChar, boost::regex(".*CIK?P.*"))) {
+    } else if (std::regex_match(testChar, std::regex(".*CIK?P.*"))) {
 
       equip[i] = "CIP";
 
     } else if (b == glc_MC) {
 
-      if (boost::regex_match(testChar, boost::regex(".*MC.*"))) {
+      if (std::regex_match(testChar, std::regex(".*MC.*"))) {
 
         equip[i] = "MC";
 
@@ -266,7 +266,7 @@ StringVector idAssetGroup(StringVector x) {
 
       }
 
-    } else if (boost::regex_match(testChar, boost::regex(".*MIXE?R.*"))) {
+    } else if (std::regex_match(testChar, std::regex(".*MIXE?R.*"))) {
 
       equip[i] = "CM";
 
@@ -283,7 +283,7 @@ StringVector idAssetGroup(StringVector x) {
       equip[i] = "DT";
 
     } else if (b == glc_EQ ||
-      (boost::regex_match(testChar, boost::regex(".*EQ\\s*[[:digit:]].*")))) {
+      (std::regex_match(testChar, std::regex(".*EQ\\s*[[:digit:]].*")))) {
 
       equip[i] = "EQ";
 
@@ -299,8 +299,8 @@ StringVector idAssetGroup(StringVector x) {
 
       equip[i] = "FORKLIFT";
 
-    } else if (boost::regex_match(testChar, boost::regex("^F\\s*S.*")) ||
-      boost::regex_match(testChar, boost::regex(".*SQUID.*"))) {
+    } else if (std::regex_match(testChar, std::regex("^F\\s*S.*")) ||
+      std::regex_match(testChar, std::regex(".*SQUID.*"))) {
 
       equip[i] = "FS";
 
@@ -313,9 +313,9 @@ StringVector idAssetGroup(StringVector x) {
       equip[i] = "FTR";
 
     } else if (b == glc_GS ||
-      boost::regex_match(testChar, boost::regex(".*GEN\\s*SET.*")) ||
-      boost::regex_match(testChar, boost::regex(".*GENERATOR.*")) ||
-      boost::regex_match(testChar, boost::regex("^GS\\s+\\d+.*"))) {
+      std::regex_match(testChar, std::regex(".*GEN\\s*SET.*")) ||
+      std::regex_match(testChar, std::regex(".*GENERATOR.*")) ||
+      std::regex_match(testChar, std::regex("^GS\\s+\\d+.*"))) {
 
       equip[i] = "GS";
 
@@ -323,13 +323,13 @@ StringVector idAssetGroup(StringVector x) {
 
       equip[i] = "GT";
 
-    } else if (boost::regex_match(testChar, boost::regex(".*HPK.*"))) {
+    } else if (std::regex_match(testChar, std::regex(".*HPK.*"))) {
 
       equip[i] = "HPK";
 
     } else if (b == glc_LM) {
 
-      if (boost::regex_match(testChar, boost::regex(".*L\\s*M.*"))) {
+      if (std::regex_match(testChar, std::regex(".*L\\s*M.*"))) {
 
         equip[i] = "LM";
 
@@ -339,32 +339,32 @@ StringVector idAssetGroup(StringVector x) {
 
       }
 
-    } else if (boost::regex_match(testChar,
-                                  boost::regex(".*LAWN\\s*MOW?ER.*"))) {
+    } else if (std::regex_match(testChar,
+                                  std::regex(".*LAWN\\s*MOW?ER.*"))) {
 
       equip[i] = "LM";
 
-    }else if (boost::regex_match(testChar, boost::regex(".*MANLIFT.*"))) {
+    }else if (std::regex_match(testChar, std::regex(".*MANLIFT.*"))) {
 
       equip[i] = "ML";
 
     } else if (b == glc_MDT ||
-      boost::regex_match(testChar, boost::regex(".*MD+T.*"))) {
+      std::regex_match(testChar, std::regex(".*MD+T.*"))) {
 
       equip[i] = "MDT";
 
-    } else if (boost::regex_match(testChar,
-                                  boost::regex(".*MA?R?KE?TI?N?G.*")) ||
-      boost::regex_match(testChar, boost::regex(".*MKGT.*"))) {
+    } else if (std::regex_match(testChar,
+                                  std::regex(".*MA?R?KE?TI?N?G.*")) ||
+      std::regex_match(testChar, std::regex(".*MKGT.*"))) {
 
       equip[i] = "MKTG";
 
-    } else if (boost::regex_match(testChar, boost::regex(".*CRU?SHE?E?R.*"))) {
+    } else if (std::regex_match(testChar, std::regex(".*CRU?SHE?E?R.*"))) {
 
       equip[i] = "MOC";
 
     } else if (b == glc_MT ||
-      boost::regex_match(testChar, boost::regex("^MT\\s*\\d+.*"))) {
+      std::regex_match(testChar, std::regex("^MT\\s*\\d+.*"))) {
 
       equip[i] = "MT";
 
@@ -372,18 +372,18 @@ StringVector idAssetGroup(StringVector x) {
 
       equip[i] = "MWL";
 
-    } else if (boost::regex_match(testChar, boost::regex(".*NBC.*")) ||
-      boost::regex_match(testChar, boost::regex("^NB?C?\\s+.*"))) {
+    } else if (std::regex_match(testChar, std::regex(".*NBC.*")) ||
+      std::regex_match(testChar, std::regex("^NB?C?\\s+.*"))) {
 
       equip[i] = "NBC";
 
-    } else if (boost::regex_match(testChar,
-                                  boost::regex(".*PATROL\\s*BOAT.*"))) {
+    } else if (std::regex_match(testChar,
+                                  std::regex(".*PATROL\\s*BOAT.*"))) {
 
       equip[i] = "PATROLBOAT";
 
     } else if (b == glc_PB ||
-      boost::regex_match(testChar, boost::regex(".*PUMP\\s*BOAT.*"))) {
+      std::regex_match(testChar, std::regex(".*PUMP\\s*BOAT.*"))) {
 
       equip[i] = "PB";
 
@@ -399,8 +399,8 @@ StringVector idAssetGroup(StringVector x) {
 
       equip[i] = "SB";
 
-    } else if (boost::regex_match(testChar, boost::regex(".*SD(M|N)\\s*C.*")) ||
-      boost::regex_match(testChar, boost::regex(".*SMDC.*"))) {
+    } else if (std::regex_match(testChar, std::regex(".*SD(M|N)\\s*C.*")) ||
+      std::regex_match(testChar, std::regex(".*SMDC.*"))) {
 
       equip[i] = "SDMC";
 
@@ -420,12 +420,12 @@ StringVector idAssetGroup(StringVector x) {
 
       equip[i] = "TL";
 
-    } else if (boost::regex_match(testChar, boost::regex(".*TRG?C.*"))) {
+    } else if (std::regex_match(testChar, std::regex(".*TRG?C.*"))) {
 
       equip[i] = "TRGC";
 
     } else if (b == glc_TX1 ||
-      boost::regex_match(testChar, boost::regex("^TX\\s+.*")) ||
+      std::regex_match(testChar, std::regex("^TX\\s+.*")) ||
       b == glc_TX2 ||
       b == glc_TX3) {
 
@@ -444,7 +444,7 @@ StringVector idAssetGroup(StringVector x) {
       equip[i] = "WL";
 
     } else if (b == glc_WP1 ||
-      boost::regex_match(testChar, boost::regex(".*H2(0|O)\\s*PUMP.*")) ||
+      std::regex_match(testChar, std::regex(".*H2(0|O)\\s*PUMP.*")) ||
       b == glc_WP2 ||
       isSubset("WATER PUMP", b)) {
 
@@ -452,12 +452,12 @@ StringVector idAssetGroup(StringVector x) {
 
     } else if (b == glc_WTL2) {
 
-      if (boost::regex_match(testChar, boost::regex(".*WTL.*")) ||
-          boost::regex_match(testChar, boost::regex(".*WLT.*"))) {
+      if (std::regex_match(testChar, std::regex(".*WTL.*")) ||
+          std::regex_match(testChar, std::regex(".*WLT.*"))) {
 
         equip[i] = "WTL";
 
-      } else if (boost::regex_match(testChar, boost::regex(".*TWL.*"))) {
+      } else if (std::regex_match(testChar, std::regex(".*TWL.*"))) {
 
         equip[i] = "TWL";
 
@@ -471,21 +471,21 @@ StringVector idAssetGroup(StringVector x) {
 
       equip[i] = "WTL";
 
-    } else if (boost::regex_match(testChar, boost::regex(".*WX.*")) ||
+    } else if (std::regex_match(testChar, std::regex(".*WX.*")) ||
       b == glc_WX) {
 
       equip[i] = "WX";
 
     } else if (b == glc_YBM ||
-      boost::regex_match(testChar, boost::regex(".*YBM.*"))) {
+      std::regex_match(testChar, std::regex(".*YBM.*"))) {
 
       equip[i] = "YBM";
 
-    }  else if (boost::regex_match(testChar, boost::regex(".*VOLVO\\s*DT.*"))) {
+    }  else if (std::regex_match(testChar, std::regex(".*VOLVO\\s*DT.*"))) {
 
       equip[i] = "DT";
 
-    }  else if (boost::regex_match(testChar, boost::regex("^MC\\s*\\d+.*"))) {
+    }  else if (std::regex_match(testChar, std::regex("^MC\\s*\\d+.*"))) {
 
       equip[i] = "MC";
 
