@@ -122,6 +122,7 @@ bool isSubset(std::string x, std::string y) {
 //'     \item{ML}{man lift}
 //'     \item{MOC}{mobile crusher}
 //'     \item{MT}{maintenance truck}
+//'     \item{MTX}{mini tracked excavator}
 //'     \item{MWL}{mini wheeled pay loader}
 //'     \item{PATROLBOAT}{}
 //'     \item{PB}{pump boat}
@@ -188,6 +189,7 @@ StringVector idAssetGroup(StringVector x) {
   String glc_LM        = getLetterCount("LM");
   String glc_MDT       = getLetterCount("MDT");
   String glc_MT        = getLetterCount("MT");
+  String glc_MTX       = getLetterCount("MTX");
   String glc_MWL       = getLetterCount("MWL");
   String glc_PB        = getLetterCount("PB");
   String glc_PMT       = getLetterCount("PMT");
@@ -367,6 +369,10 @@ StringVector idAssetGroup(StringVector x) {
       std::regex_match(testChar, std::regex("^MT\\s*\\d+.*"))) {
 
       equip[i] = "MT";
+
+    } else if (b == glc_MTX) {
+
+      equip[i] = "MTX";
 
     } else if (b == glc_MWL) {
 

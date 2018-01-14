@@ -49,6 +49,7 @@ Below are the identified groups:
     \item{ML}{man lift}
     \item{MOC}{mobile crusher}
     \item{MT}{maintenance truck}
+    \item{MTX}{mini tracked excavator}
     \item{MWL}{mini wheeled pay loader}
     \item{PATROLBOAT}{}
     \item{PB}{pump boat}
