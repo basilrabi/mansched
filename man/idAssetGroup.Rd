@@ -53,6 +53,7 @@ Below are the identified groups:
     \item{MWL}{mini wheeled pay loader}
     \item{PATROLBOAT}{}
     \item{PB}{pump boat}
+    \item{PMT}{prime mover truck}
     \item{RG}{road grader}
     \item{SB}{service bus}
     \item{SP}{service pickup}
@@ -81,7 +82,6 @@ Below are the identified groups:
     }
   \item Unknown
     \itemize{
-    \item PMT
     \item WC
     \item ZZZ
     }
