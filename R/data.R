@@ -26,11 +26,11 @@
 #'     \item{MOC}{Mobile Crusher}
 #'     \item{MOS}{Mobile Screen}
 #'     \item{PB}{Pump boat}
+#'     \item{PMT}{prime mover (trailer)}
 #'     \item{RG}{road grader}
 #'     \item{SB}{service bus}
 #'     \item{SP}{service pickup}
 #'     \item{ST}{service truck}
-#'     \item{TT}{prime mover (trailer truck)}
 #'     \item{TX}{tracked excavator}
 #'     \item{VC}{vibrating compactor}
 #'     \item{WL}{wheeled pay loader}
@@ -46,11 +46,11 @@ validEquipment <- c("CRANE",
                     "MOC",
                     "MOS",
                     "PB",
+                    "PMT",
                     "RG",
                     "SB",
                     "SP",
                     "ST",
-                    "TT",
                     "TX",
                     "VC",
                     "WL",
