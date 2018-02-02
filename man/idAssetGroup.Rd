@@ -64,6 +64,7 @@ Below are the identified groups:
     \item{TWL}{tower light}
     \item{TX}{tracked excavator}
     \item{VC}{vibrating compactor}
+    \item{WC}{wheeled crane}
     \item{WL}{wheeled pay loader}
     \item{WP}{water pump}
     \item{WTL}{water lorry}
