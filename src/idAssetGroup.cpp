@@ -106,6 +106,7 @@ bool isSubset(std::string x, std::string y) {
 //'     }
 //'   \item Equipment
 //'     \describe{
+//'     \item{ATV}{all-terrain vehicle}
 //'     \item{CM}{concrete mixer}
 //'     \item{CT}{bulldozer}
 //'     \item{DT}{dump truck}
@@ -173,6 +174,7 @@ StringVector idAssetGroup(StringVector x) {
   std::string testChar;
 
   // declare getLetterCount constants to avoid repeating in the loop
+  String glc_ATV       = getLetterCount("ATV");
   String glc_MC        = getLetterCount("CM");
   String glc_CT        = getLetterCount("CT");
   String glc_DT1       = getLetterCount("DT");
@@ -495,6 +497,10 @@ StringVector idAssetGroup(StringVector x) {
     }  else if (std::regex_match(testChar, std::regex("^MC\\s*\\d+.*"))) {
 
       equip[i] = "MC";
+
+    } else if (b == glc_ATV) {
+
+      equip[i] = "ATV";
 
     } else {
 

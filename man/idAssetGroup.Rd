@@ -33,6 +33,7 @@ Below are the identified groups:
     }
   \item Equipment
     \describe{
+    \item{ATV}{all-terrain vehicle}
     \item{CM}{concrete mixer}
     \item{CT}{bulldozer}
     \item{DT}{dump truck}
