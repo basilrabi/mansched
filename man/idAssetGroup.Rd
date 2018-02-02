@@ -46,6 +46,7 @@ Below are the identified groups:
     \item{GT}{garbage truck}
     \item{LM}{lawn mower}
     \item{MC}{motorcycle}
+    \item{MDT}{mini dump truck}
     \item{ML}{man lift}
     \item{MOC}{mobile crusher}
     \item{MT}{maintenance truck}
