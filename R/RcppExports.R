@@ -113,3 +113,22 @@ assignPool2 <- function(empReq, empPool, listT, listR, prioStat = NA_character_,
     .Call('_mansched_assignPool2', PACKAGE = 'mansched', empReq, empPool, listT, listR, prioStat, prioCode)
 }
 
+#' Interpolate
+#'
+#' This is used in a spatial study for limonite face samples.
+#'
+#' @param modelT data frame of prediction model
+#' @param sample data frame of sample coordinates
+#' @param radius numeric value representing buffer radius
+#' @param vario List contaning variogram models
+#' @return a dataframe containing the following:
+#'   \enumerate{
+#'     \item interpolated grade of element
+#'     \item interpolation variance
+#'     \item interpolation variance using absolute value of kriging weight
+#'   }
+#' @export
+predictVars <- function(modelT, sample, radius, vario) {
+    .Call('_mansched_predictVars', PACKAGE = 'mansched', modelT, sample, radius, vario)
+}
+

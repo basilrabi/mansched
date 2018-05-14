@@ -2,7 +2,7 @@ Package: mansched
 Type: Package
 Title: Manpower Scheduler and Personnel Cost Calculator for Taganito Mine
 Version: 0.1.0.9000
-Date: 2018-02-02
+Date: 2018-05-14
 Authors@R: c(
   person("Basil Eric", "Rabi",
   email = "basil.rabi@tmc.nickelasia.com",
@@ -16,12 +16,13 @@ Imports:
   data.table (>= 1.10.4),
   dplyr      (>= 0.7.2),
   lubridate  (>= 1.6.0),
+  gstat      (>= 1.1-6),
   magrittr   (>= 1.5),
   parallel   (>= 3.4.0),
   readxl     (>= 1.0.0),
   tidyr      (>= 0.6.3),
   xlsx       (>= 0.5.7),
-  Rcpp
+  Rcpp       (>= 0.12.17)
 Suggests:
   knitr      (>= 1.16),
   rmarkdown  (>= 1.6),
@@ -31,4 +32,4 @@ Remotes:
   jimhester/covr
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppArmadillo

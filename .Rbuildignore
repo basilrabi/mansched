@@ -11,3 +11,4 @@
 ^flow\.md$
 ^\.git
 ^\.gitignore$
+^clean\.sh$
