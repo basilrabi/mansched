@@ -23,7 +23,7 @@ using namespace arma;
 DataFrame predictVars( const DataFrame  modelT,
                        const DataFrame& sample,
                        const double     radius,
-                       const List&      vario) {
+                       const List&      vario ) {
 
   Environment mansched      = Environment::namespace_env( "mansched" );
   Function    variogramLine = mansched["variogramLine"];
@@ -144,7 +144,7 @@ DataFrame predictVars( const DataFrame  modelT,
 
     } else if ( subX.length() > 0 ) {
 
-      mNi[i]  = sNi[1];
+      mNi[i]  = subElement[0];
       mNiN[i] = 1;
 
     } else {
@@ -209,7 +209,7 @@ DataFrame predictVars( const DataFrame  modelT,
 
     } else if ( subX.length() > 0 ) {
 
-      mFe[i]  = sFe[1];
+      mFe[i]  = subElement[0];
       mFeN[i] = 1;
 
     } else {
@@ -274,7 +274,7 @@ DataFrame predictVars( const DataFrame  modelT,
 
     } else if ( subX.length() > 0 ) {
 
-      mCo[i]  = sCo[1];
+      mCo[i]  = subElement[0];
       mCoN[i] = 1;
 
     } else {
@@ -339,7 +339,7 @@ DataFrame predictVars( const DataFrame  modelT,
 
     } else if ( subX.length() > 0 ) {
 
-      mMg[i]  = sMg[1];
+      mMg[i]  = subElement[0];
       mMgN[i] = 1;
 
     } else {
@@ -404,7 +404,7 @@ DataFrame predictVars( const DataFrame  modelT,
 
     } else if ( subX.length() > 0 ) {
 
-      mSi[i]  = sSi[1];
+      mSi[i]  = subElement[0];
       mSiN[i] = 1;
 
     } else {
@@ -469,7 +469,7 @@ DataFrame predictVars( const DataFrame  modelT,
 
     } else if ( subX.length() > 0 ) {
 
-      mCr[i]  = sCr[1];
+      mCr[i]  = subElement[0];
       mCrN[i] = 1;
 
     } else {
@@ -534,7 +534,7 @@ DataFrame predictVars( const DataFrame  modelT,
 
     } else if ( subX.length() > 0 ) {
 
-      mAl[i]  = sAl[1];
+      mAl[i]  = subElement[0];
       mAlN[i] = 1;
 
     } else {
