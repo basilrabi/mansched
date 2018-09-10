@@ -1,10 +1,12 @@
 ---
-title: "flow"
-author: Basil Eric Rabi
-date: October 20, 2017
-output:
-  md_document:
-    variant: markdown_github
+title: "Flow"
+author: "Basil Eric Rabi"
+date: "October 20, 2017"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Classes and Methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 # budget() Function Flow
