@@ -1,1 +1,6 @@
-rm -rf src/*o src/RcppExports* man R/RcppExports.R
+rm -rf man \
+       NAMESPACE \
+       R/RcppExports.R \
+       src/*o \
+       src/RcppExports*
+touch NAMESPACE

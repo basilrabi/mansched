@@ -11,8 +11,7 @@
 #' @export budget
 #' @importFrom readxl read_xlsx
 #' @importFrom xlsx write.xlsx
-#' @importFrom dplyr left_join group_by summarise
-#' @importFrom magrittr "%>%"
+#' @importFrom dplyr left_join group_by summarise "%>%"
 #' @importFrom tidyr spread
 budget <- function(myFile, year, forecast = FALSE) {
 

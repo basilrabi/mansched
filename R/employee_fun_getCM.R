@@ -19,8 +19,7 @@ NULL
 #'     \item{allow}{numeric value of 0 to 1 representing the cost multiplier}
 #'   }
 #' @importFrom lubridate month
-#' @importFrom magrittr "%>%"
-#' @importFrom dplyr group_by summarise n
+#' @importFrom dplyr group_by summarise n "%>%"
 #' @export getCM
 setGeneric(
   name = "getCM",

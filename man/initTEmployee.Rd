@@ -10,10 +10,11 @@
 \alias{initTEmployee,Operator-method}
 \title{Initialize theoretical employee}
 \usage{
-initTEmployee(theObject, ID, costCode, equipment, OT = 0, calDays, mdtProb,
-  spareFactor = 1, monthSched = NA)
+initTEmployee(theObject, ID, costCode, equipment, OT = 0, calDays,
+  mdtProb, spareFactor = 1, monthSched = NA)
 
-\S4method{initTEmployee}{Employee}(theObject, ID, costCode, spareFactor = 1)
+\S4method{initTEmployee}{Employee}(theObject, ID, costCode,
+  spareFactor = 1)
 
 \S4method{initTEmployee}{Staff}(theObject, ID, costCode, calDays,
   spareFactor = 1)
@@ -24,8 +25,8 @@ initTEmployee(theObject, ID, costCode, equipment, OT = 0, calDays, mdtProb,
 \S4method{initTEmployee}{`Operation Personnel`}(theObject, ID, costCode,
   OT = 0, mdtProb, spareFactor = 1, monthSched = NA)
 
-\S4method{initTEmployee}{Operator}(theObject, ID, costCode, equipment, OT = 0,
-  mdtProb, spareFactor = 1, monthSched = NA)
+\S4method{initTEmployee}{Operator}(theObject, ID, costCode, equipment,
+  OT = 0, mdtProb, spareFactor = 1, monthSched = NA)
 }
 \arguments{
 \item{theObject}{\code{\link{Employee-class}} object}

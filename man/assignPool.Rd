@@ -4,7 +4,8 @@
 \alias{assignPool}
 \title{Assign pool to requirement}
 \usage{
-assignPool(empReq, empPool, listT, listR, prioStat = NA, prioCode = FALSE)
+assignPool(empReq, empPool, listT, listR, prioStat = NA,
+  prioCode = FALSE)
 }
 \arguments{
 \item{empReq}{passed from \code{\link{assignPrio}}}

@@ -48,8 +48,7 @@ NULL
 #'     \item tabulated bonus cost per month per cost code
 #'   }
 #' @export getCost
-#' @importFrom dplyr left_join group_by summarise mutate
-#' @importFrom magrittr "%>%"
+#' @importFrom dplyr left_join group_by summarise mutate "%>%"
 #' @importFrom data.table rbindlist
 #' @importFrom tidyr gather spread
 getCost <- function(mhDB, listR, wage, forecast = FALSE) {
