@@ -4,10 +4,10 @@
 \alias{budget}
 \title{Compute budget}
 \usage{
-budget(myFile, year, forecast = FALSE)
+budget(xlsxFile, year, forecast = FALSE)
 }
 \arguments{
-\item{myFile}{full path of the spreadsheet}
+\item{xlsxFile}{full path of the spreadsheet}
 
 \item{year}{integer value defining the year to be budgeted}
 

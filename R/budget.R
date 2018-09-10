@@ -3,7 +3,7 @@
 #' Given a xlsx file containing the employee pool, requirements, wages, and
 #'   work schedules, the budget is computed.
 #'
-#' @param myFile full path of the spreadsheet
+#' @param xlsxFile full path of the spreadsheet
 #' @param year integer value defining the year to be budgeted
 #' @param forecast logical value \cr
 #'   Compute cost for forecast?
@@ -13,7 +13,7 @@
 #' @importFrom xlsx write.xlsx
 #' @importFrom dplyr left_join group_by summarise "%>%"
 #' @importFrom tidyr spread
-budget <- function(myFile, year, forecast = FALSE) {
+budget <- function(xlsxFile, year, forecast = FALSE) {
 
   # Define global variables
   equipment      <- NULL
@@ -29,7 +29,7 @@ budget <- function(myFile, year, forecast = FALSE) {
                        "OT",
                        "costCode")
 
-  empReq <- readxl::read_xlsx(path  = myFile,
+  empReq <- readxl::read_xlsx(path  = xlsxFile,
                               sheet = "Requirement")
 
   empReq <- empReq[,colnames(empReq) %in% empReq.colnames]
@@ -76,7 +76,7 @@ budget <- function(myFile, year, forecast = FALSE) {
   empReq <- empReq[!is.na(empReq$quantity),]
   empReq <- empReq[!empReq$quantity == 0,]
 
-  sched <- readxl::read_xlsx(path      = myFile,
+  sched <- readxl::read_xlsx(path      = xlsxFile,
                              sheet     = "Schedule",
                              col_types = c("text",
                                            "numeric",
@@ -115,7 +115,7 @@ budget <- function(myFile, year, forecast = FALSE) {
                         "d.rh",
                         "dcc")
 
-  empPool <- readxl::read_xlsx(path  = myFile,
+  empPool <- readxl::read_xlsx(path  = xlsxFile,
                                sheet = "Pool")
 
   empPool <- empPool[, colnames(empPool) %in% empPool.colnames]
@@ -178,7 +178,7 @@ budget <- function(myFile, year, forecast = FALSE) {
                     "Type",
                     "Description")
 
-  hol <- readxl::read_xlsx(path  = myFile,
+  hol <- readxl::read_xlsx(path  = xlsxFile,
                            sheet = "hol")
 
   hol <- hol[, colnames(hol) %in% hol.colnames]
@@ -222,7 +222,7 @@ budget <- function(myFile, year, forecast = FALSE) {
 
   wage.colnames <- c("ID", "S", "s")
 
-  wage <- readxl::read_xlsx(path  = myFile,
+  wage <- readxl::read_xlsx(path  = xlsxFile,
                             sheet = "Wage")
 
   wage              <- wage[, colnames(wage) %in% wage.colnames]

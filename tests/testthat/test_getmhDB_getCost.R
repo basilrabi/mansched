@@ -1,12 +1,12 @@
 library(mansched)
 library(readxl)
 
-myFile <- system.file("exdata", "sampleData.xlsx", package = "mansched")
+xlsxFile <- system.file("exdata", "sampleData.xlsx", package = "mansched")
 
-empReq <- readxl::read_xlsx(path  = myFile,
+empReq <- readxl::read_xlsx(path  = xlsxFile,
                             sheet = "Requirement")
 
-sched <- readxl::read_xlsx(path      = myFile,
+sched <- readxl::read_xlsx(path      = xlsxFile,
                            sheet     = "Schedule",
                            col_types = c("text",
                                          "numeric",
@@ -22,10 +22,10 @@ sched <- readxl::read_xlsx(path      = myFile,
                                          "numeric",
                                          "numeric"))
 
-empPool <- readxl::read_xlsx(path  = myFile,
+empPool <- readxl::read_xlsx(path  = xlsxFile,
                              sheet = "Pool")
 
-hol <- readxl::read_xlsx(path  = myFile,
+hol <- readxl::read_xlsx(path  = xlsxFile,
                          sheet = "hol")
 
 year <- 2018
@@ -72,7 +72,7 @@ test_that("getmhDB() works", {
                totTi - totTf)
 })
 
-wage <- readxl::read_xlsx(path  = myFile,
+wage <- readxl::read_xlsx(path  = xlsxFile,
                           sheet = "Wage")
 
 tempData <- getCost(mhDB  = tempData[[1]],

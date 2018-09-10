@@ -1,8 +1,8 @@
 library(mansched)
 
-myFile <- system.file("exdata", "sampleData.xlsx", package = "mansched")
+xlsxFile <- system.file("exdata", "sampleData.xlsx", package = "mansched")
 
-empPool <- readxl::read_xlsx(path  = myFile,
+empPool <- readxl::read_xlsx(path  = xlsxFile,
                              sheet = "Pool")
 
 empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
@@ -11,7 +11,7 @@ empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
 empPool[, c("inHouse", "isRF")] <- lapply(empPool[, c("inHouse", "isRF")],
                                           as.logical)
 
-hol <- readxl::read_xlsx(path  = myFile,
+hol <- readxl::read_xlsx(path  = xlsxFile,
                          sheet = "hol")
 
 empPool <- as.data.frame(empPool)
