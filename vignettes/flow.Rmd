@@ -1,27 +1,89 @@
 ---
 title: "Flow"
 author: "Basil Eric Rabi"
-date: "October 20, 2017"
+date: "September 11, 2018"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Classes and Methods}
+  %\VignetteIndexEntry{Flow}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
-# budget() Function Flow
+# budget() Flow
 ```{dot, echo=FALSE}
 digraph budget {
 
+  node [shape = box]
+    budget [label = "budget( xlsxFile, year, forecast )"]
+    import_requirement [label = "read 'Requirement' sheet"]
+    import_schedule [label = "read 'Schedule' sheet"]
+    import_pool [label = "read 'Pool' sheet"]
+    import_holiday [label = "read 'hol' sheet"]
+    getmhDB [label =<
+<TABLE BORDER="0">
+  <TR><TD ALIGN="right">getmhDB&#40;</TD><TD ALIGN="left">Requirement</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">Pool</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">Schedule</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">year</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">hol &#41; -&gt;</TD></TR>
+  <TR><TD>mhDB</TD><TD>listR</TD></TR>
+  <TR><TD>mhReq</TD><TD>mhPool</TD>
+  </TR>
+</TABLE>>]
+    import_wage [label = "read 'Wage' sheet"]
+    getCost [label =<
+<TABLE BORDER="0">
+  <TR><TD ALIGN="right">geCost&#40;</TD><TD ALIGN="left">mhDB</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">listR</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">Wage</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">forecast &#41; -&gt;</TD></TR>
+  <TR><TD ALIGN="right">costDB[</TD><TD ALIGN="left">Personnel Cost</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">Manhours</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">13<SUP>th</SUP> Month Pay</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">Bonus</TD></TR>
+</TABLE>>]
+    costs [label = "Write to xlsx: Personnel Cost Tables"]
+    manhours [label = "Write to xlsx: Manhours Table"]
+    mp13 [label = <Write 13<SUP>th</SUP> Month Pay Tables>]
+    bonus [label = "Write Bonus Table"]
+    excess [label ="Summarize excess manhours
+using mhPool and Pool"]
+    write_excess [label = "Write Excess Manhours Table"]
+    lacking [label = "Summarize lacking manhours
+using mhReq"]
+    write_lacking [label = "Write Lacking Manhours Table"]
+    
+  node [shape = "box" style = "rounded"]
+    end [label = "return
+null"]
+
+  budget -> import_requirement
+  import_requirement -> import_schedule
+  import_schedule-> import_pool
+  import_pool -> import_holiday
+  import_holiday -> getmhDB
+  getmhDB -> import_wage
+  import_wage -> getCost
+  getCost -> costs
+  costs -> manhours
+  manhours -> mp13
+  mp13 -> bonus
+  bonus -> excess
+  excess -> write_excess
+  write_excess -> lacking
+  lacking -> write_lacking
+  write_lacking -> end
+}
+```
+
+## getmhDB() Flow
+```{dot, echo=FALSE}
+digraph getmhDB {
+
 node [shape = box]
-  
-a [label = "budget()"]
-b [label = "import 'Requirement' sheet"]
-c [label = "import 'Schedule' sheet"]
-d [label = "import 'Pool' sheet"]
-e [label = "import 'hol' sheet"]
-f [label = "getmhDB()"]
-g [label = "initialize employee pool"]
+
+  getmhDB [label = "getmhDB( empReq, empPool, sched, year, hol )"]
+  g [label = "initialize employee pool"]
 h [label = "initialize employee requirements"]
 i [label = "separate pool and requirements by personnel class"]
 
@@ -79,7 +141,8 @@ az [label = "merge assigned man hours database"]
 aaa [label = "import Wage"]
 aab [label = "getCost()"]
 
-a -> b -> c -> d -> e -> f -> g -> h -> i -> {j, k, l, m, n, o}
+
+g -> h -> i -> {j, k, l, m, n, o}
 
 j -> p -> v  -> w  -> x  -> y  -> z
 k -> q -> aa -> ab -> ac -> ad -> ae
@@ -89,11 +152,12 @@ n -> t -> ap -> aq -> ar -> as -> at
 o -> u -> au -> av -> aw -> ax -> ay
 
 {z, ae, aj, ao, at, ay} -> az -> aaa -> aab
-
 }
 ```
 
-# assignPool() Function Flow
+## getCost() Flow
+
+# assignPool() Flow
 ```{dot, echo=FALSE}
 digraph assignPool {
 

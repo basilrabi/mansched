@@ -29,9 +29,7 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
                        "OT",
                        "costCode")
 
-  empReq <- readxl::read_xlsx(path  = xlsxFile,
-                              sheet = "Requirement")
-
+  empReq <- readxl::read_xlsx(path = xlsxFile, sheet = "Requirement")
   empReq <- empReq[,colnames(empReq) %in% empReq.colnames]
 
   # Check for data types
@@ -76,21 +74,9 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   empReq <- empReq[!is.na(empReq$quantity),]
   empReq <- empReq[!empReq$quantity == 0,]
 
-  sched <- readxl::read_xlsx(path      = xlsxFile,
-                             sheet     = "Schedule",
-                             col_types = c("text",
-                                           "numeric",
-                                           "numeric",
-                                           "numeric",
-                                           "numeric",
-                                           "numeric",
-                                           "numeric",
-                                           "numeric",
-                                           "numeric",
-                                           "numeric",
-                                           "numeric",
-                                           "numeric",
-                                           "numeric"))
+  sched <- readxl::read_xlsx(path = xlsxFile,
+                             sheet = "Schedule",
+                             col_types = c("text", rep("numeric", times = 12)))
 
   sched[, !colnames(sched) %in% c("activity")] <- lapply(
     sched[, !colnames(sched) %in% c("activity")], FUN = as.integer
@@ -115,9 +101,7 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
                         "d.rh",
                         "dcc")
 
-  empPool <- readxl::read_xlsx(path  = xlsxFile,
-                               sheet = "Pool")
-
+  empPool <- readxl::read_xlsx(path = xlsxFile, sheet = "Pool")
   empPool <- empPool[, colnames(empPool) %in% empPool.colnames]
 
   # Check for data types
@@ -178,9 +162,7 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
                     "Type",
                     "Description")
 
-  hol <- readxl::read_xlsx(path  = xlsxFile,
-                           sheet = "hol")
-
+  hol <- readxl::read_xlsx(path = xlsxFile, sheet = "hol")
   hol <- hol[, colnames(hol) %in% hol.colnames]
 
   # Check data types
@@ -205,9 +187,8 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
     stop("Column Description in hol is not character!")
 
   hol <- as.data.frame(hol)
-
   empReq$activity <- toupper(empReq$activity)
-  sched$activity  <- toupper(sched$activity)
+  sched$activity <- toupper(sched$activity)
 
   tempData <- getmhDB(empReq  = empReq,
                       empPool = empPool,
@@ -222,10 +203,8 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
 
   wage.colnames <- c("ID", "S", "s")
 
-  wage <- readxl::read_xlsx(path  = xlsxFile,
-                            sheet = "Wage")
-
-  wage              <- wage[, colnames(wage) %in% wage.colnames]
+  wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
+  wage <- wage[, colnames(wage) %in% wage.colnames]
   colnames(wage)[2] <- "s"
 
   if (class(wage$ID) != "character")
@@ -234,9 +213,9 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   if (class(wage$s) != "numeric")
     wage$s <- as.numeric(wage$s)
 
-  wage                  <- wage[wage$ID %in% empPool$ID,]
+  wage <- wage[wage$ID %in% empPool$ID,]
   wage$s[is.na(wage$s)] <- 0
-  wage                  <- as.data.frame(wage)
+  wage <- as.data.frame(wage)
 
   costDB <- getCost(mhDB     = mhDB,
                     listR    = listR,
@@ -246,15 +225,11 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   tempFolder <- getwd()
 
   if (forecast) {
-
     dir.create(path = "./forecast")
     setwd(paste(tempFolder, "/forecast", sep = ""))
-
   } else {
-
     dir.create(path = "./budget")
     setwd(paste(tempFolder, "/budget", sep = ""))
-
   }
 
   for (i in costDB[[1]]) {
@@ -265,8 +240,8 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
                      append    = TRUE)
   }
 
-  xlsx::write.xlsx(x         = costDB[[2]],
-                   file      = "manhours.xlsx",
+  xlsx::write.xlsx(x = costDB[[2]],
+                   file = "manhours.xlsx",
                    row.names = FALSE)
 
   accr.13mp   <- costDB[[3]]
@@ -278,36 +253,36 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
                            !colnames(accr.13mp) %in% c("status")]
 
   if (nrow(accr.13mp.R) > 0) {
-    xlsx::write.xlsx(x         = as.data.frame(accr.13mp.R),
-                     file      = "13mp-reg.xlsx",
+    xlsx::write.xlsx(x = as.data.frame(accr.13mp.R),
+                     file = "13mp-reg.xlsx",
                      row.names = FALSE)
   }
 
   if (nrow(accr.13mp.P) > 0) {
-    xlsx::write.xlsx(x         = as.data.frame(accr.13mp.P),
-                     file      = "13mp-pro.xlsx",
+    xlsx::write.xlsx(x = as.data.frame(accr.13mp.P),
+                     file = "13mp-pro.xlsx",
                      row.names = FALSE)
   }
 
   if (nrow(accr.13mp.S) > 0) {
-    xlsx::write.xlsx(x         = as.data.frame(accr.13mp.S),
-                     file      = "13mp-sea.xlsx",
+    xlsx::write.xlsx(x = as.data.frame(accr.13mp.S),
+                     file = "13mp-sea.xlsx",
                      row.names = FALSE)
   }
 
   if (nrow(costDB[[4]]) > 0) {
-    xlsx::write.xlsx(x         = as.data.frame(costDB[[4]]),
-                     file      = "bonus.xlsx",
+    xlsx::write.xlsx(x = as.data.frame(costDB[[4]]),
+                     file = "bonus.xlsx",
                      row.names = FALSE)
   }
 
   if (!is.null(mhPool)) {
 
     mhPool <- dplyr::left_join(
-      x  = mhPool,
-      y  = empPool[, colnames(empPool) %in% c("ID",
-                                              "personnelClass",
-                                              "equipment"),],
+      x = mhPool,
+      y = empPool[, colnames(empPool) %in% c("ID",
+                                             "personnelClass",
+                                             "equipment"), ],
       by = "ID"
     )
 
@@ -315,23 +290,20 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
       dplyr::group_by(ID, month, personnelClass, equipment) %>%
       dplyr::summarise(mh = sum(mh))
 
-    mhPool <- mhPool %>%  tidyr::spread(month, mh, fill = 0)
+    mhPool <- mhPool %>% tidyr::spread(month, mh, fill = 0)
 
-    xlsx::write.xlsx(x         = as.data.frame(mhPool),
-                     file      = "pool.xlsx",
+    xlsx::write.xlsx(x = as.data.frame(mhPool),
+                     file = "pool.xlsx",
                      row.names = FALSE)
   }
 
   if (!is.null(mhReq)) {
-
     mhReq <- mhReq %>% tidyr::spread(month, mh, fill = 0)
-
-    xlsx::write.xlsx(x         = as.data.frame(mhReq),
-                     file      = "req.xlsx",
+    xlsx::write.xlsx(x = as.data.frame(mhReq),
+                     file = "req.xlsx",
                      row.names = FALSE)
   }
 
   setwd(tempFolder)
-
   invisible(NULL)
 }
