@@ -1,0 +1,12 @@
+---
+title: "initEmpReq()"
+author: "Basil Eric Rabi"
+date: "September 11, 2018"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{initEmpReq}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+# Flow

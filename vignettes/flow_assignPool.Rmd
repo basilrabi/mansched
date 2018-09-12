@@ -1,0 +1,48 @@
+---
+title: "assignPool()"
+author: "Basil Eric Rabi"
+date: "September 11, 2018"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{assignPool}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+# Flow
+```{dot, echo=FALSE}
+digraph assignPool {
+
+node [shape = box]
+
+  pA [label = "import list of Requirement"]
+  pB [label = "import list of Employees"]
+  pC [label = "i = 1"]
+  pD [label = "empReq = Requirement[[i]]"]
+  pE [label = "Employees <- Employees[with matching costCode]"]
+  pF [label = "Employees <- Employees"]
+  pG [label = "Employees <- Employees[with qualified status]"]
+  pH [label = "Employees <- Employees"]
+  pI [label = "assign Employees to empReq"]
+  pJ [label = "return man-hours assignment"]
+  pK [label = "i = i + 1"]
+  
+  
+node [shape = diamond]
+
+  dA [label = "Is costCode prioritized?"]
+  dB [label = "Is there a prioritized Status?"]
+  dC [label = "Is it the final Requirement?"]
+
+pA -> pB -> pC -> pD -> dA
+dA -> pE [label = "yes"]
+dA -> pF [label = "no"]
+{pE, pF} -> dB
+dB -> pG [label = "yes"]
+dB -> pH [label = "no"]
+{pG, pH} -> pI -> dC
+dC -> pJ [label = yes]
+dC -> pK [label = no]
+pK -> pD
+}
+```

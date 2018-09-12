@@ -113,12 +113,12 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
   # Assign only Employee-class objects that are present both in the pool and
   #   the requirement
 
-  classPool      <- unique(empPool$personnelClass)
-  classReq       <- unique(empReq$personnelClass)
+  classPool <- unique(empPool$personnelClass)
+  classReq <- unique(empReq$personnelClass)
   personnelClass <- intersect(classPool, classReq)
 
   indexPool <- which(empPool$personnelClass %in% personnelClass)
-  indexReq  <- which(empReq$personnelClass %in% personnelClass)
+  indexReq <- which(empReq$personnelClass %in% personnelClass)
 
   # Separate Employee-class objects that cannot be assigned
   u.empPool <- empPool[-indexPool,]
@@ -126,16 +126,14 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
   u.listR   <- listR[-indexPool]
   u.listT   <- listT[-indexReq]
 
-  empPool   <- empPool[indexPool,]
-  empReq    <- empReq[indexReq,]
-  listR     <- listR[indexPool]
-  listT     <- listT[indexReq]
+  empPool <- empPool[indexPool,]
+  empReq  <- empReq[indexReq,]
+  listR   <- listR[indexPool]
+  listT   <- listT[indexReq]
 
   personnelSet <- lapply(personnelClass, FUN = function(x) {
-
     iP <- which(empPool$personnelClass == x)
-    iR <- which( empReq$personnelClass == x)
-
+    iR <- which(empReq$personnelClass == x)
     return(list(empReq[iR,], empPool[iP,], listT[iR], listR[iP]))
   })
 
@@ -162,7 +160,6 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
   mhDB   <- lapply(assignedData, FUN = function(x) {x[[1]]})
   mhReq  <- lapply(assignedData, FUN = function(x) {x[[4]]})
   mhPool <- lapply(assignedData, FUN = function(x) {x[[5]]})
-
   mhDB   <- as.data.frame(data.table::rbindlist(mhDB  ))
   mhReq  <- as.data.frame(data.table::rbindlist(mhReq ))
   mhPool <- as.data.frame(data.table::rbindlist(mhPool))
@@ -184,11 +181,9 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
     listTN   <- lapply(u.listR, FUN = normEmp)
 
     u.mhPool <- lapply(listTN, FUN = function(x) {
-
-      mh       <- as.data.frame(getHours(x))
+      mh <- as.data.frame(getHours(x))
       mh$month <- 1:12
-      mh$ID    <- x@ID
-
+      mh$ID <- x@ID
       return(mh)
     })
 
@@ -239,13 +234,9 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
 
     u.mhReq <- data.table::rbindlist(u.mhReq)
     u.mhReq <- u.mhReq %>%
-      tidyr::gather(key = "mhType",
-                    value = mh,
-                    -month,
-                    -ID)
-
+      tidyr::gather(key = "mhType", value = mh, -month, -ID)
     mhReq <- data.table::rbindlist(list(mhReq, u.mhReq))
-    mhReq <- mhReq[mhReq$mh > 0,]
+    mhReq <- mhReq[mhReq$mh > 0, ]
     mhReq <- as.data.frame(mhReq)
   }
 

@@ -1,0 +1,139 @@
+---
+title: "getmhDB()"
+author: "Basil Eric Rabi"
+date: "September 11, 2018"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{getmhDB}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+# Flow
+```{dot, echo=FALSE}
+digraph getmhDB {
+
+  node [shape = box]
+    getmhDB [label = "getmhDB( empReq, empPool, sched, year, hol )"]
+    initEmpPool [label =<
+<TABLE BORDER="0">
+  <TR><TD ALIGN="right">initEmpPool&#40;</TD><TD ALIGN="left">empPool</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">hol</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">year &#41; -&gt;</TD></TR>
+  <TR><TD COLSPAN="2" ALIGN="left">listR &#40;listR.a for backup&#41;</TD></TR>
+  <TR><TD COLSPAN="2" ALIGN="left">empPool &#40;sanitized&#41;</TD>
+  </TR>
+</TABLE>>]
+    initEmpReq [label =<
+<TABLE BORDER="0">
+  <TR><TD ALIGN="right">initEmpReq&#40;</TD><TD ALIGN="left">empReq</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">sched</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">hol</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">year &#41; -&gt;</TD></TR>
+  <TR><TD COLSPAN="2" ALIGN="left">listT &#40;listT.a for backup&#41;</TD></TR>
+  <TR><TD COLSPAN="2" ALIGN="left">empReq &#40;sanitized&#41;</TD>
+  </TR>
+</TABLE>>]
+    personnelClass [label="get personnel classes that
+are both in empPool and empReq ->
+personnelClass"]
+    separateU [label=<
+<TABLE BORDER="0">
+  <TR><TD COLSPAN="2">separate empPool, empReq,</TD></TR>
+  <TR><TD COLSPAN="2">listR, and listT that</TD></TR>
+  <TR><TD COLSPAN="2">are not in personnelClass -&gt;</TD></TR>
+  <TR><TD ALIGN="left">u.empPool</TD><TD ALIGN="left">u.listR</TD></TR>
+  <TR><TD ALIGN="left">u.empReq</TD><TD ALIGN="left">u.listT</TD></TR>
+</TABLE>>]
+    separate [label=<
+<TABLE BORDER="0">
+  <TR><TD COLSPAN="2">separate empPool, empReq,</TD></TR>
+  <TR><TD COLSPAN="2">listR, and listT that</TD></TR>
+  <TR><TD COLSPAN="2">are in personnelClass -&gt;</TD></TR>
+  <TR><TD ALIGN="left">empPool</TD><TD ALIGN="left">listR</TD></TR>
+  <TR><TD ALIGN="left">empReq</TD><TD ALIGN="left">listT</TD></TR>
+</TABLE>>]
+    parallel [label = "Process in parallel
+by separating by class"]
+    staff [label = "Staff"]
+    clerk [label = "Clerk"]
+    technical [label = "Technical"]
+    supervisor [label = "Supervisor"]
+    laborer [label = "Laborer"]
+    operator [label = "Operator"]
+    assignPrio [label =<
+<TABLE BORDER="0">
+  <TR><TD ALIGN="right">assignPrio&#40;</TD><TD ALIGN="left">empReq</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">empPool</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">listT</TD></TR>
+  <TR><TD></TD><TD ALIGN="left">listR &#41; -&gt;</TD></TR>
+  <TR><TD COLSPAN="2" ALIGN="left">mhDB</TD></TR>
+  <TR><TD COLSPAN="2" ALIGN="left">listT &#40;unassigned&#41;</TD></TR>
+  <TR><TD COLSPAN="2" ALIGN="left">listR &#40;unassigned&#41;</TD></TR>
+  <TR><TD COLSPAN="2" ALIGN="left">mhReq &#40;unassigned&#41;</TD></TR>
+  <TR><TD COLSPAN="2" ALIGN="left">mhPool &#40;unassigned&#41;</TD></TR>
+</TABLE>>]
+    assignPrioClerk [label = "..."]
+    assignPrioLaborer [label = "..."]
+    assignPrioOperator [label = "..."]
+    assignPrioStaff [label = "..."]
+    assignPrioTechnical [label = "..."]
+    merge [label =<
+<TABLE BORDER="0">
+  <TR><TD COLSPAN="3">merge all outputs -&gt;</TD></TR>
+  <TR>
+    <TD>listT</TD>
+    <TD>mhReq</TD>
+    <TD>mhDB</TD>
+  </TR>
+  <TR>
+    <TD>listR</TD>
+    <TD>mhPool</TD>
+  </TR>
+</TABLE>>]
+    normEmp [label = "apply normEmp() to u.listR ->
+listTN"]
+    u_mhPool [label = "create u.mhPool
+using listTN"]
+    merge_mhPool [label = "merge u.mhPool
+to mhPool"]
+
+  node [shape = diamond]
+    len_u_listR [label = "Is length of
+u.listR > 0 ?"]
+    nrow_mhPool [label = "Is number
+of rows of
+mhPool > 0 ?"]
+
+  getmhDB -> initEmpPool
+  initEmpPool -> initEmpReq
+  initEmpReq -> personnelClass
+  personnelClass -> separateU
+  separateU -> separate
+  separate -> parallel
+  parallel -> clerk:n
+  parallel -> laborer:n
+  parallel -> operator:n
+  parallel -> staff:n
+  parallel -> supervisor:n
+  parallel -> technical:n
+  supervisor -> assignPrio
+  clerk -> assignPrioClerk
+  laborer -> assignPrioLaborer
+  operator -> assignPrioOperator
+  staff -> assignPrioStaff
+  technical -> assignPrioTechnical
+  assignPrio -> merge
+  assignPrioClerk -> merge
+  assignPrioLaborer -> merge
+  assignPrioOperator -> merge
+  assignPrioStaff -> merge
+  assignPrioTechnical -> merge
+  merge -> len_u_listR
+  len_u_listR -> normEmp [label = "yes"]
+  normEmp -> u_mhPool
+  u_mhPool -> merge_mhPool
+  merge_mhPool -> nrow_mhPool
+
+}
+```

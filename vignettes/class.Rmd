@@ -9,7 +9,7 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-# S4-Class Object Inheritance
+# S4 Object Inheritance
 ```{dot, echo=FALSE}
 digraph classes {
 
