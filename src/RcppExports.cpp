@@ -5,17 +5,6 @@
 
 using namespace Rcpp;
 
-// idAssetGroup
-StringVector idAssetGroup(StringVector x);
-RcppExport SEXP _mansched_idAssetGroup(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< StringVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(idAssetGroup(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // assignPool2
 List assignPool2(DataFrame empReq, DataFrame empPool, List listT, List listR, CharacterVector prioStat, bool prioCode);
 RcppExport SEXP _mansched_assignPool2(SEXP empReqSEXP, SEXP empPoolSEXP, SEXP listTSEXP, SEXP listRSEXP, SEXP prioStatSEXP, SEXP prioCodeSEXP) {
@@ -34,7 +23,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_mansched_idAssetGroup", (DL_FUNC) &_mansched_idAssetGroup, 1},
     {"_mansched_assignPool2", (DL_FUNC) &_mansched_assignPool2, 6},
     {NULL, NULL, 0}
 };
