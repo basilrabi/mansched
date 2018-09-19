@@ -12,7 +12,7 @@ NULL
 #'   represented as \code{Employee-class} objects.
 #'
 #'   This class is further classified into \code{\link{Staff-class}} and
-#'   \code{\link{Non Staff-class}}.
+#'   \code{\link{NonStaff-class}}.
 #'
 #' @slot ID character string defining the employee's unique identifier
 #' @slot name character string defining the name of employee
@@ -103,10 +103,10 @@ employee <- setClass(
 #' An S4 class representing a staff
 #'
 #' These are employees that are classified as
-#'   \code{\link{Division Manager-class}},
-#'   \code{\link{Group Manager-class}},
-#'   \code{\link{Department Manager-class}}
-#'   \code{\link{Section Head-class}}. In TMC, department managers and up are
+#'   \code{\link{DivisionManager-class}},
+#'   \code{\link{GroupManager-class}},
+#'   \code{\link{DepartmentManager-class}}
+#'   \code{\link{SectionHead-class}}. In TMC, department managers and up are
 #'   termed "Senior Staff" while section heads are termed "Junior Staff".
 #'
 #' @seealso \code{\link{Employee-class}}
@@ -120,14 +120,14 @@ staff <- setClass(
 
 #' An S4 class representing a division manager
 #'
-#' Only one division manager (Mine Division Manager) is presently employed in
+#' Only one division manager (Mine DivisionManager) is presently employed in
 #'   TMC Mines Group.
 #'
 #' @seealso \code{\link{Staff-class}}
 #' @examples division_manager()
 #' @export division_manager
 division_manager <- setClass(
-  "Division Manager",
+  "DivisionManager",
   slots    = character(0),
   contains = "Staff"
 )
@@ -135,13 +135,13 @@ division_manager <- setClass(
 #' An S4 class representing a group manager
 #'
 #' No group manager is presently employed in TMC Mines Group. The ex-Mines
-#'   Group Manager was promoted to Mine Division Manager.
+#'   GroupManager was promoted to Mine DivisionManager.
 #'
 #' @seealso \code{\link{Staff-class}}
 #' @examples group_manager()
 #' @export group_manager
 group_manager <- setClass(
-  "Group Manager",
+  "GroupManager",
   slots    = character(0),
   contains = "Staff"
 )
@@ -155,7 +155,7 @@ group_manager <- setClass(
 #' @examples department_manager()
 #' @export department_manager
 department_manager <- setClass(
-  "Department Manager",
+  "DepartmentManager",
   slots    = character(0),
   contains = "Staff"
 )
@@ -170,7 +170,7 @@ department_manager <- setClass(
 #' @examples section_head()
 #' @export section_head
 section_head <- setClass(
-  "Section Head",
+  "SectionHead",
   slots    = character(0),
   contains = "Staff"
 )
@@ -178,8 +178,8 @@ section_head <- setClass(
 #' An S4 class representing an employee who is not a staff
 #'
 #' This class is entitled to premium pay for overtime work.
-#'   \code{Non Staff-class} is further classified into \code{\link{Clerk-class}}
-#'   and \code{\link{Operation Personnel-class}}.
+#'   \code{NonStaff-class} is further classified into \code{\link{Clerk-class}}
+#'   and \code{\link{OperationPersonnel-class}}.
 #'
 #' @slot isRF logical value \cr
 #'   Is the employee rank and file?
@@ -190,7 +190,7 @@ section_head <- setClass(
 #' @examples non_staff()
 #' @export non_staff
 non_staff <- setClass(
-  "Non Staff",
+  "NonStaff",
   slots = c(
     isRF  = "logical",
     regOT = "integer"
@@ -205,13 +205,13 @@ non_staff <- setClass(
 #'  \code{\link{mansched}}, they were responsible for man hours encoding
 #'  using the spreadsheet template from accounting.
 #'
-#' @seealso \code{\link{Non Staff-class}}
+#' @seealso \code{\link{NonStaff-class}}
 #' @examples clerk()
 #' @export clerk
 clerk <- setClass(
   "Clerk",
   slots    = character(0),
-  contains = "Non Staff"
+  contains = "NonStaff"
 )
 
 #' An S4 class representing an operation personnel
@@ -220,7 +220,7 @@ clerk <- setClass(
 #' have different scheduled rest days and thus have a different method of
 #' calculating premium for overtime work compared to \code{\link{Clerk-class}}.
 #' This class is further classified into \code{\link{Technical-class}} and
-#' \code{\link{Production Personnel-class}}.
+#' \code{\link{ProductionPersonnel-class}}.
 #'
 #' @slot rd integer vector with length of 12
 #'
@@ -316,11 +316,11 @@ clerk <- setClass(
 #'
 #'   Only regular employees are entitled to a compounded premium pay for this
 #'   type of holiday.
-#' @seealso \code{\link{Non Staff-class}}
+#' @seealso \code{\link{NonStaff-class}}
 #' @examples operation_personnel()
 #' @export operation_personnel
 operation_personnel <- setClass(
-  "Operation Personnel",
+  "OperationPersonnel",
   slots = c(
     rd   = "integer",
     rdOT = "integer",
@@ -353,7 +353,7 @@ operation_personnel <- setClass(
     rn   = rep(0L, times = 12),
     rnOT = rep(0L, times = 12)
   ),
-  contains = "Non Staff"
+  contains = "NonStaff"
 )
 
 #' An S4 class representing a technical personnel
@@ -362,13 +362,13 @@ operation_personnel <- setClass(
 #'   classified under this S4 class. These personnel report on duty during the
 #'   day only.
 #'
-#' @seealso \code{\link{Operation Personnel-class}}
+#' @seealso \code{\link{OperationPersonnel-class}}
 #' @examples technical()
 #' @export technical
 technical <- setClass(
   "Technical",
   slots    = character(0),
-  contains = "Operation Personnel"
+  contains = "OperationPersonnel"
 )
 
 #' An S4 class representing a production personnel
@@ -378,13 +378,13 @@ technical <- setClass(
 #'   pay. This class is further classified into \code{\link{Supervisor-class}},
 #'   \code{\link{Laborer-class}} and \code{\link{Operator-class}}.
 #'
-#' @seealso \code{\link{Operation Personnel-class}}
+#' @seealso \code{\link{OperationPersonnel-class}}
 #' @examples production_personnel()
 #' @export production_personnel
 production_personnel <- setClass(
-  "Production Personnel",
+  "ProductionPersonnel",
   slots    = character(0),
-  contains = "Operation Personnel"
+  contains = "OperationPersonnel"
 )
 
 #' An S4 class representing a supervisor
@@ -394,13 +394,13 @@ production_personnel <- setClass(
 #'   monitoring their \code{\link{Laborer-class}} and
 #'   \code{\link{Operator-class}} personnel.
 #'
-#' @seealso \code{\link{Production Personnel-class}}
+#' @seealso \code{\link{ProductionPersonnel-class}}
 #' @examples supervisor()
 #' @export supervisor
 supervisor <- setClass(
   "Supervisor",
   slots    = character(0),
-  contains = "Production Personnel"
+  contains = "ProductionPersonnel"
 )
 
 #' An S4 class representing a laborer
@@ -408,13 +408,13 @@ supervisor <- setClass(
 #' Samplers, checkers, spotters, plumbers and \emph{etc.} are classified under
 #'   this class.
 #'
-#' @seealso \code{\link{Production Personnel-class}}
+#' @seealso \code{\link{ProductionPersonnel-class}}
 #' @examples laborer()
 #' @export laborer
 laborer <- setClass(
   "Laborer",
   slots    = character(0),
-  contains = "Production Personnel"
+  contains = "ProductionPersonnel"
 )
 
 #' An S4 class representing an operator
@@ -424,11 +424,11 @@ laborer <- setClass(
 #'
 #' @slot equipment character vector containing equipment types which the
 #'   employee is authorized to operate
-#' @seealso \code{\link{Production Personnel-class}}
+#' @seealso \code{\link{ProductionPersonnel-class}}
 #' @examples operator()
 #' @export operator
 operator <- setClass(
   "Operator",
   slots    = c(equipment = "character"),
-  contains = "Production Personnel"
+  contains = "ProductionPersonnel"
 )

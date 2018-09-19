@@ -15,5 +15,5 @@ This class may include field engineers and lead-men. Supervisors report to
 supervisor()
 }
 \seealso{
-\code{\link{Production Personnel-class}}
+\code{\link{ProductionPersonnel-class}}
 }

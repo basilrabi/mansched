@@ -5,11 +5,11 @@
 \alias{assignEmp}
 \alias{assignEmp,Employee-method}
 \alias{assignEmp,Staff-method}
-\alias{assignEmp,Non Staff-method}
+\alias{assignEmp,NonStaff-method}
 \alias{assignEmp,Clerk-method}
-\alias{assignEmp,Operation Personnel-method}
+\alias{assignEmp,OperationPersonnel-method}
 \alias{assignEmp,Technical-method}
-\alias{assignEmp,Production Personnel-method}
+\alias{assignEmp,ProductionPersonnel-method}
 \alias{assignEmp,Supervisor-method}
 \alias{assignEmp,Laborer-method}
 \alias{assignEmp,Operator-method}
@@ -21,15 +21,15 @@ assignEmp(empT, empR)
 
 \S4method{assignEmp}{Staff}(empT, empR)
 
-\S4method{assignEmp}{`Non Staff`}(empT, empR)
+\S4method{assignEmp}{NonStaff}(empT, empR)
 
 \S4method{assignEmp}{Clerk}(empT, empR)
 
-\S4method{assignEmp}{`Operation Personnel`}(empT, empR)
+\S4method{assignEmp}{OperationPersonnel}(empT, empR)
 
 \S4method{assignEmp}{Technical}(empT, empR)
 
-\S4method{assignEmp}{`Production Personnel`}(empT, empR)
+\S4method{assignEmp}{ProductionPersonnel}(empT, empR)
 
 \S4method{assignEmp}{Supervisor}(empT, empR)
 
@@ -126,19 +126,19 @@ Man hours from an \code{\link{Employee-class}} object representing a real
 \item \code{Staff}: Check for incompatible \code{\link{Staff-class}}
 objects
 
-\item \code{Non Staff}: Assign \code{regOT} hours
+\item \code{NonStaff}: Assign \code{regOT} hours
 
 \item \code{Clerk}: Check for incompatible \code{\link{Clerk-class}}
 objects
 
-\item \code{Operation Personnel}: Assign \code{rd}, \code{sh}, \code{lh}, \code{nh},
+\item \code{OperationPersonnel}: Assign \code{rd}, \code{sh}, \code{lh}, \code{nh},
 \code{rs}, \code{rl}, \code{rn}, \code{rdOT}, \code{shOT}, \code{lhOT},
 \code{nhOT}, \code{rsOT}, \code{rlPT} and \code{rnOT}
 
 \item \code{Technical}: Check for incompatible \code{\link{Technical-class}}
 objects
 
-\item \code{Production Personnel}: Compute for working hours with night premium pay
+\item \code{ProductionPersonnel}: Compute for working hours with night premium pay
 
 \item \code{Supervisor}: Check for incompatible \code{\link{Supervisor-class}}
 objects

@@ -7,10 +7,10 @@
 \title{An S4 class representing a staff}
 \description{
 These are employees that are classified as
-  \code{\link{Division Manager-class}},
-  \code{\link{Group Manager-class}},
-  \code{\link{Department Manager-class}}
-  \code{\link{Section Head-class}}. In TMC, department managers and up are
+  \code{\link{DivisionManager-class}},
+  \code{\link{GroupManager-class}},
+  \code{\link{DepartmentManager-class}}
+  \code{\link{SectionHead-class}}. In TMC, department managers and up are
   termed "Senior Staff" while section heads are termed "Junior Staff".
 }
 \examples{

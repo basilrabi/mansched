@@ -9,50 +9,50 @@ calDays <- getCalDays(cBegin = "2018-01-01",
 
 testDays <- c(25, 24, 27, 22, 25, 23, 25, 25, 24, 26, 24, 24)
 
-tempEmp <- createEmp("division manager")
+tempEmp <- createEmp("divisionmanager")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
                          costCode = costCode,
                          calDays = calDays)
 
 test_that("division_manager() works", {
-  expect_equal(class(tempEmp)[1], "Division Manager")
+  expect_equal(class(tempEmp)[1], "DivisionManager")
   expect_equivalent(tempEmp@reg / 8, testDays)
   expect_equal(isRF(tempEmp), FALSE)
 })
 
-tempEmp <- createEmp("group manager")
+tempEmp <- createEmp("groupmanager")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
                          costCode = costCode,
                          calDays = calDays)
 
 test_that("group_manager() works", {
-  expect_equal(class(tempEmp)[1], "Group Manager")
+  expect_equal(class(tempEmp)[1], "GroupManager")
   expect_equivalent(tempEmp@reg / 8, testDays)
   expect_equal(isRF(tempEmp), FALSE)
 })
 
-tempEmp <- createEmp("department manager")
+tempEmp <- createEmp("departmentmanager")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
                          costCode = costCode,
                          calDays = calDays)
 
 test_that("department_manager() works", {
-  expect_equal(class(tempEmp)[1], "Department Manager")
+  expect_equal(class(tempEmp)[1], "DepartmentManager")
   expect_equivalent(tempEmp@reg / 8, testDays)
   expect_equal(isRF(tempEmp), FALSE)
 })
 
-tempEmp <- createEmp("section head")
+tempEmp <- createEmp("sectionhead")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
                          costCode = costCode,
                          calDays = calDays)
 
 test_that("section_head() works", {
-  expect_equal(class(tempEmp)[1], "Section Head")
+  expect_equal(class(tempEmp)[1], "SectionHead")
   expect_equivalent(tempEmp@reg / 8, testDays)
   expect_equal(isRF(tempEmp), FALSE)
 })

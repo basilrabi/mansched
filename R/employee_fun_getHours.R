@@ -49,7 +49,7 @@ setMethod(
 #' @describeIn getHours Save \code{regOT}
 setMethod(
   f          = "getHours",
-  signature  = "Non Staff",
+  signature  = "NonStaff",
   definition = function(theObject) {
 
     mh            <- callNextMethod(theObject)
@@ -62,7 +62,7 @@ setMethod(
 #' @describeIn getHours Save all other man hour type
 setMethod(
   f = "getHours",
-  signature = "Operation Personnel",
+  signature = "OperationPersonnel",
   definition = function(theObject) {
 
     mh           <- callNextMethod(theObject)

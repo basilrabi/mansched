@@ -5,11 +5,11 @@
 \alias{assignEmp2}
 \alias{assignEmp2,Employee-method}
 \alias{assignEmp2,Staff-method}
-\alias{assignEmp2,Non Staff-method}
+\alias{assignEmp2,NonStaff-method}
 \alias{assignEmp2,Clerk-method}
-\alias{assignEmp2,Operation Personnel-method}
+\alias{assignEmp2,OperationPersonnel-method}
 \alias{assignEmp2,Technical-method}
-\alias{assignEmp2,Production Personnel-method}
+\alias{assignEmp2,ProductionPersonnel-method}
 \alias{assignEmp2,Supervisor-method}
 \alias{assignEmp2,Laborer-method}
 \alias{assignEmp2,Operator-method}
@@ -21,15 +21,15 @@ assignEmp2(empT, empR)
 
 \S4method{assignEmp2}{Staff}(empT, empR)
 
-\S4method{assignEmp2}{`Non Staff`}(empT, empR)
+\S4method{assignEmp2}{NonStaff}(empT, empR)
 
 \S4method{assignEmp2}{Clerk}(empT, empR)
 
-\S4method{assignEmp2}{`Operation Personnel`}(empT, empR)
+\S4method{assignEmp2}{OperationPersonnel}(empT, empR)
 
 \S4method{assignEmp2}{Technical}(empT, empR)
 
-\S4method{assignEmp2}{`Production Personnel`}(empT, empR)
+\S4method{assignEmp2}{ProductionPersonnel}(empT, empR)
 
 \S4method{assignEmp2}{Supervisor}(empT, empR)
 
@@ -128,19 +128,19 @@ Man hours from an \code{\link{Employee-class}} object representing a real
 \item \code{Staff}: Check for incompatible \code{\link{Staff-class}}
 objects
 
-\item \code{Non Staff}: Assign \code{regOT} hours
+\item \code{NonStaff}: Assign \code{regOT} hours
 
 \item \code{Clerk}: Check for incompatible \code{\link{Clerk-class}}
 objects
 
-\item \code{Operation Personnel}: Assign \code{rd}, \code{sh}, \code{lh}, \code{nh},
+\item \code{OperationPersonnel}: Assign \code{rd}, \code{sh}, \code{lh}, \code{nh},
 \code{rs}, \code{rl}, \code{rn}, \code{rdOT}, \code{shOT}, \code{lhOT},
 \code{nhOT}, \code{rsOT}, \code{rlPT} and \code{rnOT}
 
 \item \code{Technical}: Check for incompatible \code{\link{Technical-class}}
 objects
 
-\item \code{Production Personnel}: Compute for working hours with night premium pay
+\item \code{ProductionPersonnel}: Compute for working hours with night premium pay
 
 \item \code{Supervisor}: Check for incompatible \code{\link{Supervisor-class}}
 objects

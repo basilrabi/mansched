@@ -11,7 +11,7 @@ restday <- "Sunday"
 hol <- getHol(hol = holidays, year = 2018)
 calDays <- getCalDays(cBegin = cBegin, hol = hol, restday = restday)
 
-tempEmp <- createEmp(empClass = "division manager")
+tempEmp <- createEmp(empClass = "divisionmanager")
 empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
@@ -33,7 +33,7 @@ test_that("assignment of division manager works", {
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))
 })
 
-tempEmp <- createEmp(empClass = "group manager")
+tempEmp <- createEmp(empClass = "groupmanager")
 empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
@@ -55,7 +55,7 @@ test_that("assignment of group manager works", {
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))
 })
 
-tempEmp <- createEmp(empClass = "department manager")
+tempEmp <- createEmp(empClass = "departmentmanager")
 empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
@@ -77,7 +77,7 @@ test_that("assignment of department manager works", {
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))
 })
 
-tempEmp <- createEmp(empClass = "section head")
+tempEmp <- createEmp(empClass = "sectionhead")
 empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,

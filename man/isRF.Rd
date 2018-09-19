@@ -5,7 +5,7 @@
 \alias{isRF}
 \alias{isRF,Employee-method}
 \alias{isRF,Staff-method}
-\alias{isRF,Non Staff-method}
+\alias{isRF,NonStaff-method}
 \alias{isRF,Clerk-method}
 \alias{isRF,Technical-method}
 \alias{isRF,Supervisor-method}
@@ -19,7 +19,7 @@ isRF(theObject)
 
 \S4method{isRF}{Staff}(theObject)
 
-\S4method{isRF}{`Non Staff`}(theObject)
+\S4method{isRF}{NonStaff}(theObject)
 
 \S4method{isRF}{Clerk}(theObject)
 
@@ -46,7 +46,7 @@ Is the employee rank and file?
 
 \item \code{Staff}: All staff are not rank and file
 
-\item \code{Non Staff}: All \code{\link{Non Staff-class}} objects have isRF slot
+\item \code{NonStaff}: All \code{\link{NonStaff-class}} objects have isRF slot
 
 \item \code{Clerk}: Clerks may or may not be rank and file
 

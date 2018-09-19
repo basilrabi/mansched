@@ -16,7 +16,7 @@ Real employees are actual persons represented as \code{Employee-class}
   represented as \code{Employee-class} objects.
 
 This class is further classified into \code{\link{Staff-class}} and
-  \code{\link{Non Staff-class}}.
+  \code{\link{NonStaff-class}}.
 }
 \section{Slots}{
 

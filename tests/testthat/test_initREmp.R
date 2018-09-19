@@ -14,7 +14,7 @@ calDays <- getCalDays(cBegin = cBegin,
                       hol = hol,
                       restday = restday)
 
-tempEmp <- createEmp(empClass = "division manager")
+tempEmp <- createEmp(empClass = "divisionmanager")
 tempEmp <- initREmployee(theObject = tempEmp,
                          ID = ID,
                          name = name,
@@ -30,7 +30,7 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          d.rh = 5)
 
 test_that("division_manager() works", {
-  expect_equal(class(tempEmp)[1], "Division Manager")
+  expect_equal(class(tempEmp)[1], "DivisionManager")
   expect_equivalent(tempEmp@maxReg / 8, calDays[, "reg"])
   expect_equal(isRF(tempEmp), FALSE)
   expect_equal(tempEmp@leaveHours, 256L)
@@ -43,7 +43,7 @@ test_that("division_manager() works", {
                      MARGIN = 1, FUN = sum))
 })
 
-tempEmp <- createEmp(empClass = "group manager")
+tempEmp <- createEmp(empClass = "groupmanager")
 tempEmp <- initREmployee(theObject = tempEmp,
                          ID = ID,
                          name = name,
@@ -59,7 +59,7 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          d.rh = 5)
 
 test_that("group_manager() works", {
-  expect_equal(class(tempEmp)[1], "Group Manager")
+  expect_equal(class(tempEmp)[1], "GroupManager")
   expect_equivalent(tempEmp@maxReg / 8, calDays[, "reg"])
   expect_equal(isRF(tempEmp), FALSE)
   expect_equal(tempEmp@leaveHours, 256L)
@@ -72,7 +72,7 @@ test_that("group_manager() works", {
                      MARGIN = 1, FUN = sum))
 })
 
-tempEmp <- createEmp(empClass = "department manager")
+tempEmp <- createEmp(empClass = "departmentmanager")
 tempEmp <- initREmployee(theObject = tempEmp,
                          ID = ID,
                          name = name,
@@ -88,7 +88,7 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          d.rh = 5)
 
 test_that("department_manager() works", {
-  expect_equal(class(tempEmp)[1], "Department Manager")
+  expect_equal(class(tempEmp)[1], "DepartmentManager")
   expect_equivalent(tempEmp@maxReg / 8, calDays[, "reg"])
   expect_equal(isRF(tempEmp), FALSE)
   expect_equal(tempEmp@leaveHours, 256L)
@@ -101,7 +101,7 @@ test_that("department_manager() works", {
                      MARGIN = 1, FUN = sum))
 })
 
-tempEmp <- createEmp(empClass = "section head")
+tempEmp <- createEmp(empClass = "sectionhead")
 tempEmp <- initREmployee(theObject = tempEmp,
                          ID = ID,
                          name = name,
@@ -117,7 +117,7 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          d.rh = 5)
 
 test_that("section_head() works", {
-  expect_equal(class(tempEmp)[1], "Section Head")
+  expect_equal(class(tempEmp)[1], "SectionHead")
   expect_equivalent(tempEmp@maxReg / 8, calDays[, "reg"])
   expect_equal(isRF(tempEmp), FALSE)
   expect_equal(tempEmp@leaveHours, 256L)

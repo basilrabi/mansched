@@ -14,5 +14,5 @@ Engineers, some draftsmen and assistants providing technical support are
 technical()
 }
 \seealso{
-\code{\link{Operation Personnel-class}}
+\code{\link{OperationPersonnel-class}}
 }

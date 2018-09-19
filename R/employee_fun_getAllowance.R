@@ -63,7 +63,7 @@ setMethod(
 #' @describeIn getAllowance Compute monthly allowance
 setMethod(
   f          = "getAllowance",
-  signature  = "Non Staff",
+  signature  = "NonStaff",
   definition = function(theObject) {
 
     allowance <- callNextMethod(theObject)

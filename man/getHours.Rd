@@ -4,17 +4,17 @@
 \name{getHours}
 \alias{getHours}
 \alias{getHours,Employee-method}
-\alias{getHours,Non Staff-method}
-\alias{getHours,Operation Personnel-method}
+\alias{getHours,NonStaff-method}
+\alias{getHours,OperationPersonnel-method}
 \title{Get remaining working hours}
 \usage{
 getHours(theObject)
 
 \S4method{getHours}{Employee}(theObject)
 
-\S4method{getHours}{`Non Staff`}(theObject)
+\S4method{getHours}{NonStaff}(theObject)
 
-\S4method{getHours}{`Operation Personnel`}(theObject)
+\S4method{getHours}{OperationPersonnel}(theObject)
 }
 \arguments{
 \item{theObject}{an \code{\link{Employee-class}} object}
@@ -31,8 +31,8 @@ This function returns all remaining man hour types including overtime.
 \itemize{
 \item \code{Employee}: Save \code{reg} hours
 
-\item \code{Non Staff}: Save \code{regOT}
+\item \code{NonStaff}: Save \code{regOT}
 
-\item \code{Operation Personnel}: Save all other man hour type
+\item \code{OperationPersonnel}: Save all other man hour type
 }}
 

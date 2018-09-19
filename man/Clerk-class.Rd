@@ -14,5 +14,5 @@ Clerks are mainly responsible for data encoding. Prior to the creation of
 clerk()
 }
 \seealso{
-\code{\link{Non Staff-class}}
+\code{\link{NonStaff-class}}
 }

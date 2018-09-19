@@ -5,7 +5,7 @@
 \alias{getAllowance}
 \alias{getAllowance,Employee-method}
 \alias{getAllowance,Staff-method}
-\alias{getAllowance,Non Staff-method}
+\alias{getAllowance,NonStaff-method}
 \title{Compute the monthly allowance of employee}
 \usage{
 getAllowance(theObject)
@@ -14,7 +14,7 @@ getAllowance(theObject)
 
 \S4method{getAllowance}{Staff}(theObject)
 
-\S4method{getAllowance}{`Non Staff`}(theObject)
+\S4method{getAllowance}{NonStaff}(theObject)
 }
 \arguments{
 \item{theObject}{\code{\link{Employee-class}} object}
@@ -47,6 +47,6 @@ Depending on the attributes of the employee, his or her monthly allowances
 
 \item \code{Staff}: Compute monthly allowance
 
-\item \code{Non Staff}: Compute monthly allowance
+\item \code{NonStaff}: Compute monthly allowance
 }}
 

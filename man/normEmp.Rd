@@ -4,8 +4,8 @@
 \name{normEmp}
 \alias{normEmp}
 \alias{normEmp,Employee-method}
-\alias{normEmp,Non Staff-method}
-\alias{normEmp,Operation Personnel-method}
+\alias{normEmp,NonStaff-method}
+\alias{normEmp,OperationPersonnel-method}
 \alias{normEmp,Operator-method}
 \title{Strip all over time hours from an employee}
 \usage{
@@ -13,9 +13,9 @@ normEmp(theObject)
 
 \S4method{normEmp}{Employee}(theObject)
 
-\S4method{normEmp}{`Non Staff`}(theObject)
+\S4method{normEmp}{NonStaff}(theObject)
 
-\S4method{normEmp}{`Operation Personnel`}(theObject)
+\S4method{normEmp}{OperationPersonnel}(theObject)
 
 \S4method{normEmp}{Operator}(theObject)
 }
@@ -35,9 +35,9 @@ This function returns an \code{\link{Employee-class}} object with over time
 \itemize{
 \item \code{Employee}: Assign dummy cost code
 
-\item \code{Non Staff}: Assign zero to regOT
+\item \code{NonStaff}: Assign zero to regOT
 
-\item \code{Operation Personnel}: Assign zero to \code{rd}, \code{sh}, \code{lh},
+\item \code{OperationPersonnel}: Assign zero to \code{rd}, \code{sh}, \code{lh},
 \code{rs}, \code{rl}, \code{rn}, \code{rdOT}, \code{shOT}, \code{lhOT},
 \code{nhOT}, \code{rsOT}, \code{rlOT}, \code{rnOT}. If the employee is
 regular, also assign zero to \code{nh}.

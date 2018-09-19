@@ -65,7 +65,7 @@ mergeEmp <- function(x) {
   reg         <- apply(reg, MARGIN = 1, FUN = sum)
   tempEmp@reg <- reg
 
-  if (is(tempEmp, "Non Staff")) {
+  if (is(tempEmp, "NonStaff")) {
 
     regOT         <- sapply(x, FUN = function(y) {y@regOT})
     regOT         <- apply(regOT, MARGIN = 1, FUN = sum)
@@ -73,7 +73,7 @@ mergeEmp <- function(x) {
 
   }
 
-  if (is(tempEmp, "Operation Personnel")) {
+  if (is(tempEmp, "OperationPersonnel")) {
 
     sh   <- sapply(x, FUN = function(y) {y@sh  })
     lh   <- sapply(x, FUN = function(y) {y@lh  })

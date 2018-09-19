@@ -99,6 +99,11 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
     empPool[, c("personnelClass", "status")], FUN = tolower
   )
 
+  # Remove space
+  empPool$personnelClass <- gsub(pattern = " ",
+                                 replacement = "",
+                                 x = empPool$personnelClass)
+
   # Change to upper case
   empPool[, c("equipment", "costCode", "dcc")] <- lapply(
     empPool[, c("equipment", "costCode", "dcc")], FUN = toupper
@@ -207,7 +212,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
 #'     \item{OT}{integer value defining the number of working hours scheduled
 #'       for more than 8 hours per shift
 #'
-#'       This only applies to \code{\link{Non Staff-class}} personnel.}
+#'       This only applies to \code{\link{NonStaff-class}} personnel.}
 #'     \item{costCode}{character string representing the accounting cost code
 #'       wherein all personnel costs of this employee requirement will be
 #'       charged}
@@ -297,6 +302,11 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
 
   # Change to lower case
   empReq$personnelClass <- tolower(empReq$personnelClass)
+
+  # Remove space
+  empReq$personnelClass <- gsub(pattern = " ",
+                                replacement = "",
+                                x = empReq$personnelClass)
 
   # Change to upper case
   empReq[,c("equipment", "costCode")] <- lapply(

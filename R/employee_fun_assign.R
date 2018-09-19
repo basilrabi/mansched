@@ -200,7 +200,7 @@ setMethod(
 #' @describeIn assignEmp Assign \code{regOT} hours
 setMethod(
   f          = "assignEmp",
-  signature  = "Non Staff",
+  signature  = "NonStaff",
   definition = function(empT, empR) {
 
     results <- callNextMethod(empT = empT, empR = empR)
@@ -286,7 +286,7 @@ setMethod(
 #'   \code{nhOT}, \code{rsOT}, \code{rlPT} and \code{rnOT}
 setMethod(
   f= "assignEmp",
-  signature = "Operation Personnel",
+  signature = "OperationPersonnel",
   definition = function(empT, empR) {
 
     results <- callNextMethod(empT = empT, empR = empR)
@@ -546,7 +546,7 @@ setMethod(
 #' @describeIn assignEmp Compute for working hours with night premium pay
 setMethod(
   f          = "assignEmp",
-  signature  = "Production Personnel",
+  signature  = "ProductionPersonnel",
   definition = function(empT, empR) {
 
     tempData <- callNextMethod(empT = empT, empR = empR)

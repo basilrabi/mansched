@@ -14,7 +14,7 @@ calDays <- getCalDays(cBegin = cBegin,
                       hol = hol,
                       restday = restday)
 
-tempEmp <- createEmp(empClass = "division manager")
+tempEmp <- createEmp(empClass = "divisionmanager")
 tempEmp1 <- initREmployee(theObject = tempEmp,
                          ID = ID,
                          name = name,
@@ -28,7 +28,7 @@ tempEmp1 <- initREmployee(theObject = tempEmp,
 
 cBegin <- "2018-02-01"
 inHouse <- FALSE
-tempEmp <- createEmp(empClass = "group manager")
+tempEmp <- createEmp(empClass = "groupmanager")
 tempEmp2 <- initREmployee(theObject = tempEmp,
                           ID = ID,
                           name = name,

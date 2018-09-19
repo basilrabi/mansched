@@ -20,5 +20,5 @@ employee is authorized to operate}
 operator()
 }
 \seealso{
-\code{\link{Production Personnel-class}}
+\code{\link{ProductionPersonnel-class}}
 }

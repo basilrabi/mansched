@@ -34,7 +34,7 @@ initEmpReq(empReq, sched, hol = NA, year = NA)
     \item{OT}{integer value defining the number of working hours scheduled
       for more than 8 hours per shift
 
-      This only applies to \code{\link{Non Staff-class}} personnel.}
+      This only applies to \code{\link{NonStaff-class}} personnel.}
     \item{costCode}{character string representing the accounting cost code
       wherein all personnel costs of this employee requirement will be
       charged}

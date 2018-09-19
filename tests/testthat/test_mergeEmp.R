@@ -19,12 +19,12 @@ empListG <- list()
 empListH <- list()
 empListI <- list()
 
-empListA[[1]] <- createEmp("division manager")
-empListA[[2]] <- createEmp("department manager")
+empListA[[1]] <- createEmp("divisionmanager")
+empListA[[2]] <- createEmp("departmentmanager")
 
-empListB[[1]] <- createEmp("section head")
-empListB[[2]] <- createEmp("section head")
-empListB[[3]] <- createEmp("section head")
+empListB[[1]] <- createEmp("sectionhead")
+empListB[[2]] <- createEmp("sectionhead")
+empListB[[3]] <- createEmp("sectionhead")
 
 empListB[[1]] <- initTEmployee(theObject = empListB[[1]],
                                ID = "E1",
@@ -39,9 +39,9 @@ empListB[[3]] <- initTEmployee(theObject = empListB[[3]],
                                costCode = "C02",
                                calDays = calDays)
 
-empListC[[1]] <- createEmp("section head")
-empListC[[2]] <- createEmp("section head")
-empListC[[3]] <- createEmp("section head")
+empListC[[1]] <- createEmp("sectionhead")
+empListC[[2]] <- createEmp("sectionhead")
+empListC[[3]] <- createEmp("sectionhead")
 
 empListC[[1]] <- initTEmployee(theObject = empListC[[1]],
                                ID = "E1",
@@ -191,7 +191,7 @@ test_that("mergeEmp() works", {
   expect_error(mergeEmp(empListB))
   expect_equal(sum(getHours(empMergedC)),
                sum(calDays$reg * 8) * length(empListC))
-  expect_equal(empMergedC@ID, "Section Head-C01")
+  expect_equal(empMergedC@ID, "SectionHead-C01")
   expect_error(mergeEmp(empListD))
   expect_equal(sum(getHours(mergeEmp(empListE))), getHoursL(empListE))
   expect_equal(mergeEmp(empListE)@ID, "Supervisor-C01")

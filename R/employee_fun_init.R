@@ -262,7 +262,7 @@ setMethod(
 #' @describeIn initREmployee Initialize regOT
 setMethod(
   f          = "initREmployee",
-  signature  = "Non Staff",
+  signature  = "NonStaff",
   definition = function(theObject,
                         ID,
                         name,
@@ -409,10 +409,10 @@ setMethod(
 
 #' @describeIn initREmployee Initialize rd, rdOT, sh, shOT, lh, lhOT, nh, nhOT,
 #'   rs, rsOT, rl, rlOT, rn, rnOT. Return only the
-#'   \code{\link{Operation Personnel-class}} object.
+#'   \code{\link{OperationPersonnel-class}} object.
 setMethod(
   f          = "initREmployee",
-  signature  = "Operation Personnel",
+  signature  = "OperationPersonnel",
   definition = function(theObject,
                         ID,
                         name,
@@ -816,7 +816,7 @@ setMethod(
 #' @param monthSched integer vector of length 12
 #'
 #'   This represents the number of days an activity is scheduled for each month.
-#'   This argument is used only for \code{\link{Production Personnel-class}}
+#'   This argument is used only for \code{\link{ProductionPersonnel-class}}
 #'   objects.
 #' @return \code{\link{Employee-class}} object
 #' @export initTEmployee
@@ -917,7 +917,7 @@ setMethod(
 #'   probabilities
 setMethod(
   f          = "initTEmployee",
-  signature  = "Operation Personnel",
+  signature  = "OperationPersonnel",
   definition = function(theObject,
                         ID,
                         costCode,
@@ -1033,13 +1033,13 @@ setMethod(
 #' @export createEmp
 createEmp <- function(empClass) {
   switch(empClass,
-         "division manager"   = division_manager(),
-         "group manager"      = group_manager(),
-         "department manager" = department_manager(),
-         "section head"       = section_head(),
-         "clerk"              = clerk(),
-         "technical"          = technical(),
-         "supervisor"         = supervisor(),
-         "laborer"            = laborer(),
-         "operator"           = operator())
+         "divisionmanager"   = division_manager(),
+         "groupmanager"      = group_manager(),
+         "departmentmanager" = department_manager(),
+         "sectionhead"       = section_head(),
+         "clerk"             = clerk(),
+         "technical"         = technical(),
+         "supervisor"        = supervisor(),
+         "laborer"           = laborer(),
+         "operator"          = operator())
 }

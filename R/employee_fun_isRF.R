@@ -33,10 +33,10 @@ setMethod(
   }
 )
 
-#' @describeIn isRF All \code{\link{Non Staff-class}} objects have isRF slot
+#' @describeIn isRF All \code{\link{NonStaff-class}} objects have isRF slot
 setMethod(
   f          = "isRF",
-  signature  = "Non Staff",
+  signature  = "NonStaff",
   definition = function(theObject) {
 
     RF <- theObject@isRF

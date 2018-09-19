@@ -5,9 +5,9 @@
 \alias{initREmployee}
 \alias{initREmployee,Employee-method}
 \alias{initREmployee,Staff-method}
-\alias{initREmployee,Non Staff-method}
+\alias{initREmployee,NonStaff-method}
 \alias{initREmployee,Clerk-method}
-\alias{initREmployee,Operation Personnel-method}
+\alias{initREmployee,OperationPersonnel-method}
 \alias{initREmployee,Technical-method}
 \alias{initREmployee,Supervisor-method}
 \alias{initREmployee,Laborer-method}
@@ -29,7 +29,7 @@ initREmployee(theObject, ID, name, designation, attendance = 1,
   cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, d.rd = NA,
   d.ho = NA, d.rh = NA, dcc = "NA")
 
-\S4method{initREmployee}{`Non Staff`}(theObject, ID, name, designation,
+\S4method{initREmployee}{NonStaff}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
   cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, OT = 3,
   d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA")
@@ -39,7 +39,7 @@ initREmployee(theObject, ID, name, designation, attendance = 1,
   cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, RF = FALSE,
   OT = 3, d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA")
 
-\S4method{initREmployee}{`Operation Personnel`}(theObject, ID, name,
+\S4method{initREmployee}{OperationPersonnel}(theObject, ID, name,
   designation, attendance = 1, costCode = "NONE", status = "reg",
   cBegin, cEnd = NA, inHouse = FALSE, restday = "Sunday", hol,
   OT = 3, d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA")
@@ -146,14 +146,14 @@ costCode, status, cBegin, cEnd, inHouse, restday and calDays
 
 \item \code{Staff}: Return only the \code{\link{Staff-class}} object
 
-\item \code{Non Staff}: Initialize regOT
+\item \code{NonStaff}: Initialize regOT
 
 \item \code{Clerk}: Initialize RF and return only the
 \code{\link{Clerk-class}} object
 
-\item \code{Operation Personnel}: Initialize rd, rdOT, sh, shOT, lh, lhOT, nh, nhOT,
+\item \code{OperationPersonnel}: Initialize rd, rdOT, sh, shOT, lh, lhOT, nh, nhOT,
 rs, rsOT, rl, rlOT, rn, rnOT. Return only the
-\code{\link{Operation Personnel-class}} object.
+\code{\link{OperationPersonnel-class}} object.
 
 \item \code{Technical}: Return only the \code{\link{Technical-class}}
 object. All \code{Technical-class} personnel are not rank and file.

@@ -64,10 +64,10 @@ validEquipment <- c("CRANE",
 #'
 #' @format character vector
 #' @export validEmpClass
-validEmpClass <- c("division manager",
-                   "group manager",
-                   "department manager",
-                   "section head",
+validEmpClass <- c("divisionmanager",
+                   "groupmanager",
+                   "departmentmanager",
+                   "sectionhead",
                    "clerk",
                    "technical",
                    "supervisor",

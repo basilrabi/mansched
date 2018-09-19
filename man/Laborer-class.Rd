@@ -13,5 +13,5 @@ Samplers, checkers, spotters, plumbers and \emph{etc.} are classified under
 laborer()
 }
 \seealso{
-\code{\link{Production Personnel-class}}
+\code{\link{ProductionPersonnel-class}}
 }

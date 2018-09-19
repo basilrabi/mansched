@@ -31,7 +31,7 @@ setMethod(
 #' @describeIn normEmp Assign zero to regOT
 setMethod(
   f          = "normEmp",
-  signature  = "Non Staff",
+  signature  = "NonStaff",
   definition = function(theObject) {
 
     theObject       <- callNextMethod(theObject)
@@ -47,7 +47,7 @@ setMethod(
 #'   regular, also assign zero to \code{nh}.
 setMethod(
   f          = "normEmp",
-  signature  = "Operation Personnel",
+  signature  = "OperationPersonnel",
   definition = function(theObject) {
 
     theObject <- callNextMethod(theObject)

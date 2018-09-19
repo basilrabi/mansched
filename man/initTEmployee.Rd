@@ -6,7 +6,7 @@
 \alias{initTEmployee,Employee-method}
 \alias{initTEmployee,Staff-method}
 \alias{initTEmployee,Clerk-method}
-\alias{initTEmployee,Operation Personnel-method}
+\alias{initTEmployee,OperationPersonnel-method}
 \alias{initTEmployee,Operator-method}
 \title{Initialize theoretical employee}
 \usage{
@@ -22,7 +22,7 @@ initTEmployee(theObject, ID, costCode, equipment, OT = 0, calDays,
 \S4method{initTEmployee}{Clerk}(theObject, ID, costCode, OT = 0, calDays,
   spareFactor = 1)
 
-\S4method{initTEmployee}{`Operation Personnel`}(theObject, ID, costCode,
+\S4method{initTEmployee}{OperationPersonnel}(theObject, ID, costCode,
   OT = 0, mdtProb, spareFactor = 1, monthSched = NA)
 
 \S4method{initTEmployee}{Operator}(theObject, ID, costCode, equipment,
@@ -52,7 +52,7 @@ hours multiplier}
 \item{monthSched}{integer vector of length 12
 
   This represents the number of days an activity is scheduled for each month.
-  This argument is used only for \code{\link{Production Personnel-class}}
+  This argument is used only for \code{\link{ProductionPersonnel-class}}
   objects.}
 }
 \value{
@@ -71,7 +71,7 @@ Initialize employee data and its working hours. This function can be applied
 
 \item \code{Clerk}: Initialize reg and regOT
 
-\item \code{Operation Personnel}: Initialize all man hour type using man day type
+\item \code{OperationPersonnel}: Initialize all man hour type using man day type
 probabilities
 
 \item \code{Operator}: Initialize equipment
