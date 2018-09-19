@@ -75,6 +75,8 @@ NULL
 #'   This equates to paid vacation or sick leave.
 #' @slot dcc character string defining the cost code wherein the excess regular
 #'   man hours of the employee will be charged
+#' @slot forecast logical value \cr
+#'   Is the computation used for forecasting the present year?
 #' @examples employee()
 #' @export employee
 employee <- setClass(
@@ -95,7 +97,8 @@ employee <- setClass(
     maxReg      = "integer",
     reg         = "integer",
     leaveHours  = "integer",
-    dcc         = "character"
+    dcc         = "character",
+    forecast    = "logical"
   ),
   prototype = list(reg = rep(0L, times = 12))
 )

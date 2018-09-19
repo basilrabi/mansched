@@ -97,6 +97,9 @@ employee is not required to report to work}
 
 \item{\code{dcc}}{character string defining the cost code wherein the excess regular
 man hours of the employee will be charged}
+
+\item{\code{forecast}}{logical value \cr
+Is the computation used for forecasting the present year?}
 }}
 
 \examples{

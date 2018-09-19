@@ -13,6 +13,8 @@
 #' @param cores an integer value defining the number cores to be used
 #'
 #'   This is only applicable to UNIX-like machines.
+#' @param forecast logical value \cr
+#'   Compute cost for forecast?
 #' @return a list containing the following:
 #'   \enumerate{
 #'     \item \code{data.frame} representing the man hours database of the
@@ -76,7 +78,13 @@
 #' @importFrom tidyr gather
 #' @importFrom data.table rbindlist
 #' @importFrom parallel mclapply
-getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
+getmhDB <- function(empReq,
+                    empPool,
+                    sched,
+                    year = NA,
+                    hol = NA,
+                    cores = NA,
+                    forecast = FALSE) {
 
   # Define global variables
   ID    <- NULL
@@ -93,7 +101,10 @@ getmhDB <- function(empReq, empPool, sched, year = NA, hol = NA, cores = NA) {
     message("Using built-in holidays list.")
   }
 
-  tempData <- initEmpPool(empPool = empPool, hol = hol, year)
+  tempData <- initEmpPool(empPool  = empPool,
+                          hol      = hol,
+                          year     = year,
+                          forecast = forecast)
   listR    <- tempData[[1]]
   listR.a  <- listR
   empPool  <- tempData[[2]]

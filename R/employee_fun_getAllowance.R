@@ -49,14 +49,22 @@ setMethod(
     allowance <- callNextMethod(theObject)
     cost      <- 0
 
-    if(!theObject@inHouse)
-      cost <- cost + 1900 + 1100 # for food and lighting
+    # Allowances
+    food <- 2200
+    lighting <- 1100
+    housing <- 1100
 
-    cost <- cost + 1100 # for housing
+    # Food allowance in 2018
+    if (theObject@forecast)
+      food <- 2100
 
+    if (!theObject@inHouse)
+      cost <- cost + food + lighting
+
+    cost <- cost + housing
     allowance$allowance <- round(allowance$allow * cost, digits = 2)
 
-    return(allowance[, colnames(allowance) %in% c("month", "ID", "allowance")])
+    return(allowance[, c("month", "ID", "allowance")])
   }
 )
 
@@ -72,14 +80,18 @@ setMethod(
     if (isRF(theObject = theObject)) {
 
       if (isReg(theObject = theObject)) {
-
         cost <- cost + 700 # for lighting
         cost <- cost + 800 # for housing
-
       }
     } else {
 
-      cost <- cost + 1800 # for food
+      foodForTechSup <- 2100
+
+      # Food allowance in 2018
+      if (theObject@forecast)
+        foodForTechSup <- 2000
+
+      cost <- cost + foodForTechSup
 
       if (isReg(theObject = theObject)) {
 
@@ -88,13 +100,11 @@ setMethod(
         if (!theObject@inHouse) {
           cost <- cost + 1100 # for lighting
         }
-
       }
-
     }
 
     allowance$allowance <- round(allowance$allow * cost, digits = 2)
 
-    return(allowance[, colnames(allowance) %in% c("month", "ID", "allowance")])
+    return(allowance[, c("month", "ID", "allowance")])
   }
 )

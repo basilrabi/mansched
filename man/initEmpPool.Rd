@@ -4,7 +4,7 @@
 \alias{initEmpPool}
 \title{Initialize Employee Pool}
 \usage{
-initEmpPool(empPool, hol = NA, year = NA)
+initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
 }
 \arguments{
 \item{empPool}{a \code{data.frame} with 13 columns
@@ -61,6 +61,9 @@ initEmpPool(empPool, hol = NA, year = NA)
 \item{hol}{a \code{data.frame} similar to \code{\link{holidays}}}
 
 \item{year}{integer value representing the year to be budgeted}
+
+\item{forecast}{logical value \cr
+Compute cost for forecast?}
 }
 \value{
 list of of 2:

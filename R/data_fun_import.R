@@ -55,6 +55,8 @@
 #'   }
 #' @param hol a \code{data.frame} similar to \code{\link{holidays}}
 #' @param year integer value representing the year to be budgeted
+#' @param forecast logical value \cr
+#'   Compute cost for forecast?
 #' @return list of of 2:
 #'   \enumerate{
 #'     \item a list of real employees\cr
@@ -62,7 +64,7 @@
 #'     \item sanitized empPool
 #'   }
 #' @export initEmpPool
-initEmpPool <- function(empPool, hol = NA, year = NA) {
+initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
 
   # Error if any ID is duplicated
   if (anyDuplicated(empPool$ID) > 0) {
@@ -138,7 +140,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
   )
 
   # Pre-allocate employee list
-  manPool <- rep(list(NA), times = length(empPool[,1]))
+  manPool <- rep(list(NA), times = length(empPool[, 1]))
 
   if (is.na(year)) {
     year <- as.integer(format(Sys.Date() + 365, "%Y"))
@@ -173,7 +175,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA) {
                              d.rd        = empPool$d.rd[i],
                              d.ho        = empPool$d.ho[i],
                              d.rh        = empPool$d.rh[i],
-                             dcc         = empPool$dcc[i])
+                             dcc         = empPool$dcc[i],
+                             forecast    = forecast)
     manPool[[i]] <- tempEmp
   }
 

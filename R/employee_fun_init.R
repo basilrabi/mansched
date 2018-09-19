@@ -53,6 +53,8 @@ NULL
 #'   the employee is budgeted to report to work per month
 #' @param dcc character string defining the cost code wherein the excess regular
 #'   man hours of the employee will be charged
+#' @param forecast logical value \cr
+#'   Compute cost for forecast?
 #' @return an \code{\link{Employee-class}} object
 #' @importFrom lubridate year
 #' @export initREmployee
@@ -76,7 +78,8 @@ setGeneric(
                   d.rd       = NA,
                   d.ho       = NA,
                   d.rh       = NA,
-                  dcc        = "NA") {
+                  dcc        = "NA",
+                  forecast   = FALSE) {
     standardGeneric("initREmployee")
   }
 )
@@ -111,7 +114,8 @@ setMethod(
                         d.rd       = NA,
                         d.ho       = NA,
                         d.rh       = NA,
-                        dcc        = "NA") {
+                        dcc        = "NA",
+                        forecast   = FALSE) {
     # Checking of the validity of all arguments must be done prior to calling
     #  initREmployee()
 
@@ -119,6 +123,7 @@ setMethod(
     theObject@name        <- name
     theObject@designation <- designation
     theObject@dcc         <- dcc
+    theObject@forecast    <- forecast
 
     # attendance must be <= 1 but preferably > 0.5
     theObject@attendance <- attendance
@@ -237,7 +242,8 @@ setMethod(
                         d.rd       = NA,
                         d.ho       = NA,
                         d.rh       = NA,
-                        dcc        = "NA") {
+                        dcc        = "NA",
+                        forecast   = FALSE) {
 
     tempData <- callNextMethod(theObject   = theObject,
                                ID          = ID,
@@ -254,7 +260,8 @@ setMethod(
                                d.rd        = d.rd,
                                d.ho        = d.ho,
                                d.rh        = d.rh,
-                               dcc         = dcc)
+                               dcc         = dcc,
+                               forecast    = forecast)
     return(tempData[[1]])
   }
 )
@@ -279,7 +286,8 @@ setMethod(
                         d.rd       = NA,
                         d.ho       = NA,
                         d.rh       = NA,
-                        dcc        = "NA") {
+                        dcc        = "NA",
+                        forecast   = FALSE) {
 
     if (is.na(OT))
       OT <- 3
@@ -299,7 +307,8 @@ setMethod(
                                d.rd        = d.rd,
                                d.ho        = d.ho,
                                d.rh        = d.rh,
-                               dcc         = dcc)
+                               dcc         = dcc,
+                               forecast    = forecast)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -334,7 +343,8 @@ setMethod(
                         d.rd       = NA,
                         d.ho       = NA,
                         d.rh       = NA,
-                        dcc        = "NA") {
+                        dcc        = "NA",
+                        forecast   = FALSE) {
 
     if (is.na(OT))
       OT <- 3
@@ -358,7 +368,8 @@ setMethod(
                                d.rd        = d.rd,
                                d.ho        = d.ho,
                                d.rh        = d.rh,
-                               dcc         = dcc)
+                               dcc         = dcc,
+                               forecast    = forecast)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -429,7 +440,8 @@ setMethod(
                         d.rd       = NA,
                         d.ho       = NA,
                         d.rh       = NA,
-                        dcc        = "NA") {
+                        dcc        = "NA",
+                        forecast   = FALSE) {
 
     if (is.na(OT))
       OT <- 3
@@ -450,7 +462,8 @@ setMethod(
                                d.rd        = d.rd,
                                d.ho        = d.ho,
                                d.rh        = d.rh,
-                               dcc         = dcc)
+                               dcc         = dcc,
+                               forecast    = forecast)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -543,7 +556,8 @@ setMethod(
                         d.rd       = NA,
                         d.ho       = NA,
                         d.rh       = NA,
-                        dcc        = "NA") {
+                        dcc        = "NA",
+                        forecast   = FALSE) {
 
     if (is.na(OT))
       OT <- 3
@@ -564,7 +578,8 @@ setMethod(
                                d.rd        = d.rd,
                                d.ho        = d.ho,
                                d.rh        = d.rh,
-                               dcc         = dcc)
+                               dcc         = dcc,
+                               forecast    = forecast)
 
     theObject <- tempData[[1]]
 
@@ -595,7 +610,8 @@ setMethod(
                         d.rd       = NA,
                         d.ho       = NA,
                         d.rh       = NA,
-                        dcc        = "NA") {
+                        dcc        = "NA",
+                        forecast   = FALSE) {
 
     if (is.na(OT))
       OT <- 3
@@ -616,7 +632,8 @@ setMethod(
                                d.rd        = d.rd,
                                d.ho        = d.ho,
                                d.rh        = d.rh,
-                               dcc         = dcc)
+                               dcc         = dcc,
+                               forecast    = forecast)
 
     theObject      <- tempData[[1]]
     theObject@isRF <- FALSE
@@ -647,7 +664,8 @@ setMethod(
                         d.rd       = NA,
                         d.ho       = NA,
                         d.rh       = NA,
-                        dcc        = "NA") {
+                        dcc        = "NA",
+                        forecast   = FALSE) {
 
     if (is.na(OT))
       OT <- 3
@@ -668,7 +686,8 @@ setMethod(
                                d.rd        = d.rd,
                                d.ho        = d.ho,
                                d.rh        = d.rh,
-                               dcc         = dcc)
+                               dcc         = dcc,
+                               forecast    = forecast)
 
     theObject      <- tempData[[1]]
     calDays        <- tempData[[2]]
@@ -726,7 +745,8 @@ setMethod(
                         d.rd       = NA,
                         d.ho       = NA,
                         d.rh       = NA,
-                        dcc        = "NA") {
+                        dcc        = "NA",
+                        forecast   = FALSE) {
 
     if (is.na(OT))
       OT <- 3
@@ -747,7 +767,8 @@ setMethod(
                                d.rd        = d.rd,
                                d.ho        = d.ho,
                                d.rh        = d.rh,
-                               dcc         = dcc)
+                               dcc         = dcc,
+                               forecast    = forecast)
 
     theObject      <- tempData[[1]]
     calDays        <- tempData[[2]]

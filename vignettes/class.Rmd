@@ -49,7 +49,7 @@ employee [label=<
   <TR>
     <TD>leaveHours</TD>
     <TD>dcc</TD>
-    <TD></TD>
+    <TD>forecast</TD>
   </TR>
 </TABLE>>]
 
