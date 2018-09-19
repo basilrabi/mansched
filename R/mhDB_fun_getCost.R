@@ -312,9 +312,9 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   ### Get isOT.S
   mhDB.m.P <- dplyr::left_join(x  = mhDB.m.P,
                                y  = premium.nonRF[, c("isOT.S",
-                                                     "premiumS",
-                                                     "npS",
-                                                     "mhType")],
+                                                      "premiumS",
+                                                      "npS",
+                                                      "mhType")],
                                by = "mhType")
 
   ### Separate non-OT
@@ -1154,8 +1154,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   # Compute for Mid-year and Year-end bonus
   cat("\nComputing bonus.\n")
 
-  # FIXME
-  # Bonus is pro-rated.
+  # FIXME: Bonus must pro-rated
   # The date hired (probationary or regular, which ever came first) of the
   #   employee is used in pro-rating.
   # The to fully enjoy the bonus for the year, the date of hiring must be not

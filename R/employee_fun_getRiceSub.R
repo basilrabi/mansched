@@ -32,7 +32,11 @@ setMethod(
   signature  = "Employee",
   definition = function(theObject) {
 
-    rice            <- 2200
+    rice <- 2500
+
+    if (theObject@forecast & theObject@status != "age")
+      rice <- 0
+
     riceSub         <- getCM(theObject)
     riceSub$riceSub <- round(riceSub$allow * rice, digits = 2)
 
