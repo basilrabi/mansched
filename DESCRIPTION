@@ -20,7 +20,6 @@ Imports:
   readxl     (>= 1.1.0),
   tidyr      (>= 0.8.1),
   xlsx       (>= 0.6.1),
-  Rcpp       (>= 0.12.18)
 Suggests:
   knitr      (>= 1.20),
   rmarkdown  (>= 1.10),
@@ -30,4 +29,3 @@ Remotes:
   jimhester/covr
 RoxygenNote: 6.1.0
 VignetteBuilder: knitr
-LinkingTo: Rcpp

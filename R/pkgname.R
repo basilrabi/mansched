@@ -20,7 +20,4 @@
 #'  package is an attempt to automate the task of manually encoding the man
 #'  hours data for manpower cost computation.
 '_PACKAGE'
-
-#' @useDynLib mansched
-#' @importFrom Rcpp sourceCpp
 NULL
