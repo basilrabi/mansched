@@ -26,7 +26,7 @@ setGeneric(
   }
 )
 
-#' @describeIn getRiceSub Compute allowance multiplier
+#' @describeIn getRiceSub Compute rice subsidy throughout the year
 setMethod(
   f          = "getRiceSub",
   signature  = "Employee",
@@ -40,6 +40,6 @@ setMethod(
     riceSub         <- getCM(theObject)
     riceSub$riceSub <- round(riceSub$allow * rice, digits = 2)
 
-    return(riceSub[, colnames(riceSub) %in% c("month", "ID", "riceSub")])
+    return(riceSub[, c("month", "ID", "riceSub")])
   }
 )

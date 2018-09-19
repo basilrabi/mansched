@@ -2,5 +2,10 @@ dist: trusty
 language: r
 cache: packages
 
+addons:
+    apt:
+        packages:
+            - graphviz
+
 after_success:
     - Rscript -e 'covr::codecov()'

@@ -32,6 +32,6 @@ For every month, 1 sack of rice is awarded to the employee.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{Employee}: Compute allowance multiplier
+\item \code{Employee}: Compute rice subsidy throughout the year
 }}
 

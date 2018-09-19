@@ -35,12 +35,9 @@ setMethod(
   definition = function(theObject) {
 
     tempYear    <- substr(theObject@cEnd, start = 1, stop = 4)
-
     sched       <- dates(begin = paste(tempYear, "-01-01", sep = ""),
                          end   = paste(tempYear, "-12-31", sep = ""))
-
     sched$month <- as.integer(lubridate::month(sched$date))
-
     schedEmp    <- sched[which(sched$date >= as.Date(theObject@cBegin) &
                                  sched$date <= as.Date(theObject@cEnd)),]
 
@@ -58,6 +55,6 @@ setMethod(
     sched               <- as.data.frame(sched)
     sched$ID            <- theObject@ID
 
-    return(sched[, colnames(sched) %in% c("month", "ID", "allow")])
+    return(sched[, c("month", "ID", "allow")])
   }
 )

@@ -77,7 +77,7 @@ setMethod(
     allowance <- callNextMethod(theObject)
     cost      <- 0
 
-    if (isRF(theObject = theObject)) {
+    if (isRF(theObject)) {
 
       if (isReg(theObject = theObject)) {
         cost <- cost + 700 # for lighting

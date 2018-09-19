@@ -46,6 +46,6 @@ setMethod(
     sched$cost <- cost
     sched$mp   <- round(sched$cost * sched$allow, digits = 2)
 
-    return(sched[, colnames(sched) %in% c("month", "ID", "mp")])
+    return(sched[, c("month", "ID", "mp")])
   }
 )
