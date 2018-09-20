@@ -150,6 +150,10 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
 
   for (i in 1:length(empPool[,1])) {
 
+    field <- empPool$field[i]
+    if (is.na(field))
+      field <- TRUE
+
     tempEmp <- createEmp(empPool$personnelClass[i])
     tempEmp <- initREmployee(theObject   = tempEmp,
                              ID          = empPool$ID[i],
@@ -170,7 +174,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
                              d.rh        = empPool$d.rh[i],
                              dcc         = empPool$dcc[i],
                              forecast    = forecast,
-                             field       = empPool$field[i])
+                             field       = field)
     manPool[[i]] <- tempEmp
   }
 
