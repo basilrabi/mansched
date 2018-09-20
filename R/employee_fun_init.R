@@ -57,6 +57,8 @@ NULL
 #'   Compute cost for forecast?
 #' @param field logical value \cr
 #'   Is the employee always on the field?
+#' @param dependents integer vector of length 12 \cr
+#'   Number of dependents for each month.
 #' @return an \code{\link{Employee-class}} object
 #' @importFrom lubridate year
 #' @export initREmployee
@@ -82,7 +84,8 @@ setGeneric(
                   d.rh       = NA,
                   dcc        = "NA",
                   forecast   = FALSE,
-                  field      = TRUE) {
+                  field      = TRUE,
+                  dependents = NA) {
     standardGeneric("initREmployee")
   }
 )
@@ -119,7 +122,8 @@ setMethod(
                         d.rh       = NA,
                         dcc        = "NA",
                         forecast   = FALSE,
-                        field      = TRUE) {
+                        field      = TRUE,
+                        dependents = NA) {
     # Checking of the validity of all arguments must be done prior to calling
     #  initREmployee()
 
@@ -129,6 +133,9 @@ setMethod(
     theObject@dcc         <- dcc
     theObject@forecast    <- forecast
     theObject@field       <- field
+
+    if (length(dependents) == 12L & is.integer(dependents))
+      theObject@dependents  <- dependents
 
     # attendance must be <= 1 but preferably > 0.5
     theObject@attendance <- attendance
@@ -249,7 +256,8 @@ setMethod(
                         d.rh       = NA,
                         dcc        = "NA",
                         forecast   = FALSE,
-                        field      = TRUE) {
+                        field      = TRUE,
+                        dependents = NA) {
 
     tempData <- callNextMethod(theObject   = theObject,
                                ID          = ID,
@@ -268,7 +276,8 @@ setMethod(
                                d.rh        = d.rh,
                                dcc         = dcc,
                                forecast    = forecast,
-                               field       = field)
+                               field       = field,
+                               dependents  = dependents)
     return(tempData[[1]])
   }
 )
@@ -295,7 +304,8 @@ setMethod(
                         d.rh       = NA,
                         dcc        = "NA",
                         forecast   = FALSE,
-                        field      = TRUE) {
+                        field      = TRUE,
+                        dependents = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -317,7 +327,8 @@ setMethod(
                                d.rh        = d.rh,
                                dcc         = dcc,
                                forecast    = forecast,
-                               field       = field)
+                               field       = field,
+                               dependents  = dependents)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -354,7 +365,8 @@ setMethod(
                         d.rh       = NA,
                         dcc        = "NA",
                         forecast   = FALSE,
-                        field      = TRUE) {
+                        field      = TRUE,
+                        dependents = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -380,7 +392,8 @@ setMethod(
                                d.rh        = d.rh,
                                dcc         = dcc,
                                forecast    = forecast,
-                               field       = field)
+                               field       = field,
+                               dependents  = dependents)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -453,7 +466,8 @@ setMethod(
                         d.rh       = NA,
                         dcc        = "NA",
                         forecast   = FALSE,
-                        field      = TRUE) {
+                        field      = TRUE,
+                        dependents = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -476,7 +490,8 @@ setMethod(
                                d.rh        = d.rh,
                                dcc         = dcc,
                                forecast    = forecast,
-                               field       = field)
+                               field       = field,
+                               dependents  = dependents)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -571,7 +586,8 @@ setMethod(
                         d.rh       = NA,
                         dcc        = "NA",
                         forecast   = FALSE,
-                        field      = TRUE) {
+                        field      = TRUE,
+                        dependents = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -594,7 +610,8 @@ setMethod(
                                d.rh        = d.rh,
                                dcc         = dcc,
                                forecast    = forecast,
-                               field       = field)
+                               field       = field,
+                               dependents  = dependents)
 
     theObject <- tempData[[1]]
 
@@ -627,7 +644,8 @@ setMethod(
                         d.rh       = NA,
                         dcc        = "NA",
                         forecast   = FALSE,
-                        field      = TRUE) {
+                        field      = TRUE,
+                        dependents = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -650,7 +668,8 @@ setMethod(
                                d.rh        = d.rh,
                                dcc         = dcc,
                                forecast    = forecast,
-                               field       = field)
+                               field       = field,
+                               dependents  = dependents)
 
     theObject      <- tempData[[1]]
     theObject@isRF <- FALSE
@@ -683,7 +702,8 @@ setMethod(
                         d.rh       = NA,
                         dcc        = "NA",
                         forecast   = FALSE,
-                        field      = TRUE) {
+                        field      = TRUE,
+                        dependents = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -706,7 +726,8 @@ setMethod(
                                d.rh        = d.rh,
                                dcc         = dcc,
                                forecast    = forecast,
-                               field       = field)
+                               field       = field,
+                               dependents  = dependents)
 
     theObject      <- tempData[[1]]
     calDays        <- tempData[[2]]
@@ -714,21 +735,13 @@ setMethod(
 
     if (theObject@status == "reg") {
       holDays <- apply(
-        calDays[, colnames(calDays) %in% c("lh",
-                                           "sh",
-                                           "nh",
-                                           "rl",
-                                           "rs",
-                                           "rn")],
+        calDays[, colnames(calDays) %in% c("lh", "sh", "nh", "rl", "rs", "rn")],
         MARGIN = 1,
         FUN    = sum
       )
     } else {
       holDays <- apply(
-        calDays[, colnames(calDays) %in% c("lh", "rl")],
-        MARGIN = 1,
-        FUN    = sum
-      )
+        calDays[, colnames(calDays) %in% c("lh", "rl")], MARGIN = 1, FUN = sum)
     }
 
     theObject@holHours <- holDays * 8L
@@ -766,7 +779,8 @@ setMethod(
                         d.rh       = NA,
                         dcc        = "NA",
                         forecast   = FALSE,
-                        field      = TRUE) {
+                        field      = TRUE,
+                        dependents = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -789,7 +803,8 @@ setMethod(
                                d.rh        = d.rh,
                                dcc         = dcc,
                                forecast    = forecast,
-                               field       = field)
+                               field       = field,
+                               dependents  = dependents)
 
     theObject      <- tempData[[1]]
     calDays        <- tempData[[2]]
@@ -798,24 +813,13 @@ setMethod(
     if (theObject@status == "reg") {
 
       holDays <- apply(
-        calDays[, colnames(calDays) %in% c("lh",
-                                           "sh",
-                                           "nh",
-                                           "rl",
-                                           "rs",
-                                           "rn")],
+        calDays[, colnames(calDays) %in% c("lh", "sh", "nh", "rl", "rs", "rn")],
         MARGIN = 1,
         FUN = sum
       )
-
     } else {
-
       holDays <- apply(
-        calDays[, colnames(calDays) %in% c("lh", "rl")],
-        MARGIN = 1,
-        FUN    = sum
-      )
-
+        calDays[, colnames(calDays) %in% c("lh", "rl")], MARGIN = 1, FUN = sum)
     }
 
     theObject@holHours <- holDays * 8L

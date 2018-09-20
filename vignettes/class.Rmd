@@ -54,7 +54,7 @@ employee [label=<
   <TR>
     <TD></TD>
     <TD>field</TD>
-    <TD></TD>
+    <TD>dependents</TD>
   </TR>
 </TABLE>>]
 

@@ -101,9 +101,10 @@ employee <- setClass(
     leaveHours  = "integer",
     dcc         = "character",
     forecast    = "logical",
-    field       = "logical"
+    field       = "logical",
+    dependents  = "integer"
   ),
-  prototype = list(reg = rep(0L, times = 12))
+  prototype = list(reg = rep(0L, times = 12), dependents = rep(0L, times = 12))
 )
 
 #' An S4 class representing a staff

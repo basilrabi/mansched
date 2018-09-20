@@ -18,61 +18,61 @@ initREmployee(theObject, ID, name, designation, attendance = 1,
   costCode = "NONE", status = "reg", cBegin, cEnd = NA,
   inHouse = FALSE, restday = "Sunday", hol, RF = FALSE, equipment,
   OT = 3, d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA",
-  forecast = FALSE, field = TRUE)
+  forecast = FALSE, field = TRUE, dependents = NA)
 
 \S4method{initREmployee}{Employee}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
   cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, d.rd = NA,
   d.ho = NA, d.rh = NA, dcc = "NA", forecast = FALSE,
-  field = TRUE)
+  field = TRUE, dependents = NA)
 
 \S4method{initREmployee}{Staff}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
   cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, d.rd = NA,
   d.ho = NA, d.rh = NA, dcc = "NA", forecast = FALSE,
-  field = TRUE)
+  field = TRUE, dependents = NA)
 
 \S4method{initREmployee}{NonStaff}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
   cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, OT = 3,
   d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA", forecast = FALSE,
-  field = TRUE)
+  field = TRUE, dependents = NA)
 
 \S4method{initREmployee}{Clerk}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
   cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, RF = FALSE,
   OT = 3, d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA",
-  forecast = FALSE, field = TRUE)
+  forecast = FALSE, field = TRUE, dependents = NA)
 
 \S4method{initREmployee}{OperationPersonnel}(theObject, ID, name,
   designation, attendance = 1, costCode = "NONE", status = "reg",
   cBegin, cEnd = NA, inHouse = FALSE, restday = "Sunday", hol,
   OT = 3, d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA",
-  forecast = FALSE, field = TRUE)
+  forecast = FALSE, field = TRUE, dependents = NA)
 
 \S4method{initREmployee}{Technical}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
   cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, OT = 3,
   d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA", forecast = FALSE,
-  field = TRUE)
+  field = TRUE, dependents = NA)
 
 \S4method{initREmployee}{Supervisor}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
   cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, OT = 3,
   d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA", forecast = FALSE,
-  field = TRUE)
+  field = TRUE, dependents = NA)
 
 \S4method{initREmployee}{Laborer}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
   cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, OT = 3,
   d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA", forecast = FALSE,
-  field = TRUE)
+  field = TRUE, dependents = NA)
 
 \S4method{initREmployee}{Operator}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
   cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, equipment,
   OT = 3, d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA",
-  forecast = FALSE, field = TRUE)
+  forecast = FALSE, field = TRUE, dependents = NA)
 }
 \arguments{
 \item{theObject}{\code{\link{Employee-class}} object}
@@ -145,6 +145,9 @@ Compute cost for forecast?}
 
 \item{field}{logical value \cr
 Is the employee always on the field?}
+
+\item{dependents}{integer vector of length 12 \cr
+Number of dependents for each month.}
 }
 \value{
 an \code{\link{Employee-class}} object

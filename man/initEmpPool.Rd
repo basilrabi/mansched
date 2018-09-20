@@ -17,6 +17,8 @@ initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
       designation}
     \item{personnelClass}{character string representing the
       \code{\link{Employee-class}} sub-class to be applied}
+    \item{field}{logical value \cr
+      Is the employee always in the field?}
     \item{attendance}{numeric value representing the attendance rate of
       employee
 
@@ -33,7 +35,7 @@ initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
       employee
 
       Accepted values are \code{"reg"} (regular), \code{"pro"}
-      (probationary), and \code{'sea'} (seasonal).}
+      (probationary), \code{'sea'} (seasonal), and \code{'age'} (agency).}
     \item{cBegin}{character string representing the date of employment of
       personnel
 
@@ -50,6 +52,18 @@ initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
       the employee is not required to report to work}
     \item{isRF}{logical value \cr
       Is the employee rank and file?}
+    \item{JAN}{number of dependents for the month}
+    \item{FEB}{number of dependents for the month}
+    \item{MAR}{number of dependents for the month}
+    \item{APR}{number of dependents for the month}
+    \item{MAY}{number of dependents for the month}
+    \item{JUN}{number of dependents for the month}
+    \item{JUL}{number of dependents for the month}
+    \item{AUG}{number of dependents for the month}
+    \item{SEP}{number of dependents for the month}
+    \item{OCT}{number of dependents for the month}
+    \item{NOV}{number of dependents for the month}
+    \item{DEC}{number of dependents for the month}
     \item{d.rd}{integer value defining how many rest days per month the
       employee can report to work}
     \item{d.ho}{integer value defining how many holidays per month the

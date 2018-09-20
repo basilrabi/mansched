@@ -80,6 +80,7 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
     lapply(sched[, !colnames(sched) %in% c("activity")], FUN = as.integer)
   sched <- as.data.frame(sched)
 
+  dependentsCol <- month.abb %>% toupper()
   empPool.colnames <- c("ID",
                         "name",
                         "designation",
@@ -97,7 +98,8 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
                         "d.ho",
                         "d.rh",
                         "dcc",
-                        "field")
+                        "field",
+                        dependentsCol)
 
   empPool <- readxl::read_xlsx(path = xlsxFile, sheet = "Pool")
   empPool <- empPool[, empPool.colnames]
@@ -144,6 +146,12 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
 
   if (class(empPool$restday) != "character")
     stop("Column restday in Pool is not character!")
+
+  for (i in dependentsCol) {
+    if (class(empPool[[i]]) != "numeric") {
+      stop(paste("Column", i, "is not numeric!"))
+    }
+  }
 
   empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
                                            FUN = as.character)

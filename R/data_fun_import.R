@@ -13,6 +13,8 @@
 #'       designation}
 #'     \item{personnelClass}{character string representing the
 #'       \code{\link{Employee-class}} sub-class to be applied}
+#'     \item{field}{logical value \cr
+#'       Is the employee always in the field?}
 #'     \item{attendance}{numeric value representing the attendance rate of
 #'       employee
 #'
@@ -29,7 +31,7 @@
 #'       employee
 #'
 #'       Accepted values are \code{"reg"} (regular), \code{"pro"}
-#'       (probationary), and \code{'sea'} (seasonal).}
+#'       (probationary), \code{'sea'} (seasonal), and \code{'age'} (agency).}
 #'     \item{cBegin}{character string representing the date of employment of
 #'       personnel
 #'
@@ -46,6 +48,18 @@
 #'       the employee is not required to report to work}
 #'     \item{isRF}{logical value \cr
 #'       Is the employee rank and file?}
+#'     \item{JAN}{number of dependents for the month}
+#'     \item{FEB}{number of dependents for the month}
+#'     \item{MAR}{number of dependents for the month}
+#'     \item{APR}{number of dependents for the month}
+#'     \item{MAY}{number of dependents for the month}
+#'     \item{JUN}{number of dependents for the month}
+#'     \item{JUL}{number of dependents for the month}
+#'     \item{AUG}{number of dependents for the month}
+#'     \item{SEP}{number of dependents for the month}
+#'     \item{OCT}{number of dependents for the month}
+#'     \item{NOV}{number of dependents for the month}
+#'     \item{DEC}{number of dependents for the month}
 #'     \item{d.rd}{integer value defining how many rest days per month the
 #'       employee can report to work}
 #'     \item{d.ho}{integer value defining how many holidays per month the
@@ -64,6 +78,7 @@
 #'     \item sanitized empPool
 #'   }
 #' @export initEmpPool
+#' @importFrom dplyr "%>%"
 initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
 
   # Error if any ID is duplicated
@@ -131,8 +146,10 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   if (any(empPool$attendance[tempIndex] < 0.5))
     stop("Attendance must be at least 0.5!")
 
-  empPool[, c("d.rd", "d.ho", "d.rh")] <-
-    lapply(empPool[, c("d.rd", "d.ho", "d.rh")], FUN = as.integer)
+  dependentsCol <- month.abb %>% toupper()
+  empPool[, c("d.rd", "d.ho", "d.rh", dependentsCol)] <-
+    lapply(empPool[, c("d.rd", "d.ho", "d.rh", dependentsCol)],
+           FUN = as.integer)
 
   # Pre-allocate employee list
   manPool <- rep(list(NA), times = length(empPool[, 1]))
@@ -154,6 +171,11 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
     if (is.na(field))
       field <- TRUE
 
+    dependents <- c(
+      empPool$JAN[i], empPool$FEB[i], empPool$MAR[i], empPool$APR[i],
+      empPool$MAY[i], empPool$JUN[i], empPool$JUL[i], empPool$AUG[i],
+      empPool$SEP[i], empPool$OCT[i], empPool$NOV[i], empPool$DEC[i])
+
     tempEmp <- createEmp(empPool$personnelClass[i])
     tempEmp <- initREmployee(theObject   = tempEmp,
                              ID          = empPool$ID[i],
@@ -174,7 +196,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
                              d.rh        = empPool$d.rh[i],
                              dcc         = empPool$dcc[i],
                              forecast    = forecast,
-                             field       = field)
+                             field       = field,
+                             dependents  = dependents)
     manPool[[i]] <- tempEmp
   }
 
