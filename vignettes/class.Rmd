@@ -51,6 +51,11 @@ employee [label=<
     <TD>dcc</TD>
     <TD>forecast</TD>
   </TR>
+  <TR>
+    <TD></TD>
+    <TD>field</TD>
+    <TD></TD>
+  </TR>
 </TABLE>>]
 
 staff [label=<<B>Staff</B>>]

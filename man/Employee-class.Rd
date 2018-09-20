@@ -100,6 +100,9 @@ man hours of the employee will be charged}
 
 \item{\code{forecast}}{logical value \cr
 Is the computation used for forecasting the present year?}
+
+\item{\code{field}}{logical value \cr
+Is the employee always on the field?}
 }}
 
 \examples{

@@ -77,6 +77,8 @@ NULL
 #'   man hours of the employee will be charged
 #' @slot forecast logical value \cr
 #'   Is the computation used for forecasting the present year?
+#' @slot field logical value \cr
+#'   Is the employee always on the field?
 #' @examples employee()
 #' @export employee
 employee <- setClass(
@@ -98,7 +100,8 @@ employee <- setClass(
     reg         = "integer",
     leaveHours  = "integer",
     dcc         = "character",
-    forecast    = "logical"
+    forecast    = "logical",
+    field       = "logical"
   ),
   prototype = list(reg = rep(0L, times = 12))
 )

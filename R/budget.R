@@ -145,8 +145,6 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   if (class(empPool$restday) != "character")
     stop("Column restday in Pool is not character!")
 
-  empPool[, c("inHouse", "isRF", "field")] <-
-    lapply(empPool[, c("inHouse", "isRF", "field")], FUN = as.logical)
   empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
                                            FUN = as.character)
   empPool <- as.data.frame(empPool)

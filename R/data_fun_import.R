@@ -80,8 +80,10 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   # Remove white spaces (including leading and trailing spaces)
   empPool[, c("personnelClass", "equipment", "costCode", "dcc")] <- lapply(
     empPool[, c("personnelClass", "equipment", "costCode", "dcc")],
-    FUN = rmWS
-  )
+    FUN = rmWS)
+
+  empPool[, c("inHouse", "isRF", "field")] <-
+    lapply(empPool[, c("inHouse", "isRF", "field")], FUN = as.logical)
 
   # Remove space for status
   empPool$status <- rmS(empPool$status)
@@ -90,16 +92,12 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   empPool[ ,c("costCode", "dcc")] <- lapply(
     X   = empPool[, c("costCode", "dcc")],
     FUN = function(x) {
-      gsub(pattern     = "[[:punct:]]",
-           replacement = "",
-           x           = x)
-    }
-  )
+      gsub(pattern  = "[[:punct:]]", replacement = "", x = x)
+    })
 
   # Convert to lower case
   empPool[, c("personnelClass", "status")] <- lapply(
-    empPool[, c("personnelClass", "status")], FUN = tolower
-  )
+    empPool[, c("personnelClass", "status")], FUN = tolower)
 
   # Remove space
   empPool$personnelClass <- gsub(pattern = " ",
@@ -107,9 +105,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
                                  x = empPool$personnelClass)
 
   # Change to upper case
-  empPool[, c("equipment", "costCode", "dcc")] <- lapply(
-    empPool[, c("equipment", "costCode", "dcc")], FUN = toupper
-  )
+  empPool[, c("equipment", "costCode", "dcc")] <-
+    lapply(empPool[, c("equipment", "costCode", "dcc")], FUN = toupper)
 
   # Get only the first 3 characters for employee status
   empPool$status <- substr(x = empPool$status, start = 1L, stop = 3L)
@@ -134,10 +131,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   if (any(empPool$attendance[tempIndex] < 0.5))
     stop("Attendance must be at least 0.5!")
 
-  empPool[, colnames(empPool) %in% c("d.rd", "d.ho", "d.rh")] <- lapply(
-    empPool[, colnames(empPool) %in% c("d.rd", "d.ho", "d.rh")],
-    FUN = as.integer
-  )
+  empPool[, c("d.rd", "d.ho", "d.rh")] <-
+    lapply(empPool[, c("d.rd", "d.ho", "d.rh")], FUN = as.integer)
 
   # Pre-allocate employee list
   manPool <- rep(list(NA), times = length(empPool[, 1]))
@@ -151,13 +146,11 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
     hol <- mansched::holidays
     message("Using built-in holidays.")
   }
-
   hol <- getHol(hol = hol, year = year)
 
   for (i in 1:length(empPool[,1])) {
 
     tempEmp <- createEmp(empPool$personnelClass[i])
-
     tempEmp <- initREmployee(theObject   = tempEmp,
                              ID          = empPool$ID[i],
                              name        = empPool$name[i],
@@ -176,7 +169,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
                              d.ho        = empPool$d.ho[i],
                              d.rh        = empPool$d.rh[i],
                              dcc         = empPool$dcc[i],
-                             forecast    = forecast)
+                             forecast    = forecast,
+                             field       = empPool$field[i])
     manPool[[i]] <- tempEmp
   }
 
