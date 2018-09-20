@@ -30,7 +30,7 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
                        "costCode")
 
   empReq <- readxl::read_xlsx(path = xlsxFile, sheet = "Requirement")
-  empReq <- empReq[,colnames(empReq) %in% empReq.colnames]
+  empReq <- empReq[, empReq.colnames]
 
   # Check for data types
 
@@ -65,9 +65,8 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   if (any(is.na(empReq$costCode)))
     stop("Requirement without cost code detected!")
 
-  empReq[, colnames(empReq) %in% c("quantity", "OT")] <- lapply(
-    empReq[, colnames(empReq) %in% c("quantity", "OT")], FUN = as.integer
-  )
+  empReq[, c("quantity", "OT")] <- lapply(empReq[, c("quantity", "OT")],
+                                          FUN = as.integer)
   empReq <- as.data.frame(empReq)
 
   # Remove empReq rows with zero or NA quantities
@@ -77,10 +76,8 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   sched <- readxl::read_xlsx(path = xlsxFile,
                              sheet = "Schedule",
                              col_types = c("text", rep("numeric", times = 12)))
-
-  sched[, !colnames(sched) %in% c("activity")] <- lapply(
-    sched[, !colnames(sched) %in% c("activity")], FUN = as.integer
-  )
+  sched[, !colnames(sched) %in% c("activity")] <-
+    lapply(sched[, !colnames(sched) %in% c("activity")], FUN = as.integer)
   sched <- as.data.frame(sched)
 
   empPool.colnames <- c("ID",
@@ -99,10 +96,11 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
                         "d.rd",
                         "d.ho",
                         "d.rh",
-                        "dcc")
+                        "dcc",
+                        "field")
 
   empPool <- readxl::read_xlsx(path = xlsxFile, sheet = "Pool")
-  empPool <- empPool[, colnames(empPool) %in% empPool.colnames]
+  empPool <- empPool[, empPool.colnames]
 
   # Check for data types
 
@@ -147,23 +145,18 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   if (class(empPool$restday) != "character")
     stop("Column restday in Pool is not character!")
 
-  empPool[, colnames(empPool) %in% c("inHouse", "isRF")] <- lapply(
-    empPool[, colnames(empPool) %in% c("inHouse", "isRF")], FUN = as.logical
-  )
-
-  empPool[, colnames(empPool) %in% c("cBegin", "cEnd")] <- lapply(
-    empPool[, colnames(empPool) %in% c("cBegin", "cEnd")], FUN = as.character
-  )
-
+  empPool[, c("inHouse", "isRF", "field")] <-
+    lapply(empPool[, c("inHouse", "isRF", "field")], FUN = as.logical)
+  empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
+                                           FUN = as.character)
   empPool <- as.data.frame(empPool)
 
   hol.colnames <- c("Month",
                     "Day",
                     "Type",
                     "Description")
-
   hol <- readxl::read_xlsx(path = xlsxFile, sheet = "hol")
-  hol <- hol[, colnames(hol) %in% hol.colnames]
+  hol <- hol[, hol.colnames]
 
   # Check data types
 
@@ -190,11 +183,12 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   empReq$activity <- toupper(empReq$activity)
   sched$activity <- toupper(sched$activity)
 
-  tempData <- getmhDB(empReq  = empReq,
-                      empPool = empPool,
-                      sched   = sched,
-                      year    = year,
-                      hol     = hol)
+  tempData <- getmhDB(empReq   = empReq,
+                      empPool  = empPool,
+                      sched    = sched,
+                      year     = year,
+                      hol      = hol,
+                      forecast = forecast)
 
   mhDB   <- tempData[[1]]
   listR  <- tempData[[3]]
@@ -204,6 +198,7 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   wage.colnames <- c("ID", "S", "s")
 
   wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
+  # The salary column can either be `S` or `s`
   wage <- wage[, colnames(wage) %in% wage.colnames]
   colnames(wage)[2] <- "s"
 
@@ -280,9 +275,7 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
 
     mhPool <- dplyr::left_join(
       x = mhPool,
-      y = empPool[, colnames(empPool) %in% c("ID",
-                                             "personnelClass",
-                                             "equipment"), ],
+      y = empPool[, c("ID", "personnelClass", "equipment"),],
       by = "ID"
     )
 

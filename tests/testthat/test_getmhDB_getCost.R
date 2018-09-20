@@ -2,33 +2,14 @@ library(mansched)
 library(readxl)
 
 xlsxFile <- system.file("exdata", "sampleData.xlsx", package = "mansched")
-
-empReq <- readxl::read_xlsx(path  = xlsxFile,
-                            sheet = "Requirement")
-
-sched <- readxl::read_xlsx(path      = xlsxFile,
-                           sheet     = "Schedule",
-                           col_types = c("text",
-                                         "numeric",
-                                         "numeric",
-                                         "numeric",
-                                         "numeric",
-                                         "numeric",
-                                         "numeric",
-                                         "numeric",
-                                         "numeric",
-                                         "numeric",
-                                         "numeric",
-                                         "numeric",
-                                         "numeric"))
-
-empPool <- readxl::read_xlsx(path  = xlsxFile,
-                             sheet = "Pool")
-
-hol <- readxl::read_xlsx(path  = xlsxFile,
-                         sheet = "hol")
-
+empReq <- readxl::read_xlsx(path = xlsxFile, sheet = "Requirement")
+sched <- readxl::read_xlsx(path = xlsxFile,
+                           sheet = "Schedule",
+                           col_types = c("text", rep("numeric", times = 12)))
+empPool <- readxl::read_xlsx(path = xlsxFile, sheet = "Pool")
+hol <- readxl::read_xlsx(path = xlsxFile, sheet = "hol")
 year <- 2018
+forecast <- FALSE
 
 empReq  <- as.data.frame(empReq)
 empPool <- as.data.frame(empPool)
@@ -37,28 +18,21 @@ hol     <- as.data.frame(hol)
 
 empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
                                          as.character)
+empPool[, c("inHouse", "isRF", "field")] <-
+  lapply(empPool[, c("inHouse", "isRF", "field")], as.logical)
 
-empPool[, c("inHouse", "isRF")] <- lapply(empPool[, c("inHouse", "isRF")],
-                                          as.logical)
-
-listT <- initEmpReq(empReq = empReq,
-                    sched  = sched,
-                    hol    = hol,
-                    year   = year)[[1]]
-
-listR <- initEmpPool(empPool = empPool,
-                     hol     = hol,
-                     year    = year)[[1]]
-
+listT <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)[[1]]
+listR <- initEmpPool(empPool = empPool, hol = hol, year = year)[[1]]
 totTi <- getHoursL(listT)
 totRi <- getHoursL(listR)
 
-tempData <- getmhDB(empReq  = empReq,
-                    empPool = empPool,
-                    sched   = sched,
-                    year    = year,
-                    hol     = hol,
-                    cores   = 2)
+tempData <- getmhDB(empReq   = empReq,
+                    empPool  = empPool,
+                    sched    = sched,
+                    year     = year,
+                    hol      = hol,
+                    cores    = 2,
+                    forecast = forecast)
 
 totTf <- getHoursL(tempData[[4]])
 totRf <- getHoursL(tempData[[5]])
@@ -72,12 +46,12 @@ test_that("getmhDB() works", {
                totTi - totTf)
 })
 
-wage <- readxl::read_xlsx(path  = xlsxFile,
-                          sheet = "Wage")
+wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
 
-tempData <- getCost(mhDB  = tempData[[1]],
+tempData <- getCost(mhDB = tempData[[1]],
                     listR = listR,
-                    wage  = wage)
+                    wage = wage,
+                    forecast = forecast)
 
 c14000 <- tempData[[1]][[1]][[2]]
 c14100 <- tempData[[1]][[2]][[2]]
