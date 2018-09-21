@@ -86,15 +86,15 @@ tempEmp5  <- initREmployee(theObject   = tempEmp,
                            equipment   = equipment)
 
 test_that("getGC() works", {
-  expect_equal(sum(getGC(tempEmp1)$gc), 1500)
-  expect_equal(getGC(tempEmp1)$gc[12], 1500)
-  expect_equal(sum(getGC(tempEmp2)$gc), 0)
-  expect_equal(sum(getGC(tempEmp3)$gc), 1500)
-  expect_equal(getGC(tempEmp3)$gc[12], 1500)
-  expect_equal(sum(getGC(tempEmp4)$gc), 1350)
-  expect_equal(getGC(tempEmp4)$gc[10], 1350)
-  expect_equal(sum(getGC(tempEmp5)$gc), 1500)
-  expect_equal(getGC(tempEmp5)$gc[10], 1500)
+  expect_equal(sum(getGC(tempEmp1)$benefits), 1500)
+  expect_equal(getGC(tempEmp1)$benefits[12], 1500)
+  expect_equal(sum(getGC(tempEmp2)$benefits), 0)
+  expect_equal(sum(getGC(tempEmp3)$benefits), 1500)
+  expect_equal(getGC(tempEmp3)$benefits[12], 1500)
+  expect_equal(sum(getGC(tempEmp4)$benefits), 1350)
+  expect_equal(getGC(tempEmp4)$benefits[10], 1350)
+  expect_equal(sum(getGC(tempEmp5)$benefits), 1500)
+  expect_equal(getGC(tempEmp5)$benefits[10], 1500)
 })
 
 # Test for forecast
@@ -220,14 +220,14 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
                           hol         = hol,
                           forecast    = TRUE)
 
-test_that("getRiceSub() works", {
-  expect_equal(sum(getGC(tempEmp1)$gc), 0)
-  expect_equal(sum(getGC(tempEmp2)$gc), 0)
-  expect_equal(sum(getGC(tempEmp3)$gc), 0)
-  expect_equal(sum(getGC(tempEmp4)$gc), 0)
-  expect_equal(sum(getGC(tempEmp5)$gc), 0)
-  expect_equal(sum(getGC(tempEmp6)$gc), 0)
-  expect_equal(sum(getGC(tempEmp7)$gc), 0)
+test_that("getGC() works", {
+  expect_equal(sum(getGC(tempEmp1)$benefits), 0)
+  expect_equal(sum(getGC(tempEmp2)$benefits), 0)
+  expect_equal(sum(getGC(tempEmp3)$benefits), 0)
+  expect_equal(sum(getGC(tempEmp4)$benefits), 0)
+  expect_equal(sum(getGC(tempEmp5)$benefits), 0)
+  expect_equal(sum(getGC(tempEmp6)$benefits), 0)
+  expect_equal(sum(getGC(tempEmp7)$benefits), 0)
 })
 
 rm(list = ls())

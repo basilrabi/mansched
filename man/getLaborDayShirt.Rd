@@ -22,7 +22,7 @@ a \code{\link{data.frame}} with 12 rows and 3 columns although
      \item{ID}{character string representing the unique identifier of the
        real employee}
      \item{month}{integer value representing the month}
-     \item{riceSub}{numeric value defining the cost charged for that month}
+     \item{benefits}{numeric value defining the cost charged for that month}
   }
 }
 \description{

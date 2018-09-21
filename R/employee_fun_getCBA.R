@@ -15,7 +15,7 @@ NULL
 #'      \item{ID}{character string representing the unique identifier of the
 #'        real employee}
 #'      \item{month}{integer value representing the month}
-#'      \item{cba}{numeric value defining the cost charged for that month}
+#'      \item{benefits}{numeric value defining the cost charged for that month}
 #'   }
 #' @export getCBA
 setGeneric(
@@ -38,8 +38,8 @@ setMethod(
     if (theObject@forecast | theObject@status != "reg")
       price <- 0
 
-    cba$cba <- round(cba$allow * price / 12, digits = 2)
+    cba$benefits <- round(cba$allow * price / 12, digits = 2)
 
-    return(cba[, c("month", "ID", "cba")])
+    return(cba[, c("month", "ID", "benefits")])
   }
 )

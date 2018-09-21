@@ -116,13 +116,13 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
 
 
 test_that("getCBA() works", {
-  expect_equal(sum(getCBA(tempEmp1)$cba), 441.67 * 12)
-  expect_equal(sum(getCBA(tempEmp2)$cba), 441.67 * 11)
-  expect_equal(sum(getCBA(tempEmp3)$cba), 441.67 * 10)
-  expect_equal(sum(getCBA(tempEmp4)$cba), 0)
-  expect_equal(sum(getCBA(tempEmp5)$cba), 0)
-  expect_equal(sum(getCBA(tempEmp6)$cba), 0)
-  expect_equal(sum(getCBA(tempEmp7)$cba), 0)
+  expect_equal(sum(getCBA(tempEmp1)$benefits), 441.67 * 12)
+  expect_equal(sum(getCBA(tempEmp2)$benefits), 441.67 * 11)
+  expect_equal(sum(getCBA(tempEmp3)$benefits), 441.67 * 10)
+  expect_equal(sum(getCBA(tempEmp4)$benefits), 0)
+  expect_equal(sum(getCBA(tempEmp5)$benefits), 0)
+  expect_equal(sum(getCBA(tempEmp6)$benefits), 0)
+  expect_equal(sum(getCBA(tempEmp7)$benefits), 0)
 })
 
 # Test for forecast
@@ -250,13 +250,13 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
 
 
 test_that("getCBA() works", {
-  expect_equal(sum(getCBA(tempEmp1)$cba), 0)
-  expect_equal(sum(getCBA(tempEmp2)$cba), 0)
-  expect_equal(sum(getCBA(tempEmp3)$cba), 0)
-  expect_equal(sum(getCBA(tempEmp4)$cba), 0)
-  expect_equal(sum(getCBA(tempEmp5)$cba), 0)
-  expect_equal(sum(getCBA(tempEmp6)$cba), 0)
-  expect_equal(sum(getCBA(tempEmp7)$cba), 0)
+  expect_equal(sum(getCBA(tempEmp1)$benefits), 0)
+  expect_equal(sum(getCBA(tempEmp2)$benefits), 0)
+  expect_equal(sum(getCBA(tempEmp3)$benefits), 0)
+  expect_equal(sum(getCBA(tempEmp4)$benefits), 0)
+  expect_equal(sum(getCBA(tempEmp5)$benefits), 0)
+  expect_equal(sum(getCBA(tempEmp6)$benefits), 0)
+  expect_equal(sum(getCBA(tempEmp7)$benefits), 0)
 })
 
 rm(list = ls())

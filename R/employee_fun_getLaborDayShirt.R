@@ -15,7 +15,7 @@ NULL
 #'      \item{ID}{character string representing the unique identifier of the
 #'        real employee}
 #'      \item{month}{integer value representing the month}
-#'      \item{riceSub}{numeric value defining the cost charged for that month}
+#'      \item{benefits}{numeric value defining the cost charged for that month}
 #'   }
 #' @export getLaborDayShirt
 setGeneric(
@@ -37,8 +37,8 @@ setMethod(
     if (!theObject@forecast & isReg(theObject))
       shirt$shirt[shirt$month == 5L] <- 390
 
-    shirt$shirt <- round(shirt$allow * shirt$shirt, digits = 2)
+    shirt$benefits <- round(shirt$allow * shirt$shirt, digits = 2)
 
-    return(shirt[, c("month", "ID", "shirt")])
+    return(shirt[, c("month", "ID", "benefits")])
   }
 )

@@ -18,7 +18,7 @@ NULL
 #'      \item{ID}{character string representing the unique identifier of the
 #'        real employee}
 #'      \item{month}{integer value representing the month}
-#'      \item{gc}{numeric value defining the cost charged for that month}
+#'      \item{benefits}{numeric value defining the cost charged for that month}
 #'   }
 #' @export getGC
 setGeneric(
@@ -36,12 +36,13 @@ setMethod(
 
     gc <- getCM(theObject)
     gc$gc <- 0
+    gc$benefits <- gc$gc
 
     if (!theObject@forecast) {
 
       if (theObject@status %in% c("reg", "pro")) {
         gc$gc[gc$month == 12L] <- 1500
-        gc$gc <- round(gc$allow * gc$gc, digits = 2)
+        gc$benefits <- round(gc$allow * gc$gc, digits = 2)
       }
 
       if (theObject@status == "sea") {
@@ -52,9 +53,10 @@ setMethod(
           multiplier <- sum(gc$allow)
         }
         gc$gc[gc$month == 10L] <- (1500 / 10) * multiplier
+        gc$benefits <- gc$gc
       }
     }
 
-    return(gc[, c("month", "ID", "gc")])
+    return(gc[, c("month", "ID", "benefits")])
   }
 )

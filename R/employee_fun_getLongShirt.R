@@ -14,7 +14,7 @@ NULL
 #'      \item{ID}{character string representing the unique identifier of the
 #'        real employee}
 #'      \item{month}{integer value representing the month}
-#'      \item{ls}{numeric value defining the cost charged for that month}
+#'      \item{benefits}{numeric value defining the cost charged for that month}
 #'   }
 #' @export getLongShirt
 setGeneric(
@@ -37,8 +37,8 @@ setMethod(
     if (theObject@forecast | theObject@status == "age")
       price <- 0
 
-    longShirt$ls <- round(longShirt$allow * price / 12, digits = 2)
+    longShirt$benefits <- round(longShirt$allow * price / 12, digits = 2)
 
-    return(longShirt[, c("month", "ID", "ls")])
+    return(longShirt[, c("month", "ID", "benefits")])
   }
 )

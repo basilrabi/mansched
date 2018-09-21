@@ -116,13 +116,13 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
 
 
 test_that("getLongShirt() works", {
-  expect_equal(sum(getLongShirt(tempEmp1)$ls), 1170)
-  expect_equal(sum(getLongShirt(tempEmp2)$ls), 97.5 * 11)
-  expect_equal(sum(getLongShirt(tempEmp3)$ls), 97.5 * 10)
-  expect_equal(sum(getLongShirt(tempEmp4)$ls), 97.5 * 9)
-  expect_equal(sum(getLongShirt(tempEmp5)$ls), 97.5 * 9)
-  expect_equal(sum(getLongShirt(tempEmp6)$ls), 97.5 * 7)
-  expect_equal(sum(getLongShirt(tempEmp7)$ls), 0)
+  expect_equal(sum(getLongShirt(tempEmp1)$benefits), 1170)
+  expect_equal(sum(getLongShirt(tempEmp2)$benefits), 97.5 * 11)
+  expect_equal(sum(getLongShirt(tempEmp3)$benefits), 97.5 * 10)
+  expect_equal(sum(getLongShirt(tempEmp4)$benefits), 97.5 * 9)
+  expect_equal(sum(getLongShirt(tempEmp5)$benefits), 97.5 * 9)
+  expect_equal(sum(getLongShirt(tempEmp6)$benefits), 97.5 * 7)
+  expect_equal(sum(getLongShirt(tempEmp7)$benefits), 0)
 })
 
 # Test for forecast
@@ -250,13 +250,13 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
 
 
 test_that("getLongShirt() works", {
-  expect_equal(sum(getLongShirt(tempEmp1)$ls), 0)
-  expect_equal(sum(getLongShirt(tempEmp2)$ls), 0)
-  expect_equal(sum(getLongShirt(tempEmp3)$ls), 0)
-  expect_equal(sum(getLongShirt(tempEmp4)$ls), 0)
-  expect_equal(sum(getLongShirt(tempEmp5)$ls), 0)
-  expect_equal(sum(getLongShirt(tempEmp6)$ls), 0)
-  expect_equal(sum(getLongShirt(tempEmp7)$ls), 0)
+  expect_equal(sum(getLongShirt(tempEmp1)$benefits), 0)
+  expect_equal(sum(getLongShirt(tempEmp2)$benefits), 0)
+  expect_equal(sum(getLongShirt(tempEmp3)$benefits), 0)
+  expect_equal(sum(getLongShirt(tempEmp4)$benefits), 0)
+  expect_equal(sum(getLongShirt(tempEmp5)$benefits), 0)
+  expect_equal(sum(getLongShirt(tempEmp6)$benefits), 0)
+  expect_equal(sum(getLongShirt(tempEmp7)$benefits), 0)
 })
 
 rm(list = ls())
