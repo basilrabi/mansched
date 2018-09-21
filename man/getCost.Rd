@@ -56,6 +56,7 @@ Calculates monthly personnel cost for each cost code. Personnel costs are
     \item{521012}{Leave Commutation}
     \item{521017}{Hospital and Medical Expenses}
     \item{521009}{13th Month Pay}
+    \item{521018}{HMO}
     \item{524037}{Grouplife}
     \item{523011}{Safety Gadgets}
     \item{522099}{CF Others}

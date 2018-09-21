@@ -18,6 +18,7 @@ NULL
 #'     \item{521012}{Leave Commutation}
 #'     \item{521017}{Hospital and Medical Expenses}
 #'     \item{521009}{13th Month Pay}
+#'     \item{521018}{HMO}
 #'     \item{524037}{Grouplife}
 #'     \item{523011}{Safety Gadgets}
 #'     \item{522099}{CF Others}
@@ -761,6 +762,22 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                      by = c("ID", "month"))
   mhDB.groupLife$X <- mhDB.groupLife$mh / mhDB.groupLife$totMH
   mhDB.groupLife$cost <- round(mhDB.groupLife$X * mhDB.groupLife$gl, digits = 2)
+
+  # Compute for HMO
+  cat("\nComputing for HMO.\n")
+
+  hmo <- data.table::rbindlist(lapply(listR, getHMO))
+  mhDB.hmo <- mhDB[mhDB$mhType %in% distType, ] %>%
+    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.hmo <- mhDB.hmo %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.hmo <- dplyr::left_join(mhDB.hmo, hmo, by = c("ID", "month"))
+  mhDB.hmo$X <- mhDB.hmo$mh / mhDB.hmo$totMH
+  mhDB.hmo$cost <- round(mhDB.hmo$X * mhDB.hmo$hmo, digits = 2)
 
   # Compute for Safety Bonus
   cat("\nComputing safety bonus.\n")
@@ -1682,6 +1699,18 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r16 <- NULL
   }
 
+  # HMO
+  r17 <- mhDB.hmo %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost))
+  r17 <- as.data.frame(r17)
+
+  if (nrow(r17) > 0) {
+    r17$row <- "HMO"
+  } else {
+    r17 <- NULL
+  }
+
 
   costDB <- data.table::rbindlist(list(r01,
                                        r02,
@@ -1698,7 +1727,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                        r13,
                                        r14,
                                        r15,
-                                       r16))
+                                       r16,
+                                       r17))
 
   costDB <- costDB %>%
     dplyr::group_by(costCode, row, month) %>%
