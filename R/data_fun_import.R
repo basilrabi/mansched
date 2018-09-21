@@ -103,12 +103,9 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   # Remove space for status
   empPool$status <- rmS(empPool$status)
 
-  # Remove punctuation for costCode and dcc
+  # Remove leading zeroes for purely numeric characters
   empPool[ ,c("costCode", "dcc")] <- lapply(
-    X   = empPool[, c("costCode", "dcc")],
-    FUN = function(x) {
-      gsub(pattern  = "[[:punct:]]", replacement = "", x = x)
-    })
+    X = empPool[, c("costCode", "dcc")], FUN = rmLead0)
 
   # Convert to lower case
   empPool[, c("personnelClass", "status")] <- lapply(
@@ -319,10 +316,8 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
     FUN = rmS
   )
 
-  # Remove punctuation for costCode
-  empReq$costCode <- gsub(pattern     = "[[:punct:]]",
-                          replacement = '',
-                          x           = empReq$costCode)
+  # Remove leading zero
+  empReq$costCode <- rmLead0(empReq$costCode)
 
   # Change to lower case
   empReq$personnelClass <- tolower(empReq$personnelClass)

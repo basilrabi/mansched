@@ -94,10 +94,8 @@ dfAppend <- function(x, y) {
 #' @return character vector without 2 adjacent space characters
 #' @export rmWS
 rmWS <- function(x) {
-
   x <- gsub(pattern = "\\s+", replacement = " ", x = x)
   x <- trimws(x)
-
   return(x)
 }
 
@@ -109,8 +107,15 @@ rmWS <- function(x) {
 #' @return character vector without 2 adjacent space characters
 #' @export rmS
 rmS <- function(x) {
-
   x <- gsub(pattern = "\\s+", replacement = "", x = x)
-
   return(x)
+}
+
+rmLead0 <- function(x) {
+  y <- rep(NA, times = length(x))
+  for (i in 1:length(x)) {
+    tryCatch({y[i] <- as.character(as.integer(x[i]))},
+             warning = function(war) {y[i] <- x[i]})
+  }
+  y
 }
