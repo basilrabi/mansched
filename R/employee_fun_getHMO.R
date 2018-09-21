@@ -51,86 +51,8 @@ setMethod(
 
     employeeHMO <- 15676.25 / 12
     dependentHMO <- 15676.25 * theObject@dependents / 12
-    groupLife <-  6490 / 12
 
-    return(list(hmo, employeeHMO, dependentHMO, groupLife))
-  }
-)
-
-#' @describeIn getHMO Compute monthly cost
-setMethod(
-  f          = "getHMO",
-  signature  = "DivisionManager",
-  definition = function(theObject) {
-
-    hmoList <- callNextMethod(theObject)
-
-    hmo <- hmoList[[1]]
-    employeeHMO <- hmoList[[2]]
-    dependentHMO <- hmoList[[3]]
-    groupLife  <- 12980 / 12
-
-    cost <- employeeHMO + dependentHMO + groupLife
-    hmo$hmo <- round(hmo$allow * cost, digits = 2)
-
-    return(hmo[, c("month", "ID", "hmo")])
-  }
-)
-
-#' @describeIn getHMO Compute monthly cost
-setMethod(
-  f          = "getHMO",
-  signature  = "GroupManager",
-  definition = function(theObject) {
-
-    hmoList <- callNextMethod(theObject)
-
-    hmo <- hmoList[[1]]
-    employeeHMO <- hmoList[[2]]
-    dependentHMO <- hmoList[[3]]
-    groupLife  <- 12980 / 12
-
-    cost <- employeeHMO + dependentHMO + groupLife
-    hmo$hmo <- round(hmo$allow * cost, digits = 2)
-
-    return(hmo[, c("month", "ID", "hmo")])
-  }
-)
-
-#' @describeIn getHMO Compute monthly cost
-setMethod(
-  f          = "getHMO",
-  signature  = "DepartmentManager",
-  definition = function(theObject) {
-
-    hmoList <- callNextMethod(theObject)
-
-    hmo <- hmoList[[1]]
-    employeeHMO <- hmoList[[2]]
-    dependentHMO <- hmoList[[3]]
-    groupLife  <- 12980 / 12
-
-    cost <- employeeHMO + dependentHMO + groupLife
-    hmo$hmo <- round(hmo$allow * cost, digits = 2)
-
-    return(hmo[, c("month", "ID", "hmo")])
-  }
-)
-
-#' @describeIn getHMO Compute monthly cost
-setMethod(
-  f          = "getHMO",
-  signature  = "SectionHead",
-  definition = function(theObject) {
-
-    hmoList <- callNextMethod(theObject)
-
-    hmo <- hmoList[[1]]
-    employeeHMO <- hmoList[[2]]
-    dependentHMO <- hmoList[[3]]
-    groupLife  <- hmoList[[4]]
-
-    cost <- employeeHMO + dependentHMO + groupLife
+    cost <- employeeHMO + dependentHMO
     hmo$hmo <- round(hmo$allow * cost, digits = 2)
 
     return(hmo[, c("month", "ID", "hmo")])
@@ -148,14 +70,12 @@ setMethod(
     if (isRF(theObject)) {
       employeeHMO <- 11150 / 12
       dependentHMO <- 11150 / 12
-      groupLife <-  1947 / 12
     } else {
       employeeHMO <- 11778.75 / 12
       dependentHMO <- 11778.75 / 12
-      groupLife <-  3894 / 12
     }
 
-    cost <- employeeHMO + (dependentHMO * theObject@dependents) + groupLife
+    cost <- employeeHMO + (dependentHMO * theObject@dependents)
     hmo$hmo <- round(hmo$allow * cost, digits = 2)
 
     return(hmo[, c("month", "ID", "hmo")])

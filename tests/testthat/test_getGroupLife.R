@@ -121,18 +121,18 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
                           hol         = hol,
                           dependents  = rep(1L, times = 12))
 
-test_that("getHMO() works", {
-  expect_equal(sum(getHMO(tempEmp1)$hmo),
-               round((15676.25 + 15676.25) / 12, digits = 2) * 12)
-  expect_equal(sum(getHMO(tempEmp2)$hmo),
-               round((15676.25 + (15676.25 *2)) / 12, digits = 2) * 11)
-  expect_equal(sum(getHMO(tempEmp3)$hmo),
-               round((11778.75 + 11778.75) / 12, digits = 2) * 10)
-  expect_equal(sum(getHMO(tempEmp4)$hmo),
-               round((11150 + 11150) / 12, digits = 2) * 9)
-  expect_equal(sum(getHMO(tempEmp5)$hmo), 0)
-  expect_equal(sum(getHMO(tempEmp6)$hmo), 0)
-  expect_equal(sum(getHMO(tempEmp7)$hmo), 0)
+test_that("getGroupLife() works", {
+  expect_equal(sum(getGroupLife(tempEmp1)$gl),
+               round(12980 / 12, digits = 2) * 12)
+  expect_equal(sum(getGroupLife(tempEmp2)$gl),
+               round(6490 / 12, digits = 2) * 11)
+  expect_equal(sum(getGroupLife(tempEmp3)$gl),
+               round(3894 / 12, digits = 2) * 10)
+  expect_equal(sum(getGroupLife(tempEmp4)$gl),
+               round(1947 / 12, digits = 2) * 9)
+  expect_equal(sum(getGroupLife(tempEmp5)$gl), 0)
+  expect_equal(sum(getGroupLife(tempEmp6)$gl), 0)
+  expect_equal(sum(getGroupLife(tempEmp7)$gl), 0)
 })
 
 # Test for forecast
@@ -266,14 +266,14 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
                           dependents  = rep(1L, times = 12))
 
 
-test_that("getHMO() works", {
-  expect_equal(sum(getHMO(tempEmp1)$hmo), 0)
-  expect_equal(sum(getHMO(tempEmp2)$hmo), 0)
-  expect_equal(sum(getHMO(tempEmp3)$hmo), 0)
-  expect_equal(sum(getHMO(tempEmp4)$hmo), 0)
-  expect_equal(sum(getHMO(tempEmp5)$hmo), 0)
-  expect_equal(sum(getHMO(tempEmp6)$hmo), 0)
-  expect_equal(sum(getHMO(tempEmp7)$hmo), 0)
+test_that("getGroupLife() works", {
+  expect_equal(sum(getGroupLife(tempEmp1)$gl), 0)
+  expect_equal(sum(getGroupLife(tempEmp2)$gl), 0)
+  expect_equal(sum(getGroupLife(tempEmp3)$gl), 0)
+  expect_equal(sum(getGroupLife(tempEmp4)$gl), 0)
+  expect_equal(sum(getGroupLife(tempEmp5)$gl), 0)
+  expect_equal(sum(getGroupLife(tempEmp6)$gl), 0)
+  expect_equal(sum(getGroupLife(tempEmp7)$gl), 0)
 })
 
 rm(list = ls())

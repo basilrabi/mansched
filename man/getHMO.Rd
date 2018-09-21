@@ -5,10 +5,6 @@
 \alias{getHMO}
 \alias{getHMO,Employee-method}
 \alias{getHMO,Staff-method}
-\alias{getHMO,DivisionManager-method}
-\alias{getHMO,GroupManager-method}
-\alias{getHMO,DepartmentManager-method}
-\alias{getHMO,SectionHead-method}
 \alias{getHMO,NonStaff-method}
 \title{Compute the monthly cost for health and maintenance organization}
 \usage{
@@ -17,14 +13,6 @@ getHMO(theObject)
 \S4method{getHMO}{Employee}(theObject)
 
 \S4method{getHMO}{Staff}(theObject)
-
-\S4method{getHMO}{DivisionManager}(theObject)
-
-\S4method{getHMO}{GroupManager}(theObject)
-
-\S4method{getHMO}{DepartmentManager}(theObject)
-
-\S4method{getHMO}{SectionHead}(theObject)
 
 \S4method{getHMO}{NonStaff}(theObject)
 }
@@ -53,14 +41,6 @@ HMO privilage is only available to regular employees. The higher the job
 \item \code{Employee}: Compute cost multiplier
 
 \item \code{Staff}: Compute premium list
-
-\item \code{DivisionManager}: Compute monthly cost
-
-\item \code{GroupManager}: Compute monthly cost
-
-\item \code{DepartmentManager}: Compute monthly cost
-
-\item \code{SectionHead}: Compute monthly cost
 
 \item \code{NonStaff}: Compute monthly cost
 }}
