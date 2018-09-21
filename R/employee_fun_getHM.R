@@ -31,7 +31,7 @@ setGeneric(
   }
 )
 
-#' @describeIn getHM Compute allowance multiplier
+#' @describeIn getHM Compute hospital and medical expenses
 setMethod(
   f          = "getHM",
   signature  = "Employee",

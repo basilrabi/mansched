@@ -37,6 +37,6 @@ Depending on the employment status of the employee, his or her monthly
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{Employee}: Compute allowance multiplier
+\item \code{Employee}: Compute hospital and medical expenses
 }}
 
