@@ -17,10 +17,13 @@
 budget <- function(xlsxFile, year, forecast = FALSE) {
 
   # Define global variables
+  costCode       <- NULL
   equipment      <- NULL
   ID             <- NULL
+  manhours       <- NULL
   mh             <- NULL
   personnelClass <- NULL
+  status         <- NULL
 
   empReq.colnames <- c("activity",
                        "personnelClass",
@@ -240,7 +243,13 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   }
 
   xlsx::write.xlsx(costDB[[1]], file = "personnelCost.xlsx", row.names = FALSE)
-  xlsx::write.xlsx(costDB[[2]], file = "manhours.xlsx", row.names = FALSE)
+
+  manHours <- mhDB %>%
+    dplyr::group_by(status, costCode, month) %>%
+    dplyr::summarise(manhours = sum(mh)) %>%
+    tidyr::spread(month, manhours, fill = 0) %>%
+    as.data.frame(row.names = NULL)
+  xlsx::write.xlsx(manHours, file = "manhours.xlsx", row.names = FALSE)
 
   accr.13mp   <- costDB[[3]]
   accr.13mp.R <- accr.13mp[accr.13mp$status == "reg",
