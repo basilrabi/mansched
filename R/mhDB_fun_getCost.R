@@ -18,6 +18,8 @@ NULL
 #'     \item{521012}{Leave Commutation}
 #'     \item{521017}{Hospital and Medical Expenses}
 #'     \item{521009}{13th Month Pay}
+#'     \item{522099}{CF Others}
+#'     \item{522010}{CF Manpower Services}
 #'   }
 #'
 #' @param mhDB a \code{\link{data.frame}} similar to \code{mhDB} return by
@@ -1556,7 +1558,13 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r13 <- NULL
   }
 
-  # CF Others
+  # CF Manpower Services
+  if (forecast){
+    manpowerServicesName <- "CF Others"
+  } else {
+    manpowerServicesName <- "CF Manpower Services"
+  }
+
   r14 <- data.table::rbindlist(l = list(
     data.frame(costCode         = mhDB.d.A$costCode,
                month            = mhDB.d.A$month,
@@ -1600,13 +1608,13 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r14$cost <- round(r14$cost * 1.15, digits = 2)
 
   if (nrow(r14) > 0) {
-    r14$row  <- "CF Others"
+    r14$row  <- manpowerServicesName
   } else {
 
     r14 <- data.frame(costCode         = unique(mhDB$costCode),
                       month            = 1L,
                       cost             = 0L,
-                      row              = "CF Others",
+                      row              = manpowerServicesName,
                       stringsAsFactors = FALSE)
 
   }
