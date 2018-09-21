@@ -45,10 +45,13 @@ NULL
 #' @return a list containing the following:
 #'
 #'   \enumerate{
-#'     \item a list of personnel cost list
+#'     \item a data.frame with 16 columns
 #'
-#'        The personnel list is comprised by the cost code and the tabulated
-#'        monthly cost.
+#'       The last 12 columns represents the cost per month. The first column
+#'       is a concatenated string from the 2nd column (Cost Center) and 4th
+#'       column (accounting code). The 3rd column is the description of the
+#'       accounting code.
+#'
 #'     \item tabulated total man hours per month per cost code
 #'     \item tabulated 13th month pay per month per cost code
 #'     \item tabulated bonus cost per month per cost code
@@ -803,7 +806,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                                 "14600"))
         return("14000")
 
-      return("01100")
+      return("1100")
     }
   )
 
@@ -1170,7 +1173,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                                 "14600"))
         return("14000")
 
-      return("01100")
+      return("1100")
     }
   )
 
@@ -1294,7 +1297,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                                 "14600"))
         return("14000")
 
-      return("01100")
+      return("1100")
     }
   )
 
@@ -1775,17 +1778,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   cat("\nExporting data.\n")
 
-  export <- lapply(costCode, FUN = function(x) {
-
-    tempData <- costDB[costDB$costCode == x,
-                       !colnames(costDB) %in% c("costCode")]
-
-    tempData <- tempData[, c(2, 1, 3:14)]
-    tempData <- as.data.frame(tempData)
-    tempData <- tempData[order(tempData[,1]),]
-
-    return(list(x, tempData))
-  })
+  export <- cbind(paste0(costDB$costCode, costDB$code), as.data.frame(costDB))
+  colnames(export)[1] <- "concat"
 
   export.mh     <- costDB[costDB$code == 999999,
                           !colnames(costDB) %in% c("row", "code")]

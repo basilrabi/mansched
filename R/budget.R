@@ -13,6 +13,7 @@
 #' @importFrom xlsx write.xlsx
 #' @importFrom dplyr left_join group_by summarise "%>%"
 #' @importFrom tidyr spread
+#' @importFrom data.table rbindlist
 budget <- function(xlsxFile, year, forecast = FALSE) {
 
   # Define global variables
@@ -238,17 +239,8 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
     setwd(paste(tempFolder, "/budget", sep = ""))
   }
 
-  for (i in costDB[[1]]) {
-    xlsx::write.xlsx(x         = i[[2]],
-                     file      = "personnelCost.xlsx",
-                     row.names = FALSE,
-                     sheetName = paste(i[[1]]),
-                     append    = TRUE)
-  }
-
-  xlsx::write.xlsx(x = costDB[[2]],
-                   file = "manhours.xlsx",
-                   row.names = FALSE)
+  xlsx::write.xlsx(costDB[[1]], file = "personnelCost.xlsx", row.names = FALSE)
+  xlsx::write.xlsx(costDB[[2]], file = "manhours.xlsx", row.names = FALSE)
 
   accr.13mp   <- costDB[[3]]
   accr.13mp.R <- accr.13mp[accr.13mp$status == "reg",

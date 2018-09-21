@@ -31,10 +31,13 @@ Compute cost for forecast?}
 a list containing the following:
 
   \enumerate{
-    \item a list of personnel cost list
+    \item a data.frame with 16 columns
 
-       The personnel list is comprised by the cost code and the tabulated
-       monthly cost.
+      The last 12 columns represents the cost per month. The first column
+      is a concatenated string from the 2nd column (Cost Center) and 4th
+      column (accounting code). The 3rd column is the description of the
+      accounting code.
+
     \item tabulated total man hours per month per cost code
     \item tabulated 13th month pay per month per cost code
     \item tabulated bonus cost per month per cost code

@@ -111,11 +111,28 @@ rmS <- function(x) {
   return(x)
 }
 
+#' Remove leading zero
+#'
+#' Remove leading zeroes for purely numeric characters.
+#'
+#' @param x character vector
+#' @return character vector with leading zero removed
+#' @export rmLead0
 rmLead0 <- function(x) {
   y <- rep(NA, times = length(x))
   for (i in 1:length(x)) {
-    tryCatch({y[i] <- as.character(as.integer(x[i]))},
-             warning = function(war) {y[i] <- x[i]})
+    tryCatch(
+      {
+        j <- as.character(as.integer(j <- x[i]))
+      },
+      warning = function(w) {
+        j <- j <- x[i]
+      },
+      finally = {
+        y[i] <- j
+        j <- NULL
+      }
+    )
   }
   y
 }
