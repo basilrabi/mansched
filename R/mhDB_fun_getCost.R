@@ -18,6 +18,7 @@ NULL
 #'     \item{521012}{Leave Commutation}
 #'     \item{521017}{Hospital and Medical Expenses}
 #'     \item{521009}{13th Month Pay}
+#'     \item{524037}{Grouplife}
 #'     \item{523011}{Safety Gadgets}
 #'     \item{522099}{CF Others}
 #'     \item{522010}{CF Manpower Services}
@@ -742,6 +743,24 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.safetyGadgets$X <- mhDB.safetyGadgets$mh / mhDB.safetyGadgets$totMH
   mhDB.safetyGadgets$cost <- round(mhDB.safetyGadgets$X * mhDB.safetyGadgets$sg,
                                    digits = 2)
+
+  # Compute for Group Life Insurance
+  cat("\nComputing for group life insurance.\n")
+
+  groupLife <- data.table::rbindlist(lapply(listR, getGroupLife))
+  mhDB.groupLife <- mhDB[mhDB$mhType %in% distType, ] %>%
+    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  mhDB.groupLife <- mhDB.groupLife %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.groupLife <- dplyr::left_join(mhDB.groupLife,
+                                     groupLife,
+                                     by = c("ID", "month"))
+  mhDB.groupLife$X <- mhDB.groupLife$mh / mhDB.groupLife$totMH
+  mhDB.groupLife$cost <- round(mhDB.groupLife$X * mhDB.groupLife$gl, digits = 2)
 
   # Compute for Safety Bonus
   cat("\nComputing safety bonus.\n")
@@ -1651,6 +1670,19 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r15 <- NULL
   }
 
+  # Group Life Insurance
+  r16 <- mhDB.groupLife %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost))
+  r16 <- as.data.frame(r16)
+
+  if (nrow(r16) > 0) {
+    r16$row <- "Grouplife"
+  } else {
+    r16 <- NULL
+  }
+
+
   costDB <- data.table::rbindlist(list(r01,
                                        r02,
                                        r03,
@@ -1665,7 +1697,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                        r12,
                                        r13,
                                        r14,
-                                       r15))
+                                       r15,
+                                       r16))
 
   costDB <- costDB %>%
     dplyr::group_by(costCode, row, month) %>%
