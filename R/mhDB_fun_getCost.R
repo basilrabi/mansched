@@ -779,6 +779,31 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.hmo$X <- mhDB.hmo$mh / mhDB.hmo$totMH
   mhDB.hmo$cost <- round(mhDB.hmo$X * mhDB.hmo$hmo, digits = 2)
 
+  # Employee benefits
+  # cat("\nComputing for employee benefits.\n")
+
+  benefits <- data.table::rbindlist(list(
+    data.table::rbindlist(lapply(listR, getCBA)),
+    data.table::rbindlist(lapply(listR, getLongShirt)),
+    data.table::rbindlist(lapply(listR, getLaborDayShirt)),
+    data.table::rbindlist(lapply(listR, getGC))
+  )) %>%
+    dplyr::group_by(month, ID) %>%
+    dplyr::summarise(benefits = sum(benefits))
+
+  mhDB.benefits <- mhDB[mhDB$mhType %in% distType, ] %>%
+    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::summarise(mh = sum(mh)) %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh))
+
+  mhDB.benefits <- dplyr::left_join(mhDB.benefits,
+                                    benefits,
+                                    by = c("ID", "month"))
+  mhDB.benefits$X <- mhDB.benefits$mh / mhDB.benefits$totMH
+  mhDB.benefits$cost <- round(mhDB.benefits$X * mhDB.benefits$benefits,
+                              digits = 2)
+
   # Compute for Safety Bonus
   cat("\nComputing safety bonus.\n")
 
@@ -1711,24 +1736,21 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r17 <- NULL
   }
 
+  # Employee Benefits
+  r18 <- mhDB.benefits %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost))
+  r18 <- as.data.frame(r18)
 
-  costDB <- data.table::rbindlist(list(r01,
-                                       r02,
-                                       r03,
-                                       r04,
-                                       r05,
-                                       r06,
-                                       r07,
-                                       r08,
-                                       r09,
-                                       r10,
-                                       r11,
-                                       r12,
-                                       r13,
-                                       r14,
-                                       r15,
-                                       r16,
-                                       r17))
+  if (nrow(r18) > 0) {
+    r18$row <- "Employee Benefits"
+  } else {
+    r18 <- NULL
+  }
+
+  costDB <- data.table::rbindlist(list(
+    r01, r02, r03, r04, r05, r06, r07, r08, r09,
+    r10, r11, r12, r13, r14, r15, r16, r17, r18))
 
   costDB <- costDB %>%
     dplyr::group_by(costCode, row, month) %>%
