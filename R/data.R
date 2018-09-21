@@ -29,7 +29,7 @@
 #'     \item{MOS}{Mobile Screen}
 #'     \item{PB}{Pump boat}
 #'     \item{PMT}{prime mover (trailer)}
-#'     \teim{RADIO}{Radio}
+#'     \item{RADIO}{Radio}
 #'     \item{RG}{road grader}
 #'     \item{SB}{service bus}
 #'     \item{SP}{service pickup}
@@ -491,7 +491,8 @@ ac <- data.frame(row = c("Salaries-Regular",
                          "CF Manpower Services",
                          "Safety Gadgets",
                          "Grouplife",
-                         "HMO"),
+                         "HMO",
+                         "Food Allowance / Rice Subsidy"),
                  code = c(521001L,
                           521021L,
                           521002L,
@@ -509,5 +510,6 @@ ac <- data.frame(row = c("Salaries-Regular",
                           522010L,
                           523011L,
                           524037L,
-                          521018L),
+                          521018L,
+                          521011L),
                  stringsAsFactors = FALSE)

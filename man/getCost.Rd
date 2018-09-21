@@ -54,6 +54,7 @@ Calculates monthly personnel cost for each cost code. Personnel costs are
     \item{521007}{Prem-HDMF (Pag-ibig)}
     \item{521008}{Philhealth}
     \item{521012}{Leave Commutation}
+    \item{521011}{Food Allowance / Rice Subsidy}
     \item{521017}{Hospital and Medical Expenses}
     \item{521009}{13th Month Pay}
     \item{521018}{HMO}

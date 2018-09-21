@@ -201,12 +201,13 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   mhReq  <- tempData[[6]]
   mhPool <- tempData[[7]]
 
-  wage.colnames <- c("ID", "S", "s")
+  wage.colnames <- c("ID", "S", "s", "I", "i")
 
   wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
   # The salary column can either be `S` or `s`
   wage <- wage[, colnames(wage) %in% wage.colnames]
   colnames(wage)[2] <- "s"
+  colnames(wage)[3] <- "i"
 
   if (class(wage$ID) != "character")
     stop("Column ID in wage is not character!")
@@ -214,8 +215,12 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   if (class(wage$s) != "numeric")
     wage$s <- as.numeric(wage$s)
 
+  if (class(wage$i) != "numeric")
+    wage$i <- as.numeric(wage$i)
+
   wage <- wage[wage$ID %in% empPool$ID,]
   wage$s[is.na(wage$s)] <- 0
+  wage$i[is.na(wage$i)] <- 0
   wage <- as.data.frame(wage)
 
   costDB <- getCost(mhDB     = mhDB,

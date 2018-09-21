@@ -16,6 +16,7 @@ NULL
 #'     \item{521007}{Prem-HDMF (Pag-ibig)}
 #'     \item{521008}{Philhealth}
 #'     \item{521012}{Leave Commutation}
+#'     \item{521011}{Food Allowance / Rice Subsidy}
 #'     \item{521017}{Hospital and Medical Expenses}
 #'     \item{521009}{13th Month Pay}
 #'     \item{521018}{HMO}
@@ -90,17 +91,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     stop("All ID's must have wage data")
   }
 
-  # Error if wage data is missing or zero
-  wage  <- wage[wage$ID %in% empID, ]
-  tmpID <- wage$ID[which(is.na(wage$s) | wage$s < 100)]
-
-  if (length(tmpID) > 0) {
-
-    cat("Wage data of the following is either NA or less than 100 pesos:\n")
-    cat(paste(empID, collapse = "\n"))
-    stop("Check wage data.")
-  }
-
   # Assign if employee is RF or not
   wage$isRF <- sapply(wage$ID, FUN = function(x) {
     index <- which(empID == x)
@@ -115,38 +105,19 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   # Get salary increase
   IDs     <- sapply(listR, FUN = function(x) {x@ID})
-  wage$sB <- apply(wage[, 1:4], MARGIN = 1, FUN = function(x) {
+  wage$sB <- apply(wage[, 1:5], MARGIN = 1, FUN = function(x) {
 
     x     <- sapply(x, trimws)
     sal   <- as.numeric(x[2])
-    RF    <- as.logical(x[3])
-    Staff <- as.logical(x[4])
+    inc   <- as.numeric(x[3])
 
     if (forecast) {
       return(sal)
     } else {
-
-      tempIndex <- which(IDs == x[1])
-      cBegin    <- listR[[tempIndex]]@cBegin
-      cEnd      <- listR[[tempIndex]]@cEnd
-      year      <- substr(cEnd, start = 1L, stop = 4L)
-      cBegin    <- as.Date(cBegin)
-      cEnd      <- as.Date(cEnd)
-
-      if (RF) {
-        if (as.Date(paste(year, "-02-01", sep = "")) > cBegin) {
-          sal <- sal + 105
-        }
-      } else if ((as.Date(paste(year, "-07-01", sep = "")) > cBegin)) {
-        if (Staff) {
-          sal <- sal + 3500
-        } else {
-          sal <- sal + 3000
-        }
-      }
-      return(sal)
+      return(inc)
     }
   })
+  wage$i <- NULL
   cat("\nEstimated salary increase.\n")
 
   # Assign totHours
@@ -160,7 +131,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   })
 
   # Compute hourly rates
-  tempData <- apply(wage[,2:6], MARGIN = 1, FUN = function(x) {
+  tempData <- apply(wage[, 2:6], MARGIN = 1, FUN = function(x) {
 
     sal <- c(NA, NA)
 
@@ -1334,7 +1305,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     tidyr::spread(month, cost, fill = 0)
 
   # Compute for Rice Subsidy for Agency
-  cat("\nComputing rice subsidy.\n")
+  cat("\nComputing rice subsidy (agency).\n")
 
   listR.A <- listR[sapply(listR, function(x) {return(x@status == "age")})]
 
@@ -1362,6 +1333,33 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     mhDB.riceSub.A$cost <- mhDB.riceSub.A$X * mhDB.riceSub.A$riceSub
   } else {
     mhDB.riceSub.A <- NULL
+  }
+
+  # Compute for Rice Subsidy for in-house
+  cat("\nComputing rice subsidy (in-house).\n")
+
+  listR.I <- listR[sapply(listR, function(x) {return(x@status != "age")})]
+
+  if (length(listR.I) > 0) {
+
+    ## Get rice subsidy per month per employee
+    riceSub.I <- lapply(listR.I, FUN = getRiceSub)
+    riceSub.I <- data.table::rbindlist(riceSub.I)
+
+    ## Distribute rice subsidy
+    mhDB.riceSub.I <- mhDB[mhDB$mhType %in% distType &
+                             mhDB$status != "age",] %>%
+      dplyr::group_by(ID, month, costCode) %>%
+      dplyr::summarise(mh = sum(mh)) %>%
+      dplyr::group_by(ID, month) %>%
+      dplyr::mutate(totMH = sum(mh))
+
+    mhDB.riceSub.I$X <- mhDB.riceSub.I$mh / mhDB.riceSub.I$totMH
+    mhDB.riceSub.I <-
+      dplyr::left_join(x = mhDB.riceSub.I, y = riceSub.I, by = c("ID", "month"))
+    mhDB.riceSub.I$cost <- mhDB.riceSub.I$X * mhDB.riceSub.I$riceSub
+  } else {
+    mhDB.riceSub.I <- NULL
   }
 
   cat("\nMerging costs.\n")
@@ -1748,9 +1746,21 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r18 <- NULL
   }
 
+  # Food Allowance / Rice Subsidy
+  r19 <- mhDB.riceSub.I %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost))
+  r19 <- as.data.frame(r18)
+
+  if (nrow(r19) > 0) {
+    r19$row <- "Food Allowance / Rice Subsidy"
+  } else {
+    r19 <- NULL
+  }
+
   costDB <- data.table::rbindlist(list(
-    r01, r02, r03, r04, r05, r06, r07, r08, r09,
-    r10, r11, r12, r13, r14, r15, r16, r17, r18))
+    r01, r02, r03, r04, r05, r06, r07, r08, r09, r10,
+    r11, r12, r13, r14, r15, r16, r17, r18, r19))
 
   costDB <- costDB %>%
     dplyr::group_by(costCode, row, month) %>%
