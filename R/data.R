@@ -18,15 +18,18 @@
 #' @format character vector:
 #'
 #'   \describe{
+#'     \item{BREAKER}{Breaker}
 #'     \item{CRANE}{crane}
 #'     \item{CT}{bull dozer}
 #'     \item{DT}{dump truck}
 #'     \item{FL}{fuel truck}
 #'     \item{FORKLIFT}{forklift}
+#'     \item{MDT}{Mini Dump Truck}
 #'     \item{MOC}{Mobile Crusher}
 #'     \item{MOS}{Mobile Screen}
 #'     \item{PB}{Pump boat}
 #'     \item{PMT}{prime mover (trailer)}
+#'     \teim{RADIO}{Radio}
 #'     \item{RG}{road grader}
 #'     \item{SB}{service bus}
 #'     \item{SP}{service pickup}
@@ -38,15 +41,18 @@
 #'     \item{WX}{wheeled excavator}
 #'   }
 #' @export validEquipment
-validEquipment <- c("CRANE",
+validEquipment <- c("BREAKER",
+                    "CRANE",
                     "CT",
                     "DT",
                     "FL",
                     "FORKLIFT",
+                    "MDT",
                     "MOC",
                     "MOS",
                     "PB",
                     "PMT",
+                    "RADIO",
                     "RG",
                     "SB",
                     "SP",
