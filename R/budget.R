@@ -22,6 +22,7 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   ID             <- NULL
   manhours       <- NULL
   mh             <- NULL
+  mhType         <- NULL
   personnelClass <- NULL
   status         <- NULL
 
@@ -237,19 +238,25 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   if (forecast) {
     dir.create(path = "./forecast")
     setwd(paste(tempFolder, "/forecast", sep = ""))
+    postFix <- "Forecast.xlsx"
   } else {
     dir.create(path = "./budget")
     setwd(paste(tempFolder, "/budget", sep = ""))
+    postFix <- "Budget.xlsx"
   }
 
-  xlsx::write.xlsx(costDB[[1]], file = "personnelCost.xlsx", row.names = FALSE)
+  xlsx::write.xlsx(costDB[[1]],
+                   file = paste0("personnelCost", postFix),
+                   row.names = FALSE)
 
   manHours <- mhDB %>%
-    dplyr::group_by(status, costCode, month) %>%
+    dplyr::group_by(status, costCode, mhType, month) %>%
     dplyr::summarise(manhours = sum(mh)) %>%
     tidyr::spread(month, manhours, fill = 0) %>%
     as.data.frame(row.names = NULL)
-  xlsx::write.xlsx(manHours, file = "manhours.xlsx", row.names = FALSE)
+  xlsx::write.xlsx(manHours,
+                   file = paste0("manhours", postFix),
+                   row.names = FALSE)
 
   accr.13mp   <- costDB[[3]]
   accr.13mp.R <- accr.13mp[accr.13mp$status == "reg",
@@ -261,19 +268,19 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
 
   if (nrow(accr.13mp.R) > 0) {
     xlsx::write.xlsx(x = as.data.frame(accr.13mp.R),
-                     file = "13mp-reg.xlsx",
+                     file = paste0("13mp-reg", postFix),
                      row.names = FALSE)
   }
 
   if (nrow(accr.13mp.P) > 0) {
     xlsx::write.xlsx(x = as.data.frame(accr.13mp.P),
-                     file = "13mp-pro.xlsx",
+                     file = paste0("13mp-pro", postFix),
                      row.names = FALSE)
   }
 
   if (nrow(accr.13mp.S) > 0) {
     xlsx::write.xlsx(x = as.data.frame(accr.13mp.S),
-                     file = "13mp-sea.xlsx",
+                     file = paste0("13mp-sea", postFix),
                      row.names = FALSE)
   }
 
@@ -298,14 +305,14 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
     mhPool <- mhPool %>% tidyr::spread(month, mh, fill = 0)
 
     xlsx::write.xlsx(x = as.data.frame(mhPool),
-                     file = "pool.xlsx",
+                     file = paste0("pool", postFix),
                      row.names = FALSE)
   }
 
   if (!is.null(mhReq)) {
     mhReq <- mhReq %>% tidyr::spread(month, mh, fill = 0)
     xlsx::write.xlsx(x = as.data.frame(mhReq),
-                     file = "req.xlsx",
+                     file = paste0("req", postFix),
                      row.names = FALSE)
   }
 
