@@ -791,19 +791,13 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     mhDB.SB$costCode,
     FUN = function(x) {
 
-      if (substr(x, start = 1, stop = 5) == "13100")
+      if (grepl("13100", x = x))
         return("13100")
 
       if (x == "0-0")
         return("0-0")
 
-      if (substr(x, start = 1, stop = 5) %in% c("14000",
-                                                "14100",
-                                                "14200",
-                                                "14300",
-                                                "14400",
-                                                "14500",
-                                                "14600"))
+      if (grepl("14\\d00", x = x))
         return("14000")
 
       return("1100")
@@ -1158,19 +1152,13 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     mhDB.13mp$costCode,
     FUN = function(x) {
 
-      if (substr(x, start = 1, stop = 5) == "13100")
+      if (grepl("13100", x = x))
         return("13100")
 
       if (x == "0-0")
         return("0-0")
 
-      if (substr(x, start = 1, stop = 5) %in% c("14000",
-                                                "14100",
-                                                "14200",
-                                                "14300",
-                                                "14400",
-                                                "14500",
-                                                "14600"))
+      if (grepl("14\\d00", x = x))
         return("14000")
 
       return("1100")
@@ -1290,19 +1278,13 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
       mhDB.bonus$costCode,
       FUN = function(x) {
 
-        if (substr(x, start = 1, stop = 5) == "13100")
+        if (grepl("13100", x = x))
           return("13100")
 
         if (x == "0-0")
           return("0-0")
 
-        if (substr(x, start = 1, stop = 5) %in% c("14000",
-                                                  "14100",
-                                                  "14200",
-                                                  "14300",
-                                                  "14400",
-                                                  "14500",
-                                                  "14600"))
+        if (grepl("14\\d00", x = x))
           return("14000")
 
         return("1100")
