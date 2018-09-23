@@ -40,7 +40,7 @@ setMethod(
 
     if (!theObject@forecast) {
 
-      if (theObject@status %in% c("reg", "pro")) {
+      if (theObject@status %in% c("reg")) {
         gc$gc[gc$month == 12L] <- 1500
         gc$benefits <- round(gc$allow * gc$gc, digits = 2)
       }
@@ -52,7 +52,7 @@ setMethod(
         } else {
           multiplier <- sum(gc$allow)
         }
-        gc$gc[gc$month == 10L] <- (1500 / 10) * multiplier
+        gc$gc[gc$month == 11L] <- (3000 / 10) * multiplier
         gc$benefits <- gc$gc
       }
     }
