@@ -1211,6 +1211,12 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   # Compute for Mid-year and Year-end bonus
   cat("\nComputing bonus.\n")
 
+  if (forecast) {
+    bonusFactor <- 1.5
+  } else {
+    bonusFactor <- 2
+  }
+
   # FIXME: Bonus must pro-rated
   # The date hired (probationary or regular, which ever came first) of the
   #   employee is used in pro-rating.
@@ -1249,7 +1255,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     }
 
     tempData$salG  <- round(tempData$salM * tempData$allow, digits = 2)
-    tempData$bonus <- tempData$salG * c(0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1.5)
+    tempData$bonus <-
+      tempData$salG * c(0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, bonusFactor)
 
     tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "bonus")]
     tempData <- as.data.frame(tempData)
@@ -1278,34 +1285,36 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
-  mhDB.bonus$costCodeNew <- sapply(
-    mhDB.bonus$costCode,
-    FUN = function(x) {
+  if (forecast) {
+    mhDB.bonus$costCodeNew <- sapply(
+      mhDB.bonus$costCode,
+      FUN = function(x) {
 
-      if (substr(x, start = 1, stop = 5) == "13100")
-        return("13100")
+        if (substr(x, start = 1, stop = 5) == "13100")
+          return("13100")
 
-      if (x == "0-0")
-        return("0-0")
+        if (x == "0-0")
+          return("0-0")
 
-      if (substr(x, start = 1, stop = 5) %in% c("14000",
-                                                "14100",
-                                                "14200",
-                                                "14300",
-                                                "14400",
-                                                "14500",
-                                                "14600"))
-        return("14000")
+        if (substr(x, start = 1, stop = 5) %in% c("14000",
+                                                  "14100",
+                                                  "14200",
+                                                  "14300",
+                                                  "14400",
+                                                  "14500",
+                                                  "14600"))
+          return("14000")
 
-      return("1100")
-    }
-  )
+        return("1100")
+      }
+    )
 
-  mhDB.bonus$costCode <- mhDB.bonus$costCodeNew
-  mhDB.bonus          <- mhDB.bonus %>%
-    dplyr::group_by(costCode, month) %>%
-    dplyr::summarise(cost = sum(cost)) %>%
-    tidyr::spread(month, cost, fill = 0)
+    mhDB.bonus$costCode <- mhDB.bonus$costCodeNew
+    mhDB.bonus          <- mhDB.bonus %>%
+      dplyr::group_by(costCode, month) %>%
+      dplyr::summarise(cost = sum(cost)) %>%
+      tidyr::spread(month, cost, fill = 0)
+  }
 
   # Compute for Rice Subsidy for Agency
   cat("\nComputing rice subsidy (agency).\n")
@@ -1624,6 +1633,12 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   # 13th Month Pay
   r12 <- mhDB.13mp[, c("costCode", "month", "cost")]
+
+  ## In 2019 budget, the bonus is part of 13th Month Pay
+  if (!forecast) {
+    bonus <-mhDB.bonus[, c("costCode", "month", "cost")]
+    r12 <- data.table::rbindlist(list(r12, bonus))
+  }
 
   if (nrow(r12) > 0) {
     r12$row <- "13th Month Pay"
