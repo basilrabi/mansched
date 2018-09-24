@@ -65,9 +65,14 @@ PI14000 <- sum(c14000[c14000$row == "Prem-HDMF (Pag-ibig)",
 PI14100 <- sum(c14100[c14100$row == "Prem-HDMF (Pag-ibig)",
                       c(as.character(1:12))])
 
+riceSub <- tempData[[1]]
+riceSub <- riceSub[riceSub$code == 521011L,]
+riceSub <- riceSub[, as.character(1:12)] %>% as.matrix()
+
 test_that("getCost() works", {
   expect_equal(mh14000 + mh14100, totMH)
   expect_equal(PI14000 + PI14100, 500 * 12)
+  expect_equal(sum(riceSub), 5 * 2500 * 12)
 })
 
 rm(list = ls())

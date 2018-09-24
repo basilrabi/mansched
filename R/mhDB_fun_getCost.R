@@ -1750,7 +1750,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r19 <- mhDB.riceSub.I %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
-  r19 <- as.data.frame(r18)
+  r19 <- as.data.frame(r19)
 
   if (nrow(r19) > 0) {
     r19$row <- "Food Allowance / Rice Subsidy"
