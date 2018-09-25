@@ -1265,22 +1265,35 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   bonus <- data.table::rbindlist(bonus)
 
   if (length(bonus) > 0) {
-    mhDB.bonus <- mhDB[mhDB$mhType %in% distType, ] %>%
-      dplyr::group_by(ID, month, costCode) %>%
-      dplyr::summarise(mh = sum(mh))
 
-    mhDB.bonus <- mhDB.bonus %>%
-      dplyr::group_by(ID, month) %>%
+    # Distrubute mid-year bonus to all manhours from January to May
+    mhDB.bonusMid <- mhDB[mhDB$mhType %in% distType & mhDB$month < 6, ] %>%
+      dplyr::group_by(ID, costCode) %>%
+      dplyr::summarise(mh = sum(mh)) %>%
+      dplyr::group_by(ID) %>%
       dplyr::mutate(totMH = sum(mh))
+    mhDB.bonusMid$month <- 5L
+    mhDB.bonusMid$X <- mhDB.bonusMid$mh / mhDB.bonusMid$totMH
+    mhDB.bonusMid   <- dplyr::left_join(x  = mhDB.bonusMid,
+                                        y  = bonus,
+                                        by = c("ID", "month"))
 
-    mhDB.bonus$X <- mhDB.bonus$mh / mhDB.bonus$totMH
-    mhDB.bonus   <- dplyr::left_join(x  = mhDB.bonus,
-                                     y  = bonus,
-                                     by = c("ID", "month"))
+    # Distrubute year-and bonus to all manhours from January to December
+    mhDB.bonusEnd <- mhDB[mhDB$mhType %in% distType, ] %>%
+      dplyr::group_by(ID, costCode) %>%
+      dplyr::summarise(mh = sum(mh)) %>%
+      dplyr::group_by(ID) %>%
+      dplyr::mutate(totMH = sum(mh))
+    mhDB.bonusEnd$month <- 12L
+    mhDB.bonusEnd$X <- mhDB.bonusEnd$mh / mhDB.bonusEnd$totMH
+    mhDB.bonusEnd   <- dplyr::left_join(x  = mhDB.bonusEnd,
+                                        y  = bonus,
+                                        by = c("ID", "month"))
 
+    mhDB.bonus <- data.table::rbindlist(list(mhDB.bonusMid, mhDB.bonusEnd))
     mhDB.bonus$cost <- round(mhDB.bonus$X * mhDB.bonus$bonus, digits = 2)
-    mhDB.bonus      <- mhDB.bonus[!is.na(mhDB.bonus$cost),]
-    mhDB.bonus      <- mhDB.bonus %>%
+    mhDB.bonus <- mhDB.bonus[!is.na(mhDB.bonus$cost),]
+    mhDB.bonus <- mhDB.bonus %>%
       dplyr::group_by(costCode, month) %>%
       dplyr::summarise(cost = sum(cost))
 
@@ -1311,7 +1324,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   } else {
     mhDB.bonus <- NULL
   }
-
 
 
   # Compute for Rice Subsidy for Agency
