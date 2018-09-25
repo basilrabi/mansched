@@ -38,12 +38,17 @@ setMethod(
     sched <- getCM(theObject)
 
     if (theObject@status != "reg") {
-      cost <- sal[1] / 12
+      cost <- sal[1]
     } else {
-      cost <- sal[2] / 12
+      cost <- sal[2]
     }
 
-    sched$cost <- cost
+    if (isRF(theObject)) {
+      # If the employee is RF, multiply daily wage by 26 days
+      cost <- cost * 26
+    }
+
+    sched$cost <- cost / 12
     sched$mp   <- round(sched$cost * sched$allow, digits = 2)
 
     return(sched[, c("month", "ID", "mp")])

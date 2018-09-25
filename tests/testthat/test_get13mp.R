@@ -112,9 +112,9 @@ test_that("getHM() works", {
   expect_equal(sum(get13mp(tempEmp4, sal)$mp),
                round(1000 / 12, digits = 2) * 9)
   expect_equal(sum(get13mp(tempEmp5, sal)$mp),
-               round(1000 / 12, digits = 2) * 9)
+               round(1000 * 26 / 12, digits = 2) * 9)
   expect_equal(sum(get13mp(tempEmp6, sal)$mp),
-               round(1000 / 12, digits = 2) * 9)
+               round(1000 * 26 / 12, digits = 2) * 9)
 })
 
 rm(list = ls())

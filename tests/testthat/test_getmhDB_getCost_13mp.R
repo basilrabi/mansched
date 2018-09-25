@@ -2,6 +2,8 @@ library(mansched)
 library(readxl)
 library(dplyr)
 
+# Regular white hat ------------------------------------------------------------
+
 xlsxFile <- system.file("exdata",
                         "sampleDataRegWhite.xlsx",
                         package = "mansched")
@@ -13,6 +15,8 @@ empPool <- readxl::read_xlsx(path = xlsxFile, sheet = "Pool")
 hol <- readxl::read_xlsx(path = xlsxFile, sheet = "hol")
 year <- 2018
 forecast <- FALSE
+
+mCols <- as.character(1:12)
 
 empReq  <- as.data.frame(empReq)
 empPool <- as.data.frame(empPool)
@@ -42,10 +46,82 @@ tempData <- getCost(mhDB = tempData[[1]],
                     wage = wage,
                     forecast = forecast)
 
-# test_that("getCost() works", {
-#   expect_equal(mh14000 + mh14100, totMH)
-#   expect_equal(PI14000 + PI14100, 500 * 12)
-#   expect_equal(sum(riceSub), 5 * 2500 * 12)
-# })
+mp13 <- tempData[[1]]
+mp13 <- mp13[mp13$code == 521009L, mCols] %>% as.matrix() %>% as.vector()
 
-# rm(list = ls())
+sal <- c(wage$s[1], wage$i[1])
+
+# Compute 13th  month pay
+testMP13 <- rep(round(sal[2] / 12, digits = 2), times = 12)
+# Add mid-year bonus
+testMP13[5] <- testMP13[5] + sal[1]
+# Add year-end bonus
+testMP13[12] <- testMP13[12] + sal[2] * 2
+
+test_that("Correct 13th MP for Reg White", {
+  expect_equal(mp13, testMP13)
+})
+
+rm(list = ls())
+
+# Regular non-white hat --------------------------------------------------------
+
+xlsxFile <- system.file("exdata",
+                        "sampleDataRegNonWhite.xlsx",
+                        package = "mansched")
+empReq <- readxl::read_xlsx(path = xlsxFile, sheet = "Requirement")
+sched <- readxl::read_xlsx(path = xlsxFile,
+                           sheet = "Schedule",
+                           col_types = c("text", rep("numeric", times = 12)))
+empPool <- readxl::read_xlsx(path = xlsxFile, sheet = "Pool")
+hol <- readxl::read_xlsx(path = xlsxFile, sheet = "hol")
+year <- 2018
+forecast <- FALSE
+
+mCols <- as.character(1:12)
+
+empReq  <- as.data.frame(empReq)
+empPool <- as.data.frame(empPool)
+sched   <- as.data.frame(sched)
+hol     <- as.data.frame(hol)
+
+empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
+                                         as.character)
+empPool[, c("inHouse", "isRF", "field")] <-
+  lapply(empPool[, c("inHouse", "isRF", "field")], as.logical)
+
+listT <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)[[1]]
+listR <- initEmpPool(empPool = empPool, hol = hol, year = year)[[1]]
+
+tempData <- getmhDB(empReq   = empReq,
+                    empPool  = empPool,
+                    sched    = sched,
+                    year     = year,
+                    hol      = hol,
+                    cores    = 2,
+                    forecast = forecast)
+
+wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
+
+tempData <- getCost(mhDB = tempData[[1]],
+                    listR = listR,
+                    wage = wage,
+                    forecast = forecast)
+
+mp13 <- tempData[[1]]
+mp13 <- mp13[mp13$code == 521009L, mCols] %>% as.matrix() %>% as.vector()
+
+sal <- c(wage$s[1], wage$i[1])
+
+# Compute 13th  month pay
+testMP13 <- rep(round(sal[2] * 26 / 12, digits = 2), times = 12)
+# Add mid-year bonus
+testMP13[5] <- testMP13[5] + (sal[2] * 26)
+# Add year-end bonus
+testMP13[12] <- testMP13[12] + (sal[2] * 26 * 2)
+
+test_that("Correct 13th MP for Reg White", {
+  expect_equal(mp13, testMP13)
+})
+
+rm(list = ls())
