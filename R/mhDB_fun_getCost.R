@@ -1056,33 +1056,37 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   })
   LH <- data.table::rbindlist(LH)
 
-  ### Get LC cost per employee for the whole year
-  LH <- dplyr::left_join(x  = LH,
-                         y  = wageEmp[ ,
-                                       !colnames(wageEmp) %in% c("salM",
-                                                                 "isRF")],
-                         by = c("ID", "sal"))
+  if (nrow(LH) > 1) {
+    ### Get LC cost per employee for the whole year
+    LH <- dplyr::left_join(x  = LH,
+                           y  = wageEmp[ ,
+                                         !colnames(wageEmp) %in% c("salM",
+                                                                   "isRF")],
+                           by = c("ID", "sal"))
 
-  LH$LC <- LH$LH * LH$salH
+    LH$LC <- LH$LH * LH$salH
 
-  ### Distribute LC throughout the year
-  mhDB.LC.S <- mhDB[mhDB$status %in% c("sea", "age") &
-                      mhDB$mhType %in% distType, ] %>%
-    dplyr::group_by(ID, month, costCode, status) %>%
-    dplyr::summarise(mh = sum(mh))
+    ### Distribute LC throughout the year
+    mhDB.LC.S <- mhDB[mhDB$status %in% c("sea", "age") &
+                        mhDB$mhType %in% distType, ] %>%
+      dplyr::group_by(ID, month, costCode, status) %>%
+      dplyr::summarise(mh = sum(mh))
 
-  mhDB.LC.S <- mhDB.LC.S %>%
-    dplyr::group_by(ID) %>%
-    dplyr::mutate(totMH = sum(mh))
+    mhDB.LC.S <- mhDB.LC.S %>%
+      dplyr::group_by(ID) %>%
+      dplyr::mutate(totMH = sum(mh))
 
-  mhDB.LC.S$X <- mhDB.LC.S$mh / mhDB.LC.S$totMH
-  mhDB.LC.S   <- dplyr::left_join(
-    x  = mhDB.LC.S,
-    y  = LH[, colnames(LH) %in% c("ID", "LC")],
-    by = "ID"
-  )
+    mhDB.LC.S$X <- mhDB.LC.S$mh / mhDB.LC.S$totMH
+    mhDB.LC.S   <- dplyr::left_join(
+      x  = mhDB.LC.S,
+      y  = LH[, colnames(LH) %in% c("ID", "LC")],
+      by = "ID"
+    )
 
-  mhDB.LC.S$cost <- round(mhDB.LC.S$X * mhDB.LC.S$LC, digits = 2)
+    mhDB.LC.S$cost <- round(mhDB.LC.S$X * mhDB.LC.S$LC, digits = 2)
+  } else {
+    mhDB.LC.S <- NULL
+  }
 
   ## Get cost
   mhDB.LC <- data.table::rbindlist(l = list(
