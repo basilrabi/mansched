@@ -101,20 +101,20 @@ tempEmp6 <- initREmployee(theObject = tempEmp,
                           hol = hol,
                           equipment = equipment)
 
-sal <- c(100,200)
+sal <- c(1000, 2000)
 test_that("getHM() works", {
   expect_equal(sum(get13mp(tempEmp1, sal)$mp),
-               round(200 * 8 * 313 / (12 * 12), digits = 2) * 12)
+               round(2000 / 12, digits = 2) * 12)
   expect_equal(sum(get13mp(tempEmp2, sal)$mp),
-               round(200 * 8 * 313 / (12 * 12), digits = 2) * 11)
+               round(2000 / 12, digits = 2) * 11)
   expect_equal(sum(get13mp(tempEmp3, sal)$mp),
-               round(200 * 8 * 313 / (12 * 12), digits = 2) * 10)
+               round(2000 / 12, digits = 2) * 10)
   expect_equal(sum(get13mp(tempEmp4, sal)$mp),
-               round(100 * 8 * 313 / (12 * 12), digits = 2) * 9)
+               round(1000 / 12, digits = 2) * 9)
   expect_equal(sum(get13mp(tempEmp5, sal)$mp),
-               round(100 * 8 * 313 / (12 * 12), digits = 2) * 9)
+               round(1000 / 12, digits = 2) * 9)
   expect_equal(sum(get13mp(tempEmp6, sal)$mp),
-               round(100 * 8 * 313 / (12 * 12), digits = 2) * 9)
+               round(1000 / 12, digits = 2) * 9)
 })
 
 rm(list = ls())

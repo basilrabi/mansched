@@ -9,7 +9,8 @@ NULL
 #' @param theObject \code{\link{Employee-class}} object
 #' @param sal a numeric vector of length 2
 #'
-#'   This contains 2 hourly salaries of the employee.
+#'   This contains 2 monthly salaries of the employee. The first one is salary
+#'   before annual increase while the second one is the adjusted salary.
 #' @return a \code{\link{data.frame}} with 12 rows and 3 columns representing
 #'   the accrued 13th month pay per month
 #'
@@ -37,12 +38,11 @@ setMethod(
     sched <- getCM(theObject)
 
     if (theObject@status != "reg") {
-      cost <- sal[1]
+      cost <- sal[1] / 12
     } else {
-      cost <- sal[2]
+      cost <- sal[2] / 12
     }
 
-    cost       <- cost * 8 * 313 / (12 * 12)
     sched$cost <- cost
     sched$mp   <- round(sched$cost * sched$allow, digits = 2)
 

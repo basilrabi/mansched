@@ -15,7 +15,8 @@ get13mp(theObject, sal)
 
 \item{sal}{a numeric vector of length 2
 
-  This contains 2 hourly salaries of the employee.}
+  This contains 2 monthly salaries of the employee. The first one is salary
+  before annual increase while the second one is the adjusted salary.}
 }
 \value{
 a \code{\link{data.frame}} with 12 rows and 3 columns representing

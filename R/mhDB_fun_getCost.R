@@ -1122,7 +1122,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mp13 <- data.table::rbindlist(lapply(listR, FUN = function(x) {
 
     tempIndex <- which(wageEmp$ID == x@ID)
-    tempSal   <- wageEmp$salH[tempIndex]
+    tempSal   <- wageEmp$salM[tempIndex]
     tempData  <- get13mp(theObject = x, sal = tempSal)
 
     return(tempData)
@@ -1148,27 +1148,29 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.13mp.A <- mhDB.13mp[mhDB.13mp$status == "age", ]
   mhDB.13mp   <- mhDB.13mp[mhDB.13mp$status != "age", ]
 
-  mhDB.13mp$costCodeNew <- sapply(
-    mhDB.13mp$costCode,
-    FUN = function(x) {
+  if (forecast) {
+    mhDB.13mp$costCodeNew <- sapply(
+      mhDB.13mp$costCode,
+      FUN = function(x) {
 
-      if (grepl("13100", x = x))
-        return("13100")
+        if (grepl("13100", x = x))
+          return("13100")
 
-      if (x == "0-0")
-        return("0-0")
+        if (x == "0-0")
+          return("0-0")
 
-      if (grepl("14\\d00", x = x))
-        return("14000")
+        if (grepl("14\\d00", x = x))
+          return("14000")
 
-      return("1100")
-    }
-  )
+        return("1100")
+      }
+    )
 
-  mhDB.13mp$costCode <- mhDB.13mp$costCodeNew
-  mhDB.13mp          <- mhDB.13mp %>%
-    dplyr::group_by(costCode, status, month) %>%
-    dplyr::summarise(cost = sum(cost))
+    mhDB.13mp$costCode <- mhDB.13mp$costCodeNew
+    mhDB.13mp          <- mhDB.13mp %>%
+      dplyr::group_by(costCode, status, month) %>%
+      dplyr::summarise(cost = sum(cost))
+  }
 
   ## Separate 13th month pay for regular and non-regular in-house as requested
   ## by accounting
@@ -1227,7 +1229,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
         by = c("ID", "sal")
       )
 
-      tempData$salM2 <- round(tempData$salM * 313 / 12, digits = 2)
+      tempData$salM2 <- round(tempData$salM * 26, digits = 2)
       tempData$salM  <- tempData$salM2
       tempData       <- tempData[, !colnames(tempData) %in% c("salM2")]
 
