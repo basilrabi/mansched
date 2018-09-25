@@ -973,72 +973,76 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                stringsAsFactors = FALSE)
   })
 
-  ### Get total reg hours attendance (RH)
-  mhDB.RH <- mhDB[mhDB$status == "reg" & mhDB$mhType == "reg", ] %>%
-    dplyr::group_by(ID, month, sal) %>%
-    dplyr::summarise(mh = sum(mh))
+  if (length(maxRegDB) > 0) {
+    ### Get total reg hours attendance (RH)
+    mhDB.RH <- mhDB[mhDB$status == "reg" & mhDB$mhType == "reg", ] %>%
+      dplyr::group_by(ID, month, sal) %>%
+      dplyr::summarise(mh = sum(mh))
 
-  ### Join RH to maxRegDB then compute leave hours (LH) per month
-  tempID   <- sapply(listR, FUN = function(x) {x@ID})
-  maxRegDB <- lapply(maxRegDB, FUN = function(z) {
+    ### Join RH to maxRegDB then compute leave hours (LH) per month
+    tempID   <- sapply(listR, FUN = function(x) {x@ID})
+    maxRegDB <- lapply(maxRegDB, FUN = function(z) {
 
-    z <- dplyr::left_join(x = z, y = mhDB.RH, by = c("ID", "month"))
+      z <- dplyr::left_join(x = z, y = mhDB.RH, by = c("ID", "month"))
 
-    z[is.na(z)] <- 0L
-    z$absence <- z$maxReg - z$mh
+      z[is.na(z)] <- 0L
+      z$absence <- z$maxReg - z$mh
 
-    if (any(z$absence) < 0)
-      stop("Absence must not be less than 0!")
+      if (any(z$absence) < 0)
+        stop("Absence must not be less than 0!")
 
-    tempIndex <- which(tempID == z$ID[1])
-    LC        <- listR[[tempIndex]]@leaveHours
-    z$LH      <- 0
+      tempIndex <- which(tempID == z$ID[1])
+      LC        <- listR[[tempIndex]]@leaveHours
+      z$LH      <- 0
 
-    for (i in 1:12) {
-      if (LC > 0) {
-        minus   <- min(z$absence[i], LC)
-        z$LH[i] <- minus
-        LC      <- LC - minus
-      } else {
-        break
+      for (i in 1:12) {
+        if (LC > 0) {
+          minus   <- min(z$absence[i], LC)
+          z$LH[i] <- minus
+          LC      <- LC - minus
+        } else {
+          break
+        }
       }
-    }
 
-    z$LH[4] <- z$LH[4] + LC
+      z$LH[4] <- z$LH[4] + LC
 
-    if (sum(z$LH) != listR[[tempIndex]]@leaveHours)
-      stop("Leave hours do not match!")
+      if (sum(z$LH) != listR[[tempIndex]]@leaveHours)
+        stop("Leave hours do not match!")
 
-    return(z)
-  })
+      return(z)
+    })
 
-  maxRegDB <- data.table::rbindlist(maxRegDB)
+    maxRegDB <- data.table::rbindlist(maxRegDB)
 
-  ### Compute LC cost
-  maxRegDB <- dplyr::left_join(
-    x  = maxRegDB,
-    y  = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")],
-    by = c("ID", "sal")
-  )
-  maxRegDB$LC <- maxRegDB$salH * maxRegDB$LH
+    ### Compute LC cost
+    maxRegDB <- dplyr::left_join(
+      x  = maxRegDB,
+      y  = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")],
+      by = c("ID", "sal")
+    )
+    maxRegDB$LC <- maxRegDB$salH * maxRegDB$LH
 
-  ### Distribute LC cost for regular employees
-  mhDB.LC.R <-mhDB[mhDB$mhType %in% distType & mhDB$status == "reg", ] %>%
-    dplyr::group_by(ID, month, costCode) %>%
-    dplyr::summarise(mh = sum(mh))
+    ### Distribute LC cost for regular employees
+    mhDB.LC.R <-mhDB[mhDB$mhType %in% distType & mhDB$status == "reg", ] %>%
+      dplyr::group_by(ID, month, costCode) %>%
+      dplyr::summarise(mh = sum(mh))
 
-  mhDB.LC.R <- mhDB.LC.R %>%
-    dplyr::group_by(ID, month) %>%
-    dplyr::mutate(totMH = sum(mh))
+    mhDB.LC.R <- mhDB.LC.R %>%
+      dplyr::group_by(ID, month) %>%
+      dplyr::mutate(totMH = sum(mh))
 
-  mhDB.LC.R$X <- mhDB.LC.R$mh / mhDB.LC.R$totMH
-  mhDB.LC.R   <- dplyr::left_join(
-    x  = mhDB.LC.R,
-    y  = maxRegDB[, colnames(maxRegDB) %in% c("ID", "month", "LC")],
-    by = c("ID", "month")
-  )
+    mhDB.LC.R$X <- mhDB.LC.R$mh / mhDB.LC.R$totMH
+    mhDB.LC.R   <- dplyr::left_join(
+      x  = mhDB.LC.R,
+      y  = maxRegDB[, colnames(maxRegDB) %in% c("ID", "month", "LC")],
+      by = c("ID", "month")
+    )
 
-  mhDB.LC.R$cost <- round(mhDB.LC.R$X * mhDB.LC.R$LC, digits = 2)
+    mhDB.LC.R$cost <- round(mhDB.LC.R$X * mhDB.LC.R$LC, digits = 2)
+  } else {
+    mhDB.LC.R <- NULL
+  }
 
   ## Separate seasonal and agency employees
   ##- These must be separated since they are not entitled to negotiated
@@ -1056,7 +1060,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   })
   LH <- data.table::rbindlist(LH)
 
-  if (nrow(LH) > 1) {
+  if (nrow(LH) > 0) {
     ### Get LC cost per employee for the whole year
     LH <- dplyr::left_join(x  = LH,
                            y  = wageEmp[ ,
@@ -1260,49 +1264,55 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   bonus <- data.table::rbindlist(bonus)
 
-  mhDB.bonus <- mhDB[mhDB$mhType %in% distType, ] %>%
-    dplyr::group_by(ID, month, costCode) %>%
-    dplyr::summarise(mh = sum(mh))
+  if (length(bonus) > 0) {
+    mhDB.bonus <- mhDB[mhDB$mhType %in% distType, ] %>%
+      dplyr::group_by(ID, month, costCode) %>%
+      dplyr::summarise(mh = sum(mh))
 
-  mhDB.bonus <- mhDB.bonus %>%
-    dplyr::group_by(ID, month) %>%
-    dplyr::mutate(totMH = sum(mh))
+    mhDB.bonus <- mhDB.bonus %>%
+      dplyr::group_by(ID, month) %>%
+      dplyr::mutate(totMH = sum(mh))
 
-  mhDB.bonus$X <- mhDB.bonus$mh / mhDB.bonus$totMH
-  mhDB.bonus   <- dplyr::left_join(x  = mhDB.bonus,
-                                   y  = bonus,
-                                   by = c("ID", "month"))
+    mhDB.bonus$X <- mhDB.bonus$mh / mhDB.bonus$totMH
+    mhDB.bonus   <- dplyr::left_join(x  = mhDB.bonus,
+                                     y  = bonus,
+                                     by = c("ID", "month"))
 
-  mhDB.bonus$cost <- round(mhDB.bonus$X * mhDB.bonus$bonus, digits = 2)
-  mhDB.bonus      <- mhDB.bonus[!is.na(mhDB.bonus$cost),]
-  mhDB.bonus      <- mhDB.bonus %>%
-    dplyr::group_by(costCode, month) %>%
-    dplyr::summarise(cost = sum(cost))
-
-  if (forecast) {
-    mhDB.bonus$costCodeNew <- sapply(
-      mhDB.bonus$costCode,
-      FUN = function(x) {
-
-        if (grepl("13100", x = x))
-          return("13100")
-
-        if (x == "0-0")
-          return("0-0")
-
-        if (grepl("14\\d00", x = x))
-          return("14000")
-
-        return("1100")
-      }
-    )
-
-    mhDB.bonus$costCode <- mhDB.bonus$costCodeNew
-    mhDB.bonus          <- mhDB.bonus %>%
+    mhDB.bonus$cost <- round(mhDB.bonus$X * mhDB.bonus$bonus, digits = 2)
+    mhDB.bonus      <- mhDB.bonus[!is.na(mhDB.bonus$cost),]
+    mhDB.bonus      <- mhDB.bonus %>%
       dplyr::group_by(costCode, month) %>%
-      dplyr::summarise(cost = sum(cost)) %>%
-      tidyr::spread(month, cost, fill = 0)
+      dplyr::summarise(cost = sum(cost))
+
+    if (forecast) {
+      mhDB.bonus$costCodeNew <- sapply(
+        mhDB.bonus$costCode,
+        FUN = function(x) {
+
+          if (grepl("13100", x = x))
+            return("13100")
+
+          if (x == "0-0")
+            return("0-0")
+
+          if (grepl("14\\d00", x = x))
+            return("14000")
+
+          return("1100")
+        }
+      )
+
+      mhDB.bonus$costCode <- mhDB.bonus$costCodeNew
+      mhDB.bonus          <- mhDB.bonus %>%
+        dplyr::group_by(costCode, month) %>%
+        dplyr::summarise(cost = sum(cost)) %>%
+        tidyr::spread(month, cost, fill = 0)
+    }
+  } else {
+    mhDB.bonus <- NULL
   }
+
+
 
   # Compute for Rice Subsidy for Agency
   cat("\nComputing rice subsidy (agency).\n")
