@@ -63,7 +63,6 @@ Calculates monthly personnel cost for each cost code. Personnel costs are
     \item{521018}{HMO}
     \item{524037}{Grouplife}
     \item{523011}{Safety Gadgets}
-    \item{522099}{CF Others}
     \item{522010}{CF Manpower Services}
   }
 }

@@ -22,7 +22,6 @@ NULL
 #'     \item{521018}{HMO}
 #'     \item{524037}{Grouplife}
 #'     \item{523011}{Safety Gadgets}
-#'     \item{522099}{CF Others}
 #'     \item{522010}{CF Manpower Services}
 #'   }
 #'
@@ -1665,13 +1664,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r13 <- NULL
   }
 
-  # CF Manpower Services
-  if (forecast){
-    manpowerServicesName <- "CF Others"
-  } else {
-    manpowerServicesName <- "CF Manpower Services"
-  }
-
   r14 <- data.table::rbindlist(l = list(
     data.frame(costCode         = mhDB.d.A$costCode,
                month            = mhDB.d.A$month,
@@ -1715,15 +1707,9 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r14$cost <- round(r14$cost * 1.15, digits = 2)
 
   if (nrow(r14) > 0) {
-    r14$row  <- manpowerServicesName
+    r14$row  <- "CF Manpower Services"
   } else {
-
-    r14 <- data.frame(costCode         = unique(mhDB$costCode),
-                      month            = 1L,
-                      cost             = 0L,
-                      row              = manpowerServicesName,
-                      stringsAsFactors = FALSE)
-
+    r14 <- NULL
   }
 
   # Safety Gadgets
