@@ -134,8 +134,11 @@ setMethod(
     theObject@forecast    <- forecast
     theObject@field       <- field
 
-    if (length(dependents) == 12L & is.integer(dependents))
+    if (length(dependents) == 12L & is.integer(dependents)) {
+      isNA <- is.na(dependents)
+      dependents[isNA] <- 0L
       theObject@dependents  <- dependents
+    }
 
     # attendance must be <= 1 but preferably > 0.5
     theObject@attendance <- attendance

@@ -121,6 +121,40 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
                           hol         = hol,
                           dependents  = rep(1L, times = 12))
 
+tempEmp8 <- initREmployee(theObject   = tempEmp,
+                          ID          = ID,
+                          name        = name,
+                          designation = designation,
+                          costCode    = costCode,
+                          status      = status,
+                          cBegin      = cBegin,
+                          cEnd        = cEnd,
+                          inHouse     = inHouse,
+                          restday     = restday,
+                          hol         = hol,
+                          dependents  = c(NA, rep(1L, times = 11)))
+
+ID          <- "S-240"
+name        <- "Basil Eric Rabi"
+designation <- "Materials Engineering Supervisor"
+costCode    <- "14000"
+status      <- "reg"
+cBegin      <- "2012-10-15"
+inHouse     <- TRUE
+restday     <- "Tuesday"
+tempEmp  <- createEmp(empClass = "divisionmanager")
+tempEmp9 <- initREmployee(theObject   = tempEmp,
+                          ID          = ID,
+                          name        = name,
+                          designation = designation,
+                          costCode    = costCode,
+                          status      = status,
+                          cBegin      = cBegin,
+                          inHouse     = inHouse,
+                          restday     = restday,
+                          hol         = hol,
+                          dependents  = c(NA, rep(1L, times = 10), NA))
+
 test_that("getHMO() works", {
   expect_equal(sum(getHMO(tempEmp1)$hmo),
                round((15676.25 + 15676.25) / 12, digits = 2) * 12)
@@ -133,6 +167,12 @@ test_that("getHMO() works", {
   expect_equal(sum(getHMO(tempEmp5)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp6)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp7)$hmo), 0)
+  expect_equal(sum(getHMO(tempEmp8)$hmo), 0)
+  expect_equal(sum(getHMO(tempEmp9)$hmo),
+               sum(round(
+                 (15676.25 / 12) + (15676.25 * c(0, rep(1, times = 10), 0) / 12)
+                 , digits = 2
+               )))
 })
 
 # Test for forecast
