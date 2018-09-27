@@ -28,7 +28,7 @@ a \code{\link{data.frame}} with 12 rows and 3 columns representing
 }
 \description{
 For every month, 1 sack of rice is awarded to the employee.
-  Once sack costs around 2,200 PhP.
+  Once sack costs around 2,500 PhP.
 }
 \section{Methods (by class)}{
 \itemize{

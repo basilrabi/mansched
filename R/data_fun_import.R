@@ -93,9 +93,10 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   }
 
   # Remove white spaces (including leading and trailing spaces)
-  empPool[, c("personnelClass", "equipment", "costCode", "dcc")] <- lapply(
-    empPool[, c("personnelClass", "equipment", "costCode", "dcc")],
-    FUN = rmWS)
+  empPool[, c("name", "personnelClass", "equipment", "costCode", "dcc")] <-
+    lapply(
+      empPool[, c("name", "personnelClass", "equipment", "costCode", "dcc")],
+      FUN = rmWS)
 
   empPool[, c("inHouse", "isRF", "field")] <-
     lapply(empPool[, c("inHouse", "isRF", "field")], FUN = as.logical)
@@ -117,8 +118,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
                                  x = empPool$personnelClass)
 
   # Change to upper case
-  empPool[, c("equipment", "costCode", "dcc")] <-
-    lapply(empPool[, c("equipment", "costCode", "dcc")], FUN = toupper)
+  empPool[, c("name", "equipment", "costCode", "dcc")] <-
+    lapply(empPool[, c("name", "equipment", "costCode", "dcc")], FUN = toupper)
 
   # Get only the first 3 characters for employee status
   empPool$status <- substr(x = empPool$status, start = 1L, stop = 3L)

@@ -114,8 +114,43 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
                           restday     = restday,
                           hol         = hol)
 
+name        <- "BARGE MAINTENANCE 1"
+status      <- "age"
+cBegin      <- "2018-01-01"
+inHouse     <- FALSE
+restday     <- "Tuesday"
+tempEmp  <- createEmp(empClass = "laborer")
+tempEmp8 <- initREmployee(theObject   = tempEmp,
+                          ID          = ID,
+                          name        = name,
+                          designation = designation,
+                          costCode    = costCode,
+                          status      = status,
+                          cBegin      = cBegin,
+                          inHouse     = inHouse,
+                          restday     = restday,
+                          hol         = hol,
+                          dependents  = c(NA, rep(1L, times = 10), NA))
 
-test_that("getRiceSub() works", {
+name        <- "ORE BREAKER 1"
+status      <- "age"
+cBegin      <- "2018-01-01"
+inHouse     <- FALSE
+restday     <- "Tuesday"
+tempEmp  <- createEmp(empClass = "laborer")
+tempEmp9 <- initREmployee(theObject   = tempEmp,
+                          ID          = ID,
+                          name        = name,
+                          designation = designation,
+                          costCode    = costCode,
+                          status      = status,
+                          cBegin      = cBegin,
+                          inHouse     = inHouse,
+                          restday     = restday,
+                          hol         = hol,
+                          dependents  = c(NA, rep(1L, times = 10), NA))
+
+test_that("getRiceSub() works in budget", {
   expect_equal(sum(getRiceSub(tempEmp1)$riceSub), 2500 * 12)
   expect_equal(sum(getRiceSub(tempEmp2)$riceSub), 2500 * 11)
   expect_equal(sum(getRiceSub(tempEmp3)$riceSub), 2500 * 10)
@@ -123,6 +158,8 @@ test_that("getRiceSub() works", {
   expect_equal(sum(getRiceSub(tempEmp5)$riceSub), 2500 * 9)
   expect_equal(sum(getRiceSub(tempEmp6)$riceSub), 2500 * 7)
   expect_equal(sum(getRiceSub(tempEmp7)$riceSub), 2500 * 7)
+  expect_equal(sum(getRiceSub(tempEmp8)$riceSub), 0)
+  expect_equal(sum(getRiceSub(tempEmp9)$riceSub), 2500 * 12 * 0.5)
 })
 
 # Test for forecast
@@ -249,7 +286,45 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
                           forecast    = TRUE)
 
 
-test_that("getRiceSub() works", {
+name        <- "BARGE MAINTENANCE 1"
+status      <- "age"
+cBegin      <- "2018-01-01"
+inHouse     <- FALSE
+restday     <- "Tuesday"
+tempEmp  <- createEmp(empClass = "laborer")
+tempEmp8 <- initREmployee(theObject   = tempEmp,
+                          ID          = ID,
+                          name        = name,
+                          designation = designation,
+                          costCode    = costCode,
+                          status      = status,
+                          cBegin      = cBegin,
+                          inHouse     = inHouse,
+                          restday     = restday,
+                          hol         = hol,
+                          forecast    = TRUE,
+                          dependents  = c(NA, rep(1L, times = 10), NA))
+
+name        <- "ORE BREAKER 1"
+status      <- "age"
+cBegin      <- "2018-01-01"
+inHouse     <- FALSE
+restday     <- "Tuesday"
+tempEmp  <- createEmp(empClass = "laborer")
+tempEmp9 <- initREmployee(theObject   = tempEmp,
+                          ID          = ID,
+                          name        = name,
+                          designation = designation,
+                          costCode    = costCode,
+                          status      = status,
+                          cBegin      = cBegin,
+                          inHouse     = inHouse,
+                          restday     = restday,
+                          hol         = hol,
+                          forecast    = TRUE,
+                          dependents  = c(NA, rep(1L, times = 10), NA))
+
+test_that("getRiceSub() works in forecast", {
   expect_equal(sum(getRiceSub(tempEmp1)$riceSub), 0)
   expect_equal(sum(getRiceSub(tempEmp2)$riceSub), 0)
   expect_equal(sum(getRiceSub(tempEmp3)$riceSub), 0)
@@ -257,6 +332,8 @@ test_that("getRiceSub() works", {
   expect_equal(sum(getRiceSub(tempEmp5)$riceSub), 0)
   expect_equal(sum(getRiceSub(tempEmp6)$riceSub), 0)
   expect_equal(sum(getRiceSub(tempEmp7)$riceSub), 2500 * 7)
+  expect_equal(sum(getRiceSub(tempEmp8)$riceSub), 0)
+  expect_equal(sum(getRiceSub(tempEmp9)$riceSub), 0)
 })
 
 rm(list = ls())
