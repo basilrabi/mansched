@@ -897,6 +897,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   # Compute for Phil-Health contribution of employer
   cat("\nComputing Philhealth contribution.\n")
 
+  # TODO: make method for PHIC
+
   PHdb <- lapply(listR, FUN = function(x) {
 
     tempData <- getCM(x)
@@ -933,7 +935,28 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
 
     tempData$PH <- sapply(tempData$salG, FUN = function(x) {
-      PHIC$c[which(PHIC$r1 <= x & PHIC$r2 >= x)]
+      if (x < 1) {
+        return(0)
+      }
+
+      if (forecast) {
+        if (x < 10000) {
+          return(137.5)
+        } else if (x >= 40000) {
+          return(550)
+        } else {
+          return(round(x * 0.01375, digits = 2))
+        }
+      } else {
+        if (x < 10000) {
+          return(137.5)
+        } else if (x >= 100000) {
+          return(1375)
+        } else {
+          return(round(x * 0.01375, digits = 2))
+        }
+      }
+
     })
 
     tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "PH")]
