@@ -1434,11 +1434,11 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                        cost             = mhDB.d.P.Reg$costWage,
                        stringsAsFactors = FALSE)
 
-  r01 <- as.data.frame(data.table::rbindlist(l = list(r01.01,
-                                                      r01.02,
-                                                      r01.03,
-                                                      r01.04,
-                                                      r01.05)))
+  r01 <- data.table::rbindlist(l = list(r01.01,
+                                        r01.02,
+                                        r01.03,
+                                        r01.04,
+                                        r01.05))
 
   if (nrow(r01) > 0) {
     r01$row <- "Salaries-Regular"
@@ -1507,18 +1507,18 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                        cost             = mhDB.d.P.OT$costNP,
                        stringsAsFactors = FALSE)
 
-  r02 <- as.data.frame(data.table::rbindlist(l = list(r02.01,
-                                                      r02.02,
-                                                      r02.03,
-                                                      r02.04,
-                                                      r02.05,
-                                                      r02.06,
-                                                      r02.07,
-                                                      r02.08,
-                                                      r02.09,
-                                                      r02.10,
-                                                      r02.11,
-                                                      r02.12)))
+  r02 <- data.table::rbindlist(l = list(r02.01,
+                                        r02.02,
+                                        r02.03,
+                                        r02.04,
+                                        r02.05,
+                                        r02.06,
+                                        r02.07,
+                                        r02.08,
+                                        r02.09,
+                                        r02.10,
+                                        r02.11,
+                                        r02.12))
 
   if (nrow(r02) > 0) {
     r02$row <- "OT Pay - Regular"
@@ -1542,9 +1542,9 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                        cost             = hol.mhDB.d.S$XcostWage,
                        stringsAsFactors = FALSE)
 
-  r03 <- as.data.frame(data.table::rbindlist(l = list(r03.01,
-                                                      r03.02,
-                                                      r03.03)))
+  r03 <- data.table::rbindlist(l = list(r03.01,
+                                        r03.02,
+                                        r03.03))
 
   if (nrow(r03) > 0) {
     r03$row <- "Salaries-Seasonal"
@@ -1600,8 +1600,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r05 <- mhDB.allow %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
-
-  r05 <- as.data.frame(r05)
 
   if (nrow(r05) > 0) {
     r05$row <- "Employees Allowance"
@@ -1719,15 +1717,18 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     data.frame(costCode         = mhDB.13mp.A$costCode,
                month            = mhDB.13mp.A$month,
                cost             = mhDB.13mp.A$cost,
-               stringsAsFactors = FALSE),
+               stringsAsFactors = FALSE)
+  ))
+
+  r14$cost <- round(r14$cost * 1.3117, digits = 2)
+
+  r14 <- data.table::rbindlist(list(
+    r14,
     data.frame(costCode         = mhDB.riceSub.A$costCode,
                month            = mhDB.riceSub.A$month,
                cost             = mhDB.riceSub.A$cost,
                stringsAsFactors = FALSE)
   ))
-
-  r14      <- as.data.frame(r14)
-  r14$cost <- round(r14$cost * 1.15, digits = 2)
 
   if (nrow(r14) > 0) {
     r14$row  <- "CF Manpower Services"
@@ -1739,7 +1740,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r15 <- mhDB.safetyGadgets %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
-  r15 <- as.data.frame(r15)
 
   if (nrow(r15) > 0) {
     r15$row <- "Safety Gadgets"
@@ -1751,7 +1751,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r16 <- mhDB.groupLife %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
-  r16 <- as.data.frame(r16)
 
   if (nrow(r16) > 0) {
     r16$row <- "Grouplife"
@@ -1763,7 +1762,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r17 <- mhDB.hmo %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
-  r17 <- as.data.frame(r17)
 
   if (nrow(r17) > 0) {
     r17$row <- "HMO"
@@ -1775,7 +1773,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r18 <- mhDB.benefits %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
-  r18 <- as.data.frame(r18)
 
   if (nrow(r18) > 0) {
     r18$row <- "Employee Benefits"
@@ -1787,7 +1784,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r19 <- mhDB.riceSub.I %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
-  r19 <- as.data.frame(r19)
 
   if (nrow(r19) > 0) {
     r19$row <- "Food Allowance / Rice Subsidy"
