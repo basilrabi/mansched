@@ -759,7 +759,13 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     data.table::rbindlist(lapply(listR, getCBA)),
     data.table::rbindlist(lapply(listR, getLongShirt)),
     data.table::rbindlist(lapply(listR, getLaborDayShirt)),
-    data.table::rbindlist(lapply(listR, getGC))
+    data.table::rbindlist(lapply(listR, FUN = function(x) {
+      if (isReg(x)) {
+        return(getGC(x))
+      } else {
+        return(NULL)
+      }
+    }))
   )) %>%
     dplyr::group_by(month, ID) %>%
     dplyr::summarise(benefits = sum(benefits))
@@ -776,6 +782,34 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.benefits$X <- mhDB.benefits$mh / mhDB.benefits$totMH
   mhDB.benefits$cost <- round(mhDB.benefits$X * mhDB.benefits$benefits,
                               digits = 2)
+
+  gcSea <- data.table::rbindlist(lapply(listR, FUN = function(x) {
+    if (x@status == "sea") {
+      return(getGC(x))
+    } else {
+      return(NULL)
+    }
+  }))
+
+  if (nrow(gcSea) > 0) {
+    mhDB.GC.sea <- mhDB[mhDB$mhType %in% distType &
+                          mhDB$status == "sea" &
+                          mhDB$month %in% 4:10, ] %>%
+      dplyr::group_by(ID, costCode) %>%
+      dplyr::summarise(mh = sum(mh)) %>%
+      dplyr::group_by(ID) %>%
+      dplyr::mutate(totMH = sum(mh))
+    mhDB.GC.sea$month <- 11L
+    mhDB.GC.sea$X <- mhDB.GC.sea$mh / mhDB.GC.sea$totMH
+    mhDB.GC.sea <- dplyr::left_join(x = mhDB.GC.sea,
+                                    y = gcSea,
+                                    by = c("ID", "month"))
+    mhDB.GC.sea$cost <- round(mhDB.GC.sea$X * mhDB.GC.sea$benefits, digits = 2)
+  } else {
+    mhDB.GC.sea  <- NULL
+  }
+
+  mhDB.benefits <- data.table::rbindlist(list(mhDB.benefits, mhDB.GC.sea))
 
   # Compute for Safety Bonus
   cat("\nComputing safety bonus.\n")
