@@ -12,7 +12,7 @@ hol <- getHol(hol = holidays, year = 2018)
 
 calDays <- getCalDays(cBegin = cBegin,
                       hol = hol,
-                      restday = restday)
+                      restday = "Sunday")
 
 tempEmp <- createEmp(empClass = "divisionmanager")
 tempEmp <- initREmployee(theObject = tempEmp,
@@ -41,6 +41,7 @@ test_that("division_manager() works", {
                                                         "lh",
                                                         "nh")],
                      MARGIN = 1, FUN = sum))
+  expect_equal(tempEmp@restday, "Sunday")
 })
 
 tempEmp <- createEmp(empClass = "groupmanager")
@@ -70,6 +71,7 @@ test_that("group_manager() works", {
                                                         "lh",
                                                         "nh")],
                      MARGIN = 1, FUN = sum))
+  expect_equal(tempEmp@restday, "Sunday")
 })
 
 tempEmp <- createEmp(empClass = "departmentmanager")
@@ -99,6 +101,7 @@ test_that("department_manager() works", {
                                                         "lh",
                                                         "nh")],
                      MARGIN = 1, FUN = sum))
+  expect_equal(tempEmp@restday, "Sunday")
 })
 
 tempEmp <- createEmp(empClass = "sectionhead")
@@ -128,6 +131,7 @@ test_that("section_head() works", {
                                                         "lh",
                                                         "nh")],
                      MARGIN = 1, FUN = sum))
+  expect_equal(tempEmp@restday, "Sunday")
 })
 
 tempEmp <- createEmp(empClass = "clerk")
@@ -158,6 +162,7 @@ test_that("clerk() works for regular non-RF", {
                                                         "lh",
                                                         "nh")],
                      MARGIN = 1, FUN = sum))
+  expect_equal(tempEmp@restday, "Sunday")
 })
 
 tempEmp <- createEmp(empClass = "clerk")
@@ -192,6 +197,7 @@ test_that("clerk() works for seasonal non-RF", {
                apply(calDays[, colnames(calDays) %in% c("lh","sh")],
                      MARGIN = 1,
                      FUN = sum))
+  expect_equal(tempEmp@restday, "Sunday")
 })
 
 tempEmp <- createEmp(empClass = "clerk")
@@ -226,6 +232,7 @@ test_that("clerk() works for regular RF", {
                                                         "rl",
                                                         "rn")],
                      MARGIN = 1, FUN = sum))
+  expect_equal(tempEmp@restday, "Sunday")
 })
 
 tempEmp <- createEmp(empClass = "clerk")
@@ -261,6 +268,7 @@ test_that("clerk() works for seasonal RF", {
                apply(calDays[, colnames(calDays) %in% c("lh",
                                                         "rl")],
                      MARGIN = 1, FUN = sum))
+  expect_equal(tempEmp@restday, "Sunday")
 })
 
 tempEmp <- createEmp(empClass = "technical")
@@ -277,6 +285,10 @@ tempEmp <- initREmployee(theObject = tempEmp,
                          d.rd = 5,
                          d.ho = 5,
                          d.rh = 5)
+
+calDays <- getCalDays(cBegin = cBegin,
+                      hol = hol,
+                      restday = restday)
 
 test_that("technical() works", {
   expect_equal(class(tempEmp)[1], "Technical")

@@ -22,27 +22,27 @@ initREmployee(theObject, ID, name, designation, attendance = 1,
 
 \S4method{initREmployee}{Employee}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
-  cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, d.rd = NA,
-  d.ho = NA, d.rh = NA, dcc = "NA", forecast = FALSE,
-  field = TRUE, dependents = NA)
+  cEnd = NA, inHouse = FALSE, hol, d.rd = NA, d.ho = NA,
+  d.rh = NA, dcc = "NA", forecast = FALSE, field = TRUE,
+  dependents = NA)
 
 \S4method{initREmployee}{Staff}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
-  cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, d.rd = NA,
-  d.ho = NA, d.rh = NA, dcc = "NA", forecast = FALSE,
-  field = TRUE, dependents = NA)
+  cEnd = NA, inHouse = FALSE, hol, d.rd = NA, d.ho = NA,
+  d.rh = NA, dcc = "NA", forecast = FALSE, field = TRUE,
+  dependents = NA)
 
 \S4method{initREmployee}{NonStaff}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
-  cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, OT = 3,
-  d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA", forecast = FALSE,
-  field = TRUE, dependents = NA)
+  cEnd = NA, inHouse = FALSE, hol, OT = 3, d.rd = NA, d.ho = NA,
+  d.rh = NA, dcc = "NA", forecast = FALSE, field = TRUE,
+  dependents = NA)
 
 \S4method{initREmployee}{Clerk}(theObject, ID, name, designation,
   attendance = 1, costCode = "NONE", status = "reg", cBegin,
-  cEnd = NA, inHouse = FALSE, restday = "Sunday", hol, RF = FALSE,
-  OT = 3, d.rd = NA, d.ho = NA, d.rh = NA, dcc = "NA",
-  forecast = FALSE, field = TRUE, dependents = NA)
+  cEnd = NA, inHouse = FALSE, hol, RF = FALSE, OT = 3, d.rd = NA,
+  d.ho = NA, d.rh = NA, dcc = "NA", forecast = FALSE,
+  field = TRUE, dependents = NA)
 
 \S4method{initREmployee}{OperationPersonnel}(theObject, ID, name,
   designation, attendance = 1, costCode = "NONE", status = "reg",

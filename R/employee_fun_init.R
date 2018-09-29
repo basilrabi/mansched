@@ -115,7 +115,6 @@ setMethod(
                         cBegin,
                         cEnd       = NA,
                         inHouse    = FALSE,
-                        restday    = "Sunday",
                         hol,
                         d.rd       = NA,
                         d.ho       = NA,
@@ -170,14 +169,6 @@ setMethod(
     } else {
       theObject@inHouse <- inHouse
     }
-
-    # restday must be a valid weekday prior to calling initEmployee
-
-    if (is.na(restday))
-      restday <- "Sunday"
-
-    theObject@restday <- restday
-
 
     calDays <- getCalDays(cBegin  = theObject@cBegin,
                           cEnd    = theObject@cEnd,
@@ -252,7 +243,6 @@ setMethod(
                         cBegin,
                         cEnd       = NA,
                         inHouse    = FALSE,
-                        restday    = "Sunday",
                         hol,
                         d.rd       = NA,
                         d.ho       = NA,
@@ -261,6 +251,11 @@ setMethod(
                         forecast   = FALSE,
                         field      = TRUE,
                         dependents = NA) {
+
+    # For all staff, assign a rest day of Sunday for computation purposes.
+    # This is because in a theortical Staff, the working days do not include
+    # Sundays.
+    theObject@restday <- "Sunday"
 
     tempData <- callNextMethod(theObject   = theObject,
                                ID          = ID,
@@ -272,7 +267,6 @@ setMethod(
                                cBegin      = cBegin,
                                cEnd        = cEnd,
                                inHouse     = inHouse,
-                               restday     = restday,
                                hol         = hol,
                                d.rd        = d.rd,
                                d.ho        = d.ho,
@@ -282,10 +276,6 @@ setMethod(
                                field       = field,
                                dependents  = dependents)
 
-    # For all staff, assign a rest day of Sunday for computation purposes.
-    # This is because in a theortical Staff, the working days do not include
-    # Sundays.
-    theObject@restday <- "Sunday"
     return(tempData[[1]])
   }
 )
@@ -304,7 +294,6 @@ setMethod(
                         cBegin,
                         cEnd       = NA,
                         inHouse    = FALSE,
-                        restday    = "Sunday",
                         hol,
                         OT         = 3,
                         d.rd       = NA,
@@ -328,7 +317,6 @@ setMethod(
                                cBegin      = cBegin,
                                cEnd        = cEnd,
                                inHouse     = inHouse,
-                               restday     = restday,
                                hol         = hol,
                                d.rd        = d.rd,
                                d.ho        = d.ho,
@@ -364,7 +352,6 @@ setMethod(
                         cBegin,
                         cEnd       = NA,
                         inHouse    = FALSE,
-                        restday    = "Sunday",
                         hol,
                         RF         = FALSE,
                         OT         = 3,
@@ -375,6 +362,11 @@ setMethod(
                         forecast   = FALSE,
                         field      = TRUE,
                         dependents = NA) {
+
+    # For all clerk, assign a rest day of Sunday for computation purposes.
+    # This is because in a theortical clerk, the working days do not include
+    # Sundays.
+    theObject@restday <- "Sunday"
 
     if (is.na(OT))
       OT <- 3
@@ -392,7 +384,6 @@ setMethod(
                                cBegin      = cBegin,
                                cEnd        = cEnd,
                                inHouse     = inHouse,
-                               restday     = restday,
                                hol         = hol,
                                OT          = OT,
                                d.rd        = d.rd,
@@ -476,6 +467,12 @@ setMethod(
                         forecast   = FALSE,
                         field      = TRUE,
                         dependents = NA) {
+
+    # restday must be a valid weekday prior to calling initEmployee
+    if (is.na(restday))
+      restday <- "Sunday"
+
+    theObject@restday <- restday
 
     if (is.na(OT))
       OT <- 3
