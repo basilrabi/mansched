@@ -281,6 +281,11 @@ setMethod(
                                forecast    = forecast,
                                field       = field,
                                dependents  = dependents)
+
+    # For all staff, assign a rest day of Sunday for computation purposes.
+    # This is because in a theortical Staff, the working days do not include
+    # Sundays.
+    theObject@restday <- "Sunday"
     return(tempData[[1]])
   }
 )
