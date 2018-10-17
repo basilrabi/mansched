@@ -100,11 +100,11 @@ tempEmp6 <- initREmployee(theObject = tempEmp,
 
 test_that("getAllowance() works", {
   expect_equal(sum(getAllowance(tempEmp1)$allowance), 1100 * 12)
-  expect_equal(sum(getAllowance(tempEmp2)$allowance), 4400 * 11)
-  expect_equal(sum(getAllowance(tempEmp3)$allowance), 4300 * 10)
-  expect_equal(sum(getAllowance(tempEmp4)$allowance), 2100 * 9)
+  expect_equal(sum(getAllowance(tempEmp2)$allowance), 4300 * 11)
+  expect_equal(sum(getAllowance(tempEmp3)$allowance), 4200 * 10)
+  expect_equal(sum(getAllowance(tempEmp4)$allowance), 2000 * 9)
   expect_equal(sum(getAllowance(tempEmp5)$allowance), 0)
-  expect_equal(sum(getAllowance(tempEmp6)$allowance), 2100 * 7)
+  expect_equal(sum(getAllowance(tempEmp6)$allowance), 2000 * 7)
 })
 
 # Test another set for forecast

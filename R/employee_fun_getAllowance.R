@@ -50,7 +50,7 @@ setMethod(
     cost      <- 0
 
     # Allowances
-    food <- 2200
+    food <- 2100
     lighting <- 1100
     housing <- 1100
 
@@ -85,7 +85,7 @@ setMethod(
       }
     } else {
 
-      foodForTechSup <- 2100
+      foodForTechSup <- 2000
 
       # Food allowance in 2018
       if (theObject@forecast)
