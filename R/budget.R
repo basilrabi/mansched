@@ -284,7 +284,7 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
                      row.names = FALSE)
   }
 
-  if (nrow(costDB[[4]]) > 0 & forecast) {
+  if (nrow(costDB[[4]]) > 0) {
     xlsx::write.xlsx(x = as.data.frame(costDB[[4]]),
                      file = "bonus.xlsx",
                      row.names = FALSE)

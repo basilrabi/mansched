@@ -1700,7 +1700,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   ## In 2019 budget, the bonus is part of 13th Month Pay
   if (!forecast) {
-    bonus <-mhDB.bonus[, c("costCode", "month", "cost")]
+    bonus <- mhDB.bonus[, c("costCode", "month", "cost")]
     r12 <- data.table::rbindlist(list(r12, bonus))
   }
 
