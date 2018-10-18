@@ -494,7 +494,7 @@ setMethod(
                                        mhDB.nhOT,
                                        mhDB.rsOT,
                                        mhDB.rlOT,
-                                       mhDB.rnOT))
+                                       mhDB.rnOT), use.names = TRUE)
 
     mhDB <- as.data.frame(mhDB[which(mhDB$mh > 0),])
 

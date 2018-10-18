@@ -171,9 +171,9 @@ getmhDB <- function(empReq,
   mhDB   <- lapply(assignedData, FUN = function(x) {x[[1]]})
   mhReq  <- lapply(assignedData, FUN = function(x) {x[[4]]})
   mhPool <- lapply(assignedData, FUN = function(x) {x[[5]]})
-  mhDB   <- as.data.frame(data.table::rbindlist(mhDB  ))
-  mhReq  <- as.data.frame(data.table::rbindlist(mhReq ))
-  mhPool <- as.data.frame(data.table::rbindlist(mhPool))
+  mhDB   <- as.data.frame(data.table::rbindlist(mhDB  , use.names = TRUE))
+  mhReq  <- as.data.frame(data.table::rbindlist(mhReq , use.names = TRUE))
+  mhPool <- as.data.frame(data.table::rbindlist(mhPool, use.names = TRUE))
 
   if (nrow(mhDB) < 1)
     mhDB <- NULL
@@ -198,14 +198,14 @@ getmhDB <- function(empReq,
       return(mh)
     })
 
-    u.mhPool <- data.table::rbindlist(u.mhPool)
+    u.mhPool <- data.table::rbindlist(u.mhPool, use.names = TRUE)
     u.mhPool <- u.mhPool %>%
       tidyr::gather(key = "mhType",
                     value = mh,
                     -month,
                     -ID)
 
-    mhPool <- data.table::rbindlist(list(mhPool, u.mhPool))
+    mhPool <- data.table::rbindlist(list(mhPool, u.mhPool), use.names = TRUE)
     mhPool <- mhPool[mhPool$mh > 0,]
     mhPool <- as.data.frame(mhPool)
 
@@ -243,10 +243,10 @@ getmhDB <- function(empReq,
       return(mh)
     })
 
-    u.mhReq <- data.table::rbindlist(u.mhReq)
+    u.mhReq <- data.table::rbindlist(u.mhReq, use.names = TRUE)
     u.mhReq <- u.mhReq %>%
       tidyr::gather(key = "mhType", value = mh, -month, -ID)
-    mhReq <- data.table::rbindlist(list(mhReq, u.mhReq))
+    mhReq <- data.table::rbindlist(list(mhReq, u.mhReq), use.names = TRUE)
     mhReq <- mhReq[mhReq$mh > 0, ]
     mhReq <- as.data.frame(mhReq)
   }

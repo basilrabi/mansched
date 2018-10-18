@@ -42,6 +42,9 @@
 #'       }
 #'   }
 #' @export assignPrio
+#' @importFrom data.table rbindlist
+#' @importFrom dplyr "%>%"
+#' @importFrom tidyr gather
 assignPrio <- function(empReq, empPool, listT, listR) {
 
   # Define global variables
@@ -128,7 +131,8 @@ assignPrio <- function(empReq, empPool, listT, listR) {
   mhDB <- data.table::rbindlist(l = list(tempData1[[5]],
                                          tempData2[[5]],
                                          tempData3[[5]],
-                                         tempData4))
+                                         tempData4),
+                                use.names = TRUE)
 
   mhDB <- as.data.frame(mhDB)
 
@@ -150,7 +154,7 @@ assignPrio <- function(empReq, empPool, listT, listR) {
       return(mh)
     })
 
-    mhPool <- data.table::rbindlist(mhPool)
+    mhPool <- data.table::rbindlist(mhPool, use.names = TRUE)
 
     mhPool <- mhPool %>%
       tidyr::gather(key   = "mhType",
@@ -199,7 +203,7 @@ assignPrio <- function(empReq, empPool, listT, listR) {
       return(mh)
     })
 
-    mhReq <- data.table::rbindlist(mhReq)
+    mhReq <- data.table::rbindlist(mhReq, use.names = TRUE)
 
     mhReq <- mhReq %>%
       tidyr::gather(key = "mhType",

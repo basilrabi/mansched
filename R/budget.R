@@ -13,7 +13,6 @@
 #' @importFrom xlsx write.xlsx
 #' @importFrom dplyr left_join group_by summarise "%>%"
 #' @importFrom tidyr spread
-#' @importFrom data.table rbindlist
 budget <- function(xlsxFile, year, forecast = FALSE) {
 
   # Define global variables
