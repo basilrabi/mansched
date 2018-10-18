@@ -54,7 +54,7 @@ sal <- c(wage$s[1], wage$i[1])
 # Compute 13th  month pay
 testMP13 <- rep(round(sal[2] / 12, digits = 2), times = 12)
 # Add mid-year bonus
-testMP13[5] <- testMP13[5] + sal[1]
+testMP13[5] <- testMP13[5] + sal[2]
 # Add year-end bonus
 testMP13[12] <- testMP13[12] + sal[2] * 2
 

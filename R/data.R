@@ -95,8 +95,8 @@ validEmpStatus <- c("reg", "pro", "sea", "age")
 #' @format \code{\link{data.frame}} with 12 rows and two columns
 #' @export payA
 payA <- data.frame(month            = 1:12,
-                   sal              = c(rep("a", times = 6),
-                                        rep("b", times = 6)),
+                   sal              = c(rep("a", times = 0),
+                                        rep("b", times = 12)),
                    stringsAsFactors = FALSE)
 
 #' Payment scheme for regular RF
