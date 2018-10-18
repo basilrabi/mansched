@@ -54,6 +54,12 @@ NULL
 #'     \item tabulated total man hours per month per cost code
 #'     \item tabulated 13th month pay per month per cost code
 #'     \item tabulated bonus cost per month per cost code
+#'     \item a data.frame with 15 columns
+#'
+#'       This is simlar to the first object returned but composed of only
+#'       seasonal employee-related costs.
+#'       Also, there is no concat column since this will not be linked to the
+#'       budget templates.
 #'   }
 #' @export getCost
 #' @importFrom dplyr left_join group_by summarise mutate "%>%"
@@ -687,11 +693,11 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   allowance  <- data.table::rbindlist(lapply(listR, getAllowance))
   mhDB.allow <- mhDB[mhDB$mhType %in% distType, ] %>%
-    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::group_by(ID, month, costCode, status) %>%
     dplyr::summarise(mh = sum(mh))
 
   mhDB.allow <- mhDB.allow %>%
-    dplyr::group_by(ID, month) %>%
+    dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh))
 
   mhDB.allow <- dplyr::left_join(mhDB.allow, allowance, by = c("ID", "month"))
@@ -704,11 +710,11 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   safetyGadgets <- data.table::rbindlist(lapply(listR, getSafetyGadgets))
   mhDB.safetyGadgets <- mhDB[mhDB$mhType %in% distType, ] %>%
-    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::group_by(ID, month, costCode, status) %>%
     dplyr::summarise(mh = sum(mh))
 
   mhDB.safetyGadgets <- mhDB.safetyGadgets %>%
-    dplyr::group_by(ID, month) %>%
+    dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh))
 
   mhDB.safetyGadgets <- dplyr::left_join(mhDB.safetyGadgets,
@@ -771,7 +777,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     dplyr::summarise(benefits = sum(benefits))
 
   mhDB.benefits <- mhDB[mhDB$mhType %in% distType, ] %>%
-    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::group_by(ID, month, costCode, status) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month) %>%
     dplyr::mutate(totMH = sum(mh))
@@ -782,6 +788,10 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.benefits$X <- mhDB.benefits$mh / mhDB.benefits$totMH
   mhDB.benefits$cost <- round(mhDB.benefits$X * mhDB.benefits$benefits,
                               digits = 2)
+
+  mhDB.benefits.sea <- mhDB.benefits[mhDB.benefits$status == "sea",]
+  mhDB.benefits.sea$status <- NULL
+  mhDB.benefits$status <- NULL
 
   gcSea <- data.table::rbindlist(lapply(listR, FUN = function(x) {
     if (x@status == "sea") {
@@ -805,6 +815,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                     y = gcSea,
                                     by = c("ID", "month"))
     mhDB.GC.sea$cost <- round(mhDB.GC.sea$X * mhDB.GC.sea$benefits, digits = 2)
+    mhDB.benefits.sea <- data.table::rbindlist(list(mhDB.benefits.sea,
+                                                    mhDB.GC.sea))
   } else {
     mhDB.GC.sea  <- NULL
   }
@@ -1435,7 +1447,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     ## Distribute rice subsidy
     mhDB.riceSub.I <- mhDB[mhDB$mhType %in% distType &
                              mhDB$status != "age",] %>%
-      dplyr::group_by(ID, month, costCode) %>%
+      dplyr::group_by(ID, month, costCode, status) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID, month) %>%
       dplyr::mutate(totMH = sum(mh))
@@ -1649,6 +1661,17 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r05 <- NULL
   }
 
+  r05.sea <- mhDB.allow %>%
+    dplyr::filter(status == "sea") %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost))
+
+  if (nrow(r05.sea) > 0) {
+    r05.sea$row <- "Employees Allowance"
+  } else {
+    r05.sea <- NULL
+  }
+
   # Employee Benefits
   r06 <- mhDB.SB[, !colnames(mhDB.SB) %in% c("mh", "costCodeNew")]
 
@@ -1667,6 +1690,14 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r07 <- NULL
   }
 
+  r07.sea <- mhDB.SSS[mhDB.SSS$status == "sea", c("costCode", "month", "cost")]
+
+  if (nrow(r07.sea) > 0) {
+    r07.sea$row <- "Premium SSS, EC"
+  } else {
+    r07.sea <- NULL
+  }
+
   # Prem-HDMF (Pag-ibig)
   r08 <- mhDB.PI[, c("costCode", "month", "cost")]
 
@@ -1674,6 +1705,14 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r08$row <- "Prem-HDMF (Pag-ibig)"
   } else {
     r08 <- NULL
+  }
+
+  r08.sea <- mhDB.PI[mhDB.PI$status == "sea", c("costCode", "month", "cost")]
+
+  if (nrow(r08.sea) > 0) {
+    r08.sea$row <- "Prem-HDMF (Pag-ibig)"
+  } else {
+    r08.sea <- NULL
   }
 
   # Philhealth
@@ -1685,6 +1724,14 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r09 <- NULL
   }
 
+  r09.sea <- mhDB.PH[mhDB.PH$status == "sea", c("costCode", "month", "cost")]
+
+  if (nrow(r09.sea) > 0) {
+    r09.sea$row <- "Philhealth"
+  } else {
+    r09.sea <- NULL
+  }
+
   # Leave Commutation
   r10 <- mhDB.LC[, c("costCode", "month", "cost")]
 
@@ -1694,6 +1741,14 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r10 <- NULL
   }
 
+  r10.sea <- mhDB.LC.S[mhDB.LC.S$status == "sea",
+                       colnames(mhDB.LC.S) %in% c("costCode", "month", "cost")]
+
+  if (!is.null(r10.sea)) {
+    if (nrow(r10.sea) > 0)
+      r10.sea$row <- "Leave Commutation"
+  }
+
   # Hospital and Medical Expenses
   r11 <- mhDB.HM[, c("costCode", "month", "cost")]
 
@@ -1701,6 +1756,14 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r11$row <- "Hospital and Medical Expenses"
   } else {
     r11 <- NULL
+  }
+
+  r11.sea <- mhDB.HM[mhDB.HM$status == "sea", c("costCode", "month", "cost")]
+
+  if (nrow(r11.sea) > 0) {
+    r11.sea$row <- "Hospital and Medical Expenses"
+  } else {
+    r11.sea <- NULL
   }
 
   # 13th Month Pay
@@ -1789,6 +1852,17 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r15 <- NULL
   }
 
+  r15.sea <- mhDB.safetyGadgets %>%
+    dplyr::filter(status == "sea") %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost))
+
+  if (nrow(r15.sea) > 0) {
+    r15.sea$row <- "Safety Gadgets"
+  } else {
+    r15.sea <- NULL
+  }
+
   # Group Life Insurance
   r16 <- mhDB.groupLife %>%
     dplyr::group_by(costCode, month) %>%
@@ -1822,6 +1896,16 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r18 <- NULL
   }
 
+  r18.sea <- mhDB.benefits.sea %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost))
+
+  if (nrow(r18.sea) > 0) {
+    r18.sea$row <- "Employee Benefits"
+  } else {
+    r18.sea <- NULL
+  }
+
   # Food Allowance / Rice Subsidy
   r19 <- mhDB.riceSub.I %>%
     dplyr::group_by(costCode, month) %>%
@@ -1831,6 +1915,17 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r19$row <- "Food Allowance / Rice Subsidy"
   } else {
     r19 <- NULL
+  }
+
+  r19.sea <- mhDB.riceSub.I %>%
+    dplyr::filter(status == "sea") %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost))
+
+  if (nrow(r19.sea) > 0) {
+    r19.sea$row <- "Food Allowance / Rice Subsidy"
+  } else {
+    r19.sea <- NULL
   }
 
   costDB <- data.table::rbindlist(list(
@@ -1846,6 +1941,11 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   costDB <- costDB %>%
     tidyr::spread(month, cost, fill = 0)
 
+  costDB.sea <- data.table::rbindlist(list(
+    r05.sea, r07.sea, r08.sea, r09.sea, r10.sea,
+    r11.sea, r15.sea, r18.sea, r19.sea
+  ))
+
   costCode <- unique(costDB$costCode)
 
   cat("\nExporting data.\n")
@@ -1860,5 +1960,21 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   export.mh     <- export.mh[order(export.mh$costCode),]
   export.mh$SUM <- apply(export.mh[, 2:13], MARGIN = 1, FUN = sum)
 
-  return(list(export, export.mh, accr.13mp, mhDB.bonus))
+  if (nrow(costDB.sea) > 0) {
+    costDB.sea <- costDB.sea %>%
+      dplyr::group_by(costCode, row, month) %>%
+      dplyr::summarise(cost = sum(cost))
+
+    costDB.sea <- dplyr::left_join(x = costDB.sea, y = ac, by = "row")
+
+    costDB.sea <- costDB.sea %>%
+      tidyr::spread(month, cost, fill = 0)
+
+    costDB.sea <- costDB.sea[, c("costCode",
+                                 "row",
+                                 "code",
+                                 as.character(1:12))]
+  }
+
+  return(list(export, export.mh, accr.13mp, mhDB.bonus, costDB.sea))
 }

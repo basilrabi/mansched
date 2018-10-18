@@ -290,6 +290,12 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
                      row.names = FALSE)
   }
 
+  if (nrow(costDB[[5]]) > 0) {
+    xlsx::write.xlsx(x = as.data.frame(costDB[[5]]),
+                     file = "seasonalCosts.xlsx",
+                     row.names = FALSE)
+  }
+
   if (!is.null(mhPool)) {
 
     mhPool <- dplyr::left_join(

@@ -41,6 +41,12 @@ a list containing the following:
     \item tabulated total man hours per month per cost code
     \item tabulated 13th month pay per month per cost code
     \item tabulated bonus cost per month per cost code
+    \item a data.frame with 15 columns
+
+      This is simlar to the first object returned but composed of only
+      seasonal employee-related costs.
+      Also, there is no concat column since this will not be linked to the
+      budget templates.
   }
 }
 \description{
