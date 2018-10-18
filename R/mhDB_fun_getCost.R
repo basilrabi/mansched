@@ -1433,7 +1433,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                          y  = riceSub.A,
                                          by = c("ID", "month"))
 
-    mhDB.riceSub.A$cost <- mhDB.riceSub.A$X * mhDB.riceSub.A$riceSub
+    mhDB.riceSub.A$cost <- round(mhDB.riceSub.A$X * mhDB.riceSub.A$riceSub,
+                                 digits = 2)
   } else {
     mhDB.riceSub.A <- NULL
   }
@@ -1460,7 +1461,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     mhDB.riceSub.I$X <- mhDB.riceSub.I$mh / mhDB.riceSub.I$totMH
     mhDB.riceSub.I <-
       dplyr::left_join(x = mhDB.riceSub.I, y = riceSub.I, by = c("ID", "month"))
-    mhDB.riceSub.I$cost <- mhDB.riceSub.I$X * mhDB.riceSub.I$riceSub
+    mhDB.riceSub.I$cost <- round(mhDB.riceSub.I$X * mhDB.riceSub.I$riceSub,
+                                 digits = 2)
   } else {
     mhDB.riceSub.I <- NULL
   }
