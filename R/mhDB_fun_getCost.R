@@ -1969,11 +1969,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
     costDB.sea <- costDB.sea %>%
       tidyr::spread(month, cost, fill = 0)
-
-    costDB.sea <- costDB.sea[, c("costCode",
-                                 "row",
-                                 "code",
-                                 as.character(1:12))]
   }
 
   return(list(export, export.mh, accr.13mp, mhDB.bonus, costDB.sea))
