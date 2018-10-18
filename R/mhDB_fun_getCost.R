@@ -833,6 +833,14 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
       if (grepl("14\\d00", x = x))
         return("14000")
 
+      if (!forecast) {
+        if (grepl("1100-A", x = x)) {
+          return("01100-A")
+        } else {
+          return("01100-B")
+        }
+      }
+
       return("1100")
     }
   )
