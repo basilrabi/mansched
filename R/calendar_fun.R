@@ -131,27 +131,28 @@ getCalDays <- function(cBegin, cEnd = NA, hol, restday) {
   hol$is.rd <- FALSE
   hol$is.rd[which(hol$weekday == restday)] <- TRUE
 
+  # Man-day type
   hol$mdType <- apply(X = hol[,c(3:6)], MARGIN = 1,FUN = function(x) {
     if (sum(x) == 0) {
       return("reg") # regular day
     } else if (sum(x) == 1) {
       if (x[4]) {
         return("rd") # rest day
+      } else if (x[1]) {
+        return("sh") # special holiday
       } else if (x[2]) {
         return("lh") # legal holiday
       } else if (x[3]) {
-        return("sh") # special holiday
-      } else if (x[1]) {
         return("nh") # negotiated holiday
       } else {
         stop("Unknown day!")
       }
     } else if (sum(x) == 2) {
-      if (x[4] & x[2]) {
+      if (x[4] & x[1]) {
+        return("rs") # rest day and special holiday
+      } else if (x[4] & x[2]) {
         return("rl") # rest day and legal holiday
       } else if (x[4] & x[3]) {
-        return("rs") # rest day and special holiday
-      } else if (x[4] & x[1]) {
         return("rn") # rest day and negotiated holiday
       }
     } else {
@@ -228,11 +229,11 @@ getMDTProb <- function(hol) {
 
   hol$type <- apply(hol[,c(3:5)], MARGIN = 1, FUN = function(x) {
     if (x[1]) {
-      return("nh")
+      return("sh")
     } else if (x[2]) {
       return("lh")
-    }else if (x[3]) {
-      return("sh")
+    } else if (x[3]) {
+      return("nh")
     } else {
       return("reg")
     }
