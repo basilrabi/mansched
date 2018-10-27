@@ -22,7 +22,7 @@ Install the appropriate version of java for your R installation.
 
 #### java in macOS
 
-In macOS, you might need to
+In macOS, you need to install [jdk](https://docs.oracle.com/javase/8/docs/technotes/guides/install/mac_jdk.html) and
 [reconfigure](https://stackoverflow.com/questions/34971966/how-does-one-configure-rjava-on-osx-to-select-the-right-jvm-jinit-failing)
 the java installation.
 
@@ -36,7 +36,7 @@ sudo R CMD javareconf
 Then in R console, run:
 
 ``` r
-install.packages("rJava", type = "source")
+install.packages("rJava")
 ```
 
 ### devtools

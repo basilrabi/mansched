@@ -1,8 +1,8 @@
 Package: mansched
 Type: Package
 Title: Manpower Scheduler and Personnel Cost Calculator for Taganito Mine
-Version: 0.1.0.9000
-Date: 2018-09-10
+Version: 0.2.0
+Date: 2018-10-27
 Authors@R: c(
   person("Basil Eric", "Rabi",
   email = "basil.rabi@tmc.nickelasia.com",
