@@ -3,7 +3,7 @@ NULL
 
 #' Compute cost for CBA provisions
 #'
-#' Taganito Mine provides items to all regular employees as agreen upon with
+#' Taganito Mine provides items to all regular employees as agreed upon with
 #'   the labor union.
 #'
 #' @param theObject \code{\link{Employee-class}} object
@@ -32,10 +32,20 @@ setMethod(
   signature  = "Employee",
   definition = function(theObject) {
 
-    price <- 5300
+    uniform <- 1750
+    maong <- 800
+    packBag <- 1000
+    waterJug <- 400
+    if (theObject@forecast) {
+      uniform <- 1600
+      maong <- 700
+      packBag <- 980
+      waterJug <- 380
+    }
+    price <- 2 * uniform + maong + packBag + waterJug
     cba <- getCM(theObject)
 
-    if (theObject@forecast | theObject@status != "reg")
+    if (theObject@status != "reg")
       price <- 0
 
     cba$benefits <- round(cba$allow * price / 12, digits = 2)

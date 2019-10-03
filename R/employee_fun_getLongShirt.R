@@ -31,11 +31,12 @@ setMethod(
   signature  = "Employee",
   definition = function(theObject) {
 
-    price <- 1170
-    longShirt  <- getCM(theObject)
-
-    if (theObject@forecast | theObject@status == "age")
+    price <- 3 * 450
+    if (theObject@forecast)
+      price <- 3 * 390
+    if (theObject@status == "age")
       price <- 0
+    longShirt  <- getCM(theObject)
 
     longShirt$benefits <- round(longShirt$allow * price / 12, digits = 2)
 

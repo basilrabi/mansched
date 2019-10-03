@@ -26,7 +26,7 @@ a \code{\link{data.frame}} with 12 rows and 3 columns representing
   }
 }
 \description{
-Taganito Mine provides items to all regular employees as agreen upon with
+Taganito Mine provides items to all regular employees as agreed upon with
   the labor union.
 }
 \section{Methods (by class)}{

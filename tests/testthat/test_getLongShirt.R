@@ -114,14 +114,13 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
                           restday     = restday,
                           hol         = hol)
 
-
 test_that("getLongShirt() works", {
-  expect_equal(sum(getLongShirt(tempEmp1)$benefits), 1170)
-  expect_equal(sum(getLongShirt(tempEmp2)$benefits), 97.5 * 11)
-  expect_equal(sum(getLongShirt(tempEmp3)$benefits), 97.5 * 10)
-  expect_equal(sum(getLongShirt(tempEmp4)$benefits), 97.5 * 9)
-  expect_equal(sum(getLongShirt(tempEmp5)$benefits), 97.5 * 9)
-  expect_equal(sum(getLongShirt(tempEmp6)$benefits), 97.5 * 7)
+  expect_equal(sum(getLongShirt(tempEmp1)$benefits), 112.5 * 12)
+  expect_equal(sum(getLongShirt(tempEmp2)$benefits), 112.5 * 11)
+  expect_equal(sum(getLongShirt(tempEmp3)$benefits), 112.5 * 10)
+  expect_equal(sum(getLongShirt(tempEmp4)$benefits), 112.5 * 9)
+  expect_equal(sum(getLongShirt(tempEmp5)$benefits), 112.5 * 9)
+  expect_equal(sum(getLongShirt(tempEmp6)$benefits), 112.5 * 7)
   expect_equal(sum(getLongShirt(tempEmp7)$benefits), 0)
 })
 
@@ -250,12 +249,12 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
 
 
 test_that("getLongShirt() works", {
-  expect_equal(sum(getLongShirt(tempEmp1)$benefits), 0)
-  expect_equal(sum(getLongShirt(tempEmp2)$benefits), 0)
-  expect_equal(sum(getLongShirt(tempEmp3)$benefits), 0)
-  expect_equal(sum(getLongShirt(tempEmp4)$benefits), 0)
-  expect_equal(sum(getLongShirt(tempEmp5)$benefits), 0)
-  expect_equal(sum(getLongShirt(tempEmp6)$benefits), 0)
+  expect_equal(sum(getLongShirt(tempEmp1)$benefits), 97.5 * 12)
+  expect_equal(sum(getLongShirt(tempEmp2)$benefits), 97.5 * 11)
+  expect_equal(sum(getLongShirt(tempEmp3)$benefits), 97.5 * 10)
+  expect_equal(sum(getLongShirt(tempEmp4)$benefits), 97.5 * 9)
+  expect_equal(sum(getLongShirt(tempEmp5)$benefits), 97.5 * 9)
+  expect_equal(sum(getLongShirt(tempEmp6)$benefits), 97.5 * 7)
   expect_equal(sum(getLongShirt(tempEmp7)$benefits), 0)
 })
 

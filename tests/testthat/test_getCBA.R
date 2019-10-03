@@ -114,11 +114,10 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
                           restday     = restday,
                           hol         = hol)
 
-
 test_that("getCBA() works", {
-  expect_equal(sum(getCBA(tempEmp1)$benefits), 441.67 * 12)
-  expect_equal(sum(getCBA(tempEmp2)$benefits), 441.67 * 11)
-  expect_equal(sum(getCBA(tempEmp3)$benefits), 441.67 * 10)
+  expect_equal(sum(getCBA(tempEmp1)$benefits), 475 * 12)
+  expect_equal(sum(getCBA(tempEmp2)$benefits), 475 * 11)
+  expect_equal(sum(getCBA(tempEmp3)$benefits), 475 * 10)
   expect_equal(sum(getCBA(tempEmp4)$benefits), 0)
   expect_equal(sum(getCBA(tempEmp5)$benefits), 0)
   expect_equal(sum(getCBA(tempEmp6)$benefits), 0)
@@ -250,9 +249,9 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
 
 
 test_that("getCBA() works", {
-  expect_equal(sum(getCBA(tempEmp1)$benefits), 0)
-  expect_equal(sum(getCBA(tempEmp2)$benefits), 0)
-  expect_equal(sum(getCBA(tempEmp3)$benefits), 0)
+  expect_equal(sum(getCBA(tempEmp1)$benefits), 438.33 * 12)
+  expect_equal(sum(getCBA(tempEmp2)$benefits), 438.33 * 11)
+  expect_equal(sum(getCBA(tempEmp3)$benefits), 438.33 * 10)
   expect_equal(sum(getCBA(tempEmp4)$benefits), 0)
   expect_equal(sum(getCBA(tempEmp5)$benefits), 0)
   expect_equal(sum(getCBA(tempEmp6)$benefits), 0)

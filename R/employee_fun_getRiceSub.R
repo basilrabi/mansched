@@ -33,20 +33,14 @@ setMethod(
   definition = function(theObject) {
 
     rice <- 2500
+    if (theObject@forecast)
+      rice <- 2300
 
-    if (theObject@forecast & theObject@status != "age")
+    if (grepl("BARGE MAIN", theObject@name))
       rice <- 0
 
-    if (grepl("BARGE MAINTENANCE", theObject@name))
-      rice <- 0
-
-    if (grepl("ORE BREAKER", theObject@name)) {
-      if (!theObject@forecast) {
-        rice <- rice * 0.5
-      } else {
-        rice <- 0
-      }
-    }
+    if (grepl("ORE BREAKER", theObject@name))
+      rice <- rice * 0.5
 
     riceSub         <- getCM(theObject)
     riceSub$riceSub <- round(riceSub$allow * rice, digits = 2)
