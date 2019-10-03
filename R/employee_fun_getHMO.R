@@ -34,7 +34,7 @@ setMethod(
 
     hmo <- getCM(theObject)
 
-    if (theObject@status != "reg" | theObject@forecast)
+    if (theObject@status != "reg")
       hmo$allow <- 0
 
     return(hmo)
@@ -49,8 +49,12 @@ setMethod(
 
     hmo <- callNextMethod(theObject)
 
-    employeeHMO <- 15676.25 / 12
-    dependentHMO <- 15676.25 * theObject@dependents / 12
+    principal <- 16876
+    if (theObject@forecast)
+      principal <- 14548
+
+    employeeHMO <- principal / 12
+    dependentHMO <- principal * theObject@dependents / 12
 
     cost <- employeeHMO + dependentHMO
     hmo$hmo <- round(hmo$allow * cost, digits = 2)
@@ -68,11 +72,17 @@ setMethod(
     hmo <- callNextMethod(theObject)
 
     if (isRF(theObject)) {
-      employeeHMO <- 11150 / 12
-      dependentHMO <- 11150 / 12
+      principal <- 12004
+      if (theObject@forecast)
+        principal <- 10348
+      employeeHMO <- principal / 12
+      dependentHMO <- principal / 12
     } else {
-      employeeHMO <- 11778.75 / 12
-      dependentHMO <- 11778.75 / 12
+      principal <- 12680
+      if (theObject@forecast)
+        principal <- 10931
+      employeeHMO <- principal / 12
+      dependentHMO <- principal / 12
     }
 
     cost <- employeeHMO + (dependentHMO * theObject@dependents)
