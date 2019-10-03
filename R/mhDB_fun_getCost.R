@@ -745,6 +745,30 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.groupLife$X <- mhDB.groupLife$mh / mhDB.groupLife$totMH
   mhDB.groupLife$cost <- round(mhDB.groupLife$X * mhDB.groupLife$gl, digits = 2)
 
+  # Compute for Signing Bonus
+  cat("\nComputing for Signing Bonus.\n")
+  mhDB.signingBonus <- NULL
+  if (!forecast) {
+    signingBonus <- data.table::rbindlist(lapply(listR, getSigningBonus),
+                                          use.names = TRUE)
+    mhDB.signingBonus <- mhDB[mhDB$mhType %in% distType & mhDB$month < 6, ] %>%
+      dplyr::group_by(ID, costCode) %>%
+      dplyr::summarise(mh = sum(mh)) %>%
+      dplyr::group_by(ID) %>%
+      dplyr::mutate(totMH = sum(mh))
+    mhDB.signingBonus$month <- 5L
+    mhDB.signingBonus$X <- mhDB.signingBonus$mh / mhDB.signingBonus$totMH
+    mhDB.signingBonus <- dplyr::left_join(x = mhDB.signingBonus,
+                                          y = signingBonus,
+                                          by = c("ID", "month"))
+    mhDB.signingBonus$cost <- round(
+      mhDB.signingBonus$X * mhDB.signingBonus$signingBonus, digits = 2
+    )
+    mhDB.signingBonus <- mhDB.signingBonus[!is.na(mhDB.signingBonus$cost),] %>%
+      dplyr::group_by(costCode, month) %>%
+      dplyr::summarise(cost = sum(cost))
+  }
+
   # Compute for HMO
   cat("\nComputing for HMO.\n")
 
@@ -1762,9 +1786,12 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   r12 <- mhDB.13mp[, c("costCode", "month", "cost")]
 
   ## In 2019 budget, the bonus is part of 13th Month Pay
+  ## In 2020 budget, signing bonus of RF is part of 13th Month Pay cost code
   if (!forecast) {
     bonus <- mhDB.bonus[, c("costCode", "month", "cost")]
-    r12 <- data.table::rbindlist(list(r12, bonus), use.names = TRUE)
+    signingBonus <- mhDB.signingBonus[, c("costCode", "month", "cost")]
+    r12 <- data.table::rbindlist(list(r12, bonus, signingBonus),
+                                 use.names = TRUE)
   }
 
   if (nrow(r12) > 0) {

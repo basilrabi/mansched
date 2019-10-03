@@ -119,6 +119,8 @@ testMP13 <- rep(round(sal[2] * 26 / 12, digits = 2), times = 12)
 testMP13[5] <- testMP13[5] + (sal[2] * 26)
 # Add year-end bonus
 testMP13[12] <- testMP13[12] + (sal[2] * 26 * 2)
+# Add signing bonus
+testMP13[5] <- testMP13[5] + 13000
 
 test_that("Correct 13th MP for Reg non-white", {
   expect_equal(mp13, testMP13)

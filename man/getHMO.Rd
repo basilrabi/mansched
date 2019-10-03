@@ -33,8 +33,8 @@ a \code{\link{data.frame}} with 12 rows and 3 columns representing
   }
 }
 \description{
-HMO privilage is only available to regular employees. The higher the job
-  grade of the employee, the higher the privilage per dependent.
+HMO privilege is only available to regular employees. The higher the job
+  grade of the employee, the higher the privilege per dependent.
 }
 \section{Methods (by class)}{
 \itemize{

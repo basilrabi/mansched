@@ -3,8 +3,8 @@ NULL
 
 #' Compute the monthly cost for health and maintenance organization
 #'
-#' HMO privilage is only available to regular employees. The higher the job
-#'   grade of the employee, the higher the privilage per dependent.
+#' HMO privilege is only available to regular employees. The higher the job
+#'   grade of the employee, the higher the privilege per dependent.
 #'
 #' @param theObject \code{\link{Employee-class}} object
 #' @return a \code{\link{data.frame}} with 12 rows and 3 columns representing
