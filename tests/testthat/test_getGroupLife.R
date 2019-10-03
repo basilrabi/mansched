@@ -123,13 +123,13 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
 
 test_that("getGroupLife() works", {
   expect_equal(sum(getGroupLife(tempEmp1)$gl),
-               round(12980 / 12, digits = 2) * 12)
+               round(13629 / 12, digits = 2) * 12)
   expect_equal(sum(getGroupLife(tempEmp2)$gl),
-               round(6490 / 12, digits = 2) * 11)
+               round(6815 / 12, digits = 2) * 11)
   expect_equal(sum(getGroupLife(tempEmp3)$gl),
-               round(3894 / 12, digits = 2) * 10)
+               round(4089 / 12, digits = 2) * 10)
   expect_equal(sum(getGroupLife(tempEmp4)$gl),
-               round(1947 / 12, digits = 2) * 9)
+               round(2044 / 12, digits = 2) * 9)
   expect_equal(sum(getGroupLife(tempEmp5)$gl), 0)
   expect_equal(sum(getGroupLife(tempEmp6)$gl), 0)
   expect_equal(sum(getGroupLife(tempEmp7)$gl), 0)
@@ -265,11 +265,13 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
                           forecast    = TRUE,
                           dependents  = rep(1L, times = 12))
 
-
 test_that("getGroupLife() works", {
-  expect_equal(sum(getGroupLife(tempEmp1)$gl), 0)
-  expect_equal(sum(getGroupLife(tempEmp2)$gl), 0)
-  expect_equal(sum(getGroupLife(tempEmp3)$gl), 0)
+  expect_equal(sum(getGroupLife(tempEmp1)$gl),
+               round(12980 / 12, digits = 2) * 12)
+  expect_equal(sum(getGroupLife(tempEmp2)$gl),
+               round(12980 / 12, digits = 2) * 11)
+  expect_equal(sum(getGroupLife(tempEmp3)$gl),
+               round(3894 / 12, digits = 2) * 10)
   expect_equal(sum(getGroupLife(tempEmp4)$gl), 0)
   expect_equal(sum(getGroupLife(tempEmp5)$gl), 0)
   expect_equal(sum(getGroupLife(tempEmp6)$gl), 0)
