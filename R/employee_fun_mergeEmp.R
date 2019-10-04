@@ -57,6 +57,7 @@ mergeEmp <- function(x) {
       stop("Incompatible equipment!")
 
     tempEmp@ID <- paste(tempEmp@ID, tempEquip, sep = "-")
+    tempEmp@equipment <- paste(tempEquip, collapse = " ")
   }
 
   zero <- rep(0L, times = 12)
