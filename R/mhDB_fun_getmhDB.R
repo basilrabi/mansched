@@ -10,9 +10,6 @@
 #'   \code{\link{initEmpReq}}
 #' @param year an integer value representing the year to be budgeted
 #' @param hol a \code{data.frame} similar to \code{\link{holidays}}
-#' @param cores an integer value defining the number cores to be used
-#'
-#'   This is only applicable to UNIX-like machines.
 #' @param forecast logical value \cr
 #'   Compute cost for forecast?
 #' @return a list containing the following:
@@ -77,13 +74,11 @@
 #' @export getmhDB
 #' @importFrom tidyr gather
 #' @importFrom data.table rbindlist
-#' @importFrom parallel mclapply
 getmhDB <- function(empReq,
                     empPool,
                     sched,
                     year = NA,
                     hol = NA,
-                    cores = NA,
                     forecast = FALSE) {
 
   # Define global variables
@@ -114,13 +109,6 @@ getmhDB <- function(empReq,
   listT.a  <- listT
   empReq   <- tempData[[2]]
 
-  # Create vector for indexing qualified employees
-  empPool$hasAviHours   <- FALSE
-  empPool$matchClass    <- FALSE
-  empPool$matchEquip    <- FALSE
-  empPool$matchCostCode <- FALSE
-  empPool$choice        <- FALSE
-
   # Assign only Employee-class objects that are present both in the pool and
   #   the requirement
 
@@ -148,25 +136,14 @@ getmhDB <- function(empReq,
     return(list(empReq[iR,], empPool[iP,], listT[iR], listR[iP]))
   })
 
-  if(.Platform$OS.type == "unix") {
-    if (is.na(cores)) {
-      cores <- parallel::detectCores() - 1L
-      cores <- max(c(cores, 1L))
-    }
-  } else {
-    cores <- 1L
-  }
-
   cat("Assigning employees.\n")
 
-  assignedData <- parallel::mclapply(X = personnelSet,
-                                     FUN = function(x) {
-                                       assignPrio(empReq  = x[[1]],
-                                                  empPool = x[[2]],
-                                                  listT   = x[[3]],
-                                                  listR   = x[[4]])
-                                     },
-                                     mc.cores = cores)
+  assignedData <- lapply(X = personnelSet, FUN = function(x) {
+    assignPrio(empReq  = x[[1]],
+               empPool = x[[2]],
+               listT   = x[[3]],
+               listR   = x[[4]])
+  })
 
   mhDB   <- lapply(assignedData, FUN = function(x) {x[[1]]})
   mhReq  <- lapply(assignedData, FUN = function(x) {x[[4]]})

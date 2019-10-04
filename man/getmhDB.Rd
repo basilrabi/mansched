@@ -4,7 +4,7 @@
 \alias{getmhDB}
 \title{Compute man hours database}
 \usage{
-getmhDB(empReq, empPool, sched, year = NA, hol = NA, cores = NA,
+getmhDB(empReq, empPool, sched, year = NA, hol = NA,
   forecast = FALSE)
 }
 \arguments{
@@ -20,10 +20,6 @@ getmhDB(empReq, empPool, sched, year = NA, hol = NA, cores = NA,
 \item{year}{an integer value representing the year to be budgeted}
 
 \item{hol}{a \code{data.frame} similar to \code{\link{holidays}}}
-
-\item{cores}{an integer value defining the number cores to be used
-
-  This is only applicable to UNIX-like machines.}
 
 \item{forecast}{logical value \cr
 Compute cost for forecast?}

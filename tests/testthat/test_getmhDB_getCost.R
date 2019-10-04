@@ -1,6 +1,8 @@
 library(mansched)
 library(readxl)
 
+set.seed(1)
+
 xlsxFile <- system.file("exdata", "sampleData.xlsx", package = "mansched")
 empReq <- readxl::read_xlsx(path = xlsxFile, sheet = "Requirement")
 sched <- readxl::read_xlsx(path = xlsxFile,
@@ -31,7 +33,6 @@ tempData <- getmhDB(empReq   = empReq,
                     sched    = sched,
                     year     = year,
                     hol      = hol,
-                    cores    = 2,
                     forecast = forecast)
 
 totTf <- getHoursL(tempData[[4]])

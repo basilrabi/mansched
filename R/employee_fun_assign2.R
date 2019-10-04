@@ -203,17 +203,14 @@ setMethod(
       if (empR@status != "reg") {
         results[[1]]$sal <- "a"
       } else {
-
         if (empR@isRF) {
           results[[1]] <- dplyr::left_join(x  = results[[1]],
                                            y  = payB,
                                            by = "month")
-
         } else {
           results[[1]] <- dplyr::left_join(x  = results[[1]],
                                            y  = payA,
                                            by = "month")
-
         }
       }
       if (empR@isRF) {
@@ -275,7 +272,6 @@ setMethod(
 
     # If a non-regular RF is assigned in a special holiday, add 8 hours per
     # special holiday assigned in holHours
-
     if (!isReg(empR) & isRF(empR)) {
 
       if (sum(tempData.sh$hoursA) + sum(tempData.rs$hoursA) > 0) {

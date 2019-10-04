@@ -169,7 +169,7 @@ setMethod(
     # Assign hourly salary
     # Staff has no probationary and seasonal
 
-    results      <- callNextMethod(empT = empT, empR = empR)
+    results <- callNextMethod(empT = empT, empR = empR)
 
     results[[1]] <- dplyr::left_join(x  = results[[1]],
                                      y  = payA,
@@ -188,7 +188,6 @@ setMethod(
                                    by = "month")
 
       results[[1]] <- as.data.frame(tempData)
-
     } else {
       results[[1]] <- NA
     }
@@ -204,7 +203,6 @@ setMethod(
   definition = function(empT, empR) {
 
     results <- callNextMethod(empT = empT, empR = empR)
-
     empT <- results[[2]]
     empR <- results[[3]]
 
@@ -241,11 +239,9 @@ setMethod(
     results <- callNextMethod(empT = empT, empR = empR)
 
     if (length(results[[1]]$ID) > 0) {
-
       if (empR@status != "reg") {
         results[[1]]$sal <- "a"
       } else {
-
         if (empR@isRF) {
           results[[1]] <- dplyr::left_join(x  = results[[1]],
                                            y  = payB,
@@ -256,7 +252,6 @@ setMethod(
                                            by = "month")
         }
       }
-
       if (empR@isRF) {
         results[[1]]$scheme <- "d"
       } else {
@@ -285,8 +280,8 @@ setMethod(
 #'   \code{rs}, \code{rl}, \code{rn}, \code{rdOT}, \code{shOT}, \code{lhOT},
 #'   \code{nhOT}, \code{rsOT}, \code{rlPT} and \code{rnOT}
 setMethod(
-  f= "assignEmp",
-  signature = "OperationPersonnel",
+  f          = "assignEmp",
+  signature  = "OperationPersonnel",
   definition = function(empT, empR) {
 
     results <- callNextMethod(empT = empT, empR = empR)
@@ -506,7 +501,7 @@ setMethod(
 #'   objects
 setMethod(
   f          = "assignEmp",
-  signature = "Technical",
+  signature  = "Technical",
   definition = function(empT, empR) {
 
     if (class(empT) != class(empR))
@@ -534,7 +529,6 @@ setMethod(
                                    by = "month")
 
       results[[1]] <- as.data.frame(tempData)
-
     } else {
       results[[1]] <- NA
     }
@@ -550,8 +544,7 @@ setMethod(
   definition = function(empT, empR) {
 
     tempData <- callNextMethod(empT = empT, empR = empR)
-
-    mhDB <- tempData[[1]]
+    mhDB     <- tempData[[1]]
 
     if (length(mhDB$ID) > 0) {
       if (tempData[[3]]@status == "reg") {
@@ -580,7 +573,6 @@ setMethod(
     results <- callNextMethod(empT = empT, empR = empR)
 
     if (class(results[[1]]) != "logical") {
-
       if (empR@status != "reg") {
         results[[1]]$sal <- "a"
       } else {
@@ -619,7 +611,6 @@ setMethod(
     results <- callNextMethod(empT = empT, empR = empR)
 
     if (class(results[[1]]) != "logical") {
-
       if (empR@status != "reg") {
         results[[1]]$sal <- "a"
       } else {
@@ -631,8 +622,8 @@ setMethod(
       results[[1]]$scheme <- "d"
       results[[1]]$status <- empR@status
 
-      maxReg   <- data.frame(month   = 1:12,
-                             maxReg  = empR@maxReg)
+      maxReg   <- data.frame(month  = 1:12,
+                             maxReg = empR@maxReg)
 
       tempData <- dplyr::left_join(x  = results[[1]],
                                    y  = maxReg,

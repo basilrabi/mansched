@@ -14,9 +14,9 @@ LazyData: true
 Depends: R   (>= 3.5.0), methods
 Imports:
   data.table (>= 1.11.4),
-  dplyr      (>= 0.7.6),
+  dplyr      (>= 0.8.3),
   lubridate  (>= 1.7.4),
-  parallel   (>= 3.5.0),
+  Rcpp       (>= 1.0.2),
   readxl     (>= 1.1.0),
   tidyr      (>= 0.8.1),
   xlsx       (>= 0.6.1),
@@ -29,4 +29,5 @@ Suggests:
 Remotes:
   r-lib/covr
 RoxygenNote: 6.1.1
+LinkingTo: Rcpp  (>= 1.0.2)
 VignetteBuilder: knitr

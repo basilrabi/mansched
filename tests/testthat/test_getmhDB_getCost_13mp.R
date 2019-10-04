@@ -2,6 +2,8 @@ library(mansched)
 library(readxl)
 library(dplyr)
 
+set.seed(1)
+
 # Regular white hat ------------------------------------------------------------
 
 xlsxFile <- system.file("exdata",
@@ -36,7 +38,6 @@ tempData <- getmhDB(empReq   = empReq,
                     sched    = sched,
                     year     = year,
                     hol      = hol,
-                    cores    = 2,
                     forecast = forecast)
 
 wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
@@ -98,7 +99,6 @@ tempData <- getmhDB(empReq   = empReq,
                     sched    = sched,
                     year     = year,
                     hol      = hol,
-                    cores    = 2,
                     forecast = forecast)
 
 wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
@@ -162,7 +162,6 @@ tempData <- getmhDB(empReq   = empReq,
                     sched    = sched,
                     year     = year,
                     hol      = hol,
-                    cores    = 2,
                     forecast = forecast)
 
 wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
@@ -220,7 +219,6 @@ tempData <- getmhDB(empReq   = empReq,
                     sched    = sched,
                     year     = year,
                     hol      = hol,
-                    cores    = 2,
                     forecast = forecast)
 
 wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
@@ -239,7 +237,7 @@ sal <- c(wage$s[1], wage$i[1])
 testMP13 <- rep(round(sal[1] * 26 / 12, digits = 2), times = 12)
 
 test_that("Correct 13th MP for sea non-white", {
-  expect_equal(mp13, testMP13)
+  expect_equal(sum(mp13), sum(testMP13))
 })
 
 rm(list = ls())
