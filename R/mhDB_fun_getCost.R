@@ -874,15 +874,11 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
       if (grepl("14\\d00", x = x))
         return("14000")
 
-      if (!forecast) {
-        if (grepl("1100-A", x = x)) {
-          return("01100-A")
-        } else {
-          return("01100-B")
-        }
-      }
+      if (grepl("1100-A", x = x))
+        return("01100-A")
 
-      return("1100")
+      else
+        return("01100-B")
     }
   )
 
@@ -1016,30 +1012,17 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     }
 
     tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
-
     tempData$PH <- sapply(tempData$salG, FUN = function(x) {
-      if (x < 1) {
+      if (x < 1)
         return(0)
-      }
 
-      if (forecast) {
-        if (x < 10000) {
-          return(137.5)
-        } else if (x >= 40000) {
-          return(550)
-        } else {
-          return(round(x * 0.01375, digits = 2))
-        }
+      if (x <= 10000) {
+        return(137.5)
+      } else if (x > 40000) {
+        return(550)
       } else {
-        if (x < 10000) {
-          return(137.5)
-        } else if (x >= 100000) {
-          return(1375)
-        } else {
-          return(round(x * 0.01375, digits = 2))
-        }
+        return(round(x * 0.01375, digits = 2))
       }
-
     })
 
     tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "PH")]
@@ -1261,30 +1244,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.13mp.A <- mhDB.13mp[mhDB.13mp$status == "age", ]
   mhDB.13mp   <- mhDB.13mp[mhDB.13mp$status != "age", ]
 
-  if (forecast) {
-    mhDB.13mp$costCodeNew <- sapply(
-      mhDB.13mp$costCode,
-      FUN = function(x) {
-
-        if (grepl("13100", x = x))
-          return("13100")
-
-        if (x == "0-0")
-          return("0-0")
-
-        if (grepl("14\\d00", x = x))
-          return("14000")
-
-        return("1100")
-      }
-    )
-
-    mhDB.13mp$costCode <- mhDB.13mp$costCodeNew
-    mhDB.13mp          <- mhDB.13mp %>%
-      dplyr::group_by(costCode, status, month) %>%
-      dplyr::summarise(cost = sum(cost))
-  }
-
   ## Separate 13th month pay for regular and non-regular in-house as requested
   ## by accounting
 
@@ -1401,31 +1360,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     mhDB.bonus <- mhDB.bonus %>%
       dplyr::group_by(costCode, month) %>%
       dplyr::summarise(cost = sum(cost))
-
-    if (forecast) {
-      mhDB.bonus$costCodeNew <- sapply(
-        mhDB.bonus$costCode,
-        FUN = function(x) {
-
-          if (grepl("13100", x = x))
-            return("13100")
-
-          if (x == "0-0")
-            return("0-0")
-
-          if (grepl("14\\d00", x = x))
-            return("14000")
-
-          return("1100")
-        }
-      )
-
-      mhDB.bonus$costCode <- mhDB.bonus$costCodeNew
-      mhDB.bonus          <- mhDB.bonus %>%
-        dplyr::group_by(costCode, month) %>%
-        dplyr::summarise(cost = sum(cost)) %>%
-        tidyr::spread(month, cost, fill = 0)
-    }
   } else {
     mhDB.bonus <- NULL
   }
