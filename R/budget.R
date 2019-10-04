@@ -25,57 +25,8 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   personnelClass <- NULL
   status         <- NULL
 
-  empReq.colnames <- c("activity",
-                       "personnelClass",
-                       "quantity",
-                       "spareFactor",
-                       "equipment",
-                       "OT",
-                       "costCode")
-
   empReq <- readxl::read_xlsx(path = xlsxFile, sheet = "Requirement")
-  empReq <- empReq[, empReq.colnames]
-
-  # Check for data types
-
-  if (length(empReq) != length(empReq.colnames)) {
-    stop(paste("Column names of Requirement must be:",
-               paste(empReq.colnames, collapse = " ")))
-  }
-
-  if (class(empReq$activity) != "character")
-    stop("Column activity in Requirement is not character!")
-
-  if (class(empReq$personnelClass) != "character")
-    stop("Column personnelClass in Requirement is not character!")
-
-  if (class(empReq$quantity) != "numeric")
-    stop("Column quantity in Requirement is not numeric!")
-
-  if (!all(is.na(empReq$spareFactor)) & class(empReq$spareFactor) != "numeric")
-    stop("Column spareFactor in Requirement is not numeric!")
-
-  empReq$spareFactor <- as.numeric(empReq$spareFactor)
-
-  if (class(empReq$equipment) != "character")
-    stop("Column equipment in Requirement is not character!")
-
-  if (class(empReq$OT) != "numeric")
-    stop("Column OT in Requirement is not numeric!")
-
-  if (class(empReq$costCode) != "character")
-    stop("Column costCode in Requirement is not character!")
-
-  if (any(is.na(empReq$costCode)))
-    stop("Requirement without cost code detected!")
-
-  empReq[, c("quantity", "OT")] <- lapply(empReq[, c("quantity", "OT")],
-                                          FUN = as.integer)
-  empReq <- as.data.frame(empReq)
-
-  # Remove empReq rows with zero or NA quantities
-  empReq <- empReq[!is.na(empReq$quantity),]
-  empReq <- empReq[!empReq$quantity == 0,]
+  empReq <- sanityCheckEmpReq(empReq)
 
   sched <- readxl::read_xlsx(path = xlsxFile,
                              sheet = "Schedule",
@@ -84,112 +35,12 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
     lapply(sched[, !colnames(sched) %in% c("activity")], FUN = as.integer)
   sched <- as.data.frame(sched)
 
-  dependentsCol <- month.abb %>% toupper()
-  empPool.colnames <- c("ID",
-                        "name",
-                        "designation",
-                        "personnelClass",
-                        "attendance",
-                        "equipment",
-                        "costCode",
-                        "status",
-                        "cBegin",
-                        "cEnd",
-                        "inHouse",
-                        "restday",
-                        "isRF",
-                        "d.rd",
-                        "d.ho",
-                        "d.rh",
-                        "dcc",
-                        "field",
-                        dependentsCol)
-
   empPool <- readxl::read_xlsx(path = xlsxFile, sheet = "Pool")
-  empPool <- empPool[, empPool.colnames]
+  empPool <- sanityCheckEmpPool(empPool)
 
-  # Check for data types
-
-  if (length(empPool) != length(empPool.colnames)) {
-    stop(paste("Column names of Pool must be:",
-               paste(empPool.colnames, collapse = " ")))
-  }
-
-  if (class(empPool$ID) != "character")
-    stop("Column ID in Pool is not character!")
-
-  if (class(empPool$name) != "character")
-    stop("Column name in Pool is not character!")
-
-  if (class(empPool$designation) != "character")
-    stop("Column designation in Pool is not character!")
-
-  if (class(empPool$personnelClass) != "character")
-    stop("Column personnelClass in Pool is not character!")
-
-  if (class(empPool$attendance) != "numeric")
-    stop("Column attendance in Pool is not numeric!")
-
-  if (!all(is.na(empPool$equipment)) & class(empPool$equipment) != "character")
-    stop("Column equipment in Pool is not character!")
-
-  if (!all(is.na(empPool$equipment)) & class(empPool$costCode) != "character")
-    stop("Column costCode in Pool is not character!")
-
-  if (!all(is.na(empPool$dcc)) & class(empPool$dcc) != "character")
-    stop("Column dcc in Pool is not character!")
-
-  if (class(empPool$status) != "character")
-    stop("Column status in Pool is not character!")
-
-  if (!"POSIXct" %in% class(empPool$cBegin))
-    stop("Column cBegin in Pool is not date!")
-
-  if (!"POSIXct" %in% class(empPool$cEnd))
-    stop("Column cEnd in Pool is not date!")
-
-  if (class(empPool$restday) != "character")
-    stop("Column restday in Pool is not character!")
-
-  for (i in dependentsCol) {
-    if (class(empPool[[i]]) != "numeric") {
-      stop(paste("Column", i, "is not numeric!"))
-    }
-  }
-
-  empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
-                                           FUN = as.character)
-  empPool <- as.data.frame(empPool)
-
-  hol.colnames <- c("Month",
-                    "Day",
-                    "Type",
-                    "Description")
   hol <- readxl::read_xlsx(path = xlsxFile, sheet = "hol")
-  hol <- hol[, hol.colnames]
+  hol <- sanityCheckHol(hol)
 
-  # Check data types
-
-  if (length(hol) != length(hol.colnames)) {
-    stop(paste("Column names of hol must be:",
-               paste(hol.colnames, collapse = " ")))
-  }
-
-  if (class(hol$Month) != "character")
-    stop("Column Month in hol is not character!")
-
-  if (class(hol$Day) != "numeric")
-    stop("Column Day in hol is not numeric!")
-
-  hol$Day <- as.integer(hol$Day)
-
-  if (class(hol$Type) != "character")
-    stop("Column Type in hol is not character!")
-
-  if (class(hol$Description) != "character")
-    stop("Column Description in hol is not character!")
-
-  hol <- as.data.frame(hol)
   empReq$activity <- toupper(empReq$activity)
   sched$activity <- toupper(sched$activity)
 
@@ -205,27 +56,8 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   mhReq  <- tempData[[6]]
   mhPool <- tempData[[7]]
 
-  wage.colnames <- c("ID", "S", "s", "I", "i")
-
   wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
-  # The salary column can either be `S` or `s`
-  wage <- wage[, colnames(wage) %in% wage.colnames]
-  colnames(wage)[2] <- "s"
-  colnames(wage)[3] <- "i"
-
-  if (class(wage$ID) != "character")
-    stop("Column ID in wage is not character!")
-
-  if (class(wage$s) != "numeric")
-    wage$s <- as.numeric(wage$s)
-
-  if (class(wage$i) != "numeric")
-    wage$i <- as.numeric(wage$i)
-
-  wage <- wage[wage$ID %in% empPool$ID,]
-  wage$s[is.na(wage$s)] <- 0
-  wage$i[is.na(wage$i)] <- 0
-  wage <- as.data.frame(wage)
+  wage <- sanityCheckWage(wage, empPool)
 
   costDB <- getCost(mhDB     = mhDB,
                     listR    = listR,
