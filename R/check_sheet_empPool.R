@@ -49,6 +49,9 @@ sanityCheckEmpPool <- function(empPool) {
   if (class(empPool$attendance) != "numeric")
     stop("Column attendance in Pool is not numeric!")
 
+  if (anyNA(empPool$attendance))
+    stop("Attendance column is incomplete!")
+
   if (!all(is.na(empPool$equipment)) & class(empPool$equipment) != "character")
     stop("Column equipment in Pool is not character!")
 
