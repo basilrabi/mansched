@@ -16,6 +16,34 @@ T combine ( T a, T b ) {
   return output;
 }
 
+// Is employee assignable to requirement? Assignable means both objects have
+// man-hours with the same man-hour type.
+bool assignable ( const Rcpp::S4& requirement, const Rcpp::S4& pool )
+{
+  Rcpp::DataFrame hoursT = getHours( requirement );
+  Rcpp::DataFrame hoursR = getHours( pool );
+  hoursR["reg"  ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["reg"  ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rd"  ] );
+  hoursR["sh"   ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["sh"   ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rs"  ] );
+  hoursR["lh"   ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["lh"   ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rl"  ] );
+  hoursR["nh"   ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["nh"   ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rn"  ] );
+  hoursR["regOT"] = Rcpp::as<Rcpp::IntegerVector>( hoursR["regOT"] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rdOT"] );
+  hoursR["shOT" ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["shOT" ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rsOT"] );
+  hoursR["lhOT" ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["lhOT" ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rlOT"] );
+  hoursR["nhOT" ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["nhOT" ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rnOT"] );
+
+  for ( int col = 0; col < hoursT.length(); col++ )
+  {
+    for ( int row = 0; row < Rcpp::as<Rcpp::IntegerVector>( hoursT[col] ).length(); row++ )
+    {
+      if ( Rcpp::as<Rcpp::IntegerVector>( hoursT[col] )[row] > 0 && Rcpp::as<Rcpp::IntegerVector>( hoursR[col] )[row] > 0 )
+      {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 // Returns the total available working hours of an employee
 int availableHours( const Rcpp::S4& employee )
 {
@@ -188,33 +216,8 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
                   << listRC.length()
                   << ".\n";
       Rcpp::Rcout << "Checking available man hours...\n";
-      if ( availableHours( listRC[j] ) > 0 )
-      {
-        Rcpp::DataFrame hoursT = getHours( Rcpp::as<Rcpp::S4>( listTC[i] ) );
-        Rcpp::DataFrame hoursR = getHours( listRC[j]   );
-        hoursR["reg"  ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["reg"  ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rd"  ] );
-        hoursR["sh"   ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["sh"   ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rs"  ] );
-        hoursR["lh"   ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["lh"   ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rl"  ] );
-        hoursR["nh"   ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["nh"   ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rn"  ] );
-        hoursR["regOT"] = Rcpp::as<Rcpp::IntegerVector>( hoursR["regOT"] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rdOT"] );
-        hoursR["shOT" ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["shOT" ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rsOT"] );
-        hoursR["lhOT" ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["lhOT" ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rlOT"] );
-        hoursR["nhOT" ] = Rcpp::as<Rcpp::IntegerVector>( hoursR["nhOT" ] ) + Rcpp::as<Rcpp::IntegerVector>( hoursR["rnOT"] );
-
-        for ( int col = 0; col < hoursT.length(); col++ )
-        {
-          for ( int row = 0; row < Rcpp::as<Rcpp::IntegerVector>( hoursT[col] ).length(); row++ )
-          {
-            if ( Rcpp::as<Rcpp::IntegerVector>( hoursT[col] )[row] > 0 && Rcpp::as<Rcpp::IntegerVector>( hoursR[col] )[row] > 0 )
-            {
-              hasAviHours[j] = TRUE;
-              break;
-            }
-          }
-          if ( hasAviHours[j] )
-            break;
-        }
-      }
+      if ( assignable( listTC[i] , listRC[j] ) )
+        hasAviHours[j] = TRUE;
 
       Rcpp::Rcout << "Checking matching employee class...\n";
       if ( Rcpp::any( Rcpp::is_na( prioStat ) ) )
@@ -269,6 +272,9 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
       {
         for ( Rcpp::IntegerVector::iterator jj = index.begin(); jj != index.end(); jj++ )
         {
+          if ( !assignable( listTC[i] , listRC[*jj] ) )
+            continue;
+
           Rcpp::Rcout << "Assigning "
                       << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[*jj] ).slot( "ID" ) )
                       << " to "
