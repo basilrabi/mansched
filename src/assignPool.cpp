@@ -180,7 +180,9 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
                 << ".\n"
                 << "Iteration: "
                 << i
-                << "\n";
+                << " / "
+                << empReqC.nrows()
+                << ".\n";
 
     if ( listRC.length() < 1 )
     {
@@ -199,27 +201,12 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
     }
 
     Rcpp::StringVector tempCostCode = Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "costCode" );
-
-    Rcpp::Rcout << "Identifying which personnel will be assigned from "
-                << listRC.length()
-                << " personnel.\n";
-    Rcpp::LogicalVector hasAviHours   ( listRC.length(), FALSE );
     Rcpp::LogicalVector matchClass    ( listRC.length(), FALSE );
     Rcpp::LogicalVector matchEquip    ( listRC.length(), FALSE );
     Rcpp::LogicalVector matchCostCode ( listRC.length(), TRUE  );
     Rcpp::LogicalVector choice        ( listRC.length(), FALSE );
     for ( j = 0; j < listRC.length(); j++ )
     {
-      Rcpp::Rcout << "Identifying "
-                  << j + 1
-                  << " out of "
-                  << listRC.length()
-                  << ".\n";
-      Rcpp::Rcout << "Checking available man hours...\n";
-      if ( assignable( listTC[i] , listRC[j] ) )
-        hasAviHours[j] = TRUE;
-
-      Rcpp::Rcout << "Checking matching employee class...\n";
       if ( Rcpp::any( Rcpp::is_na( prioStat ) ) )
         matchClass[j] = TRUE;
       else
@@ -228,24 +215,20 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
           matchClass[j] = TRUE;
       }
 
-      Rcpp::Rcout << "Checking matching equipment...\n";
       if ( Rcpp::is_na( tempEquip )[0] )
         matchEquip[j] = TRUE;
       else if ( Rcpp::as<Rcpp::S4>( listRC[j] ).hasSlot( "equipment" ) &&
                 Rcpp::intersect( tempEquip, Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[j] ).slot( "equipment" ) ) ).length() > 0 )
         matchEquip[j] = TRUE;
 
-      Rcpp::Rcout << "Checking matching cost centers...\n";
       if ( prioCode &&
            Rcpp::intersect( tempCostCode, Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[j] ).slot( "costCode" ) ) ).length() < 1 )
         matchCostCode[j] = FALSE;
 
-      choice[j] = hasAviHours[j] &&
-                  matchClass[j] &&
+      choice[j] = matchClass[j] &&
                   matchEquip[j] &&
                   matchCostCode[j];
     }
-    Rcpp::Rcout << "Done identifying.\n";
     Rcpp::LogicalVector choices = choice[choice == TRUE];
     Rcpp::Rcout << "Identified "
                 << choices.length()
