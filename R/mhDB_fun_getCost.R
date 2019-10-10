@@ -79,6 +79,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   XholHours <- NULL
   distType  <- c("reg", "rd", "sh", "lh", "nh", "rs", "rl", "rn")
 
+  #### Sanity Check ####
+
   # Error if any ID in wage is duplicated
   if (anyDuplicated(wage$ID) > 0) {
 
@@ -99,19 +101,19 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     stop("All ID's must have wage data")
   }
 
-  # Assign if employee is RF or not
+  ##### Assign if employee is RF or not ####
   wage$isRF <- sapply(wage$ID, FUN = function(x) {
     index <- which(empID == x)
     isRF(listR[[index]])
   })
 
-  # Assign if employee is staff or not
+  #### Assign if employee is staff or not ####
   wage$isStaff <- sapply(wage$ID, FUN = function(x) {
     index <- which(empID == x)
     is(listR[[index]], "Staff")
   })
 
-  # Get salary increase
+  ##### Get salary increase ####
   IDs     <- sapply(listR, FUN = function(x) {x@ID})
   wage$sB <- apply(wage[, 1:5], MARGIN = 1, FUN = function(x) {
 
@@ -128,7 +130,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   wage$i <- NULL
   cat("\nEstimated salary increase.\n")
 
-  # Assign totHours
+  #### Assign totHours ####
   wage$totHours <- sapply(wage$ID, FUN = function(x) {
 
     # index <- which(empID == x)
@@ -138,7 +140,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     return(313 * 8)
   })
 
-  # Compute hourly rates
+  #### Compute hourly rates ####
   tempData <- apply(wage[, 2:6], MARGIN = 1, FUN = function(x) {
 
     sal <- c(NA, NA)
@@ -181,7 +183,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                               y  = wage[,c(1,3)],
                               by = c("ID"))
 
-  # Compute Salaries for monthly wagers
+  #### Compute Salaries for monthly wagers ####
 
   cat("\nComputing salaries for non-RF.\n")
 
@@ -492,8 +494,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     mhDB.m.S.OT$salH * mhDB.m.S.OT$np * mhDB.m.S.OT$npS, digits = 2
   )
 
-  # Compute Salaries for daily wagers or RF
-
+  #### Compute Salaries for daily wagers ####
   cat("\nComputing salaries for RF.\n")
 
   mhDB.d <- mhDB[which(mhDB$scheme == "d"),
@@ -606,7 +607,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   mhDB.d.A$cost <- mhDB.d.A$costWage + mhDB.d.A$costNP
 
-  # Distribute holHours
+  #### Distribute holHours ####
 
   hol.mhDB <- mhDB[mhDB$mhType == "reg",
                    !colnames(mhDB) %in% c("mhType", "np", "scheme", "maxReg")]
@@ -688,7 +689,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   hol.mhDB.d.S <- hol.mhDB.d[hol.mhDB.d$status == "sea",]
   hol.mhDB.d.A <- hol.mhDB.d[hol.mhDB.d$status == "age",]
 
-  # Compute for Employee Allowances
+  #### Compute for Employee Allowances ####
   cat("\nComputing employee allowances.\n")
 
   allowance  <- data.table::rbindlist(lapply(listR, getAllowance),
@@ -706,7 +707,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.allow$X    <- mhDB.allow$mh / mhDB.allow$totMH
   mhDB.allow$cost <- round(mhDB.allow$X * mhDB.allow$allowance, digits = 2)
 
-  # Compute for Safety Gadgets
+  #### Compute for Safety Gadgets ####
   cat("\nComputing safety gadgets.\n")
 
   safetyGadgets <- data.table::rbindlist(lapply(listR, getSafetyGadgets),
@@ -726,7 +727,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.safetyGadgets$cost <- round(mhDB.safetyGadgets$X * mhDB.safetyGadgets$sg,
                                    digits = 2)
 
-  # Compute for Group Life Insurance
+  #### Compute for Group Life Insurance ####
   cat("\nComputing for group life insurance.\n")
 
   groupLife <- data.table::rbindlist(lapply(listR, getGroupLife),
@@ -745,7 +746,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.groupLife$X <- mhDB.groupLife$mh / mhDB.groupLife$totMH
   mhDB.groupLife$cost <- round(mhDB.groupLife$X * mhDB.groupLife$gl, digits = 2)
 
-  # Compute for Signing Bonus
+  ####  Compute for Signing Bonus ####
   cat("\nComputing for Signing Bonus.\n")
   mhDB.signingBonus <- NULL
   if (!forecast) {
@@ -769,7 +770,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
       dplyr::summarise(cost = sum(cost))
   }
 
-  # Compute for HMO
+  #### Compute for HMO ####
   cat("\nComputing for HMO.\n")
 
   hmo <- data.table::rbindlist(lapply(listR, getHMO), use.names = TRUE)
@@ -785,7 +786,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.hmo$X <- mhDB.hmo$mh / mhDB.hmo$totMH
   mhDB.hmo$cost <- round(mhDB.hmo$X * mhDB.hmo$hmo, digits = 2)
 
-  # Employee benefits
+  #### Employee benefits ####
   # cat("\nComputing for employee benefits.\n")
 
   benefits <- data.table::rbindlist(list(
@@ -852,7 +853,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.benefits <- data.table::rbindlist(list(mhDB.benefits, mhDB.GC.sea),
                                          use.names = TRUE)
 
-  # Compute for Safety Bonus
+  ##### Compute for Safety Bonus ####
   cat("\nComputing safety bonus.\n")
 
   mhDB.SB <- mhDB %>%
@@ -884,7 +885,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   mhDB.SB$costCode <- mhDB.SB$costCodeNew
 
-  # Compute for SSS contribution of employer
+  ##### Compute for SSS contribution of employer ####
   cat("\nComputing SSS contribution.\n")
 
   #- SSS Contribution is fixed
@@ -956,7 +957,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.SSS.A    <- mhDB.SSS[mhDB.SSS$status == "age", ]
   mhDB.SSS      <- mhDB.SSS[mhDB.SSS$status != "age", ]
 
-  # Compute for Pag-ibig contribution of employer
+  #### Compute for Pag-ibig contribution of employer ####
   cat("\nComputing Pag-ibig contributions.\n")
 
   mhDB.PI <- mhDB[mhDB$mhType %in% distType, ] %>%
@@ -973,7 +974,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.PI.A    <- mhDB.PI[mhDB.PI$status == "age", ]
   mhDB.PI      <- mhDB.PI[mhDB.PI$status != "age", ]
 
-  # Compute for Phil-Health contribution of employer
+  #### Compute for Phil-Health contribution of employer ####
   cat("\nComputing Philhealth contribution.\n")
 
   # TODO: make method for PHIC
@@ -1048,7 +1049,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.PH.A    <- mhDB.PH[mhDB.PH$status == "age", ]
   mhDB.PH      <- mhDB.PH[mhDB.PH$status != "age", ]
 
-  # Compute for Leave Commutation
+  #### Compute for Leave Commutation ####
   cat("\nComputing leave commutation.\n")
 
   ## Separate regular employees
@@ -1192,7 +1193,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                                                     "month",
                                                     "cost")]
 
-  # Compute for Hospital and Medical Expenses
+  #### Compute for Hospital and Medical Expenses ####
   cat("\nComputing hospital and medical expenses.\n")
 
   hm <- data.table::rbindlist(lapply(listR, getHM), use.names = TRUE)
@@ -1212,7 +1213,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.HM.A <- mhDB.HM[mhDB.HM$status == "age", ]
   mhDB.HM   <- mhDB.HM[mhDB.HM$status != "age", ]
 
-  # Compute for 13th month pay
+  #### Compute for 13th month pay ####
   cat("\nComputing 13th month pay.\n")
 
   mp13 <- data.table::rbindlist(lapply(listR, FUN = function(x) {
@@ -1269,14 +1270,10 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   mhDB.mh <- data.table::rbindlist(list(mhDB.mh1, mhDB.mh2, mhDB.mh3),
                                    use.names = TRUE)
 
-  # Compute for Mid-year and Year-end bonus
+  #### Compute for Mid-year and Year-end bonus ####
   cat("\nComputing bonus.\n")
 
-  if (forecast) {
-    bonusFactor <- 1.5
-  } else {
-    bonusFactor <- 2
-  }
+  bonusFactor <- 2
 
   # FIXME: Bonus must pro-rated
   # The date hired (probationary or regular, which ever came first) of the
@@ -1365,7 +1362,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   }
 
 
-  # Compute for Rice Subsidy for Agency
+  ####  Compute for Rice Subsidy for Agency ####
   cat("\nComputing rice subsidy (agency).\n")
 
   listR.A <- listR[sapply(listR, function(x) {return(x@status == "age")})]
@@ -1397,7 +1394,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     mhDB.riceSub.A <- NULL
   }
 
-  # Compute for Rice Subsidy for in-house
+  ##### Compute for Rice Subsidy for in-house ####
   cat("\nComputing rice subsidy (in-house).\n")
 
   listR.I <- listR[sapply(listR, function(x) {return(x@status != "age")})]
@@ -1427,7 +1424,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   cat("\nMerging costs.\n")
 
-  # Salaries-Regular
+  #### Salaries-Regular ####
   r01.01 <- data.frame(costCode         = mhDB.m.R.Reg$costCode,
                        month            = mhDB.m.R.Reg$month,
                        cost             = mhDB.m.R.Reg$costWage,
@@ -1462,7 +1459,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r01 <- NULL
   }
 
-  # OT Pay - Regular
+  #### OT Pay - Regular ####
   r02.01 <- data.frame(costCode         = mhDB.m.R.Reg$costCode,
                        month            = mhDB.m.R.Reg$month,
                        cost             = mhDB.m.R.Reg$costNP,
@@ -1534,7 +1531,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r02 <- NULL
   }
 
-  # Salaries-Seasonal
+  #### Salaries-Seasonal ####
   r03.01 <- data.frame(costCode         = mhDB.m.S.Reg$costCode,
                        month            = mhDB.m.S.Reg$month,
                        cost             = mhDB.m.S.Reg$costWage,
@@ -1559,7 +1556,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r03 <- NULL
   }
 
-  # OT Pay - Seasonal
+  #### OT Pay - Seasonal ####
   r04.01 <- data.frame(costCode         = mhDB.m.S.Reg$costCode,
                        month            = mhDB.m.S.Reg$month,
                        cost             = mhDB.m.S.Reg$costNP,
@@ -1600,7 +1597,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r04 <- NULL
   }
 
-  # Employee Allowance
+  #### Employee Allowance ####
   r05 <- mhDB.allow %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
@@ -1622,7 +1619,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r05.sea <- NULL
   }
 
-  # Employee Benefits
+  #### Employee Benefits ####
   r06 <- mhDB.SB[, !colnames(mhDB.SB) %in% c("mh", "costCodeNew")]
 
   if (nrow(r06) > 0) {
@@ -1631,7 +1628,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r06 <- NULL
   }
 
-  # Premium SSS, EC
+  #### Premium SSS, EC ####
   r07 <- mhDB.SSS[, c("costCode", "month", "cost")]
 
   if (nrow(r07) > 0) {
@@ -1648,7 +1645,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r07.sea <- NULL
   }
 
-  # Prem-HDMF (Pag-ibig)
+  #### Prem-HDMF (Pag-ibig) ####
   r08 <- mhDB.PI[, c("costCode", "month", "cost")]
 
   if (nrow(r08) > 0) {
@@ -1665,7 +1662,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r08.sea <- NULL
   }
 
-  # Philhealth
+  #### Philhealth ####
   r09 <- mhDB.PH[, c("costCode", "month", "cost")]
 
   if (nrow(r09) > 0) {
@@ -1682,7 +1679,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r09.sea <- NULL
   }
 
-  # Leave Commutation
+  #### Leave Commutation ####
   r10 <- mhDB.LC[, c("costCode", "month", "cost")]
 
   if (nrow(r10) > 0) {
@@ -1699,7 +1696,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
       r10.sea$row <- "Leave Commutation"
   }
 
-  # Hospital and Medical Expenses
+  #### Hospital and Medical Expenses ####
   r11 <- mhDB.HM[, c("costCode", "month", "cost")]
 
   if (nrow(r11) > 0) {
@@ -1716,7 +1713,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r11.sea <- NULL
   }
 
-  # 13th Month Pay
+  #### 13th Month Pay ####
   r12 <- mhDB.13mp[, c("costCode", "month", "cost")]
 
   ## In 2019 budget, the bonus is part of 13th Month Pay
@@ -1734,7 +1731,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r12 <- NULL
   }
 
-  # man hours
+  #### man hours ####
   r13 <- as.data.frame(mhDB.mh)
 
   if (nrow(r13) > 0) {
@@ -1743,6 +1740,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r13 <- NULL
   }
 
+  #### CF Manpower Services ####
   r14 <- data.table::rbindlist(l = list(
     data.frame(costCode         = mhDB.d.A$costCode,
                month            = mhDB.d.A$month,
@@ -1794,7 +1792,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r14 <- NULL
   }
 
-  # Safety Gadgets
+  #### Safety Gadgets ####
   r15 <- mhDB.safetyGadgets %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
@@ -1816,7 +1814,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r15.sea <- NULL
   }
 
-  # Group Life Insurance
+  #### Group Life Insurance ####
   r16 <- mhDB.groupLife %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
@@ -1827,7 +1825,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r16 <- NULL
   }
 
-  # HMO
+  #### HMO ####
   r17 <- mhDB.hmo %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
@@ -1838,7 +1836,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r17 <- NULL
   }
 
-  # Employee Benefits
+  ##### Employee Benefits ####
   r18 <- mhDB.benefits %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
@@ -1859,7 +1857,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r18.sea <- NULL
   }
 
-  # Food Allowance / Rice Subsidy
+  #### Food Allowance / Rice Subsidy ####
   r19 <- mhDB.riceSub.I %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
