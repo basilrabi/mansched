@@ -28,3 +28,16 @@ assignPool <- function(empReq, empPool, listT, listR, prioStat = NA_character_, 
     .Call('_mansched_assignPool', PACKAGE = 'mansched', empReq, empPool, listT, listR, prioStat, prioCode)
 }
 
+#' Get remaining working hours
+#'
+#' This function returns all remaining man hour types including overtime.
+#'
+#' @param employee an \code{\link{Employee-class}} object
+#' @return a \code{\link{data.frame}} representing the remaining man hours
+#'
+#'   Each row represents a month while each column represents a man hour type.
+#' @export
+getHours <- function(employee) {
+    .Call('_mansched_getHours', PACKAGE = 'mansched', employee)
+}
+

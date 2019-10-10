@@ -1,9 +1,9 @@
 #include <Rcpp.h>
+#include "gethours.h"
 
 Rcpp::Environment mansched   = Rcpp::Environment::namespace_env( "mansched" );
 Rcpp::Function    assignEmp2 = mansched["assignEmp2"];
 Rcpp::Function    dfAppend   = mansched["dfAppend"];
-Rcpp::Function    getHours   = mansched["getHours"];
 
 template <class T>
 T combine ( T a, T b ) {

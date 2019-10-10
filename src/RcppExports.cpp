@@ -21,9 +21,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getHours
+Rcpp::DataFrame getHours(const Rcpp::S4& employee);
+RcppExport SEXP _mansched_getHours(SEXP employeeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::S4& >::type employee(employeeSEXP);
+    rcpp_result_gen = Rcpp::wrap(getHours(employee));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_mansched_assignPool", (DL_FUNC) &_mansched_assignPool, 6},
+    {"_mansched_getHours", (DL_FUNC) &_mansched_getHours, 1},
     {NULL, NULL, 0}
 };
 
