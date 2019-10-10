@@ -137,13 +137,46 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
               << "*************************\n\n";
 
   int empHours, i, j, k;
-  Rcpp::DataFrame empReqC  = Rcpp::clone( empReq  );
-  Rcpp::DataFrame empPoolC = Rcpp::clone( empPool );
-  Rcpp::List listTC        = Rcpp::clone( listT   );
-  Rcpp::List listRC        = Rcpp::clone( listR   );
+  Rcpp::List listTC = Rcpp::clone( listT );
+  Rcpp::List listRC = Rcpp::clone( listR );
+
+  Rcpp::StringVector reqID       = Rcpp::clone( Rcpp::as<Rcpp::StringVector  >( empReq["ID"             ] ) );
+  Rcpp::StringVector reqCostCode = Rcpp::clone( Rcpp::as<Rcpp::StringVector  >( empReq["costCode"       ] ) );
+  Rcpp::StringVector reqClass    = Rcpp::clone( Rcpp::as<Rcpp::StringVector  >( empReq["personnelClass" ] ) );
+
+  Rcpp::StringVector  poolID          = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["ID"            ] ) );
+  Rcpp::StringVector  poolName        = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["name"          ] ) );
+  Rcpp::StringVector  poolDesignation = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["designation"   ] ) );
+  Rcpp::StringVector  poolClass       = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["personnelClass"] ) );
+  Rcpp::LogicalVector poolField       = Rcpp::clone( Rcpp::as<Rcpp::LogicalVector>( empPool["field"         ] ) );
+  Rcpp::NumericVector poolAttendance  = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["attendance"    ] ) );
+  Rcpp::StringVector  poolEquipment   = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["equipment"     ] ) );
+  Rcpp::StringVector  poolCostCode    = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["costCode"      ] ) );
+  Rcpp::StringVector  poolStatus      = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["status"        ] ) );
+  Rcpp::StringVector  poolCBegin      = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["cBegin"        ] ) );
+  Rcpp::StringVector  poolCEnd        = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["cEnd"          ] ) );
+  Rcpp::LogicalVector poolInHouse     = Rcpp::clone( Rcpp::as<Rcpp::LogicalVector>( empPool["inHouse"       ] ) );
+  Rcpp::StringVector  poolRestDay     = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["restday"       ] ) );
+  Rcpp::LogicalVector poolIsRF        = Rcpp::clone( Rcpp::as<Rcpp::LogicalVector>( empPool["isRF"          ] ) );
+  Rcpp::IntegerVector poolJan         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["JAN"           ] ) );
+  Rcpp::IntegerVector poolFeb         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["FEB"           ] ) );
+  Rcpp::IntegerVector poolMar         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["MAR"           ] ) );
+  Rcpp::IntegerVector poolApr         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["APR"           ] ) );
+  Rcpp::IntegerVector poolMay         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["MAY"           ] ) );
+  Rcpp::IntegerVector poolJun         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["JUN"           ] ) );
+  Rcpp::IntegerVector poolJul         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["JUL"           ] ) );
+  Rcpp::IntegerVector poolAug         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["AUG"           ] ) );
+  Rcpp::IntegerVector poolSep         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["SEP"           ] ) );
+  Rcpp::IntegerVector poolOct         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["OCT"           ] ) );
+  Rcpp::IntegerVector poolNov         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["NOV"           ] ) );
+  Rcpp::IntegerVector poolDec         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["DEC"           ] ) );
+  Rcpp::IntegerVector poolDRD         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["d.rd"          ] ) );
+  Rcpp::IntegerVector poolDHO         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["d.ho"          ] ) );
+  Rcpp::IntegerVector poolDRH         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["d.rh"          ] ) );
+  Rcpp::StringVector  poolDCC         = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["dcc"           ] ) );
 
   Rcpp::StringVector  tempEquip   (0);
-  Rcpp::LogicalVector hasManHours (0);
+  Rcpp::LogicalVector toBeRemoved (0);
   Rcpp::IntegerVector maxReg        ( 10000, Rcpp::IntegerVector::get_na() );
   Rcpp::IntegerVector mh            ( 10000, Rcpp::IntegerVector::get_na() );
   Rcpp::IntegerVector month         ( 10000, Rcpp::IntegerVector::get_na() );
@@ -169,7 +202,7 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
     Rcpp::Named( "stringsAsFactors" ) = false
   );
 
-  for ( i = 0; i < empReqC.nrows(); i++ )
+  for ( i = 0; i < listTC.length(); i++ )
   {
     empHours = availableHours( Rcpp::as<Rcpp::S4>( listTC[i] ) );
     if ( empHours == 0 )
@@ -181,7 +214,7 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
                 << "Iteration: "
                 << i
                 << " / "
-                << empReqC.nrows()
+                << listTC.length()
                 << ".\n";
 
     if ( listRC.length() < 1 )
@@ -207,7 +240,7 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
     Rcpp::LogicalVector choice        ( listRC.length(), FALSE );
     for ( j = 0; j < listRC.length(); j++ )
     {
-      if ( Rcpp::any( Rcpp::is_na( prioStat ) ) )
+      if ( Rcpp::any( Rcpp::is_na( prioStat ) ).is_true() )
         matchClass[j] = TRUE;
       else
       {
@@ -289,118 +322,114 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
         }
       }
 
-      hasManHours = Rcpp::LogicalVector ( listRC.length(), FALSE );
+      toBeRemoved = Rcpp::LogicalVector ( listRC.length(), FALSE );
       for ( j = 0; j < listRC.length(); j++ )
       {
-        if ( availableHours( listRC[j] ) > 0 )
-          hasManHours[j] = TRUE;
-        else
+        if ( availableHours( listRC[j] ) < 1 )
+        {
+          toBeRemoved[j] = TRUE;
           Rcpp::Rcout << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[j] ).slot( "ID" ) )
                       << " is fully spent.\n";
+        }
       }
       // Retain personnel pool with available man hours
-      if ( which( hasManHours ).length() < listRC.length() )
+      if ( Rcpp::any( toBeRemoved ).is_true() )
       {
-        Rcpp::Rcout << "Removing spent employees...\n";
-        listRC = listRC[hasManHours];
-        Rcpp::StringVector  poolID          = Rcpp::as<Rcpp::StringVector >( empPoolC["ID"            ] )[hasManHours];
-        Rcpp::StringVector  poolName        = Rcpp::as<Rcpp::StringVector >( empPoolC["name"          ] )[hasManHours];
-        Rcpp::StringVector  poolDesignation = Rcpp::as<Rcpp::StringVector >( empPoolC["designation"   ] )[hasManHours];
-        Rcpp::StringVector  poolClass       = Rcpp::as<Rcpp::StringVector >( empPoolC["personnelClass"] )[hasManHours];
-        Rcpp::LogicalVector poolField       = Rcpp::as<Rcpp::LogicalVector>( empPoolC["field"         ] )[hasManHours];
-        Rcpp::NumericVector poolAttendance  = Rcpp::as<Rcpp::NumericVector>( empPoolC["attendance"    ] )[hasManHours];
-        Rcpp::StringVector  poolEquipment   = Rcpp::as<Rcpp::StringVector >( empPoolC["equipment"     ] )[hasManHours];
-        Rcpp::StringVector  poolCostCode    = Rcpp::as<Rcpp::StringVector >( empPoolC["costCode"      ] )[hasManHours];
-        Rcpp::StringVector  poolStatus      = Rcpp::as<Rcpp::StringVector >( empPoolC["status"        ] )[hasManHours];
-        Rcpp::StringVector  poolCBegin      = Rcpp::as<Rcpp::StringVector >( empPoolC["cBegin"        ] )[hasManHours];
-        Rcpp::StringVector  poolCEnd        = Rcpp::as<Rcpp::StringVector >( empPoolC["cEnd"          ] )[hasManHours];
-        Rcpp::LogicalVector poolInHouse     = Rcpp::as<Rcpp::LogicalVector>( empPoolC["inHouse"       ] )[hasManHours];
-        Rcpp::StringVector  poolRestDay     = Rcpp::as<Rcpp::StringVector >( empPoolC["restday"       ] )[hasManHours];
-        Rcpp::LogicalVector poolIsRF        = Rcpp::as<Rcpp::LogicalVector>( empPoolC["isRF"          ] )[hasManHours];
-        Rcpp::IntegerVector poolJan         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["JAN"           ] )[hasManHours];
-        Rcpp::IntegerVector poolFeb         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["FEB"           ] )[hasManHours];
-        Rcpp::IntegerVector poolMar         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["MAR"           ] )[hasManHours];
-        Rcpp::IntegerVector poolApr         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["APR"           ] )[hasManHours];
-        Rcpp::IntegerVector poolMay         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["MAY"           ] )[hasManHours];
-        Rcpp::IntegerVector poolJun         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["JUN"           ] )[hasManHours];
-        Rcpp::IntegerVector poolJul         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["JUL"           ] )[hasManHours];
-        Rcpp::IntegerVector poolAug         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["AUG"           ] )[hasManHours];
-        Rcpp::IntegerVector poolSep         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["SEP"           ] )[hasManHours];
-        Rcpp::IntegerVector poolOct         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["OCT"           ] )[hasManHours];
-        Rcpp::IntegerVector poolNov         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["NOV"           ] )[hasManHours];
-        Rcpp::IntegerVector poolDec         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["DEC"           ] )[hasManHours];
-        Rcpp::IntegerVector poolDRD         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["d.rd"          ] )[hasManHours];
-        Rcpp::IntegerVector poolDHO         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["d.ho"          ] )[hasManHours];
-        Rcpp::IntegerVector poolDRH         = Rcpp::as<Rcpp::IntegerVector>( empPoolC["d.rh"          ] )[hasManHours];
-        Rcpp::StringVector  poolDCC         = Rcpp::as<Rcpp::StringVector >( empPoolC["dcc"           ] )[hasManHours];
-
-        empPoolC = Rcpp::DataFrame::create(
-          Rcpp::Named( "ID"               ) = poolID,
-          Rcpp::Named( "name"             ) = poolName,
-          Rcpp::Named( "designation"      ) = poolDesignation,
-          Rcpp::Named( "personnelClass"   ) = poolClass,
-          Rcpp::Named( "field"            ) = poolField,
-          Rcpp::Named( "attendance"       ) = poolAttendance,
-          Rcpp::Named( "equipment"        ) = poolEquipment,
-          Rcpp::Named( "costCode"         ) = poolCostCode,
-          Rcpp::Named( "status"           ) = poolStatus,
-          Rcpp::Named( "cBegin"           ) = poolCBegin,
-          Rcpp::Named( "cEnd"             ) = poolCEnd,
-          Rcpp::Named( "inHouse"          ) = poolInHouse,
-          Rcpp::Named( "restday"          ) = poolRestDay,
-          Rcpp::Named( "isRF"             ) = poolIsRF,
-          Rcpp::Named( "stringsAsFactors" ) = false
-        );
-        empPoolC.push_back( poolJan, "JAN"  );
-        empPoolC.push_back( poolFeb, "FEB"  );
-        empPoolC.push_back( poolMar, "MAR"  );
-        empPoolC.push_back( poolApr, "APR"  );
-        empPoolC.push_back( poolMay, "MAY"  );
-        empPoolC.push_back( poolJun, "JUN"  );
-        empPoolC.push_back( poolJul, "JUL"  );
-        empPoolC.push_back( poolAug, "AUG"  );
-        empPoolC.push_back( poolSep, "SEP"  );
-        empPoolC.push_back( poolOct, "OCT"  );
-        empPoolC.push_back( poolNov, "NOV"  );
-        empPoolC.push_back( poolDec, "DEC"  );
-        empPoolC.push_back( poolDRD, "d.rd" );
-        empPoolC.push_back( poolDHO, "d.ho" );
-        empPoolC.push_back( poolDRH, "d.rh" );
-        empPoolC.push_back( poolDCC, "dcc"  );
-        empPoolC.attr( "class" ) = "data.frame";
-        empPoolC.attr( "row.names" ) = Rcpp::IntegerVector::create( NA_INTEGER, XLENGTH( poolID ) );
-        Rcpp::Rcout << "Employee pool successfully compressed.\n";
+        listRC          = listRC         [!toBeRemoved];
+        poolID          = poolID         [!toBeRemoved];
+        poolName        = poolName       [!toBeRemoved];
+        poolDesignation = poolDesignation[!toBeRemoved];
+        poolClass       = poolClass      [!toBeRemoved];
+        poolField       = poolField      [!toBeRemoved];
+        poolAttendance  = poolAttendance [!toBeRemoved];
+        poolEquipment   = poolEquipment  [!toBeRemoved];
+        poolCostCode    = poolCostCode   [!toBeRemoved];
+        poolStatus      = poolStatus     [!toBeRemoved];
+        poolCBegin      = poolCBegin     [!toBeRemoved];
+        poolCEnd        = poolCEnd       [!toBeRemoved];
+        poolInHouse     = poolInHouse    [!toBeRemoved];
+        poolRestDay     = poolRestDay    [!toBeRemoved];
+        poolIsRF        = poolIsRF       [!toBeRemoved];
+        poolJan         = poolJan        [!toBeRemoved];
+        poolFeb         = poolFeb        [!toBeRemoved];
+        poolMar         = poolMar        [!toBeRemoved];
+        poolApr         = poolApr        [!toBeRemoved];
+        poolMay         = poolMay        [!toBeRemoved];
+        poolJun         = poolJun        [!toBeRemoved];
+        poolJul         = poolJul        [!toBeRemoved];
+        poolAug         = poolAug        [!toBeRemoved];
+        poolSep         = poolSep        [!toBeRemoved];
+        poolOct         = poolOct        [!toBeRemoved];
+        poolNov         = poolNov        [!toBeRemoved];
+        poolDec         = poolDec        [!toBeRemoved];
+        poolDRD         = poolDRD        [!toBeRemoved];
+        poolDHO         = poolDHO        [!toBeRemoved];
+        poolDRH         = poolDRH        [!toBeRemoved];
+        poolDCC         = poolDCC        [!toBeRemoved];
       }
     }
   }
 
-  hasManHours = Rcpp::LogicalVector ( listTC.length(), FALSE );
+  toBeRemoved = Rcpp::LogicalVector ( listTC.length(), FALSE );
   for ( i = 0; i < listTC.length(); i++ )
   {
-    if ( availableHours( listTC[i] ) > 0 )
+    if ( availableHours( listTC[i] ) < 1 )
     {
-      hasManHours[i] = TRUE;
-    }
-    else
-    {
+      toBeRemoved[i] = TRUE;
       Rcpp::Rcout << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "ID" ) )
                   << " is fully spent.\n";
     }
   }
-  // Retain personnel pool with available man hours
-  if ( which( hasManHours ).length() < listTC.length() )
+  if ( Rcpp::any( toBeRemoved ).is_true() )
   {
-    listTC = listTC[hasManHours];
-    Rcpp::StringVector reqID       = Rcpp::as<Rcpp::StringVector  >( empReqC["ID"             ] )[hasManHours];
-    Rcpp::StringVector reqCostCode = Rcpp::as<Rcpp::StringVector  >( empReqC["costCode"       ] )[hasManHours];
-    Rcpp::StringVector reqClass    = Rcpp::as<Rcpp::StringVector  >( empReqC["personnelClass" ] )[hasManHours];
-    empReqC = Rcpp::DataFrame::create(
-      Rcpp::Named( "ID"               ) = reqID,
-      Rcpp::Named( "costCode"         ) = reqCostCode,
-      Rcpp::Named( "personnelClass"   ) = reqClass,
-      Rcpp::Named( "stringsAsFactors" ) = false
-    );
+    listTC      = listTC      [!toBeRemoved];
+    reqID       = reqID       [!toBeRemoved];
+    reqCostCode = reqCostCode [!toBeRemoved];
+    reqClass    = reqClass    [!toBeRemoved];
   }
+
+  Rcpp::DataFrame empReqC = Rcpp::DataFrame::create(
+    Rcpp::Named( "ID"               ) = reqID,
+    Rcpp::Named( "costCode"         ) = reqCostCode,
+    Rcpp::Named( "personnelClass"   ) = reqClass,
+    Rcpp::Named( "stringsAsFactors" ) = false
+  );
+
+  Rcpp::DataFrame empPoolC = Rcpp::DataFrame::create(
+    Rcpp::Named( "ID"               ) = poolID,
+    Rcpp::Named( "name"             ) = poolName,
+    Rcpp::Named( "designation"      ) = poolDesignation,
+    Rcpp::Named( "personnelClass"   ) = poolClass,
+    Rcpp::Named( "field"            ) = poolField,
+    Rcpp::Named( "attendance"       ) = poolAttendance,
+    Rcpp::Named( "equipment"        ) = poolEquipment,
+    Rcpp::Named( "costCode"         ) = poolCostCode,
+    Rcpp::Named( "status"           ) = poolStatus,
+    Rcpp::Named( "cBegin"           ) = poolCBegin,
+    Rcpp::Named( "cEnd"             ) = poolCEnd,
+    Rcpp::Named( "inHouse"          ) = poolInHouse,
+    Rcpp::Named( "restday"          ) = poolRestDay,
+    Rcpp::Named( "isRF"             ) = poolIsRF,
+    Rcpp::Named( "stringsAsFactors" ) = false
+  );
+  empPoolC.push_back( poolJan, "JAN"  );
+  empPoolC.push_back( poolFeb, "FEB"  );
+  empPoolC.push_back( poolMar, "MAR"  );
+  empPoolC.push_back( poolApr, "APR"  );
+  empPoolC.push_back( poolMay, "MAY"  );
+  empPoolC.push_back( poolJun, "JUN"  );
+  empPoolC.push_back( poolJul, "JUL"  );
+  empPoolC.push_back( poolAug, "AUG"  );
+  empPoolC.push_back( poolSep, "SEP"  );
+  empPoolC.push_back( poolOct, "OCT"  );
+  empPoolC.push_back( poolNov, "NOV"  );
+  empPoolC.push_back( poolDec, "DEC"  );
+  empPoolC.push_back( poolDRD, "d.rd" );
+  empPoolC.push_back( poolDHO, "d.ho" );
+  empPoolC.push_back( poolDRH, "d.rh" );
+  empPoolC.push_back( poolDCC, "dcc"  );
+  empPoolC.attr( "class" ) = "data.frame";
+  empPoolC.attr( "row.names" ) = Rcpp::IntegerVector::create( NA_INTEGER, XLENGTH( poolID ) );
 
   costCode = mhDB["costCode"];
   id       = mhDB["ID"      ];
