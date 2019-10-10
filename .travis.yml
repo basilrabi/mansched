@@ -1,6 +1,7 @@
 dist: bionic
 language: r
 cache: packages
+warnings_are_errors: false
 
 addons:
     apt:
