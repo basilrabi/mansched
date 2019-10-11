@@ -31,11 +31,11 @@ setMethod(
   signature  = "Employee",
   definition = function(theObject) {
 
-    shoes <- rep(2400 / 12, times = 12L)
+    shoes <- rep(2800 / 12, times = 12L)
     others <- rep(1300 / 12, times = 12L)
     sg <- getCM(theObject)
 
-    if (theObject@forecast | theObject@status == "age") {
+    if (theObject@status == "age") {
       shoes <-  shoes * 0
       others <- others * 0
     }
