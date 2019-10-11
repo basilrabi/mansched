@@ -1715,15 +1715,13 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   #### 13th Month Pay ####
   r12 <- mhDB.13mp[, c("costCode", "month", "cost")]
+  bonus <- mhDB.bonus[, c("costCode", "month", "cost")]
+  signingBonus <- NULL
 
-  ## In 2019 budget, the bonus is part of 13th Month Pay
   ## In 2020 budget, signing bonus of RF is part of 13th Month Pay cost code
-  if (!forecast) {
-    bonus <- mhDB.bonus[, c("costCode", "month", "cost")]
+  if (!forecast)
     signingBonus <- mhDB.signingBonus[, c("costCode", "month", "cost")]
-    r12 <- data.table::rbindlist(list(r12, bonus, signingBonus),
-                                 use.names = TRUE)
-  }
+  r12 <- data.table::rbindlist(list(r12, bonus, signingBonus), use.names = TRUE)
 
   if (nrow(r12) > 0) {
     r12$row <- "13th Month Pay"
