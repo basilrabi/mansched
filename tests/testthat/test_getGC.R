@@ -89,7 +89,7 @@ test_that("getGC() works", {
   expect_equal(sum(getGC(tempEmp1)$benefits), 1500)
   expect_equal(getGC(tempEmp1)$benefits[12], 1500)
   expect_equal(sum(getGC(tempEmp2)$benefits), 0)
-  expect_equal(sum(getGC(tempEmp3)$benefits), 0)
+  expect_equal(sum(getGC(tempEmp3)$benefits), 3000)
   expect_equal(getGC(tempEmp3)$benefits[12], 0)
   expect_equal(sum(getGC(tempEmp4)$benefits), 2700)
   expect_equal(getGC(tempEmp4)$benefits[11], 2700)
@@ -221,12 +221,12 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
                           forecast    = TRUE)
 
 test_that("getGC() works", {
-  expect_equal(sum(getGC(tempEmp1)$benefits), 0)
-  expect_equal(sum(getGC(tempEmp2)$benefits), 0)
-  expect_equal(sum(getGC(tempEmp3)$benefits), 0)
-  expect_equal(sum(getGC(tempEmp4)$benefits), 0)
-  expect_equal(sum(getGC(tempEmp5)$benefits), 0)
-  expect_equal(sum(getGC(tempEmp6)$benefits), 0)
+  expect_equal(sum(getGC(tempEmp1)$benefits), 1500)
+  expect_equal(sum(getGC(tempEmp2)$benefits), 1500)
+  expect_equal(sum(getGC(tempEmp3)$benefits), 1500)
+  expect_equal(sum(getGC(tempEmp4)$benefits), 2700)
+  expect_equal(sum(getGC(tempEmp5)$benefits), 2700)
+  expect_equal(sum(getGC(tempEmp6)$benefits), 2100)
   expect_equal(sum(getGC(tempEmp7)$benefits), 0)
 })
 

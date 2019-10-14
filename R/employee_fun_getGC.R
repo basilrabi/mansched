@@ -38,23 +38,20 @@ setMethod(
     gc$gc <- 0
     gc$benefits <- gc$gc
 
-    if (!theObject@forecast) {
+    if (theObject@status %in% c("reg")) {
+      gc$gc[gc$month == 12L] <- 1500
+      gc$benefits <- round(gc$allow * gc$gc, digits = 2)
+    }
 
-      if (theObject@status %in% c("reg")) {
-        gc$gc[gc$month == 12L] <- 1500
-        gc$benefits <- round(gc$allow * gc$gc, digits = 2)
+    if (theObject@status %in% c("sea", "pro")) {
+
+      if (sum(gc$allow) > 10) {
+        multiplier <- 10
+      } else {
+        multiplier <- sum(gc$allow)
       }
-
-      if (theObject@status == "sea") {
-
-        if (sum(gc$allow) > 10) {
-          multiplier <- 10
-        } else {
-          multiplier <- sum(gc$allow)
-        }
-        gc$gc[gc$month == 11L] <- (3000 / 10) * multiplier
-        gc$benefits <- gc$gc
-      }
+      gc$gc[gc$month == 11L] <- (3000 / 10) * multiplier
+      gc$benefits <- gc$gc
     }
 
     return(gc[, c("month", "ID", "benefits")])
