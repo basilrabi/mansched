@@ -1361,6 +1361,47 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     mhDB.bonus <- NULL
   }
 
+  #### Compute for April and October retention bonus ####
+  cat("\nComputing retention bonus.\n")
+
+  retentionBonus <- lapply(listR, getRB) %>%
+    data.table::rbindlist(use.names = TRUE)
+
+  # Distribute April to all man-hours from January to April
+  mhDB.RBMid <- mhDB[
+    mhDB$mhType %in% distType & mhDB$month < 4,
+  ] %>%
+    dplyr::group_by(ID, costCode) %>%
+    dplyr::summarise(mh = sum(mh)) %>%
+    dplyr::group_by(ID) %>%
+    dplyr::mutate(totMH = sum(mh))
+  mhDB.RBMid$month <- 4L
+  mhDB.RBMid$X <- mhDB.RBMid$mh / mhDB.RBMid$totMH
+  mhDB.RBMid   <- dplyr::left_join(x  = mhDB.RBMid,
+                                   y  = retentionBonus,
+                                   by = c("ID", "month"))
+
+  # Distribute October bonus to all man-hours from April to October
+  mhDB.RBEnd <- mhDB[mhDB$mhType %in% distType &
+                       mhDB$month >= 4 &
+                       mhDB$month <= 10, ] %>%
+    dplyr::group_by(ID, costCode) %>%
+    dplyr::summarise(mh = sum(mh)) %>%
+    dplyr::group_by(ID) %>%
+    dplyr::mutate(totMH = sum(mh))
+  mhDB.RBEnd$month <- 10L
+  mhDB.RBEnd$X <- mhDB.RBEnd$mh / mhDB.RBEnd$totMH
+  mhDB.RBEnd   <- dplyr::left_join(x  = mhDB.RBEnd,
+                                   y  = retentionBonus,
+                                   by = c("ID", "month"))
+
+  # Combine Retention Bonuses
+  mhDB.RB <- data.table::rbindlist(list(mhDB.RBMid, mhDB.RBEnd),
+                                   use.names = TRUE)
+  mhDB.RB$cost <- round(mhDB.RB$X * mhDB.RB$benefits, digits = 2)
+  mhDB.RB <- mhDB.RB %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = sum(cost))
 
   ####  Compute for Rice Subsidy for Agency ####
   cat("\nComputing rice subsidy (agency).\n")
@@ -1721,7 +1762,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   ## In 2020 budget, signing bonus of RF is part of 13th Month Pay cost code
   if (!forecast)
     signingBonus <- mhDB.signingBonus[, c("costCode", "month", "cost")]
-  r12 <- data.table::rbindlist(list(r12, bonus, signingBonus), use.names = TRUE)
+  r12 <- data.table::rbindlist(list(r12, bonus, signingBonus, mhDB.RB),
+                               use.names = TRUE)
 
   if (nrow(r12) > 0) {
     r12$row <- "13th Month Pay"

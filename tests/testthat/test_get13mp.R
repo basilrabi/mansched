@@ -102,7 +102,7 @@ tempEmp6 <- initREmployee(theObject = tempEmp,
                           equipment = equipment)
 
 sal <- c(1000, 2000)
-test_that("getHM() works", {
+test_that("get14mp() works", {
   expect_equal(sum(get13mp(tempEmp1, sal)$mp),
                round(2000 / 12, digits = 2) * 12)
   expect_equal(sum(get13mp(tempEmp2, sal)$mp),

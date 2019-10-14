@@ -178,6 +178,8 @@ sal <- c(wage$s[1], wage$i[1])
 
 # Compute 13th  month pay
 testMP13 <- rep(round(sal[1] / 12, digits = 2), times = 12)
+testMP13[4] = testMP13[4] + 4186
+testMP13[10] = testMP13[10] + 16744
 
 test_that("Correct 13th MP for Sea White", {
   expect_equal(mp13, testMP13)
@@ -235,6 +237,8 @@ sal <- c(wage$s[1], wage$i[1])
 
 # Compute 13th  month pay
 testMP13 <- rep(round(sal[1] * 26 / 12, digits = 2), times = 12)
+testMP13[4] = testMP13[4] + 4186
+testMP13[10] = testMP13[10] + 16744
 
 test_that("Correct 13th MP for sea non-white", {
   expect_equal(sum(mp13), sum(testMP13))
