@@ -267,7 +267,7 @@ setMethod(
     tempData.rl <- assignMH(hoursT = empT@lh, hoursR = empR@rl)
     empT@lh     <- tempData.rl$hoursT
 
-    tempData.rn <- assignMH(hoursT = empT@rn, hoursR = empR@rn)
+    tempData.rn <- assignMH(hoursT = empT@nh, hoursR = empR@rn)
     empT@nh     <- tempData.rn$hoursT
 
     # If a non-regular RF is assigned in a special holiday, add 8 hours per
