@@ -82,5 +82,6 @@ sanityCheckEmpPool <- function(empPool) {
   empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
                                            FUN = as.character)
   empPool <- as.data.frame(empPool)
+  empPool$field <- as.logical(empPool$field)
   return(empPool)
 }
