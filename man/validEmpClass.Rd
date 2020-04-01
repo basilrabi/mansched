@@ -4,7 +4,9 @@
 \name{validEmpClass}
 \alias{validEmpClass}
 \title{Valid \code{personnelClass}}
-\format{character vector}
+\format{
+character vector
+}
 \usage{
 validEmpClass
 }

@@ -18,11 +18,11 @@ Budget season in Taganito Mine means sleepless nights for its personnel,
  schedules, manpower requirements and lastly, manual encoding of
  man hours into the spreadsheet template.
 
-The spreadsheet template is full of details and its size is stupendous. It
+ The spreadsheet template is full of details and its size is stupendous. It
  has at least 12 sheets. Each sheet has more than a thousand rows and the
  number of columns are magnitudes more than the number of rows.
 
-Encoding the man hours into the template requires great amount of patience
+ Encoding the man hours into the template requires great amount of patience
  and time. Also, finding encoding mistakes is also a discouraging task. This
  package is an attempt to automate the task of manually encoding the man
  hours data for manpower cost computation.

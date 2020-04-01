@@ -4,7 +4,8 @@
 \name{validEquipment}
 \alias{validEquipment}
 \title{Valid equipment types}
-\format{character vector:
+\format{
+character vector:
 
   \describe{
     \item{BREAKER}{Breaker}
@@ -28,7 +29,8 @@
     \item{WL}{wheeled pay loader}
     \item{WTL}{water truck}
     \item{WX}{wheeled excavator}
-  }}
+  }
+}
 \usage{
 validEquipment
 }

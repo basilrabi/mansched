@@ -15,7 +15,7 @@ Real employees are actual persons represented as \code{Employee-class}
   objects. Theoretical employees in this context are employee requirements
   represented as \code{Employee-class} objects.
 
-This class is further classified into \code{\link{Staff-class}} and
+  This class is further classified into \code{\link{Staff-class}} and
   \code{\link{NonStaff-class}}.
 }
 \section{Slots}{

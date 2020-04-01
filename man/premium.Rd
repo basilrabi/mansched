@@ -4,7 +4,8 @@
 \name{premium}
 \alias{premium}
 \title{Wage premiums}
-\format{\code{\link{data.frame}} with 16 rows and 7 columns
+\format{
+\code{\link{data.frame}} with 16 rows and 7 columns
 
   Each row represents the premium pay for a man hour type. The columns are
   consisted by:
@@ -24,7 +25,8 @@
     \item{isOT.S}{logical value \cr
       Is man hour type of non-regular employee treated as overtime work?}
 
-  }}
+  }
+}
 \usage{
 premium
 }

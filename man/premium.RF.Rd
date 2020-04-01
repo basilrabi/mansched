@@ -4,7 +4,9 @@
 \name{premium.RF}
 \alias{premium.RF}
 \title{Wage premiums for Rank and File}
-\format{An object of class \code{data.frame} with 16 rows and 7 columns.}
+\format{
+An object of class \code{data.frame} with 16 rows and 7 columns.
+}
 \usage{
 premium.RF
 }

@@ -4,8 +4,7 @@
 \alias{getmhDB}
 \title{Compute man hours database}
 \usage{
-getmhDB(empReq, empPool, sched, year = NA, hol = NA,
-  forecast = FALSE)
+getmhDB(empReq, empPool, sched, year = NA, hol = NA, forecast = FALSE)
 }
 \arguments{
 \item{empReq}{a \code{\link{data.frame}} similar to \code{empReq} in

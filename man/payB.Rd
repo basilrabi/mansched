@@ -4,7 +4,9 @@
 \name{payB}
 \alias{payB}
 \title{Payment scheme for regular RF}
-\format{\code{\link{data.frame}} with 12 rows and two columns}
+\format{
+\code{\link{data.frame}} with 12 rows and two columns
+}
 \usage{
 payB
 }

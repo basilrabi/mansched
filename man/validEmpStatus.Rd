@@ -4,7 +4,9 @@
 \name{validEmpStatus}
 \alias{validEmpStatus}
 \title{Valid employment \code{status}}
-\format{character vector}
+\format{
+character vector
+}
 \usage{
 validEmpStatus
 }

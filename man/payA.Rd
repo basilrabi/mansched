@@ -4,7 +4,9 @@
 \name{payA}
 \alias{payA}
 \title{Payment scheme for regular non-RF}
-\format{\code{\link{data.frame}} with 12 rows and two columns}
+\format{
+\code{\link{data.frame}} with 12 rows and two columns
+}
 \usage{
 payA
 }

@@ -4,8 +4,14 @@
 \alias{assignPool}
 \title{Assign pool to requirement faster}
 \usage{
-assignPool(empReq, empPool, listT, listR, prioStat = NA_character_,
-  prioCode = FALSE)
+assignPool(
+  empReq,
+  empPool,
+  listT,
+  listR,
+  prioStat = NA_character_,
+  prioCode = FALSE
+)
 }
 \arguments{
 \item{empReq}{passed from \code{\link{assignPrio}}}

@@ -28,6 +28,6 @@ Suggests:
   covr
 Remotes:
   r-lib/covr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 LinkingTo: Rcpp  (>= 1.0.2)
 VignetteBuilder: knitr
