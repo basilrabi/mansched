@@ -49,9 +49,7 @@ setMethod(
 
     hmo <- callNextMethod(theObject)
 
-    principal <- 16876
-    if (theObject@forecast)
-      principal <- 14548
+    principal <- 16003
 
     employeeHMO <- principal / 12
     dependentHMO <- principal * theObject@dependents / 12
@@ -72,15 +70,11 @@ setMethod(
     hmo <- callNextMethod(theObject)
 
     if (isRF(theObject)) {
-      principal <- 12004
-      if (theObject@forecast)
-        principal <- 10348
+      principal <- 11383
       employeeHMO <- principal / 12
       dependentHMO <- principal / 12
     } else {
-      principal <- 12680
-      if (theObject@forecast)
-        principal <- 10931
+      principal <- 12025
       employeeHMO <- principal / 12
       dependentHMO <- principal / 12
     }

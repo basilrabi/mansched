@@ -157,20 +157,20 @@ tempEmp9 <- initREmployee(theObject   = tempEmp,
 
 test_that("getHMO() works", {
   expect_equal(sum(getHMO(tempEmp1)$hmo),
-               round((16876 + 16876) / 12, digits = 2) * 12)
+               round((16003 + 16003) / 12, digits = 2) * 12)
   expect_equal(sum(getHMO(tempEmp2)$hmo),
-               round((16876 + (16876 *2)) / 12, digits = 2) * 11)
+               round((16003 + (16003 *2)) / 12, digits = 2) * 11)
   expect_equal(sum(getHMO(tempEmp3)$hmo),
-               round((12680 + 12680) / 12, digits = 2) * 10)
+               round((12025 + 12025) / 12, digits = 2) * 10)
   expect_equal(sum(getHMO(tempEmp4)$hmo),
-               round((12004 + 12004) / 12, digits = 2) * 9)
+               round((11383 + 11383) / 12, digits = 2) * 9)
   expect_equal(sum(getHMO(tempEmp5)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp6)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp7)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp8)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp9)$hmo),
                sum(round(
-                 (16876 / 12) + (16876 * c(0, rep(1, times = 10), 0) / 12)
+                 (16003 / 12) + (16003 * c(0, rep(1, times = 10), 0) / 12)
                  , digits = 2
                )))
 })
@@ -307,11 +307,11 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
 
 test_that("getHMO() works", {
   expect_equal(sum(getHMO(tempEmp1)$hmo),
-               round((14548 + 14548) / 12, digits = 2) * 12)
+               round((16003 + 16003) / 12, digits = 2) * 12)
   expect_equal(sum(getHMO(tempEmp2)$hmo),
-               round((14548 + 14548) / 12, digits = 2) * 11)
+               round((16003 + 16003) / 12, digits = 2) * 11)
   expect_equal(sum(getHMO(tempEmp3)$hmo),
-               round((10931 + 10931) / 12, digits = 2) * 10)
+               round((12025 + 12025) / 12, digits = 2) * 10)
   expect_equal(sum(getHMO(tempEmp4)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp5)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp6)$hmo), 0)
