@@ -50,13 +50,12 @@ cost <- cost[cost$code %in% c(521001L, 521002L, 521008L),
              c("costCode", "row", mCols)]
 
 test_that("Correct PHIC in Budget", {
-  expect_equal(550, cost$`1`[1])
-  expect_equal(550, cost$`7`[1])
-  expect_equal(cost$`1`[3], 550)
-  expect_equal(cost$`7`[3], 550)
-  expect_equal(cost$`1`[5],
-               round(round(400 * (313 / 12), digits = 2) * 0.01375, digits = 2))
-  expect_equal(cost$`1`[9], 137.5)
+  expect_equal(437.5, cost$`1`[1])
+  expect_equal(437.5, cost$`7`[1])
+  expect_equal(cost$`1`[3], 437.5)
+  expect_equal(cost$`7`[3], 437.5)
+  expect_equal(cost$`1`[5], 125)
+  expect_equal(cost$`1`[9], 100)
 })
 
 
@@ -96,13 +95,12 @@ cost <- cost[cost$code %in% c(521001L, 521002L, 521008L),
              c("costCode", "row", mCols)]
 
 test_that("Correct PHIC in Budget", {
-  expect_equal(cost$`1`[1], 550)
-  expect_equal(cost$`7`[1], 550)
-  expect_equal(cost$`1`[3], 550)
-  expect_equal(cost$`7`[3], 550)
-  expect_equal(cost$`1`[5],
-               round(round(400 * (313 / 12), digits = 2) * 0.01375, digits = 2))
-  expect_equal(cost$`1`[9], 137.5)
+  expect_equal(cost$`1`[1], 437.5)
+  expect_equal(cost$`7`[1], 437.5)
+  expect_equal(cost$`1`[3], 437.5)
+  expect_equal(cost$`7`[3], 437.5)
+  expect_equal(cost$`1`[5], 125)
+  expect_equal(cost$`1`[9], 100)
 })
 
 rm(list = ls())

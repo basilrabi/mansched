@@ -977,9 +977,11 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   #### Compute for Phil-Health contribution of employer ####
   cat("\nComputing Philhealth contribution.\n")
 
-  # TODO: make method for PHIC
+  #- PHIC Contribution is fixed
+  #- For monthly wagers, PHIC is based on basic monthly salary
+  #- For daily wagers, PHIC is based on daily wage * 313 / 12
 
-  PHdb <- lapply(listR, FUN = function(x) {
+  PHICdb <- lapply(listR, FUN = function(x) {
 
     tempData <- getCM(x)
 
@@ -996,13 +998,14 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     if (isRF(x)) {
 
       tempData <- dplyr::left_join(
-        tempData,
-        wageEmp[wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
+        x  = tempData,
+        y  = wageEmp[wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
         by = c("ID", "sal"))
 
       tempData$salM2 <- round(tempData$salM * 313 / 12, digits = 2)
       tempData$salM  <- tempData$salM2
       tempData       <- tempData[, !colnames(tempData) %in% c("salM2")]
+
     } else {
 
       tempData <- dplyr::left_join(
@@ -1013,41 +1016,35 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     }
 
     tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
-    tempData$PH <- sapply(tempData$salG, FUN = function(x) {
-      if (x < 1)
-        return(0)
 
-      if (x <= 10000) {
-        return(137.5)
-      } else if (x > 40000) {
-        return(550)
-      } else {
-        return(round(x * 0.01375, digits = 2))
-      }
+    tempData$PHIC <- sapply(tempData$salG, FUN = function(x) {
+      PHIC$c[which(PHIC$r1 <= x & PHIC$r2 >= x)]
     })
 
-    tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "PH")]
+    tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "PHIC")]
     tempData <- as.data.frame(tempData)
 
     tempData
   })
 
-  PHdb <- data.table::rbindlist(PHdb, use.names = TRUE)
+  PHICdb <- data.table::rbindlist(PHICdb, use.names = TRUE)
 
-  mhDB.PH <- mhDB[mhDB$mhType %in% distType, ] %>%
+  mhDB.PHIC <- mhDB[mhDB$mhType %in% distType, ] %>%
     dplyr::group_by(ID, month, costCode, status) %>%
     dplyr::summarise(mh = sum(mh))
 
-  mhDB.PH <- mhDB.PH %>%
+  mhDB.PHIC <- mhDB.PHIC %>%
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh))
 
-  mhDB.PH$X    <- mhDB.PH$mh / mhDB.PH$totMH
-  mhDB.PH      <- dplyr::left_join(x = mhDB.PH, y = PHdb, by = c("ID", "month"))
-  mhDB.PH$cost <- round(mhDB.PH$X * mhDB.PH$PH, digits = 2)
+  mhDB.PHIC$X    <- mhDB.PHIC$mh / mhDB.PHIC$totMH
+  mhDB.PHIC      <- dplyr::left_join(x = mhDB.PHIC,
+                                    y = PHICdb,
+                                    by = c("ID", "month"))
 
-  mhDB.PH.A    <- mhDB.PH[mhDB.PH$status == "age", ]
-  mhDB.PH      <- mhDB.PH[mhDB.PH$status != "age", ]
+  mhDB.PHIC$cost <- round(mhDB.PHIC$X * mhDB.PHIC$PHIC, digits = 2)
+  mhDB.PHIC.A    <- mhDB.PHIC[mhDB.PHIC$status == "age", ]
+  mhDB.PHIC      <- mhDB.PHIC[mhDB.PHIC$status != "age", ]
 
   #### Compute for Leave Commutation ####
   cat("\nComputing leave commutation.\n")
@@ -1704,7 +1701,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   }
 
   #### Philhealth ####
-  r09 <- mhDB.PH[, c("costCode", "month", "cost")]
+  r09 <- mhDB.PHIC[, c("costCode", "month", "cost")]
 
   if (nrow(r09) > 0) {
     r09$row <- "Philhealth"
@@ -1712,7 +1709,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     r09 <- NULL
   }
 
-  r09.sea <- mhDB.PH[mhDB.PH$status == "sea", c("costCode", "month", "cost")]
+  r09.sea <- mhDB.PHIC[mhDB.PHIC$status == "sea", c("costCode", "month", "cost")]
 
   if (nrow(r09.sea) > 0) {
     r09.sea$row <- "Philhealth"
@@ -1798,9 +1795,9 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
                month            = mhDB.PI.A$month,
                cost             = mhDB.PI.A$cost,
                stringsAsFactors = FALSE),
-    data.frame(costCode         = mhDB.PH.A$costCode,
-               month            = mhDB.PH.A$month,
-               cost             = mhDB.PH.A$cost,
+    data.frame(costCode         = mhDB.PHIC.A$costCode,
+               month            = mhDB.PHIC.A$month,
+               cost             = mhDB.PHIC.A$cost,
                stringsAsFactors = FALSE),
     data.frame(costCode         = mhDB.LC.A$costCode,
                month            = mhDB.LC.A$month,
