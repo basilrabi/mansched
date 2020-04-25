@@ -32,13 +32,25 @@ setMethod(
   definition = function(theObject) {
 
     price <- 3 * 450
-    if (theObject@forecast)
-      price <- 3 * 390
-    if (theObject@status == "age")
-      price <- 0
+
     longShirt  <- getCM(theObject)
 
-    longShirt$benefits <- round(longShirt$allow * price / 12, digits = 2)
+    if (theObject@status == "age")
+      longShirt$benefits <- 0
+
+    if (theObject@status == "reg")
+      longShirt$benefits <- round(longShirt$allow * price / 12, digits = 2)
+
+    if (theObject@status == "pro") {
+      longShirt$benefits <- round(
+        longShirt$allow * price / sum(longShirt$allow), digits = 2
+      )
+    }
+
+    if (theObject@status == "sea") {
+      longShirt$benefits <- 0
+      longShirt$benefits[min(which(longShirt$allow > 0))] <- price
+    }
 
     return(longShirt[, c("month", "ID", "benefits")])
   }
