@@ -45,12 +45,12 @@ setMethod(
 
     if (theObject@status %in% c("sea", "pro")) {
 
-      if (sum(gc$allow) > 10) {
-        multiplier <- 10
+      if (sum(gc$allow) > 6) {
+        multiplier <- 7
       } else {
         multiplier <- sum(gc$allow)
       }
-      gc$gc[gc$month == 11L] <- (3000 / 10) * multiplier
+      gc$gc[gc$month == 11L] <- round((3000 / 7) * multiplier, digits = 2)
       gc$benefits <- gc$gc
     }
 
