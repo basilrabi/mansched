@@ -1949,6 +1949,11 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
 
   export <- cbind(paste0(costDB$costCode, costDB$code), as.data.frame(costDB))
   colnames(export)[1] <- "concat"
+  missingCols <- (1:12)[which(!1:12 %in% colnames(export))]
+  for (i in missingCols) {
+    cmd <- paste0("export$`", i, "` <- 0")
+    eval(parse(text = cmd))
+  }
   export <- export[, c("costCode", "row", "code", "concat", as.character(1:12))]
 
   export.mh     <- costDB[costDB$code == 999999,
