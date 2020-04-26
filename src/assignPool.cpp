@@ -149,7 +149,6 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
   Rcpp::StringVector  poolDesignation = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["designation"   ] ) );
   Rcpp::StringVector  poolClass       = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["personnelClass"] ) );
   Rcpp::LogicalVector poolField       = Rcpp::clone( Rcpp::as<Rcpp::LogicalVector>( empPool["field"         ] ) );
-  Rcpp::StringVector  poolAttendance  = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["attendance"    ] ) );
   Rcpp::StringVector  poolEquipment   = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["equipment"     ] ) );
   Rcpp::StringVector  poolCostCode    = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["costCode"      ] ) );
   Rcpp::StringVector  poolStatus      = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["status"        ] ) );
@@ -174,6 +173,18 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
   Rcpp::IntegerVector poolDHO         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["d.ho"          ] ) );
   Rcpp::IntegerVector poolDRH         = Rcpp::clone( Rcpp::as<Rcpp::IntegerVector>( empPool["d.rh"          ] ) );
   Rcpp::StringVector  poolDCC         = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["dcc"           ] ) );
+  Rcpp::NumericVector poolA01         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_1"           ] ) );
+  Rcpp::NumericVector poolA02         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_2"           ] ) );
+  Rcpp::NumericVector poolA03         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_3"           ] ) );
+  Rcpp::NumericVector poolA04         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_4"           ] ) );
+  Rcpp::NumericVector poolA05         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_5"           ] ) );
+  Rcpp::NumericVector poolA06         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_6"           ] ) );
+  Rcpp::NumericVector poolA07         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_7"           ] ) );
+  Rcpp::NumericVector poolA08         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_8"           ] ) );
+  Rcpp::NumericVector poolA09         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_9"           ] ) );
+  Rcpp::NumericVector poolA10         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_10"          ] ) );
+  Rcpp::NumericVector poolA11         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_11"          ] ) );
+  Rcpp::NumericVector poolA12         = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["a_12"          ] ) );
 
   Rcpp::StringVector  tempEquip   (0);
   Rcpp::LogicalVector toBeRemoved (0);
@@ -341,7 +352,6 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
         poolDesignation = poolDesignation[!toBeRemoved];
         poolClass       = poolClass      [!toBeRemoved];
         poolField       = poolField      [!toBeRemoved];
-        poolAttendance  = poolAttendance [!toBeRemoved];
         poolEquipment   = poolEquipment  [!toBeRemoved];
         poolCostCode    = poolCostCode   [!toBeRemoved];
         poolStatus      = poolStatus     [!toBeRemoved];
@@ -366,6 +376,18 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
         poolDHO         = poolDHO        [!toBeRemoved];
         poolDRH         = poolDRH        [!toBeRemoved];
         poolDCC         = poolDCC        [!toBeRemoved];
+        poolA01         = poolA01        [!toBeRemoved];
+        poolA02         = poolA02        [!toBeRemoved];
+        poolA03         = poolA03        [!toBeRemoved];
+        poolA04         = poolA04        [!toBeRemoved];
+        poolA05         = poolA05        [!toBeRemoved];
+        poolA06         = poolA06        [!toBeRemoved];
+        poolA07         = poolA07        [!toBeRemoved];
+        poolA08         = poolA08        [!toBeRemoved];
+        poolA09         = poolA09        [!toBeRemoved];
+        poolA10         = poolA10        [!toBeRemoved];
+        poolA11         = poolA11        [!toBeRemoved];
+        poolA12         = poolA12        [!toBeRemoved];
       }
     }
   }
@@ -401,7 +423,6 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
     Rcpp::Named( "designation"      ) = poolDesignation,
     Rcpp::Named( "personnelClass"   ) = poolClass,
     Rcpp::Named( "field"            ) = poolField,
-    Rcpp::Named( "attendance"       ) = poolAttendance,
     Rcpp::Named( "equipment"        ) = poolEquipment,
     Rcpp::Named( "costCode"         ) = poolCostCode,
     Rcpp::Named( "status"           ) = poolStatus,
@@ -428,6 +449,18 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
   empPoolC.push_back( poolDHO, "d.ho" );
   empPoolC.push_back( poolDRH, "d.rh" );
   empPoolC.push_back( poolDCC, "dcc"  );
+  empPoolC.push_back( poolA01, "a_1"  );
+  empPoolC.push_back( poolA02, "a_2"  );
+  empPoolC.push_back( poolA03, "a_3"  );
+  empPoolC.push_back( poolA04, "a_4"  );
+  empPoolC.push_back( poolA05, "a_5"  );
+  empPoolC.push_back( poolA06, "a_6"  );
+  empPoolC.push_back( poolA07, "a_7"  );
+  empPoolC.push_back( poolA08, "a_8"  );
+  empPoolC.push_back( poolA09, "a_9"  );
+  empPoolC.push_back( poolA10, "a_10" );
+  empPoolC.push_back( poolA11, "a_11" );
+  empPoolC.push_back( poolA12, "a_12" );
   empPoolC.attr( "class" ) = "data.frame";
   empPoolC.attr( "row.names" ) = Rcpp::IntegerVector::create( NA_INTEGER, XLENGTH( poolID ) );
 
