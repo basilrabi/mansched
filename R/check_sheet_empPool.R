@@ -5,11 +5,11 @@
 #' @export sanityCheckEmpPool
 sanityCheckEmpPool <- function(empPool) {
   dependentsCol <- month.abb %>% toupper()
+  attendanceCol <- paste0("a_", 1:12)
   empPool.colnames <- c("ID",
                         "name",
                         "designation",
                         "personnelClass",
-                        "attendance",
                         "equipment",
                         "costCode",
                         "status",
@@ -23,7 +23,8 @@ sanityCheckEmpPool <- function(empPool) {
                         "d.rh",
                         "dcc",
                         "field",
-                        dependentsCol)
+                        dependentsCol,
+                        attendanceCol)
 
   empPool <- empPool[, empPool.colnames]
 
@@ -45,12 +46,6 @@ sanityCheckEmpPool <- function(empPool) {
 
   if (class(empPool$personnelClass) != "character")
     stop("Column personnelClass in Pool is not character!")
-
-  if (class(empPool$attendance) != "numeric")
-    stop("Column attendance in Pool is not numeric!")
-
-  if (anyNA(empPool$attendance))
-    stop("Attendance column is incomplete!")
 
   if (!all(is.na(empPool$equipment)) & class(empPool$equipment) != "character")
     stop("Column equipment in Pool is not character!")
@@ -77,6 +72,15 @@ sanityCheckEmpPool <- function(empPool) {
     if (class(empPool[[i]]) != "numeric") {
       stop(paste("Column", i, "is not numeric!"))
     }
+  }
+
+  for (i in attendanceCol) {
+    if (class(empPool[[i]]) != "numeric")
+      stop(paste("Column", i, "is not numeric!"))
+
+    if (anyNA(empPool[[i]]))
+      stop(paste("Column", i, "is incomplete!"))
+
   }
 
   empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],

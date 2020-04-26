@@ -149,7 +149,7 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
   Rcpp::StringVector  poolDesignation = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["designation"   ] ) );
   Rcpp::StringVector  poolClass       = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["personnelClass"] ) );
   Rcpp::LogicalVector poolField       = Rcpp::clone( Rcpp::as<Rcpp::LogicalVector>( empPool["field"         ] ) );
-  Rcpp::NumericVector poolAttendance  = Rcpp::clone( Rcpp::as<Rcpp::NumericVector>( empPool["attendance"    ] ) );
+  Rcpp::StringVector  poolAttendance  = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["attendance"    ] ) );
   Rcpp::StringVector  poolEquipment   = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["equipment"     ] ) );
   Rcpp::StringVector  poolCostCode    = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["costCode"      ] ) );
   Rcpp::StringVector  poolStatus      = Rcpp::clone( Rcpp::as<Rcpp::StringVector >( empPool["status"        ] ) );

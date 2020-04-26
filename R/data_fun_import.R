@@ -3,7 +3,7 @@
 #' Initializes the list of the pool of employees and their corresponding
 #'   maximum man hours which can be assigned to any activity.
 #'
-#' @param empPool a \code{data.frame} with 13 columns
+#' @param empPool a \code{data.frame} with 40 columns
 #'
 #'   Each row represents a real employee. The columns are:
 #'   \describe{
@@ -15,10 +15,6 @@
 #'       \code{\link{Employee-class}} sub-class to be applied}
 #'     \item{field}{logical value \cr
 #'       Is the employee always in the field?}
-#'     \item{attendance}{numeric value representing the attendance rate of
-#'       employee
-#'
-#'       This value must be less than or equal to one and more than 0.5.}
 #'     \item{equipment}{character string representing the equipment types which
 #'       the employee was authorized to operate.
 #'
@@ -66,6 +62,30 @@
 #'       employee can report to work}
 #'     \item{d.rh}{integer value defining how many rest days on holidays per
 #'       month the employee can report to work}
+#'     \item{a_1}{numeric value representing the attendance rate of
+#'       employee on January}
+#'     \item{a_2}{numeric value representing the attendance rate of
+#'       employee on February}
+#'     \item{a_3}{numeric value representing the attendance rate of
+#'       employee on March}
+#'     \item{a_4}{numeric value representing the attendance rate of
+#'       employee on April}
+#'     \item{a_5}{numeric value representing the attendance rate of
+#'       employee on May}
+#'     \item{a_6}{numeric value representing the attendance rate of
+#'       employee on June}
+#'     \item{a_7}{numeric value representing the attendance rate of
+#'       employee on July}
+#'     \item{a_8}{numeric value representing the attendance rate of
+#'       employee on August}
+#'     \item{a_9}{numeric value representing the attendance rate of
+#'       employee on September}
+#'     \item{a_10}{numeric value representing the attendance rate of
+#'       employee on October}
+#'     \item{a_11}{numeric value representing the attendance rate of
+#'       employee on November}
+#'     \item{a_12}{numeric value representing the attendance rate of
+#'       employee on December}
 #'   }
 #' @param hol a \code{data.frame} similar to \code{\link{holidays}}
 #' @param year integer value representing the year to be budgeted
@@ -80,6 +100,19 @@
 #' @export initEmpPool
 #' @importFrom dplyr "%>%"
 initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
+
+  a_1 <- NULL
+  a_2 <- NULL
+  a_3 <- NULL
+  a_4 <- NULL
+  a_5 <- NULL
+  a_6 <- NULL
+  a_7 <- NULL
+  a_8 <- NULL
+  a_9 <- NULL
+  a_10 <- NULL
+  a_11 <- NULL
+  a_12 <- NULL
 
   # Error if any ID is duplicated
   if (anyDuplicated(empPool$ID) > 0) {
@@ -136,13 +169,27 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   }
 
   # Check for acceptable attendance
-  tempIndex <- which(!is.na(empPool$attendance))
-
-  if (any(empPool$attendance[tempIndex] > 1))
-    stop("attendance must be less than or equal to 1")
-
-  if (any(empPool$attendance[tempIndex] < 0.5))
-    stop("Attendance must be at least 0.5!")
+  empPool <- dplyr::mutate(
+    empPool,
+    attendance = paste(a_1, a_2, a_3, a_4, a_5, a_6,
+                   a_7, a_8, a_9, a_10, a_11, a_12)
+  )
+  attendance <- strsplit(empPool$attendance, split = " ") %>%
+    sapply(function(x) {as.numeric(x)}, simplify = FALSE)
+  for (i in 1:nrow(empPool)) {
+    if (any(is.na(attendance[[i]]))) {
+      stop(paste0("Empty or non-numeric attendance in ",
+                  empPool$ID[i]), ".")
+    }
+    if (any(attendance[[i]] > 1)) {
+      stop(paste0("Value higher than 1 in ",
+                  empPool$ID[i]), ".")
+    }
+    if (any(attendance[[i]] < 0)) {
+      stop(paste0("Value lower than 0 in ",
+                  empPool$ID[i]), ".")
+    }
+  }
 
   dependentsCol <- month.abb %>% toupper()
   empPool[, c("d.rd", "d.ho", "d.rh", dependentsCol)] <-
@@ -172,14 +219,21 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
     dependents <- c(
       empPool$JAN[i], empPool$FEB[i], empPool$MAR[i], empPool$APR[i],
       empPool$MAY[i], empPool$JUN[i], empPool$JUL[i], empPool$AUG[i],
-      empPool$SEP[i], empPool$OCT[i], empPool$NOV[i], empPool$DEC[i])
+      empPool$SEP[i], empPool$OCT[i], empPool$NOV[i], empPool$DEC[i]
+    )
+
+    attendance <- as.numeric(c(
+      empPool$a_1[i], empPool$a_2[i], empPool$a_3[i], empPool$a_4[i],
+      empPool$a_5[i], empPool$a_6[i], empPool$a_7[i], empPool$a_8[i],
+      empPool$a_9[i], empPool$a_10[i], empPool$a_11[i], empPool$a_12[i]
+    ))
 
     tempEmp <- createEmp(empPool$personnelClass[i])
     tempEmp <- initREmployee(theObject   = tempEmp,
                              ID          = empPool$ID[i],
                              name        = empPool$name[i],
                              designation = empPool$designation[i],
-                             attendance  = empPool$attendance[i],
+                             attendance  = attendance,
                              costCode    = empPool$costCode[i],
                              status      = empPool$status[i],
                              cBegin      = empPool$cBegin[i],

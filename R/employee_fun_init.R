@@ -68,7 +68,7 @@ setGeneric(
                   ID,
                   name,
                   designation,
-                  attendance = 1,
+                  attendance = rep(1, times = 12),
                   costCode   = "NONE",
                   status     = "reg",
                   cBegin,
@@ -109,7 +109,7 @@ setMethod(
                         ID,
                         name,
                         designation,
-                        attendance = 1,
+                        attendance = rep(1, times = 12),
                         costCode   = "NONE",
                         status     = "reg",
                         cBegin,
@@ -139,7 +139,7 @@ setMethod(
       theObject@dependents  <- dependents
     }
 
-    # attendance must be <= 1 but preferably > 0.5
+    # attendance must be <= 1 and => 0
     theObject@attendance <- attendance
 
     # Vectorize costCode
@@ -237,7 +237,7 @@ setMethod(
                         ID,
                         name,
                         designation,
-                        attendance = 1,
+                        attendance = rep(1, times = 12),
                         costCode   = "NONE",
                         status     = "reg",
                         cBegin,
@@ -288,7 +288,7 @@ setMethod(
                         ID,
                         name,
                         designation,
-                        attendance = 1,
+                        attendance = rep(1, times = 12),
                         costCode   = "NONE",
                         status     = "reg",
                         cBegin,
@@ -346,7 +346,7 @@ setMethod(
                         ID,
                         name,
                         designation,
-                        attendance = 1,
+                        attendance = rep(1, times = 12),
                         costCode   = "NONE",
                         status     = "reg",
                         cBegin,
@@ -451,7 +451,7 @@ setMethod(
                         ID,
                         name,
                         designation,
-                        attendance = 1,
+                        attendance = rep(1, times = 12),
                         costCode   = "NONE",
                         status     = "reg",
                         cBegin,
@@ -577,7 +577,7 @@ setMethod(
                         ID,
                         name,
                         designation,
-                        attendance = 1,
+                        attendance = rep(1, times = 12),
                         costCode   = "NONE",
                         status     = "reg",
                         cBegin,
@@ -635,7 +635,7 @@ setMethod(
                         ID,
                         name,
                         designation,
-                        attendance = 1,
+                        attendance = rep(1, times = 12),
                         costCode   = "NONE",
                         status     = "reg",
                         cBegin,
@@ -693,7 +693,7 @@ setMethod(
                         ID,
                         name,
                         designation,
-                        attendance = 1,
+                        attendance = rep(1, times = 12),
                         costCode   = "NONE",
                         status     = "reg",
                         cBegin,
@@ -769,7 +769,7 @@ setMethod(
                         ID,
                         name,
                         designation,
-                        attendance = 1,
+                        attendance = rep(1, times = 12),
                         costCode   = "NONE",
                         status     = "reg",
                         cBegin,

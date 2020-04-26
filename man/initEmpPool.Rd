@@ -7,7 +7,7 @@
 initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
 }
 \arguments{
-\item{empPool}{a \code{data.frame} with 13 columns
+\item{empPool}{a \code{data.frame} with 40 columns
 
   Each row represents a real employee. The columns are:
   \describe{
@@ -19,10 +19,6 @@ initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
       \code{\link{Employee-class}} sub-class to be applied}
     \item{field}{logical value \cr
       Is the employee always in the field?}
-    \item{attendance}{numeric value representing the attendance rate of
-      employee
-
-      This value must be less than or equal to one and more than 0.5.}
     \item{equipment}{character string representing the equipment types which
       the employee was authorized to operate.
 
@@ -70,6 +66,30 @@ initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
       employee can report to work}
     \item{d.rh}{integer value defining how many rest days on holidays per
       month the employee can report to work}
+    \item{a_1}{numeric value representing the attendance rate of
+      employee on January}
+    \item{a_2}{numeric value representing the attendance rate of
+      employee on February}
+    \item{a_3}{numeric value representing the attendance rate of
+      employee on March}
+    \item{a_4}{numeric value representing the attendance rate of
+      employee on April}
+    \item{a_5}{numeric value representing the attendance rate of
+      employee on May}
+    \item{a_6}{numeric value representing the attendance rate of
+      employee on June}
+    \item{a_7}{numeric value representing the attendance rate of
+      employee on July}
+    \item{a_8}{numeric value representing the attendance rate of
+      employee on August}
+    \item{a_9}{numeric value representing the attendance rate of
+      employee on September}
+    \item{a_10}{numeric value representing the attendance rate of
+      employee on October}
+    \item{a_11}{numeric value representing the attendance rate of
+      employee on November}
+    \item{a_12}{numeric value representing the attendance rate of
+      employee on December}
   }}
 
 \item{hol}{a \code{data.frame} similar to \code{\link{holidays}}}

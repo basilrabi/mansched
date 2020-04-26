@@ -28,11 +28,11 @@ Real employees are actual persons represented as \code{Employee-class}
 \item{\code{designation}}{character string defining the designation of the
 employee}
 
-\item{\code{attendance}}{numeric value estimating the attendance rate of the
-  employee
+\item{\code{attendance}}{integer vector with length of 12 estimating the attendance
+  rate of the employee for the whole year.
 
   This defaults to 1 for theoretical employees. For real employees,
-  a value of not more than 1 but greater than 0.5 may be used.}
+  a value of not more than 1 but greater than 0 may be used.}
 
 \item{\code{spareFactor}}{numeric value estimating the man power spare factor for
   an activity
@@ -103,6 +103,10 @@ Is the computation used for forecasting the present year?}
 
 \item{\code{field}}{logical value \cr
 Is the employee always on the field?}
+
+\item{\code{dependents}}{integer vector with length of 12
+
+  This represents the number of dependents of the employee per month.}
 }}
 
 \examples{
