@@ -1960,6 +1960,12 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
                           !colnames(costDB) %in% c("row", "code")]
   export.mh     <- as.data.frame(export.mh)
   export.mh     <- export.mh[order(export.mh$costCode),]
+  missingCols <- (1:12)[which(!1:12 %in% colnames(export.mh))]
+  for (i in missingCols) {
+    cmd <- paste0("export.mh$`", i, "` <- 0")
+    eval(parse(text = cmd))
+  }
+  export.mh <- export.mh[, c("costCode", as.character(1:12))]
   export.mh$SUM <- apply(export.mh[, 2:13], MARGIN = 1, FUN = sum)
 
   if (nrow(costDB.sea) > 0) {
