@@ -4,7 +4,7 @@
 \alias{getCost}
 \title{Compute Personnel Cost}
 \usage{
-getCost(mhDB, listR, wage, forecast = FALSE)
+getCost(mhDB, listR, wage, forecast = FALSE, bonusFactorYearEnd = 1.5)
 }
 \arguments{
 \item{mhDB}{a \code{\link{data.frame}} similar to \code{mhDB} return by
@@ -26,6 +26,9 @@ employee pool}
 
 \item{forecast}{logical value \cr
 Compute cost for forecast?}
+
+\item{bonusFactorYearEnd}{a numeric value for the salary multiplier for the
+year-end bonus}
 }
 \value{
 a list containing the following:

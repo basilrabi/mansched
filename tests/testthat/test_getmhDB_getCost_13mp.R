@@ -45,7 +45,8 @@ wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
 tempData <- getCost(mhDB = tempData[[1]],
                     listR = listR,
                     wage = wage,
-                    forecast = forecast)
+                    forecast = forecast,
+                    bonusFactorYearEnd = 2)
 
 mp13 <- tempData[[1]]
 mp13 <- mp13[mp13$code == 521009L, mCols] %>% as.matrix() %>% as.vector()
@@ -106,7 +107,8 @@ wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
 tempData <- getCost(mhDB = tempData[[1]],
                     listR = listR,
                     wage = wage,
-                    forecast = forecast)
+                    forecast = forecast,
+                    bonusFactorYearEnd = 2)
 
 mp13 <- tempData[[1]]
 mp13 <- mp13[mp13$code == 521009L, mCols] %>% as.matrix() %>% as.vector()

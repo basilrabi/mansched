@@ -41,6 +41,8 @@ NULL
 #'   }
 #' @param forecast logical value \cr
 #'   Compute cost for forecast?
+#' @param bonusFactorYearEnd a numeric value for the salary multiplier for the
+#'   year-end bonus
 #' @return a list containing the following:
 #'
 #'   \enumerate{
@@ -65,7 +67,8 @@ NULL
 #' @importFrom dplyr left_join group_by summarise mutate "%>%"
 #' @importFrom data.table rbindlist
 #' @importFrom tidyr gather spread
-getCost <- function(mhDB, listR, wage, forecast = FALSE) {
+getCost <- function(mhDB, listR, wage, forecast = FALSE,
+                    bonusFactorYearEnd = 1.5) {
 
   # Fix for "no visible binding for global variable" note in R CMD check
   costCode       <- NULL
@@ -1274,8 +1277,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
   #### Compute for Mid-year and Year-end bonus ####
   cat("\nComputing bonus.\n")
 
-  bonusFactor <- 2
-
   # FIXME: Bonus must pro-rated
   # The date hired (probationary or regular, which ever came first) of the
   #   employee is used in pro-rating.
@@ -1315,7 +1316,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
     tempData$salG  <- round(tempData$salM * tempData$allow, digits = 2)
     tempData$bonus <-
-      tempData$salG * c(0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, bonusFactor)
+      tempData$salG * c(0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, bonusFactorYearEnd)
 
     tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "bonus")]
     tempData <- as.data.frame(tempData)
