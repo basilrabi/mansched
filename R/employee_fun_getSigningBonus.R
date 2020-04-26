@@ -72,3 +72,46 @@ setMethod(
     return(signingBonus[, c("month", "ID", "signingBonus")])
   }
 )
+
+#' Compute Seasonal Employee Signing Bonus
+#'
+#' Signing bonus to be given to all seasonal employees at the start of
+#'   employment.
+#'
+#' @param theObject \code{\link{Employee-class}} object
+#' @return a \code{\link{data.frame}} with 12 rows and 3 columns.
+#'
+#'   Each row represents a month. The columns are:
+#'   \describe{
+#'      \item{ID}{character string representing the unique identifier of the
+#'        real employee}
+#'      \item{month}{integer value representing the month}
+#'      \item{signingBonus}{numeric value defining the cost charged for that
+#'        month}
+#'   }
+#' @export getSigningBonusSea
+setGeneric(
+  name = "getSigningBonusSea",
+  def  = function(theObject) {
+    standardGeneric("getSigningBonusSea")
+  }
+)
+
+#' @describeIn getSigningBonusSea Compute seasonal employee's signing bonus
+setMethod(
+  f          = "getSigningBonusSea",
+  signature  = "Employee",
+  definition = function(theObject) {
+
+    signingBonus <- getCM(theObject)
+    signingBonus$signingBonus <- 0
+
+    if (theObject@status %in% c("sea")) {
+      monthStart <- as.integer(lubridate::month(as.Date(theObject@cBegin)))
+      signingBonus$signingBonus[signingBonus$month == monthStart] <-
+        seasonalSigningBonus
+    }
+
+    return(signingBonus[, c("month", "ID", "signingBonus")])
+  }
+)

@@ -68,15 +68,19 @@ NULL
 getCost <- function(mhDB, listR, wage, forecast = FALSE) {
 
   # Fix for "no visible binding for global variable" note in R CMD check
-  costCode  <- NULL
-  cost      <- NULL
-  ID        <- NULL
-  mh        <- NULL
-  sal       <- NULL
-  salH      <- NULL
-  salM      <- NULL
-  status    <- NULL
-  XholHours <- NULL
+  costCode       <- NULL
+  cost           <- NULL
+  ID             <- NULL
+  mh             <- NULL
+  retentionBonus <- NULL
+  sal            <- NULL
+  salH           <- NULL
+  salM           <- NULL
+  status         <- NULL
+  totMH          <- NULL
+  totMHCostCode  <- NULL
+  X              <- NULL
+  XholHours      <- NULL
   distType  <- c("reg", "rd", "sh", "lh", "nh", "rs", "rl", "rn")
 
   #### Sanity Check ####
@@ -1358,44 +1362,48 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE) {
     mhDB.bonus <- NULL
   }
 
-  #### Compute for April and October retention bonus ####
-  cat("\nComputing retention bonus.\n")
+  #### Compute for Seasonal Employees Bonuses ####
 
-  retentionBonus <- lapply(listR, getRB) %>%
+  cat("\nComputing signing bonus for seasonal employees.\n")
+
+  signingBonusSea <- lapply(listR, getSigningBonusSea) %>%
     data.table::rbindlist(use.names = TRUE)
 
-  # Distribute April to all man-hours from January to April
-  mhDB.RBMid <- mhDB[
-    mhDB$mhType %in% distType & mhDB$month < 4,
-  ] %>%
-    dplyr::group_by(ID, costCode) %>%
+  # Distribute seasonal signing bonus
+  mhDB.signingBonusSea <- dplyr::filter(mhDB, status == "sea") %>%
+    dplyr::group_by(ID, costCode, month) %>%
+    dplyr::summarise(mh = sum(mh)) %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totMH = sum(mh)) %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::left_join(signingBonusSea, by = c("ID", "month")) %>%
+    dplyr::mutate(benefits = signingBonus * X) %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = round(sum(benefits), digits = 2))
+
+  cat("\nComputing retention bonus for seasonal employees.\n")
+
+  retentionBonusSea <- lapply(listR, getRetentionBonus) %>%
+    data.table::rbindlist(use.names = TRUE)
+
+  # Distribute seasonal retention bonus
+  mhDB.retentionBonusSea <- dplyr::filter(mhDB, status == "sea") %>%
+    dplyr::group_by(ID, costCode, month) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID) %>%
-    dplyr::mutate(totMH = sum(mh))
-  mhDB.RBMid$month <- 4L
-  mhDB.RBMid$X <- mhDB.RBMid$mh / mhDB.RBMid$totMH
-  mhDB.RBMid   <- dplyr::left_join(x  = mhDB.RBMid,
-                                   y  = retentionBonus,
-                                   by = c("ID", "month"))
-
-  # Distribute October bonus to all man-hours from April to October
-  mhDB.RBEnd <- mhDB[mhDB$mhType %in% distType &
-                       mhDB$month >= 4 &
-                       mhDB$month <= 10, ] %>%
+    dplyr::mutate(totMH = sum(mh)) %>%
     dplyr::group_by(ID, costCode) %>%
-    dplyr::summarise(mh = sum(mh)) %>%
-    dplyr::group_by(ID) %>%
-    dplyr::mutate(totMH = sum(mh))
-  mhDB.RBEnd$month <- 10L
-  mhDB.RBEnd$X <- mhDB.RBEnd$mh / mhDB.RBEnd$totMH
-  mhDB.RBEnd   <- dplyr::left_join(x  = mhDB.RBEnd,
-                                   y  = retentionBonus,
-                                   by = c("ID", "month"))
+    dplyr::mutate(totMHCostCode = sum(mh)) %>%
+    dplyr::mutate(X = totMHCostCode / totMH) %>%
+    dplyr::left_join(retentionBonusSea, by = c("ID", "month")) %>%
+    dplyr::mutate(benefits = retentionBonus * X) %>%
+    dplyr::group_by(costCode, month) %>%
+    dplyr::summarise(cost = round(sum(benefits), digits = 2))
 
-  # Combine Retention Bonuses
-  mhDB.RB <- data.table::rbindlist(list(mhDB.RBMid, mhDB.RBEnd),
+  # Combine Bonuses
+  mhDB.RB <- data.table::rbindlist(list(mhDB.signingBonusSea,
+                                        mhDB.retentionBonusSea),
                                    use.names = TRUE)
-  mhDB.RB$cost <- round(mhDB.RB$X * mhDB.RB$benefits, digits = 2)
   mhDB.RB <- mhDB.RB %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))

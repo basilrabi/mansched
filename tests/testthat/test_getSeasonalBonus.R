@@ -85,12 +85,20 @@ tempEmp5  <- initREmployee(theObject   = tempEmp,
                            hol         = hol,
                            equipment   = equipment)
 
-test_that("getRB() works", {
-  expect_equal(sum(getRB(tempEmp1)$benefits), 0)
-  expect_equal(sum(getRB(tempEmp2)$benefits), 0)
-  expect_equal(sum(getRB(tempEmp3)$benefits), 0)
-  expect_equal(sum(getRB(tempEmp4)$benefits), 4186 + 16744)
-  expect_equal(sum(getRB(tempEmp5)$benefits), 4186 + 16744)
+test_that("getSigningBonusSea() works", {
+  expect_equal(sum(getSigningBonusSea(tempEmp1)$signingBonus), 0)
+  expect_equal(sum(getSigningBonusSea(tempEmp2)$signingBonus), 0)
+  expect_equal(sum(getSigningBonusSea(tempEmp3)$signingBonus), 0)
+  expect_equal(sum(getSigningBonusSea(tempEmp4)$signingBonus), 4186)
+  expect_equal(sum(getSigningBonusSea(tempEmp5)$signingBonus), 4186)
+})
+
+test_that("getRetentionBonus() works", {
+  expect_equal(sum(getRetentionBonus(tempEmp1)$retentionBonus), 0)
+  expect_equal(sum(getRetentionBonus(tempEmp2)$retentionBonus), 0)
+  expect_equal(sum(getRetentionBonus(tempEmp3)$retentionBonus), 0)
+  expect_equal(sum(getRetentionBonus(tempEmp4)$retentionBonus), 16744)
+  expect_equal(sum(getRetentionBonus(tempEmp5)$retentionBonus), 16744)
 })
 
 # Test for forecast
@@ -182,6 +190,7 @@ tempEmp5  <- initREmployee(theObject   = tempEmp,
                            equipment   = equipment,
                            forecast    = TRUE)
 
+cBegin   <- "2018-05-01"
 cEnd     <- "2018-10-31"
 inHouse  <- TRUE
 status   <- "sea"
@@ -199,6 +208,7 @@ tempEmp6 <- initREmployee(theObject   = tempEmp,
                           hol         = hol,
                           forecast    = TRUE)
 
+cBegin   <- "2018-06-01"
 cEnd     <- "2018-10-31"
 inHouse  <- TRUE
 status   <- "age"
@@ -216,14 +226,22 @@ tempEmp7 <- initREmployee(theObject   = tempEmp,
                           hol         = hol,
                           forecast    = TRUE)
 
-test_that("getRB() works in forecast", {
-  expect_equal(sum(getRB(tempEmp1)$benefits), 0)
-  expect_equal(sum(getRB(tempEmp2)$benefits), 0)
-  expect_equal(sum(getRB(tempEmp3)$benefits), 0)
-  expect_equal(sum(getRB(tempEmp4)$benefits), 0)
-  expect_equal(sum(getRB(tempEmp5)$benefits), 0)
-  expect_equal(sum(getRB(tempEmp6)$benefits), 0)
-  expect_equal(sum(getRB(tempEmp7)$benefits), 0)
+test_that("getSigningBonusSea() works", {
+  expect_equal(sum(getSigningBonusSea(tempEmp1)$signingBonus), 0)
+  expect_equal(sum(getSigningBonusSea(tempEmp2)$signingBonus), 0)
+  expect_equal(sum(getSigningBonusSea(tempEmp3)$signingBonus), 0)
+  expect_equal(sum(getSigningBonusSea(tempEmp4)$signingBonus), 4186)
+  expect_equal(sum(getSigningBonusSea(tempEmp5)$signingBonus), 4186)
+})
+
+test_that("getRetentionBonus() works", {
+  expect_equal(sum(getRetentionBonus(tempEmp1)$retentionBonus), 0)
+  expect_equal(sum(getRetentionBonus(tempEmp2)$retentionBonus), 0)
+  expect_equal(sum(getRetentionBonus(tempEmp3)$retentionBonus), 0)
+  expect_equal(sum(getRetentionBonus(tempEmp4)$retentionBonus), 16744)
+  expect_equal(sum(getRetentionBonus(tempEmp5)$retentionBonus), 16744)
+  expect_equal(sum(getRetentionBonus(tempEmp6)$retentionBonus), 13754)
+  expect_equal(sum(getRetentionBonus(tempEmp7)$retentionBonus), 0)
 })
 
 rm(list = ls())
