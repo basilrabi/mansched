@@ -58,7 +58,7 @@ NULL
 #'     \item tabulated bonus cost per month per cost code
 #'     \item a data.frame with 15 columns
 #'
-#'       This is simlar to the first object returned but composed of only
+#'       This is similar to the first object returned but composed of only
 #'       seasonal employee-related costs.
 #'       Also, there is no concat column since this will not be linked to the
 #'       budget templates.
@@ -892,140 +892,6 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
 
   mhDB.SB$costCode <- mhDB.SB$costCodeNew
 
-  ##### Compute for SSS contribution of employer ####
-  cat("\nComputing SSS contribution.\n")
-
-  #- SSS Contribution is based on gross salary
-
-  SSSdb <- data.frame(
-    ID = c(hol.mhDB.d.R$ID,
-           hol.mhDB.d.S$ID,
-           mhDB.d.P.OT$ID,
-           mhDB.d.P.OT$ID,
-           mhDB.d.P.Reg$ID,
-           mhDB.d.P.Reg$ID,
-           mhDB.d.R.OT$ID,
-           mhDB.d.R.OT$ID,
-           mhDB.d.R.Reg$ID,
-           mhDB.d.R.Reg$ID,
-           mhDB.d.S.OT$ID,
-           mhDB.d.S.OT$ID,
-           mhDB.d.S.Reg$ID,
-           mhDB.d.S.Reg$ID,
-           mhDB.m.P.OT$ID,
-           mhDB.m.P.OT$ID,
-           mhDB.m.P.Reg$ID,
-           mhDB.m.P.Reg$ID,
-           mhDB.m.R.OT$ID,
-           mhDB.m.R.OT$ID,
-           mhDB.m.R.Reg$ID,
-           mhDB.m.R.Reg$ID,
-           mhDB.m.S.OT$ID,
-           mhDB.m.S.OT$ID,
-           mhDB.m.S.Reg$ID,
-           mhDB.m.S.Reg$ID),
-    costCode = c(hol.mhDB.d.R$costCode,
-                 hol.mhDB.d.S$costCode,
-                 mhDB.d.P.OT$costCode,
-                 mhDB.d.P.OT$costCode,
-                 mhDB.d.P.Reg$costCode,
-                 mhDB.d.P.Reg$costCode,
-                 mhDB.d.R.OT$costCode,
-                 mhDB.d.R.OT$costCode,
-                 mhDB.d.R.Reg$costCode,
-                 mhDB.d.R.Reg$costCode,
-                 mhDB.d.S.OT$costCode,
-                 mhDB.d.S.OT$costCode,
-                 mhDB.d.S.Reg$costCode,
-                 mhDB.d.S.Reg$costCode,
-                 mhDB.m.P.OT$costCode,
-                 mhDB.m.P.OT$costCode,
-                 mhDB.m.P.Reg$costCode,
-                 mhDB.m.P.Reg$costCode,
-                 mhDB.m.R.OT$costCode,
-                 mhDB.m.R.OT$costCode,
-                 mhDB.m.R.Reg$costCode,
-                 mhDB.m.R.Reg$costCode,
-                 mhDB.m.S.OT$costCode,
-                 mhDB.m.S.OT$costCode,
-                 mhDB.m.S.Reg$costCode,
-                 mhDB.m.S.Reg$costCode),
-    month = c(hol.mhDB.d.R$month,
-              hol.mhDB.d.S$month,
-              mhDB.d.P.OT$month,
-              mhDB.d.P.OT$month,
-              mhDB.d.P.Reg$month,
-              mhDB.d.P.Reg$month,
-              mhDB.d.R.OT$month,
-              mhDB.d.R.OT$month,
-              mhDB.d.R.Reg$month,
-              mhDB.d.R.Reg$month,
-              mhDB.d.S.OT$month,
-              mhDB.d.S.OT$month,
-              mhDB.d.S.Reg$month,
-              mhDB.d.S.Reg$month,
-              mhDB.m.P.OT$month,
-              mhDB.m.P.OT$month,
-              mhDB.m.P.Reg$month,
-              mhDB.m.P.Reg$month,
-              mhDB.m.R.OT$month,
-              mhDB.m.R.OT$month,
-              mhDB.m.R.Reg$month,
-              mhDB.m.R.Reg$month,
-              mhDB.m.S.OT$month,
-              mhDB.m.S.OT$month,
-              mhDB.m.S.Reg$month,
-              mhDB.m.S.Reg$month),
-    cost = c(hol.mhDB.d.R$XcostWage,
-             hol.mhDB.d.S$XcostWage,
-             mhDB.d.P.OT$costNP,
-             mhDB.d.P.OT$costWage,
-             mhDB.d.P.Reg$costNP,
-             mhDB.d.P.Reg$costWage,
-             mhDB.d.R.OT$costNP,
-             mhDB.d.R.OT$costWage,
-             mhDB.d.R.Reg$costNP,
-             mhDB.d.R.Reg$costWage,
-             mhDB.d.S.OT$costNP,
-             mhDB.d.S.OT$costWage,
-             mhDB.d.S.Reg$costNP,
-             mhDB.d.S.Reg$costWage,
-             mhDB.m.P.OT$costNP,
-             mhDB.m.P.OT$costWage,
-             mhDB.m.P.Reg$costNP,
-             mhDB.m.P.Reg$costWage,
-             mhDB.m.R.OT$costNP,
-             mhDB.m.R.OT$costWage,
-             mhDB.m.R.Reg$costNP,
-             mhDB.m.R.Reg$costWage,
-             mhDB.m.S.OT$costNP,
-             mhDB.m.S.OT$costWage,
-             mhDB.m.S.Reg$costNP,
-             mhDB.m.S.Reg$costWage),
-    stringsAsFactors = FALSE
-  ) %>%
-    dplyr::group_by(ID, month, costCode) %>%
-    dplyr::summarise(cost = sum(cost)) %>%
-    dplyr::group_by(ID, month) %>%
-    dplyr::mutate(totalCost = sum(cost)) %>%
-    dplyr::mutate(X = cost / totalCost)
-  SSSdb$SSSRate <- sapply(SSSdb$totalCost, function(x) {
-    SSS$c[which(SSS$r1 <= x & SSS$r2 >= x)]
-  })
-  SSSdb$SSS <- SSSdb$X * SSSdb$SSSRate
-
-  mhDB.SSS <- dplyr::group_by(SSSdb, ID, month, costCode) %>%
-    dplyr::summarise(cost = round(sum(SSS), digits = 2)) %>%
-    dplyr::left_join(
-      lapply(listR, function(x) {
-        data.frame(ID = x@ID, status = x@status, stringsAsFactors = FALSE)
-      }) %>%
-        data.table::rbindlist(use.names = TRUE)
-    )
-
-  mhDB.SSS.A    <- mhDB.SSS[mhDB.SSS$status == "age", ]
-  mhDB.SSS      <- mhDB.SSS[mhDB.SSS$status != "age", ]
-
   #### Compute for Pag-ibig contribution of employer ####
   cat("\nComputing Pag-ibig contributions.\n")
 
@@ -1160,9 +1026,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
         }
       }
 
-      z$LH[4] <- z$LH[4] + LC
-
-      if (sum(z$LH) != listR[[tempIndex]]@leaveHours)
+      if ((sum(z$LH) + LC) != listR[[tempIndex]]@leaveHours)
         stop("Leave hours do not match!")
 
       return(z)
@@ -1212,8 +1076,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
                LH  = x@leaveHours,
                sal = "a",
                stringsAsFactors = FALSE)
-  })
-  LH <- data.table::rbindlist(LH, use.names = TRUE)
+  }) %>% data.table::rbindlist(use.names = TRUE)
 
   if (nrow(LH) > 0) {
     ### Get LC cost per employee for the whole year
@@ -1248,16 +1111,149 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   ## Get cost
-  mhDB.LC <- data.table::rbindlist(l = list(
-    mhDB.LC.R[, colnames(mhDB.LC.R) %in% c("costCode", "month", "cost")],
-    mhDB.LC.S[mhDB.LC.S$status == "sea",
-              colnames(mhDB.LC.S) %in% c("costCode", "month", "cost")]
-  ) , use.names = TRUE)
+  mhDB.LC <- mhDB.LC.S[mhDB.LC.S$status == "sea",
+                       c("costCode", "month", "cost")]
 
   mhDB.LC.A <- mhDB.LC.S[mhDB.LC.S$status == "age",
-                         colnames(mhDB.LC.S) %in% c("costCode",
-                                                    "month",
-                                                    "cost")]
+                         c("costCode", "month", "cost")]
+
+  ##### Compute for SSS contribution of employer ####
+  cat("\nComputing SSS contribution.\n")
+
+  #- SSS Contribution is based on gross salary
+
+  SSSdb <- data.frame(
+    ID = c(hol.mhDB.d.R$ID,
+           hol.mhDB.d.S$ID,
+           mhDB.d.P.OT$ID,
+           mhDB.d.P.OT$ID,
+           mhDB.d.P.Reg$ID,
+           mhDB.d.P.Reg$ID,
+           mhDB.d.R.OT$ID,
+           mhDB.d.R.OT$ID,
+           mhDB.d.R.Reg$ID,
+           mhDB.d.R.Reg$ID,
+           mhDB.d.S.OT$ID,
+           mhDB.d.S.OT$ID,
+           mhDB.d.S.Reg$ID,
+           mhDB.d.S.Reg$ID,
+           mhDB.m.P.OT$ID,
+           mhDB.m.P.OT$ID,
+           mhDB.m.P.Reg$ID,
+           mhDB.m.P.Reg$ID,
+           mhDB.m.R.OT$ID,
+           mhDB.m.R.OT$ID,
+           mhDB.m.R.Reg$ID,
+           mhDB.m.R.Reg$ID,
+           mhDB.m.S.OT$ID,
+           mhDB.m.S.OT$ID,
+           mhDB.m.S.Reg$ID,
+           mhDB.m.S.Reg$ID,
+           mhDB.LC.R$ID),
+    costCode = c(hol.mhDB.d.R$costCode,
+                 hol.mhDB.d.S$costCode,
+                 mhDB.d.P.OT$costCode,
+                 mhDB.d.P.OT$costCode,
+                 mhDB.d.P.Reg$costCode,
+                 mhDB.d.P.Reg$costCode,
+                 mhDB.d.R.OT$costCode,
+                 mhDB.d.R.OT$costCode,
+                 mhDB.d.R.Reg$costCode,
+                 mhDB.d.R.Reg$costCode,
+                 mhDB.d.S.OT$costCode,
+                 mhDB.d.S.OT$costCode,
+                 mhDB.d.S.Reg$costCode,
+                 mhDB.d.S.Reg$costCode,
+                 mhDB.m.P.OT$costCode,
+                 mhDB.m.P.OT$costCode,
+                 mhDB.m.P.Reg$costCode,
+                 mhDB.m.P.Reg$costCode,
+                 mhDB.m.R.OT$costCode,
+                 mhDB.m.R.OT$costCode,
+                 mhDB.m.R.Reg$costCode,
+                 mhDB.m.R.Reg$costCode,
+                 mhDB.m.S.OT$costCode,
+                 mhDB.m.S.OT$costCode,
+                 mhDB.m.S.Reg$costCode,
+                 mhDB.m.S.Reg$costCode,
+                 mhDB.LC.R$costCode),
+    month = c(hol.mhDB.d.R$month,
+              hol.mhDB.d.S$month,
+              mhDB.d.P.OT$month,
+              mhDB.d.P.OT$month,
+              mhDB.d.P.Reg$month,
+              mhDB.d.P.Reg$month,
+              mhDB.d.R.OT$month,
+              mhDB.d.R.OT$month,
+              mhDB.d.R.Reg$month,
+              mhDB.d.R.Reg$month,
+              mhDB.d.S.OT$month,
+              mhDB.d.S.OT$month,
+              mhDB.d.S.Reg$month,
+              mhDB.d.S.Reg$month,
+              mhDB.m.P.OT$month,
+              mhDB.m.P.OT$month,
+              mhDB.m.P.Reg$month,
+              mhDB.m.P.Reg$month,
+              mhDB.m.R.OT$month,
+              mhDB.m.R.OT$month,
+              mhDB.m.R.Reg$month,
+              mhDB.m.R.Reg$month,
+              mhDB.m.S.OT$month,
+              mhDB.m.S.OT$month,
+              mhDB.m.S.Reg$month,
+              mhDB.m.S.Reg$month,
+              mhDB.LC.R$month),
+    cost = c(hol.mhDB.d.R$XcostWage,
+             hol.mhDB.d.S$XcostWage,
+             mhDB.d.P.OT$costNP,
+             mhDB.d.P.OT$costWage,
+             mhDB.d.P.Reg$costNP,
+             mhDB.d.P.Reg$costWage,
+             mhDB.d.R.OT$costNP,
+             mhDB.d.R.OT$costWage,
+             mhDB.d.R.Reg$costNP,
+             mhDB.d.R.Reg$costWage,
+             mhDB.d.S.OT$costNP,
+             mhDB.d.S.OT$costWage,
+             mhDB.d.S.Reg$costNP,
+             mhDB.d.S.Reg$costWage,
+             mhDB.m.P.OT$costNP,
+             mhDB.m.P.OT$costWage,
+             mhDB.m.P.Reg$costNP,
+             mhDB.m.P.Reg$costWage,
+             mhDB.m.R.OT$costNP,
+             mhDB.m.R.OT$costWage,
+             mhDB.m.R.Reg$costNP,
+             mhDB.m.R.Reg$costWage,
+             mhDB.m.S.OT$costNP,
+             mhDB.m.S.OT$costWage,
+             mhDB.m.S.Reg$costNP,
+             mhDB.m.S.Reg$costWage,
+             mhDB.LC.R$cost),
+    stringsAsFactors = FALSE
+  ) %>%
+    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::summarise(cost = sum(cost)) %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totalCost = sum(cost)) %>%
+    dplyr::mutate(X = cost / totalCost)
+  SSSdb$SSSRate <- sapply(SSSdb$totalCost, function(x) {
+    SSS$c[which(SSS$r1 <= x & SSS$r2 >= x)]
+  })
+  SSSdb$SSS <- SSSdb$X * SSSdb$SSSRate
+
+  mhDB.SSS <- dplyr::group_by(SSSdb, ID, month, costCode) %>%
+    dplyr::summarise(cost = round(sum(SSS), digits = 2)) %>%
+    dplyr::left_join(
+      lapply(listR, function(x) {
+        data.frame(ID = x@ID, status = x@status, stringsAsFactors = FALSE)
+      }) %>%
+        data.table::rbindlist(use.names = TRUE)
+    )
+
+  mhDB.SSS.A    <- mhDB.SSS[mhDB.SSS$status == "age", ]
+  mhDB.SSS      <- mhDB.SSS[mhDB.SSS$status != "age", ]
 
   #### Compute for Hospital and Medical Expenses ####
   cat("\nComputing hospital and medical expenses.\n")
@@ -1558,9 +1554,15 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
                        month            = mhDB.d.P.Reg$month,
                        cost             = mhDB.d.P.Reg$costWage,
                        stringsAsFactors = FALSE)
+  r01.06 <- data.frame(costCode         = mhDB.LC.R$costCode,
+                       month            = mhDB.LC.R$month,
+                       cost             = mhDB.LC.R$cost,
+                       stringsAsFactors = FALSE)
 
-  r01 <- data.table::rbindlist(l = list(r01.01, r01.02, r01.03, r01.04, r01.05),
-                               use.names = TRUE)
+  r01 <- data.table::rbindlist(
+    l = list(r01.01, r01.02, r01.03, r01.04, r01.05, r01.06),
+    use.names = TRUE
+  )
 
   if (nrow(r01) > 0) {
     r01$row <- "Salaries-Regular"
@@ -1791,7 +1793,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   #### Leave Commutation ####
   r10 <- mhDB.LC[, c("costCode", "month", "cost")]
 
-  if (nrow(r10) > 0) {
+  if (!is.null(r10) && nrow(r10) > 0) {
     r10$row <- "Leave Commutation"
   } else {
     r10 <- NULL
