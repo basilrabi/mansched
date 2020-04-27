@@ -895,72 +895,134 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   ##### Compute for SSS contribution of employer ####
   cat("\nComputing SSS contribution.\n")
 
-  #- SSS Contribution is fixed
-  #- For monthly wagers, SSS is based on basic monthly salary
-  #- For daily wagers, SSS is based on daily wage * 313 / 12
+  #- SSS Contribution is based on gross salary
 
-  SSSdb <- lapply(listR, FUN = function(x) {
-
-    tempData <- getCM(x)
-
-    if (!isReg(x)) {
-      tempData$sal <- "a"
-    } else {
-      if (isRF(x)) {
-        tempData <- dplyr::left_join(x = tempData, y = payB, by = "month")
-      } else {
-        tempData <- dplyr::left_join(x = tempData, y = payA, by = "month")
-      }
-    }
-
-    if (isRF(x)) {
-
-      tempData <- dplyr::left_join(
-        x  = tempData,
-        y  = wageEmp[wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
-        by = c("ID", "sal"))
-
-      tempData$salM2 <- round(tempData$salM * 313 / 12, digits = 2)
-      tempData$salM  <- tempData$salM2
-      tempData       <- tempData[, !colnames(tempData) %in% c("salM2")]
-
-    } else {
-
-      tempData <- dplyr::left_join(
-        x  = tempData,
-        y  = wageEmp[!wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
-        by = c("ID", "sal")
-      )
-    }
-
-    tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
-
-    tempData$SSS <- sapply(tempData$salG, FUN = function(x) {
-      SSS$c[which(SSS$r1 <= x & SSS$r2 >= x)]
-    })
-
-    tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "SSS")]
-    tempData <- as.data.frame(tempData)
-
-    tempData
+  SSSdb <- data.frame(
+    ID = c(hol.mhDB.d.R$ID,
+           hol.mhDB.d.S$ID,
+           mhDB.d.P.OT$ID,
+           mhDB.d.P.OT$ID,
+           mhDB.d.P.Reg$ID,
+           mhDB.d.P.Reg$ID,
+           mhDB.d.R.OT$ID,
+           mhDB.d.R.OT$ID,
+           mhDB.d.R.Reg$ID,
+           mhDB.d.R.Reg$ID,
+           mhDB.d.S.OT$ID,
+           mhDB.d.S.OT$ID,
+           mhDB.d.S.Reg$ID,
+           mhDB.d.S.Reg$ID,
+           mhDB.m.P.OT$ID,
+           mhDB.m.P.OT$ID,
+           mhDB.m.P.Reg$ID,
+           mhDB.m.P.Reg$ID,
+           mhDB.m.R.OT$ID,
+           mhDB.m.R.OT$ID,
+           mhDB.m.R.Reg$ID,
+           mhDB.m.R.Reg$ID,
+           mhDB.m.S.OT$ID,
+           mhDB.m.S.OT$ID,
+           mhDB.m.S.Reg$ID,
+           mhDB.m.S.Reg$ID),
+    costCode = c(hol.mhDB.d.R$costCode,
+                 hol.mhDB.d.S$costCode,
+                 mhDB.d.P.OT$costCode,
+                 mhDB.d.P.OT$costCode,
+                 mhDB.d.P.Reg$costCode,
+                 mhDB.d.P.Reg$costCode,
+                 mhDB.d.R.OT$costCode,
+                 mhDB.d.R.OT$costCode,
+                 mhDB.d.R.Reg$costCode,
+                 mhDB.d.R.Reg$costCode,
+                 mhDB.d.S.OT$costCode,
+                 mhDB.d.S.OT$costCode,
+                 mhDB.d.S.Reg$costCode,
+                 mhDB.d.S.Reg$costCode,
+                 mhDB.m.P.OT$costCode,
+                 mhDB.m.P.OT$costCode,
+                 mhDB.m.P.Reg$costCode,
+                 mhDB.m.P.Reg$costCode,
+                 mhDB.m.R.OT$costCode,
+                 mhDB.m.R.OT$costCode,
+                 mhDB.m.R.Reg$costCode,
+                 mhDB.m.R.Reg$costCode,
+                 mhDB.m.S.OT$costCode,
+                 mhDB.m.S.OT$costCode,
+                 mhDB.m.S.Reg$costCode,
+                 mhDB.m.S.Reg$costCode),
+    month = c(hol.mhDB.d.R$month,
+              hol.mhDB.d.S$month,
+              mhDB.d.P.OT$month,
+              mhDB.d.P.OT$month,
+              mhDB.d.P.Reg$month,
+              mhDB.d.P.Reg$month,
+              mhDB.d.R.OT$month,
+              mhDB.d.R.OT$month,
+              mhDB.d.R.Reg$month,
+              mhDB.d.R.Reg$month,
+              mhDB.d.S.OT$month,
+              mhDB.d.S.OT$month,
+              mhDB.d.S.Reg$month,
+              mhDB.d.S.Reg$month,
+              mhDB.m.P.OT$month,
+              mhDB.m.P.OT$month,
+              mhDB.m.P.Reg$month,
+              mhDB.m.P.Reg$month,
+              mhDB.m.R.OT$month,
+              mhDB.m.R.OT$month,
+              mhDB.m.R.Reg$month,
+              mhDB.m.R.Reg$month,
+              mhDB.m.S.OT$month,
+              mhDB.m.S.OT$month,
+              mhDB.m.S.Reg$month,
+              mhDB.m.S.Reg$month),
+    cost = c(hol.mhDB.d.R$XcostWage,
+             hol.mhDB.d.S$XcostWage,
+             mhDB.d.P.OT$costNP,
+             mhDB.d.P.OT$costWage,
+             mhDB.d.P.Reg$costNP,
+             mhDB.d.P.Reg$costWage,
+             mhDB.d.R.OT$costNP,
+             mhDB.d.R.OT$costWage,
+             mhDB.d.R.Reg$costNP,
+             mhDB.d.R.Reg$costWage,
+             mhDB.d.S.OT$costNP,
+             mhDB.d.S.OT$costWage,
+             mhDB.d.S.Reg$costNP,
+             mhDB.d.S.Reg$costWage,
+             mhDB.m.P.OT$costNP,
+             mhDB.m.P.OT$costWage,
+             mhDB.m.P.Reg$costNP,
+             mhDB.m.P.Reg$costWage,
+             mhDB.m.R.OT$costNP,
+             mhDB.m.R.OT$costWage,
+             mhDB.m.R.Reg$costNP,
+             mhDB.m.R.Reg$costWage,
+             mhDB.m.S.OT$costNP,
+             mhDB.m.S.OT$costWage,
+             mhDB.m.S.Reg$costNP,
+             mhDB.m.S.Reg$costWage),
+    stringsAsFactors = FALSE
+  ) %>%
+    dplyr::group_by(ID, month, costCode) %>%
+    dplyr::summarise(cost = sum(cost)) %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::mutate(totalCost = sum(cost)) %>%
+    dplyr::mutate(X = cost / totalCost)
+  SSSdb$SSSRate <- sapply(SSSdb$totalCost, function(x) {
+    SSS$c[which(SSS$r1 <= x & SSS$r2 >= x)]
   })
+  SSSdb$SSS <- SSSdb$X * SSSdb$SSSRate
 
-  SSSdb <- data.table::rbindlist(SSSdb, use.names = TRUE)
+  mhDB.SSS <- dplyr::group_by(SSSdb, ID, month, costCode) %>%
+    dplyr::summarise(cost = round(sum(SSS), digits = 2)) %>%
+    dplyr::left_join(
+      lapply(listR, function(x) {
+        data.frame(ID = x@ID, status = x@status, stringsAsFactors = FALSE)
+      }) %>%
+        data.table::rbindlist(use.names = TRUE)
+    )
 
-  mhDB.SSS <- mhDB[mhDB$mhType %in% distType, ] %>%
-    dplyr::group_by(ID, month, costCode, status) %>%
-    dplyr::summarise(mh = sum(mh))
-
-  mhDB.SSS <- mhDB.SSS %>%
-    dplyr::group_by(ID, month, status) %>%
-    dplyr::mutate(totMH = sum(mh))
-
-  mhDB.SSS$X    <- mhDB.SSS$mh / mhDB.SSS$totMH
-  mhDB.SSS      <- dplyr::left_join(x = mhDB.SSS,
-                                    y = SSSdb,
-                                    by = c("ID", "month"))
-
-  mhDB.SSS$cost <- round(mhDB.SSS$X * mhDB.SSS$SSS, digits = 2)
   mhDB.SSS.A    <- mhDB.SSS[mhDB.SSS$status == "age", ]
   mhDB.SSS      <- mhDB.SSS[mhDB.SSS$status != "age", ]
 
