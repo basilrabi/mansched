@@ -111,6 +111,10 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   ##### Assign if employee is RF or not ####
   wage$isRF <- sapply(wage$ID, FUN = function(x) {
     index <- which(empID == x)
+    if (length(index) > 1L)
+      stop(paste0("Multiple match for ", x, "."))
+    if (length(index) < 1L)
+      stop(paste0("No match for ", x, "."))
     isRF(listR[[index]])
   })
 
@@ -1235,6 +1239,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   ) %>%
     dplyr::group_by(ID, month, costCode) %>%
     dplyr::summarise(cost = sum(cost)) %>%
+    dplyr::filter(cost > 0) %>%
     dplyr::group_by(ID, month) %>%
     dplyr::mutate(totalCost = sum(cost)) %>%
     dplyr::mutate(X = cost / totalCost)
