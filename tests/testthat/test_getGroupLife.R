@@ -130,7 +130,8 @@ test_that("getGroupLife() works", {
                round(4089 / 12, digits = 2) * 10)
   expect_equal(sum(getGroupLife(tempEmp4)$gl),
                round(2044 / 12, digits = 2) * 9)
-  expect_equal(sum(getGroupLife(tempEmp5)$gl), 0)
+  expect_equal(sum(getGroupLife(tempEmp5)$gl),
+               round(2044 /12, digits = 2) * 9)
   expect_equal(sum(getGroupLife(tempEmp6)$gl), 0)
   expect_equal(sum(getGroupLife(tempEmp7)$gl), 0)
 })

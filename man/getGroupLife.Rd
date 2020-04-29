@@ -44,8 +44,9 @@ a \code{\link{data.frame}} with 12 rows and 3 columns representing
   }
 }
 \description{
-Life insurance privilage is only available to regular employees. The higher
-  the job grade of the employee, the higher the privilage enjoyed.
+Life insurance privilege is only available to regular and probationary
+  employees. The higher the job grade of the employee, the higher the
+  privilege enjoyed.
 }
 \section{Functions}{
 \itemize{
