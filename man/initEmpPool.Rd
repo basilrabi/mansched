@@ -60,12 +60,78 @@ initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
     \item{OCT}{number of dependents for the month}
     \item{NOV}{number of dependents for the month}
     \item{DEC}{number of dependents for the month}
-    \item{d.rd}{integer value defining how many rest days per month the
-      employee can report to work}
-    \item{d.ho}{integer value defining how many holidays per month the
-      employee can report to work}
-    \item{d.rh}{integer value defining how many rest days on holidays per
-      month the employee can report to work}
+    \item{d.rd_1}{integer value defining how many rest days the employee can
+      report to work on January}
+    \item{d.rd_2}{integer value defining how many rest days the employee can
+      report to work on February}
+    \item{d.rd_3}{integer value defining how many rest days the employee can
+      report to work on March}
+    \item{d.rd_4}{integer value defining how many rest days the employee can
+      report to work on April}
+    \item{d.rd_5}{integer value defining how many rest days the employee can
+      report to work on May}
+    \item{d.rd_6}{integer value defining how many rest days the employee can
+      report to work on June}
+    \item{d.rd_7}{integer value defining how many rest days the employee can
+      report to work on July}
+    \item{d.rd_8}{integer value defining how many rest days the employee can
+      report to work on August}
+    \item{d.rd_9}{integer value defining how many rest days the employee can
+      report to work on September}
+    \item{d.rd_10}{integer value defining how many rest days the employee can
+      report to work on October}
+    \item{d.rd_11}{integer value defining how many rest days the employee can
+      report to work on November}
+    \item{d.rd_12}{integer value defining how many rest days the employee can
+      report to work on December}
+    \item{d.ho_1}{integer value defining how many holidays the employee can
+      report to work on January}
+    \item{d.ho_2}{integer value defining how many holidays the employee can
+      report to work on February}
+    \item{d.ho_3}{integer value defining how many holidays the employee can
+      report to work on March}
+    \item{d.ho_4}{integer value defining how many holidays the employee can
+      report to work on April}
+    \item{d.ho_5}{integer value defining how many holidays the employee can
+      report to work on May}
+    \item{d.ho_6}{integer value defining how many holidays the employee can
+      report to work on June}
+    \item{d.ho_7}{integer value defining how many holidays the employee can
+      report to work on July}
+    \item{d.ho_8}{integer value defining how many holidays the employee can
+      report to work on August}
+    \item{d.ho_9}{integer value defining how many holidays the employee can
+      report to work on September}
+    \item{d.ho_10}{integer value defining how many holidays the employee can
+      report to work on October}
+    \item{d.ho_11}{integer value defining how many holidays the employee can
+      report to work on November}
+    \item{d.ho_12}{integer value defining how many holidays the employee can
+      report to work on December}
+    \item{d.rh_1}{integer value defining how many rest days on holidays the
+      employee can report to work on January}
+    \item{d.rh_2}{integer value defining how many rest days on holidays the
+      employee can report to work on February}
+    \item{d.rh_3}{integer value defining how many rest days on holidays the
+      employee can report to work on March}
+    \item{d.rh_4}{integer value defining how many rest days on holidays the
+      employee can report to work on April}
+    \item{d.rh_5}{integer value defining how many rest days on holidays the
+      employee can report to work on May}
+    \item{d.rh_6}{integer value defining how many rest days on holidays the
+      employee can report to work on June}
+    \item{d.rh_7}{integer value defining how many rest days on holidays the
+      employee can report to work on July}
+    \item{d.rh_8}{integer value defining how many rest days on holidays the
+      employee can report to work on August}
+    \item{d.rh_9}{integer value defining how many rest days on holidays the
+      employee can report to work on September}
+    \item{d.rh_10}{integer value defining how many rest days on holidays the
+      employee can report to work on October}
+    \item{d.rh_11}{integer value defining how many rest days on holidays the
+      employee can report to work on November}
+    \item{d.rh_12}{integer value defining how many rest days on holidays the
+      employee can report to work on December}
     \item{VL}{numeric value representing the number of vacation leave
       credits}
     \item{SL}{numeric value representing the number of sick leave

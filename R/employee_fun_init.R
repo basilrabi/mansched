@@ -182,26 +182,26 @@ setMethod(
                           hol     = hol,
                           restday = theObject@restday)
 
-    if (is.na(d.rd))
-      d.rd <- 2L
+    if (any(is.na(d.rd)))
+      d.rd[is.na(d.rd)] <- 2L
 
     calDays$rd <- assignMH(hoursT = calDays$rd, hoursR = d.rd)$hoursA
 
     if (theObject@status == "reg") {
-      if (is.na(d.ho)) {
-        d.ho <- 0L
+      if (any(is.na(d.ho))) {
+        d.ho[is.na(d.ho)] <- 0L
       }
     } else {
-      if (is.na(d.ho))
-        d.ho <- 5L
+      if (any(is.na(d.ho)))
+        d.ho[is.na(d.ho)] <- 5L
     }
 
     calDays$sh <- assignMH(hoursT = calDays$sh, hoursR = d.ho)$hoursA
     calDays$lh <- assignMH(hoursT = calDays$lh, hoursR = d.ho)$hoursA
     calDays$nh <- assignMH(hoursT = calDays$nh, hoursR = d.ho)$hoursA
 
-    if (is.na(d.rh))
-      d.rh <- 0L
+    if (any(is.na(d.rh)))
+      d.rh[is.na(d.rh)] <- 0L
 
     calDays$rs <- assignMH(hoursT = calDays$rs, hoursR = d.rh)$hoursA
     calDays$rl <- assignMH(hoursT = calDays$rl, hoursR = d.rh)$hoursA

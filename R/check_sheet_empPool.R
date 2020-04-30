@@ -6,6 +6,9 @@
 sanityCheckEmpPool <- function(empPool) {
   dependentsCol <- month.abb %>% toupper()
   attendanceCol <- paste0("a_", 1:12)
+  d.rdCol       <- paste0("d.rd_", 1:12)
+  d.hoCol       <- paste0("d.ho_", 1:12)
+  d.rhCol       <- paste0("d.rh_", 1:12)
   empPool.colnames <- c("ID",
                         "name",
                         "designation",
@@ -76,7 +79,7 @@ sanityCheckEmpPool <- function(empPool) {
     }
   }
 
-  for (i in attendanceCol) {
+  for (i in c(attendanceCol, d.rdCol, d.hoCol, d.rhCol)) {
     if (class(empPool[[i]]) != "numeric")
       stop(paste("Column", i, "is not numeric!"))
 

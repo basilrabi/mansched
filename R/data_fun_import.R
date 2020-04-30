@@ -56,12 +56,78 @@
 #'     \item{OCT}{number of dependents for the month}
 #'     \item{NOV}{number of dependents for the month}
 #'     \item{DEC}{number of dependents for the month}
-#'     \item{d.rd}{integer value defining how many rest days per month the
-#'       employee can report to work}
-#'     \item{d.ho}{integer value defining how many holidays per month the
-#'       employee can report to work}
-#'     \item{d.rh}{integer value defining how many rest days on holidays per
-#'       month the employee can report to work}
+#'     \item{d.rd_1}{integer value defining how many rest days the employee can
+#'       report to work on January}
+#'     \item{d.rd_2}{integer value defining how many rest days the employee can
+#'       report to work on February}
+#'     \item{d.rd_3}{integer value defining how many rest days the employee can
+#'       report to work on March}
+#'     \item{d.rd_4}{integer value defining how many rest days the employee can
+#'       report to work on April}
+#'     \item{d.rd_5}{integer value defining how many rest days the employee can
+#'       report to work on May}
+#'     \item{d.rd_6}{integer value defining how many rest days the employee can
+#'       report to work on June}
+#'     \item{d.rd_7}{integer value defining how many rest days the employee can
+#'       report to work on July}
+#'     \item{d.rd_8}{integer value defining how many rest days the employee can
+#'       report to work on August}
+#'     \item{d.rd_9}{integer value defining how many rest days the employee can
+#'       report to work on September}
+#'     \item{d.rd_10}{integer value defining how many rest days the employee can
+#'       report to work on October}
+#'     \item{d.rd_11}{integer value defining how many rest days the employee can
+#'       report to work on November}
+#'     \item{d.rd_12}{integer value defining how many rest days the employee can
+#'       report to work on December}
+#'     \item{d.ho_1}{integer value defining how many holidays the employee can
+#'       report to work on January}
+#'     \item{d.ho_2}{integer value defining how many holidays the employee can
+#'       report to work on February}
+#'     \item{d.ho_3}{integer value defining how many holidays the employee can
+#'       report to work on March}
+#'     \item{d.ho_4}{integer value defining how many holidays the employee can
+#'       report to work on April}
+#'     \item{d.ho_5}{integer value defining how many holidays the employee can
+#'       report to work on May}
+#'     \item{d.ho_6}{integer value defining how many holidays the employee can
+#'       report to work on June}
+#'     \item{d.ho_7}{integer value defining how many holidays the employee can
+#'       report to work on July}
+#'     \item{d.ho_8}{integer value defining how many holidays the employee can
+#'       report to work on August}
+#'     \item{d.ho_9}{integer value defining how many holidays the employee can
+#'       report to work on September}
+#'     \item{d.ho_10}{integer value defining how many holidays the employee can
+#'       report to work on October}
+#'     \item{d.ho_11}{integer value defining how many holidays the employee can
+#'       report to work on November}
+#'     \item{d.ho_12}{integer value defining how many holidays the employee can
+#'       report to work on December}
+#'     \item{d.rh_1}{integer value defining how many rest days on holidays the
+#'       employee can report to work on January}
+#'     \item{d.rh_2}{integer value defining how many rest days on holidays the
+#'       employee can report to work on February}
+#'     \item{d.rh_3}{integer value defining how many rest days on holidays the
+#'       employee can report to work on March}
+#'     \item{d.rh_4}{integer value defining how many rest days on holidays the
+#'       employee can report to work on April}
+#'     \item{d.rh_5}{integer value defining how many rest days on holidays the
+#'       employee can report to work on May}
+#'     \item{d.rh_6}{integer value defining how many rest days on holidays the
+#'       employee can report to work on June}
+#'     \item{d.rh_7}{integer value defining how many rest days on holidays the
+#'       employee can report to work on July}
+#'     \item{d.rh_8}{integer value defining how many rest days on holidays the
+#'       employee can report to work on August}
+#'     \item{d.rh_9}{integer value defining how many rest days on holidays the
+#'       employee can report to work on September}
+#'     \item{d.rh_10}{integer value defining how many rest days on holidays the
+#'       employee can report to work on October}
+#'     \item{d.rh_11}{integer value defining how many rest days on holidays the
+#'       employee can report to work on November}
+#'     \item{d.rh_12}{integer value defining how many rest days on holidays the
+#'       employee can report to work on December}
 #'     \item{VL}{numeric value representing the number of vacation leave
 #'       credits}
 #'     \item{SL}{numeric value representing the number of sick leave
@@ -105,18 +171,54 @@
 #' @importFrom dplyr "%>%"
 initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
 
-  a_1 <- NULL
-  a_2 <- NULL
-  a_3 <- NULL
-  a_4 <- NULL
-  a_5 <- NULL
-  a_6 <- NULL
-  a_7 <- NULL
-  a_8 <- NULL
-  a_9 <- NULL
-  a_10 <- NULL
-  a_11 <- NULL
-  a_12 <- NULL
+  a_1     <- NULL
+  a_2     <- NULL
+  a_3     <- NULL
+  a_4     <- NULL
+  a_5     <- NULL
+  a_6     <- NULL
+  a_7     <- NULL
+  a_8     <- NULL
+  a_9     <- NULL
+  a_10    <- NULL
+  a_11    <- NULL
+  a_12    <- NULL
+  d.rd_1  <- NULL
+  d.rd_2  <- NULL
+  d.rd_3  <- NULL
+  d.rd_4  <- NULL
+  d.rd_5  <- NULL
+  d.rd_6  <- NULL
+  d.rd_7  <- NULL
+  d.rd_8  <- NULL
+  d.rd_9  <- NULL
+  d.rd_10 <- NULL
+  d.rd_11 <- NULL
+  d.rd_12 <- NULL
+  d.ho_1  <- NULL
+  d.ho_2  <- NULL
+  d.ho_3  <- NULL
+  d.ho_4  <- NULL
+  d.ho_5  <- NULL
+  d.ho_6  <- NULL
+  d.ho_7  <- NULL
+  d.ho_8  <- NULL
+  d.ho_9  <- NULL
+  d.ho_10 <- NULL
+  d.ho_11 <- NULL
+  d.ho_12 <- NULL
+  d.rh_1  <- NULL
+  d.rh_2  <- NULL
+  d.rh_3  <- NULL
+  d.rh_4  <- NULL
+  d.rh_5  <- NULL
+  d.rh_6  <- NULL
+  d.rh_7  <- NULL
+  d.rh_8  <- NULL
+  d.rh_9  <- NULL
+  d.rh_10 <- NULL
+  d.rh_11 <- NULL
+  d.rh_12 <- NULL
 
   # Error if any ID is duplicated
   if (anyDuplicated(empPool$ID) > 0) {
@@ -196,8 +298,11 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   }
 
   dependentsCol <- month.abb %>% toupper()
-  empPool[, c("d.rd", "d.ho", "d.rh", dependentsCol)] <-
-    lapply(empPool[, c("d.rd", "d.ho", "d.rh", dependentsCol)],
+  d.rdCol       <- paste0("d.rd_", 1:12)
+  d.hoCol       <- paste0("d.ho_", 1:12)
+  d.rhCol       <- paste0("d.rh_", 1:12)
+  empPool[, c(d.rdCol, d.hoCol, d.rhCol, dependentsCol)] <-
+    lapply(empPool[, c(d.rdCol, d.hoCol, d.rhCol, dependentsCol)],
            FUN = as.integer)
 
   # Pre-allocate employee list
@@ -232,6 +337,27 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
       empPool$a_9[i], empPool$a_10[i], empPool$a_11[i], empPool$a_12[i]
     ))
 
+    d.rd <- c(
+      empPool$d.rd_1[i], empPool$d.rd_2[i], empPool$d.rd_3[i],
+      empPool$d.rd_4[i], empPool$d.rd_5[i], empPool$d.rd_6[i],
+      empPool$d.rd_7[i], empPool$d.rd_8[i], empPool$d.rd_9[i],
+      empPool$d.rd_10[i], empPool$d.rd_11[i], empPool$d.rd_12[i]
+    )
+
+    d.ho <- c(
+      empPool$d.ho_1[i], empPool$d.ho_2[i], empPool$d.ho_3[i],
+      empPool$d.ho_4[i], empPool$d.ho_5[i], empPool$d.ho_6[i],
+      empPool$d.ho_7[i], empPool$d.ho_8[i], empPool$d.ho_9[i],
+      empPool$d.ho_10[i], empPool$d.ho_11[i], empPool$d.ho_12[i]
+    )
+
+    d.rh <- c(
+      empPool$d.rh_1[i], empPool$d.rh_2[i], empPool$d.rh_3[i],
+      empPool$d.rh_4[i], empPool$d.rh_5[i], empPool$d.rh_6[i],
+      empPool$d.rh_7[i], empPool$d.rh_8[i], empPool$d.rh_9[i],
+      empPool$d.rh_10[i], empPool$d.rh_11[i], empPool$d.rh_12[i]
+    )
+
     tempEmp <- createEmp(empPool$personnelClass[i])
     tempEmp <- initREmployee(theObject   = tempEmp,
                              ID          = empPool$ID[i],
@@ -247,9 +373,9 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
                              hol         = hol,
                              RF          = empPool$isRF[i],
                              equipment   = empPool$equipment[i],
-                             d.rd        = empPool$d.rd[i],
-                             d.ho        = empPool$d.ho[i],
-                             d.rh        = empPool$d.rh[i],
+                             d.rd        = d.rd,
+                             d.ho        = d.ho,
+                             d.rh        = d.rh,
                              dcc         = empPool$dcc[i],
                              forecast    = forecast,
                              field       = field,

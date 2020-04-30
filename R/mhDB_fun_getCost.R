@@ -80,6 +80,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   salH           <- NULL
   salM           <- NULL
   status         <- NULL
+  totalCost      <- NULL
   totMH          <- NULL
   totMHCostCode  <- NULL
   X              <- NULL
