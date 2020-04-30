@@ -35,7 +35,9 @@ initREmployee(
   dcc = "NA",
   forecast = FALSE,
   field = TRUE,
-  dependents = NA
+  dependents = NA,
+  VL = NA,
+  SL = NA
 )
 
 \S4method{initREmployee}{Employee}(
@@ -56,7 +58,9 @@ initREmployee(
   dcc = "NA",
   forecast = FALSE,
   field = TRUE,
-  dependents = NA
+  dependents = NA,
+  VL = NA,
+  SL = NA
 )
 
 \S4method{initREmployee}{Staff}(
@@ -77,7 +81,9 @@ initREmployee(
   dcc = "NA",
   forecast = FALSE,
   field = TRUE,
-  dependents = NA
+  dependents = NA,
+  VL = NA,
+  SL = NA
 )
 
 \S4method{initREmployee}{NonStaff}(
@@ -99,7 +105,9 @@ initREmployee(
   dcc = "NA",
   forecast = FALSE,
   field = TRUE,
-  dependents = NA
+  dependents = NA,
+  VL = NA,
+  SL = NA
 )
 
 \S4method{initREmployee}{Clerk}(
@@ -122,7 +130,9 @@ initREmployee(
   dcc = "NA",
   forecast = FALSE,
   field = TRUE,
-  dependents = NA
+  dependents = NA,
+  VL = NA,
+  SL = NA
 )
 
 \S4method{initREmployee}{OperationPersonnel}(
@@ -145,7 +155,9 @@ initREmployee(
   dcc = "NA",
   forecast = FALSE,
   field = TRUE,
-  dependents = NA
+  dependents = NA,
+  VL = NA,
+  SL = NA
 )
 
 \S4method{initREmployee}{Technical}(
@@ -168,7 +180,9 @@ initREmployee(
   dcc = "NA",
   forecast = FALSE,
   field = TRUE,
-  dependents = NA
+  dependents = NA,
+  VL = NA,
+  SL = NA
 )
 
 \S4method{initREmployee}{Supervisor}(
@@ -191,7 +205,9 @@ initREmployee(
   dcc = "NA",
   forecast = FALSE,
   field = TRUE,
-  dependents = NA
+  dependents = NA,
+  VL = NA,
+  SL = NA
 )
 
 \S4method{initREmployee}{Laborer}(
@@ -214,7 +230,9 @@ initREmployee(
   dcc = "NA",
   forecast = FALSE,
   field = TRUE,
-  dependents = NA
+  dependents = NA,
+  VL = NA,
+  SL = NA
 )
 
 \S4method{initREmployee}{Operator}(
@@ -238,7 +256,9 @@ initREmployee(
   dcc = "NA",
   forecast = FALSE,
   field = TRUE,
-  dependents = NA
+  dependents = NA,
+  VL = NA,
+  SL = NA
 )
 }
 \arguments{
@@ -315,6 +335,11 @@ Is the employee always on the field?}
 
 \item{dependents}{integer vector of length 12 \cr
 Number of dependents for each month.}
+
+\item{VL}{numeric value for the number of vacation leave credits to be
+assigned}
+
+\item{SL}{numeric value for the number of sick leave credits to be assigned}
 }
 \value{
 an \code{\link{Employee-class}} object

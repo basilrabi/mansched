@@ -24,7 +24,9 @@ sanityCheckEmpPool <- function(empPool) {
                         "dcc",
                         "field",
                         dependentsCol,
-                        attendanceCol)
+                        attendanceCol,
+                        "VL",
+                        "SL")
 
   empPool <- empPool[, empPool.colnames]
 
@@ -82,6 +84,11 @@ sanityCheckEmpPool <- function(empPool) {
       stop(paste("Column", i, "is incomplete!"))
 
   }
+
+  if (class(empPool$VL) != "numeric")
+    stop("Column VL is not numeric!")
+  if (class(empPool$SL) != "numeric")
+    stop("Column SL is not numeric!")
 
   empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
                                            FUN = as.character)

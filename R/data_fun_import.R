@@ -62,6 +62,10 @@
 #'       employee can report to work}
 #'     \item{d.rh}{integer value defining how many rest days on holidays per
 #'       month the employee can report to work}
+#'     \item{VL}{numeric value representing the number of vacation leave
+#'       credits}
+#'     \item{SL}{numeric value representing the number of sick leave
+#'       credits}
 #'     \item{a_1}{numeric value representing the attendance rate of
 #'       employee on January}
 #'     \item{a_2}{numeric value representing the attendance rate of
@@ -249,7 +253,9 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
                              dcc         = empPool$dcc[i],
                              forecast    = forecast,
                              field       = field,
-                             dependents  = dependents)
+                             dependents  = dependents,
+                             VL          = empPool$VL[i],
+                             SL          = empPool$SL[i])
     manPool[[i]] <- tempEmp
   }
 

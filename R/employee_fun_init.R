@@ -59,6 +59,9 @@ NULL
 #'   Is the employee always on the field?
 #' @param dependents integer vector of length 12 \cr
 #'   Number of dependents for each month.
+#' @param VL numeric value for the number of vacation leave credits to be
+#'   assigned
+#' @param SL numeric value for the number of sick leave credits to be assigned
 #' @return an \code{\link{Employee-class}} object
 #' @importFrom lubridate year
 #' @export initREmployee
@@ -85,7 +88,9 @@ setGeneric(
                   dcc        = "NA",
                   forecast   = FALSE,
                   field      = TRUE,
-                  dependents = NA) {
+                  dependents = NA,
+                  VL         = NA,
+                  SL         = NA) {
     standardGeneric("initREmployee")
   }
 )
@@ -122,7 +127,9 @@ setMethod(
                         dcc        = "NA",
                         forecast   = FALSE,
                         field      = TRUE,
-                        dependents = NA) {
+                        dependents = NA,
+                        VL         = NA,
+                        SL         = NA) {
     # Checking of the validity of all arguments must be done prior to calling
     #  initREmployee()
 
@@ -250,7 +257,9 @@ setMethod(
                         dcc        = "NA",
                         forecast   = FALSE,
                         field      = TRUE,
-                        dependents = NA) {
+                        dependents = NA,
+                        VL         = NA,
+                        SL         = NA) {
 
     # For all staff, assign a rest day of Sunday for computation purposes.
     # This is because in a theortical Staff, the working days do not include
@@ -274,7 +283,9 @@ setMethod(
                                dcc         = dcc,
                                forecast    = forecast,
                                field       = field,
-                               dependents  = dependents)
+                               dependents  = dependents,
+                               VL          = VL,
+                               SL          = SL)
 
     return(tempData[[1]])
   }
@@ -302,7 +313,9 @@ setMethod(
                         dcc        = "NA",
                         forecast   = FALSE,
                         field      = TRUE,
-                        dependents = NA) {
+                        dependents = NA,
+                        VL         = NA,
+                        SL         = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -324,7 +337,9 @@ setMethod(
                                dcc         = dcc,
                                forecast    = forecast,
                                field       = field,
-                               dependents  = dependents)
+                               dependents  = dependents,
+                               VL          = VL,
+                               SL          = SL)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -361,7 +376,9 @@ setMethod(
                         dcc        = "NA",
                         forecast   = FALSE,
                         field      = TRUE,
-                        dependents = NA) {
+                        dependents = NA,
+                        VL         = NA,
+                        SL         = NA) {
 
     # For all clerk, assign a rest day of Sunday for computation purposes.
     # This is because in a theortical clerk, the working days do not include
@@ -392,7 +409,9 @@ setMethod(
                                dcc         = dcc,
                                forecast    = forecast,
                                field       = field,
-                               dependents  = dependents)
+                               dependents  = dependents,
+                               VL          = VL,
+                               SL          = SL)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -466,7 +485,9 @@ setMethod(
                         dcc        = "NA",
                         forecast   = FALSE,
                         field      = TRUE,
-                        dependents = NA) {
+                        dependents = NA,
+                        VL         = NA,
+                        SL         = NA) {
 
     # restday must be a valid weekday prior to calling initEmployee
     if (is.na(restday))
@@ -496,7 +517,9 @@ setMethod(
                                dcc         = dcc,
                                forecast    = forecast,
                                field       = field,
-                               dependents  = dependents)
+                               dependents  = dependents,
+                               VL          = VL,
+                               SL          = SL)
 
     theObject <- tempData[[1]]
     calDays   <- tempData[[2]]
@@ -592,7 +615,9 @@ setMethod(
                         dcc        = "NA",
                         forecast   = FALSE,
                         field      = TRUE,
-                        dependents = NA) {
+                        dependents = NA,
+                        VL         = NA,
+                        SL         = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -616,7 +641,9 @@ setMethod(
                                dcc         = dcc,
                                forecast    = forecast,
                                field       = field,
-                               dependents  = dependents)
+                               dependents  = dependents,
+                               VL          = VL,
+                               SL          = SL)
 
     theObject <- tempData[[1]]
 
@@ -650,7 +677,9 @@ setMethod(
                         dcc        = "NA",
                         forecast   = FALSE,
                         field      = TRUE,
-                        dependents = NA) {
+                        dependents = NA,
+                        VL         = NA,
+                        SL         = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -674,7 +703,9 @@ setMethod(
                                dcc         = dcc,
                                forecast    = forecast,
                                field       = field,
-                               dependents  = dependents)
+                               dependents  = dependents,
+                               VL          = VL,
+                               SL          = SL)
 
     theObject      <- tempData[[1]]
     theObject@isRF <- FALSE
@@ -708,7 +739,9 @@ setMethod(
                         dcc        = "NA",
                         forecast   = FALSE,
                         field      = TRUE,
-                        dependents = NA) {
+                        dependents = NA,
+                        VL         = NA,
+                        SL         = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -732,7 +765,9 @@ setMethod(
                                dcc         = dcc,
                                forecast    = forecast,
                                field       = field,
-                               dependents  = dependents)
+                               dependents  = dependents,
+                               VL          = VL,
+                               SL          = SL)
 
     theObject      <- tempData[[1]]
     calDays        <- tempData[[2]]
@@ -785,7 +820,9 @@ setMethod(
                         dcc        = "NA",
                         forecast   = FALSE,
                         field      = TRUE,
-                        dependents = NA) {
+                        dependents = NA,
+                        VL         = NA,
+                        SL         = NA) {
 
     if (is.na(OT))
       OT <- 3
@@ -809,7 +846,9 @@ setMethod(
                                dcc         = dcc,
                                forecast    = forecast,
                                field       = field,
-                               dependents  = dependents)
+                               dependents  = dependents,
+                               VL          = VL,
+                               SL          = SL)
 
     theObject      <- tempData[[1]]
     calDays        <- tempData[[2]]
