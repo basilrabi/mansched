@@ -28,6 +28,7 @@ initTEmployee(
   ID,
   costCode,
   calDays,
+  mdtProb,
   spareFactor = 1,
   monthSched = NA
 )
