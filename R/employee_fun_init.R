@@ -955,7 +955,8 @@ setMethod(
                         ID,
                         costCode,
                         calDays,
-                        spareFactor = 1) {
+                        spareFactor = 1,
+                        monthSched  = NA) {
 
     if (is.na(spareFactor))
       spareFactor <- 1
@@ -965,7 +966,14 @@ setMethod(
                                 costCode    = costCode,
                                 spareFactor = spareFactor)
 
-    theObject@reg <- as.integer(calDays[,c("reg")] * 8 * theObject@spareFactor)
+    if (any(is.na(monthSched))) {
+      theObject@reg <- as.integer(calDays[,c("reg")] * 8 * theObject@spareFactor)
+    } else {
+      d.reg <- mdtProb$reg + mdtProb$rd
+      reg <- d.reg * theObject@spareFactor * 8
+      theObject@reg <- as.integer(reg * monthSched + 0.5)
+    }
+
 
     return(theObject)
   }
@@ -980,7 +988,9 @@ setMethod(
                         costCode,
                         OT          = 0,
                         calDays,
-                        spareFactor = 1) {
+                        mdtProb,
+                        spareFactor = 1,
+                        monthSched  = NA) {
 
     if (is.na(OT))
       OT <- 0
@@ -993,11 +1003,18 @@ setMethod(
                                 costCode    = costCode,
                                 spareFactor = spareFactor)
 
-    theObject@reg   <- as.integer(calDays[,c("reg")] * 8 *
-                                    theObject@spareFactor)
-
-    theObject@regOT <- as.integer(calDays[,c("reg")] * OT *
-                                    theObject@spareFactor)
+    if (any(is.na(monthSched))) {
+      theObject@reg   <- as.integer(calDays[,c("reg")] * 8 *
+                                      theObject@spareFactor)
+      theObject@regOT <- as.integer(calDays[,c("reg")] * OT *
+                                      theObject@spareFactor)
+    } else {
+      d.reg <- mdtProb$reg + mdtProb$rd
+      reg <- d.reg * theObject@spareFactor * 8
+      regOT <- d.reg * theObject@spareFactor * OT
+      theObject@reg <- as.integer(reg * monthSched + 0.5)
+      theObject@regOT <- as.integer(regOT * monthSched + 0.5)
+    }
 
     return(theObject)
   }

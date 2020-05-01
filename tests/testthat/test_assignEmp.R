@@ -9,6 +9,7 @@ cBegin      <- "2012-10-15"
 inHouse     <- TRUE
 restday     <- "Sunday"
 hol         <- getHol(hol = holidays, year = 2018)
+mdtProb     <- getMDTProb(hol = hol)
 calDays     <- getCalDays(cBegin = cBegin, hol = hol, restday = restday)
 
 tempEmp <- createEmp(empClass = "divisionmanager")
@@ -126,6 +127,7 @@ empT     <- initTEmployee(theObject = tempEmp,
                           ID        = ID,
                           costCode  = costCode,
                           OT        = OT,
+                          mdtProb   = mdtProb,
                           calDays   = calDays)
 
 tempData <- assignEmp(empT = empT, empR = empR)
@@ -135,7 +137,6 @@ test_that("assignment of clerk works", {
 })
 
 
-mdtProb <- getMDTProb(hol = hol)
 tempEmp <- createEmp(empClass = "technical")
 empR    <- initREmployee(theObject   = tempEmp,
                          ID          = ID,

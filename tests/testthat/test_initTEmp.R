@@ -3,6 +3,7 @@ library(mansched)
 ID <- "Materials Handling General Employee"
 costCode <- "14000"
 spareFactor <- 1
+mdtProb <- getMDTProb(getHol(hol = holidays, year = 2018))
 calDays <- getCalDays(cBegin = "2018-01-01",
                       hol = getHol(hol = holidays, year = "2018"),
                       restday = "Sunday")
@@ -62,6 +63,7 @@ tempEmp <- createEmp("clerk")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
                          costCode = costCode,
+                         mdtProb = mdtProb,
                          calDays = calDays,
                          OT = OT)
 
@@ -72,7 +74,6 @@ test_that("clerk() works", {
   expect_error(isRF(tempEmp))
 })
 
-mdtProb <- getMDTProb(getHol(hol = holidays, year = 2018))
 tempEmp <- createEmp("technical")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,

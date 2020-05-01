@@ -23,9 +23,25 @@ initTEmployee(
 
 \S4method{initTEmployee}{Employee}(theObject, ID, costCode, spareFactor = 1)
 
-\S4method{initTEmployee}{Staff}(theObject, ID, costCode, calDays, spareFactor = 1)
+\S4method{initTEmployee}{Staff}(
+  theObject,
+  ID,
+  costCode,
+  calDays,
+  spareFactor = 1,
+  monthSched = NA
+)
 
-\S4method{initTEmployee}{Clerk}(theObject, ID, costCode, OT = 0, calDays, spareFactor = 1)
+\S4method{initTEmployee}{Clerk}(
+  theObject,
+  ID,
+  costCode,
+  OT = 0,
+  calDays,
+  mdtProb,
+  spareFactor = 1,
+  monthSched = NA
+)
 
 \S4method{initTEmployee}{OperationPersonnel}(
   theObject,
