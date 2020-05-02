@@ -1,3 +1,17 @@
+#' Clean Cost Center Name
+#'
+#' Removes non-alpha-numeric characters and leading zero in a character vector.
+#'
+#' @param x character vector
+#' @return character vector without leading zero and without non-alpha-numeric
+#'   characters
+#' @export cleanCC
+cleanCC <- function(x) {
+  x <- gsub(pattern = "^0*", replacement = "", x = rmS(x))
+  x <- gsub(pattern = "[^[:alnum:]]", replacement = "", x = x)
+  return(x)
+}
+
 #' Expand \code{data.frame}
 #'
 #' Expands a \code{data.frame} twice its original number of rows. The expanded
@@ -7,13 +21,8 @@
 #' @return \code{data.frame} with \code{NA} values at the lower half rows
 #' @export expandDF
 expandDF <- function(x) {
-
-  tempData <- matrix(NA,
-                     nrow = length(x[,1]),
-                     ncol = length(x))
-
+  tempData <- matrix(NA, nrow = length(x[,1]), ncol = length(x))
   colnames(tempData) <- colnames(x)
-
   rbind(x, tempData)
 }
 
@@ -52,11 +61,8 @@ capacityEnough <- function(x, dfLength) {
 #' @return \code{data.frame} with NA rows at the bottom
 #' @export testAndExpand
 testAndExpand <- function(x, dfLength) {
-
-  while (!capacityEnough(x, dfLength)) {
+  while (!capacityEnough(x, dfLength))
     x <- expandDF(x)
-  }
-
   return(x)
 }
 
