@@ -75,7 +75,6 @@ NULL
 #' @export getCost
 #' @importFrom dplyr left_join group_by summarise mutate "%>%"
 #' @importFrom data.table rbindlist
-#' @importFrom stringr str_split
 #' @importFrom tidyr gather pivot_longer pivot_wider spread
 getCost <- function(mhDB, listR, wage, forecast = FALSE,
                     bonusFactorYearEnd = 1.5, absentee = NA) {
@@ -104,9 +103,9 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   if (!any(is.na(absentee))) {
     absenteeList <- lapply(1:nrow(absentee), function(x) {
       costCenters <- rmWS(absentee$costCenter[x])
-      costCenters <- unique(stringr::str_split(costCenters,
-                                               pattern = " ",
-                                               simplify = FALSE)[[1]])
+      costCenters <- unique(strsplit(x = costCenters,
+                                     split = " ",
+                                     fixed = TRUE)[[1]])
       dfOut <- data.frame(ID = absentee$ID[x], costCenters = costCenters)
     }) %>%
       data.table::rbindlist()
@@ -1316,7 +1315,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     dplyr::summarise(cost = sum(cost)) %>%
     dplyr::filter(cost > 0) %>%
     dplyr::group_by(ID, month) %>%
-    dplyr::mutate(totalCost = sum(cost)) %>%
+    dplyr::mutate(totalCost = round(sum(cost), digits = 2)) %>%
     dplyr::mutate(X = cost / totalCost)
   SSSdb$SSSRate <- sapply(SSSdb$totalCost, function(x) {
     SSS$c[which(SSS$r1 <= x & SSS$r2 >= x)]
