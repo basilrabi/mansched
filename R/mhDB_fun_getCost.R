@@ -1316,7 +1316,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     dplyr::summarise(cost = sum(cost)) %>%
     dplyr::filter(cost > 0) %>%
     dplyr::group_by(ID, month) %>%
-    dplyr::mutate(totalCost = sum(cost)) %>%
+    dplyr::mutate(totalCost = round(sum(cost), digits = 2)) %>%
     dplyr::mutate(X = cost / totalCost)
   SSSdb$SSSRate <- sapply(SSSdb$totalCost, function(x) {
     SSS$c[which(SSS$r1 <= x & SSS$r2 >= x)]
