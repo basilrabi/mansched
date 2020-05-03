@@ -4,7 +4,14 @@
 \alias{getCost}
 \title{Compute Personnel Cost}
 \usage{
-getCost(mhDB, listR, wage, forecast = FALSE, bonusFactorYearEnd = 1.5)
+getCost(
+  mhDB,
+  listR,
+  wage,
+  forecast = FALSE,
+  bonusFactorYearEnd = 1.5,
+  absentee = NA
+)
 }
 \arguments{
 \item{mhDB}{a \code{\link{data.frame}} similar to \code{mhDB} return by
@@ -29,6 +36,16 @@ Compute cost for forecast?}
 
 \item{bonusFactorYearEnd}{a numeric value for the salary multiplier for the
 year-end bonus}
+
+\item{absentee}{a \code{\link{data.frame}} composed of at least two columns:
+\describe{
+  \item{ID}{character string representing a unique identifier of an
+    employee}
+  \item{costCenter}{Cost centers wherein the leave commutation or the
+    holiday pays are distributed whenever the employee does not report for
+    work for a month.
+  }
+}}
 }
 \value{
 a list containing the following:

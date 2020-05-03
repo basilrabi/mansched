@@ -43,6 +43,15 @@ NULL
 #'   Compute cost for forecast?
 #' @param bonusFactorYearEnd a numeric value for the salary multiplier for the
 #'   year-end bonus
+#' @param absentee a \code{\link{data.frame}} composed of at least two columns:
+#'   \describe{
+#'     \item{ID}{character string representing a unique identifier of an
+#'       employee}
+#'     \item{costCenter}{Cost centers wherein the leave commutation or the
+#'       holiday pays are distributed whenever the employee does not report for
+#'       work for a month.
+#'     }
+#'   }
 #' @return a list containing the following:
 #'
 #'   \enumerate{
@@ -66,14 +75,18 @@ NULL
 #' @export getCost
 #' @importFrom dplyr left_join group_by summarise mutate "%>%"
 #' @importFrom data.table rbindlist
-#' @importFrom tidyr gather spread
+#' @importFrom stringr str_split
+#' @importFrom tidyr gather pivot_longer pivot_wider spread
 getCost <- function(mhDB, listR, wage, forecast = FALSE,
-                    bonusFactorYearEnd = 1.5) {
+                    bonusFactorYearEnd = 1.5, absentee = NA) {
 
   # Fix for "no visible binding for global variable" note in R CMD check
+  absenteeList   <- NULL
+  costCenters    <- NULL
   costCode       <- NULL
   cost           <- NULL
   ID             <- NULL
+  LC             <- NULL
   mh             <- NULL
   retentionBonus <- NULL
   sal            <- NULL
@@ -86,6 +99,18 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   X              <- NULL
   XholHours      <- NULL
   distType  <- c("reg", "rd", "sh", "lh", "nh", "rs", "rl", "rn")
+
+  # Arrange absentee to a data.frame
+  if (!any(is.na(absentee))) {
+    absenteeList <- lapply(1:nrow(absentee), function(x) {
+      costCenters <- rmWS(absentee$costCenter[x])
+      costCenters <- unique(stringr::str_split(costCenters,
+                                               pattern = " ",
+                                               simplify = FALSE)[[1]])
+      dfOut <- data.frame(ID = absentee$ID[x], costCenters = costCenters)
+    }) %>%
+      data.table::rbindlist()
+  }
 
   #### Sanity Check ####
 
@@ -979,8 +1004,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
 
   mhDB.PHIC$X    <- mhDB.PHIC$mh / mhDB.PHIC$totMH
   mhDB.PHIC      <- dplyr::left_join(x = mhDB.PHIC,
-                                    y = PHICdb,
-                                    by = c("ID", "month"))
+                                     y = PHICdb,
+                                     by = c("ID", "month"))
 
   mhDB.PHIC$cost <- round(mhDB.PHIC$X * mhDB.PHIC$PHIC, digits = 2)
   mhDB.PHIC.A    <- mhDB.PHIC[mhDB.PHIC$status == "age", ]
@@ -1002,8 +1027,28 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   if (length(maxRegDB) > 0) {
     ### Get total reg hours attendance (RH)
     mhDB.RH <- mhDB[mhDB$status == "reg" & mhDB$mhType == "reg", ] %>%
-      dplyr::group_by(ID, month, sal) %>%
-      dplyr::summarise(mh = sum(mh))
+      dplyr::group_by(ID, month) %>%
+      dplyr::summarise(mh = sum(mh)) %>%
+      tidyr::pivot_wider(names_from = month,
+                         values_from = mh,
+                         values_fill = list(mh = 0)) %>%
+      tidyr::pivot_longer(names_to = "month", values_to = "mh", -ID) %>%
+      dplyr::mutate(month = as.integer(month)) %>%
+      dplyr::left_join(
+        lapply(listR, function(x) {
+          if (isReg(x)) {
+            if (isRF(x)) {
+              dfOut <- payB
+            } else {
+              dfOut <- payA
+            }
+            dfOut$ID <- x@ID
+            return(dfOut)
+          }
+          return(NULL)
+        }) %>%
+          data.table::rbindlist()
+      )
 
     ### Join RH to maxRegDB then compute leave hours (LH) per month
     tempID   <- sapply(listR, FUN = function(x) {x@ID})
@@ -1047,6 +1092,28 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     )
     maxRegDB$LC <- maxRegDB$salH * maxRegDB$LH
 
+    ### Filter-out months with full absences but with leave
+    vacationMode <- dplyr::filter(maxRegDB,
+                                  LC > 0,
+                                  mh < 1)
+
+    if (nrow(vacationMode) > 0) {
+      if (is.null(absenteeList))
+        stop("Absentees present but without cost centers distribution.")
+      absenteeID <- unique(vacationMode$ID)
+      absenteeIDAbsent <- absenteeID[!absenteeID %in% absenteeList$ID]
+      if (length(absenteeIDAbsent) > 0)
+        stop(paste0("No distribution absentee for ", absenteeIDAbsent, "."))
+      absenteeCost <- vacationMode %>%
+        dplyr::select(ID, month, LC) %>%
+        dplyr::inner_join(absenteeList, by = "ID") %>%
+        dplyr::group_by(ID, month) %>%
+        dplyr::mutate(n = dplyr::n()) %>%
+        dplyr::mutate(cost = round(LC / n, digits = 2)) %>%
+        dplyr::group_by(month, costCenters, ID) %>%
+        dplyr::summarise(cost = sum(cost))
+    }
+
     ### Distribute LC cost for regular employees
     mhDB.LC.R <-mhDB[mhDB$mhType %in% distType & mhDB$status == "reg", ] %>%
       dplyr::group_by(ID, month, costCode) %>%
@@ -1062,8 +1129,15 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
       y  = maxRegDB[, colnames(maxRegDB) %in% c("ID", "month", "LC")],
       by = c("ID", "month")
     )
-
     mhDB.LC.R$cost <- round(mhDB.LC.R$X * mhDB.LC.R$LC, digits = 2)
+    if (nrow(vacationMode) > 0 &&
+        !is.null(absenteeCost) &&
+        nrow(absenteeCost) > 0) {
+      mhDB.LC.R <- dplyr::select(mhDB.LC.R, ID, month, costCode, cost) %>%
+        dplyr::bind_rows(
+          dplyr::select(absenteeCost, ID, month, costCode = costCenters, cost)
+        )
+    }
   } else {
     mhDB.LC.R <- NULL
   }
