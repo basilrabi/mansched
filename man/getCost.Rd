@@ -10,7 +10,8 @@ getCost(
   wage,
   forecast = FALSE,
   bonusFactorYearEnd = 1.5,
-  absentee = NA
+  absentee = NA,
+  monthStart = 1L
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ year-end bonus}
     work for a month.
   }
 }}
+
+\item{monthStart}{an integer representing the month of start of forecasting}
 }
 \value{
 a list containing the following:

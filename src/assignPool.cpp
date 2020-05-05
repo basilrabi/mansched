@@ -221,16 +221,16 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
 
   Rcpp::StringVector  tempEquip   (0);
   Rcpp::LogicalVector toBeRemoved (0);
-  Rcpp::IntegerVector maxReg        ( 10000, Rcpp::IntegerVector::get_na() );
-  Rcpp::IntegerVector mh            ( 10000, Rcpp::IntegerVector::get_na() );
-  Rcpp::IntegerVector month         ( 10000, Rcpp::IntegerVector::get_na() );
-  Rcpp::IntegerVector np            ( 10000, Rcpp::IntegerVector::get_na() );
-  Rcpp::StringVector  costCode      ( 10000, Rcpp::StringVector::get_na()  );
-  Rcpp::StringVector  id            ( 10000, Rcpp::StringVector::get_na()  );
-  Rcpp::StringVector  mhType        ( 10000, Rcpp::StringVector::get_na()  );
-  Rcpp::StringVector  sal           ( 10000, Rcpp::StringVector::get_na()  );
-  Rcpp::StringVector  scheme        ( 10000, Rcpp::StringVector::get_na()  );
-  Rcpp::StringVector  status        ( 10000, Rcpp::StringVector::get_na()  );
+  Rcpp::IntegerVector maxReg      ( 10000, Rcpp::IntegerVector::get_na() );
+  Rcpp::IntegerVector mh          ( 10000, Rcpp::IntegerVector::get_na() );
+  Rcpp::IntegerVector month       ( 10000, Rcpp::IntegerVector::get_na() );
+  Rcpp::IntegerVector np          ( 10000, Rcpp::IntegerVector::get_na() );
+  Rcpp::StringVector  costCode    ( 10000, Rcpp::StringVector::get_na()  );
+  Rcpp::StringVector  id          ( 10000, Rcpp::StringVector::get_na()  );
+  Rcpp::StringVector  mhType      ( 10000, Rcpp::StringVector::get_na()  );
+  Rcpp::StringVector  sal         ( 10000, Rcpp::StringVector::get_na()  );
+  Rcpp::StringVector  scheme      ( 10000, Rcpp::StringVector::get_na()  );
+  Rcpp::StringVector  status      ( 10000, Rcpp::StringVector::get_na()  );
 
   Rcpp::DataFrame mhDB = Rcpp::DataFrame::create(
     Rcpp::Named( "ID"               ) = id,

@@ -52,6 +52,7 @@ NULL
 #'       work for a month.
 #'     }
 #'   }
+#' @param monthStart an integer representing the month of start of forecasting
 #' @return a list containing the following:
 #'
 #'   \enumerate{
@@ -77,7 +78,7 @@ NULL
 #' @importFrom data.table rbindlist
 #' @importFrom tidyr gather pivot_longer pivot_wider spread
 getCost <- function(mhDB, listR, wage, forecast = FALSE,
-                    bonusFactorYearEnd = 1.5, absentee = NA) {
+                    bonusFactorYearEnd = 1.5, absentee = NA, monthStart = 1L) {
 
   # Fix for "no visible binding for global variable" note in R CMD check
   absenteeList   <- NULL
@@ -87,6 +88,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   ID             <- NULL
   LC             <- NULL
   mh             <- NULL
+  mhType         <- NULL
   retentionBonus <- NULL
   sal            <- NULL
   salH           <- NULL
@@ -1465,8 +1467,15 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
 
   if (length(bonus) > 0) {
 
-    # Distrubute mid-year bonus to all manhours from January to May
-    mhDB.bonusMid <- mhDB[mhDB$mhType %in% distType & mhDB$month < 6, ] %>%
+    # Distrubute mid-year bonus to all manhours from January to May.
+    # TODO: in forecast, use actual manhours per employee.
+    # If forecasting, temporarily drop man-hours before the start of forecasted
+    # month so the the cost center "0-0" is not given bonus
+    mhDB.bonusMid <- dplyr::filter(mhDB,
+                                   mhType %in% distType,
+                                   month < 6,
+                                   month >= monthStart,
+                                   status == "reg") %>%
       dplyr::group_by(ID, costCode) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
@@ -1478,7 +1487,13 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
                                         by = c("ID", "month"))
 
     # Distrubute year-and bonus to all manhours from January to December
-    mhDB.bonusEnd <- mhDB[mhDB$mhType %in% distType, ] %>%
+    # TODO: in forecast, use actual manhours per employee.
+    # If forecasting, temporarily drop man-hours before the start of forecasted
+    # month so the the cost center "0-0" is not given bonus
+    mhDB.bonusEnd <- dplyr::filter(mhDB,
+                                   mhType %in% distType,
+                                   month >= monthStart,
+                                   status == "reg") %>%
       dplyr::group_by(ID, costCode) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
