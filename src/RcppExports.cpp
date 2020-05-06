@@ -21,6 +21,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// assignMH
+Rcpp::DataFrame assignMH(const Rcpp::IntegerVector& hoursT, const Rcpp::IntegerVector& hoursR);
+RcppExport SEXP _mansched_assignMH(SEXP hoursTSEXP, SEXP hoursRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type hoursT(hoursTSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type hoursR(hoursRSEXP);
+    rcpp_result_gen = Rcpp::wrap(assignMH(hoursT, hoursR));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getHours
 Rcpp::DataFrame getHours(const Rcpp::S4& employee);
 RcppExport SEXP _mansched_getHours(SEXP employeeSEXP) {
@@ -35,6 +47,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_mansched_assignPool", (DL_FUNC) &_mansched_assignPool, 6},
+    {"_mansched_assignMH", (DL_FUNC) &_mansched_assignMH, 2},
     {"_mansched_getHours", (DL_FUNC) &_mansched_getHours, 1},
     {NULL, NULL, 0}
 };
