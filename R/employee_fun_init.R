@@ -185,7 +185,7 @@ setMethod(
     if (any(is.na(d.rd)))
       d.rd[is.na(d.rd)] <- 2L
 
-    calDays$rd <- assignMH(hoursT = calDays$rd, hoursR = d.rd)$hoursA
+    calDays$rd <- getMin(calDays$rd, d.rd)
 
     if (theObject@status == "reg") {
       if (any(is.na(d.ho))) {
@@ -196,16 +196,16 @@ setMethod(
         d.ho[is.na(d.ho)] <- 5L
     }
 
-    calDays$sh <- assignMH(hoursT = calDays$sh, hoursR = d.ho)$hoursA
-    calDays$lh <- assignMH(hoursT = calDays$lh, hoursR = d.ho)$hoursA
-    calDays$nh <- assignMH(hoursT = calDays$nh, hoursR = d.ho)$hoursA
+    calDays$sh <- getMin(calDays$sh, d.ho)
+    calDays$lh <- getMin(calDays$lh, d.ho)
+    calDays$nh <- getMin(calDays$nh, d.ho)
 
     if (any(is.na(d.rh)))
       d.rh[is.na(d.rh)] <- 0L
 
-    calDays$rs <- assignMH(hoursT = calDays$rs, hoursR = d.rh)$hoursA
-    calDays$rl <- assignMH(hoursT = calDays$rl, hoursR = d.rh)$hoursA
-    calDays$rn <- assignMH(hoursT = calDays$rn, hoursR = d.rh)$hoursA
+    calDays$rs <- getMin(calDays$rs, d.rh)
+    calDays$rl <- getMin(calDays$rl, d.rh)
+    calDays$rn <- getMin(calDays$rn, d.rh)
 
     # holDays may differ between reg employees and non-reg employees
     # This must be confirmed with accounting first
