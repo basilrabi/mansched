@@ -137,8 +137,8 @@ empR <- initREmployee(theObject = tempEmp,
                       inHouse = inHouse,
                       restday = restday,
                       hol = hol,
-                      OT =OT,
-                      d.ho = 5)
+                      OT = OT,
+                      d.ho = rep(5L, times = 12))
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
