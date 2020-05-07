@@ -29,7 +29,7 @@ empT     <- initTEmployee(theObject = tempEmp,
                           ID        = ID,
                           costCode  = costCode,
                           calDays   = calDays)
-tempData <- assignEmp(empT = empT, empR = empR)
+tempData <- assignEmp(empT = empT, empR = empR, TRUE)
 
 test_that("assignment of division manager works", {
   expect_equal(preHours,
@@ -54,7 +54,7 @@ empT     <- initTEmployee(theObject = tempEmp,
                           costCode  = costCode,
                           calDays   = calDays)
 
-tempData <- assignEmp(empT = empT, empR = empR)
+tempData <- assignEmp(empT = empT, empR = empR, TRUE)
 test_that("assignment of group manager works", {
   expect_equal(preHours,
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))
@@ -78,7 +78,7 @@ empT     <- initTEmployee(theObject = tempEmp,
                           costCode  = costCode,
                           calDays   = calDays)
 
-tempData <- assignEmp(empT = empT, empR = empR)
+tempData <- assignEmp(empT = empT, empR = empR, TRUE)
 test_that("assignment of department manager works", {
   expect_equal(preHours,
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))
@@ -102,7 +102,7 @@ empT     <- initTEmployee(theObject = tempEmp,
                           costCode  = costCode,
                           calDays   = calDays)
 
-tempData <- assignEmp(empT = empT, empR = empR)
+tempData <- assignEmp(empT = empT, empR = empR, TRUE)
 test_that("assignment of section head works", {
   expect_equal(preHours,
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))
@@ -130,7 +130,7 @@ empT     <- initTEmployee(theObject = tempEmp,
                           mdtProb   = mdtProb,
                           calDays   = calDays)
 
-tempData <- assignEmp(empT = empT, empR = empR)
+tempData <- assignEmp(empT = empT, empR = empR, TRUE)
 test_that("assignment of clerk works", {
   expect_equal(preHours,
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))
@@ -157,7 +157,7 @@ empT     <- initTEmployee(theObject = tempEmp,
                           OT        = OT,
                           mdtProb   = mdtProb)
 
-tempData <- assignEmp(empT = empT, empR = empR)
+tempData <- assignEmp(empT = empT, empR = empR, TRUE)
 test_that("assignment of technical works", {
   expect_equal(preHours,
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))
@@ -183,7 +183,7 @@ empT     <- initTEmployee(theObject = tempEmp,
                           OT        = OT,
                           mdtProb   = mdtProb)
 
-tempData <- assignEmp(empT = empT, empR = empR)
+tempData <- assignEmp(empT = empT, empR = empR, TRUE)
 test_that("assignment of supervisor works", {
   expect_equal(preHours,
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))
@@ -209,7 +209,7 @@ empT     <- initTEmployee(theObject = tempEmp,
                           OT        = OT,
                           mdtProb   = mdtProb)
 
-tempData <- assignEmp(empT = empT, empR = empR)
+tempData <- assignEmp(empT = empT, empR = empR, TRUE)
 test_that("assignment of laborer works", {
   expect_equal(preHours,
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))
@@ -238,7 +238,7 @@ empT     <- initTEmployee(theObject = tempEmp,
                           mdtProb   = mdtProb,
                           equipment = equipment)
 
-tempData <- assignEmp(empT = empT, empR = empR)
+tempData <- assignEmp(empT = empT, empR = empR, TRUE)
 test_that("assignment of operator works", {
   expect_equal(preHours,
                sum(tempData[[1]]$mh) + sum(getHours(tempData[[3]])))

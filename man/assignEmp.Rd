@@ -14,32 +14,38 @@
 \alias{assignEmp,Operator-method}
 \title{Assign an employee}
 \usage{
-assignEmp(empT, empR)
+assignEmp(empT, empR, selfAssign = FALSE)
 
-\S4method{assignEmp}{Employee}(empT, empR)
+\S4method{assignEmp}{Employee}(empT, empR, selfAssign = FALSE)
 
-\S4method{assignEmp}{Staff}(empT, empR)
+\S4method{assignEmp}{Staff}(empT, empR, selfAssign = FALSE)
 
-\S4method{assignEmp}{NonStaff}(empT, empR)
+\S4method{assignEmp}{NonStaff}(empT, empR, selfAssign = FALSE)
 
-\S4method{assignEmp}{Clerk}(empT, empR)
+\S4method{assignEmp}{Clerk}(empT, empR, selfAssign = FALSE)
 
-\S4method{assignEmp}{OperationPersonnel}(empT, empR)
+\S4method{assignEmp}{OperationPersonnel}(empT, empR, selfAssign = FALSE)
 
-\S4method{assignEmp}{Technical}(empT, empR)
+\S4method{assignEmp}{Technical}(empT, empR, selfAssign = FALSE)
 
-\S4method{assignEmp}{ProductionPersonnel}(empT, empR)
+\S4method{assignEmp}{ProductionPersonnel}(empT, empR, selfAssign = FALSE)
 
-\S4method{assignEmp}{Supervisor}(empT, empR)
+\S4method{assignEmp}{Supervisor}(empT, empR, selfAssign = FALSE)
 
-\S4method{assignEmp}{Laborer}(empT, empR)
+\S4method{assignEmp}{Laborer}(empT, empR, selfAssign = FALSE)
 
-\S4method{assignEmp}{Operator}(empT, empR)
+\S4method{assignEmp}{Operator}(empT, empR, selfAssign = FALSE)
 }
 \arguments{
-\item{empT}{an \code{\link{Employee-class}} object}
+\item{empT}{an \code{\link{Employee-class}} object representing a theoretical
+employee}
 
-\item{empR}{an \code{\link{Employee-class}} object}
+\item{empR}{an \code{\link{Employee-class}} object representing a real
+employee}
+
+\item{selfAssign}{boolean
+
+  Is the employee being assigned?}
 }
 \value{
 a list containing the following:
@@ -114,7 +120,7 @@ a list containing the following:
 \description{
 Man hours from an \code{\link{Employee-class}} object representing a real
   employee is assigned to the man hours from an \code{\link{Employee-class}}
-  object representing another real employee (manpower requirement). During
+  object representing another employee (manpower requirement). During
   successful assignment, the man hours of both \code{Employee-class} objects
   are reduced.
 }

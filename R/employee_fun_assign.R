@@ -5,12 +5,17 @@ NULL
 #'
 #' Man hours from an \code{\link{Employee-class}} object representing a real
 #'   employee is assigned to the man hours from an \code{\link{Employee-class}}
-#'   object representing another real employee (manpower requirement). During
+#'   object representing another employee (manpower requirement). During
 #'   successful assignment, the man hours of both \code{Employee-class} objects
 #'   are reduced.
 #'
-#' @param empT an \code{\link{Employee-class}} object
-#' @param empR an \code{\link{Employee-class}} object
+#' @param empT an \code{\link{Employee-class}} object representing a theoretical
+#'   employee
+#' @param empR an \code{\link{Employee-class}} object representing a real
+#'   employee
+#' @param selfAssign boolean
+#'
+#'   Is the employee being assigned?
 #' @return a list containing the following:
 #'   \enumerate{
 #'     \item a \code{\link{data.frame}} containing the man hours database
@@ -84,7 +89,7 @@ NULL
 #' @export assignEmp
 setGeneric(
   name = "assignEmp",
-  def  = function(empT, empR) {
+  def  = function(empT, empR, selfAssign = FALSE) {
     standardGeneric("assignEmp")
   }
 )
@@ -93,7 +98,7 @@ setGeneric(
 setMethod(
   f          = "assignEmp",
   signature  = "Employee",
-  definition = function(empT, empR) {
+  definition = function(empT, empR, selfAssign = FALSE) {
 
     tempData <- assignMH(hoursT = empT@reg,
                          hoursR = empR@reg)
@@ -120,7 +125,7 @@ setMethod(
 setMethod(
   f          = "assignEmp",
   signature  = "Staff",
-  definition = function(empT, empR) {
+  definition = function(empT, empR, selfAssign = FALSE) {
 
     if (class(empT) != class(empR))
       stop("Incompatible class!")
@@ -128,7 +133,7 @@ setMethod(
     # Assign hourly salary
     # Staff has no probationary and seasonal
 
-    results <- callNextMethod(empT = empT, empR = empR)
+    results <- callNextMethod(empT = empT, empR = empR, selfAssign)
 
     results[[1]] <- dplyr::left_join(x  = results[[1]],
                                      y  = payA,
@@ -159,9 +164,9 @@ setMethod(
 setMethod(
   f          = "assignEmp",
   signature  = "NonStaff",
-  definition = function(empT, empR) {
+  definition = function(empT, empR, selfAssign = FALSE) {
 
-    results <- callNextMethod(empT = empT, empR = empR)
+    results <- callNextMethod(empT = empT, empR = empR, selfAssign)
     empT <- results[[2]]
     empR <- results[[3]]
 
@@ -190,12 +195,12 @@ setMethod(
 setMethod(
   f          = "assignEmp",
   signature  = "Clerk",
-  definition = function(empT, empR) {
+  definition = function(empT, empR, selfAssign = FALSE) {
 
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
-    results <- callNextMethod(empT = empT, empR = empR)
+    results <- callNextMethod(empT = empT, empR = empR, selfAssign)
 
     if (length(results[[1]]$ID) > 0) {
       if (empR@status != "reg") {
@@ -241,19 +246,41 @@ setMethod(
 setMethod(
   f          = "assignEmp",
   signature  = "OperationPersonnel",
-  definition = function(empT, empR) {
+  definition = function(empT, empR, selfAssign = FALSE) {
 
-    results <- callNextMethod(empT = empT, empR = empR)
+    results <- callNextMethod(empT = empT, empR = empR, selfAssign)
     empT <- results[[2]]
     empR <- results[[3]]
 
-    tempData.rd <- assignMH(hoursT = empT@rd, hoursR = empR@rd)
-    tempData.sh <- assignMH(hoursT = empT@sh, hoursR = empR@sh)
     tempData.lh <- assignMH(hoursT = empT@lh, hoursR = empR@lh)
     tempData.nh <- assignMH(hoursT = empT@nh, hoursR = empR@nh)
-    tempData.rs <- assignMH(hoursT = empT@rs, hoursR = empR@rs)
-    tempData.rl <- assignMH(hoursT = empT@rl, hoursR = empR@rl)
-    tempData.rn <- assignMH(hoursT = empT@rn, hoursR = empR@rn)
+    tempData.sh <- assignMH(hoursT = empT@sh, hoursR = empR@sh)
+
+    if (selfAssign) {
+
+      tempData.rd <- assignMH(hoursT = empT@rd, hoursR = empR@rd)
+      tempData.rs <- assignMH(hoursT = empT@rs, hoursR = empR@rs)
+      tempData.rl <- assignMH(hoursT = empT@rl, hoursR = empR@rl)
+      tempData.rn <- assignMH(hoursT = empT@rn, hoursR = empR@rn)
+
+    } else {
+
+      empT@lh     <- tempData.lh$hoursT
+      empT@nh     <- tempData.nh$hoursT
+      empT@sh     <- tempData.sh$hoursT
+
+      tempData.rd <- assignMH(hoursT = empT@reg, hoursR = empR@rd)
+      empT@reg    <- tempData.rd$hoursT
+
+      tempData.rl <- assignMH(hoursT = empT@lh, hoursR = empR@rl)
+      empT@lh     <- tempData.rl$hoursT
+
+      tempData.rn <- assignMH(hoursT = empT@nh, hoursR = empR@rn)
+      empT@nh     <- tempData.rn$hoursT
+
+      tempData.rs <- assignMH(hoursT = empT@sh, hoursR = empR@rs)
+      empT@sh     <- tempData.rs$hoursT
+    }
 
     # If a non-regular RF is assigned in a special holiday, add 8 hours per
     # special holiday assigned in holHours
@@ -279,32 +306,48 @@ setMethod(
 
         empR@holHours <- as.integer(empR@holHours + shToBeAddedA + shToBeAddedB)
       }
-
     }
 
-    tempData.rdOT <- assignMH(hoursT = empT@rdOT, hoursR = empR@rdOT)
     tempData.shOT <- assignMH(hoursT = empT@shOT, hoursR = empR@shOT)
     tempData.lhOT <- assignMH(hoursT = empT@lhOT, hoursR = empR@lhOT)
     tempData.nhOT <- assignMH(hoursT = empT@nhOT, hoursR = empR@nhOT)
-    tempData.rsOT <- assignMH(hoursT = empT@rsOT, hoursR = empR@rsOT)
-    tempData.rlOT <- assignMH(hoursT = empT@rlOT, hoursR = empR@rlOT)
-    tempData.rnOT <- assignMH(hoursT = empT@rnOT, hoursR = empR@rnOT)
 
-    empT@rd <- tempData.rd$hoursT
-    empT@sh <- tempData.sh$hoursT
-    empT@lh <- tempData.lh$hoursT
-    empT@nh <- tempData.nh$hoursT
-    empT@rs <- tempData.rs$hoursT
-    empT@rl <- tempData.rl$hoursT
-    empT@rn <- tempData.rn$hoursT
-
-    empT@rdOT <- tempData.rdOT$hoursT
     empT@shOT <- tempData.shOT$hoursT
     empT@lhOT <- tempData.lhOT$hoursT
     empT@nhOT <- tempData.nhOT$hoursT
-    empT@rsOT <- tempData.rsOT$hoursT
-    empT@rlOT <- tempData.rlOT$hoursT
-    empT@rnOT <- tempData.rnOT$hoursT
+
+    if (selfAssign) {
+
+      tempData.rdOT <- assignMH(hoursT = empT@rdOT, hoursR = empR@rdOT)
+      tempData.rsOT <- assignMH(hoursT = empT@rsOT, hoursR = empR@rsOT)
+      tempData.rlOT <- assignMH(hoursT = empT@rlOT, hoursR = empR@rlOT)
+      tempData.rnOT <- assignMH(hoursT = empT@rnOT, hoursR = empR@rnOT)
+
+      empT@rd <- tempData.rd$hoursT
+      empT@sh <- tempData.sh$hoursT
+      empT@lh <- tempData.lh$hoursT
+      empT@nh <- tempData.nh$hoursT
+      empT@rs <- tempData.rs$hoursT
+      empT@rl <- tempData.rl$hoursT
+      empT@rn <- tempData.rn$hoursT
+
+      empT@rdOT <- tempData.rdOT$hoursT
+      empT@rsOT <- tempData.rsOT$hoursT
+      empT@rlOT <- tempData.rlOT$hoursT
+      empT@rnOT <- tempData.rnOT$hoursT
+
+    } else {
+
+      tempData.rdOT <- assignMH(hoursT = empT@regOT, hoursR = empR@rdOT)
+      tempData.rsOT <- assignMH(hoursT = empT@shOT, hoursR = empR@rsOT)
+      tempData.rlOT <- assignMH(hoursT = empT@lhOT, hoursR = empR@rlOT)
+      tempData.rnOT <- assignMH(hoursT = empT@nhOT, hoursR = empR@rnOT)
+
+      empT@regOT <- tempData.rdOT$hoursT
+      empT@shOT  <- tempData.rsOT$hoursT
+      empT@lhOT  <- tempData.rlOT$hoursT
+      empT@nhOT  <- tempData.rnOT$hoursT
+    }
 
     empR@rd <- tempData.rd$hoursR
     empR@sh <- tempData.sh$hoursR
@@ -461,12 +504,12 @@ setMethod(
 setMethod(
   f          = "assignEmp",
   signature  = "Technical",
-  definition = function(empT, empR) {
+  definition = function(empT, empR, selfAssign = FALSE) {
 
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
-    results <- callNextMethod(empT = empT, empR = empR)
+    results <- callNextMethod(empT = empT, empR = empR, selfAssign)
 
     if (length(results[[1]]$ID) > 0) {
       if (empR@status != "reg") {
@@ -500,9 +543,9 @@ setMethod(
 setMethod(
   f          = "assignEmp",
   signature  = "ProductionPersonnel",
-  definition = function(empT, empR) {
+  definition = function(empT, empR, selfAssign = FALSE) {
 
-    tempData <- callNextMethod(empT = empT, empR = empR)
+    tempData <- callNextMethod(empT = empT, empR = empR, selfAssign)
     mhDB     <- tempData[[1]]
 
     if (length(mhDB$ID) > 0) {
@@ -524,12 +567,12 @@ setMethod(
 setMethod(
   f          = "assignEmp",
   signature  = "Supervisor",
-  definition = function(empT, empR) {
+  definition = function(empT, empR, selfAssign = FALSE) {
 
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
-    results <- callNextMethod(empT = empT, empR = empR)
+    results <- callNextMethod(empT = empT, empR = empR, selfAssign)
 
     if (class(results[[1]]) != "logical") {
       if (empR@status != "reg") {
@@ -562,12 +605,12 @@ setMethod(
 setMethod(
   f          = "assignEmp",
   signature  = "Laborer",
-  definition = function(empT, empR) {
+  definition = function(empT, empR, selfAssign = FALSE) {
 
     if (class(empT) != class(empR))
       stop("Incompatible class!")
 
-    results <- callNextMethod(empT = empT, empR = empR)
+    results <- callNextMethod(empT = empT, empR = empR, selfAssign)
 
     if (class(results[[1]]) != "logical") {
       if (empR@status != "reg") {
@@ -600,7 +643,7 @@ setMethod(
 setMethod(
   f          = "assignEmp",
   signature  = "Operator",
-  definition = function(empT, empR) {
+  definition = function(empT, empR, selfAssign = FALSE) {
 
     if (class(empT) != class(empR))
       stop("Incompatible class!")
@@ -608,7 +651,7 @@ setMethod(
     if (!empT@equipment %in% empR@equipment)
       stop("Unauthorized equipment!")
 
-    results <- callNextMethod(empT = empT, empR = empR)
+    results <- callNextMethod(empT = empT, empR = empR, selfAssign)
 
     if (class(results[[1]]) != "logical") {
       if (empR@status != "reg") {

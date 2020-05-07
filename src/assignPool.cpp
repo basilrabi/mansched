@@ -1,9 +1,9 @@
 #include <Rcpp.h>
 #include "gethours.h"
 
-Rcpp::Environment mansched   = Rcpp::Environment::namespace_env( "mansched" );
-Rcpp::Function    assignEmp2 = mansched["assignEmp2"];
-Rcpp::Function    dfAppend   = mansched["dfAppend"];
+Rcpp::Environment mansched  = Rcpp::Environment::namespace_env( "mansched" );
+Rcpp::Function    assignEmp = mansched["assignEmp"];
+Rcpp::Function    dfAppend  = mansched["dfAppend"];
 
 template <class T>
 T combine ( T a, T b ) {
@@ -345,7 +345,7 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
                       << "\nMH Pool: "
                       << availableHours( listRC[*jj] )
                       << "\n";
-          Rcpp::List tempData = assignEmp2( Rcpp::as<Rcpp::S4>( listTC[i] ), Rcpp::as<Rcpp::S4>( listRC[*jj] ) );
+          Rcpp::List tempData = assignEmp( Rcpp::as<Rcpp::S4>( listTC[i] ), Rcpp::as<Rcpp::S4>( listRC[*jj] ) );
           listTC[i] = Rcpp::as<Rcpp::S4>( tempData[1] );
           Rcpp::Rcout << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( tempData[2] ).slot( "ID" ) );
           listRC[*jj] = Rcpp::as<Rcpp::S4>( tempData[2] );
