@@ -22,13 +22,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // assignMH
-Rcpp::DataFrame assignMH(const Rcpp::IntegerVector& hoursT, const Rcpp::IntegerVector& hoursR);
+Rcpp::IntegerVector assignMH(Rcpp::IntegerVector hoursT, Rcpp::IntegerVector hoursR);
 RcppExport SEXP _mansched_assignMH(SEXP hoursTSEXP, SEXP hoursRSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type hoursT(hoursTSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type hoursR(hoursRSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type hoursT(hoursTSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type hoursR(hoursRSEXP);
     rcpp_result_gen = Rcpp::wrap(assignMH(hoursT, hoursR));
     return rcpp_result_gen;
 END_RCPP

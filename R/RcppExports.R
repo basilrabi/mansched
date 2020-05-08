@@ -43,15 +43,10 @@ assignPool <- function(empReq, empPool, listT, listR, prioStat = NA_character_, 
 #'
 #'   This represents the man hours from a real employee with a certain man hour
 #'   type.
-#' @return a \code{\link{data.frame}} with 12 rows and 4 columns
+#' @return an integer vector of length 12 representing the man-hours assigned
 #'
-#'   Each row represents a month. The columns are defined as follows:
-#'   \describe{
-#'     \item{hoursT}{man hours from the theoretical employee}
-#'     \item{hoursR}{man hours from the real employee}
-#'     \item{hoursA}{man hours to be assigned}
-#'     \item{month}{integer representing the month of assignment}
-#'   }
+#'   The hoursT and hoursR will also be reduced by the value of the returned
+#'   integer vector.
 #' @export
 assignMH <- function(hoursT, hoursR) {
     .Call('_mansched_assignMH', PACKAGE = 'mansched', hoursT, hoursR)

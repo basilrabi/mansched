@@ -99,23 +99,15 @@ setMethod(
   f          = "assignEmp",
   signature  = "Employee",
   definition = function(empT, empR, selfAssign = FALSE) {
-
-    tempData <- assignMH(hoursT = empT@reg,
-                         hoursR = empR@reg)
-
-    empT@reg <- tempData$hoursT
-    empR@reg <- tempData$hoursR
-
-    mhDB <- data.frame(ID               = empR@ID,
-                       mh               = tempData$hoursA,
-                       mhType           = "reg",
-                       month            = tempData$month,
-                       np               = 0,
-                       costCode         = empT@costCode,
+    hoursA <- assignMH(hoursT = empT@reg,hoursR = empR@reg)
+    mhDB <- data.frame(ID = empR@ID,
+                       mh = hoursA,
+                       mhType = "reg",
+                       month = 1:12,
+                       np = 0,
+                       costCode = empT@costCode,
                        stringsAsFactors = FALSE)
-
     mhDB <- mhDB[which(mhDB$mh > 0),]
-
     return(list(mhDB, empT, empR))
   }
 )
@@ -169,23 +161,16 @@ setMethod(
     results <- callNextMethod(empT = empT, empR = empR, selfAssign)
     empT <- results[[2]]
     empR <- results[[3]]
-
-    tempData <- assignMH(hoursT =  empT@regOT, hoursR = empR@regOT)
-
-    empT@regOT <- tempData$hoursT
-    empR@regOT <- tempData$hoursR
-
-    mhDB <- data.frame(ID               = empR@ID,
-                       mh               = tempData$hoursA,
-                       mhType           = "regOT",
-                       month            = tempData$month,
-                       np               = 0,
-                       costCode         = empT@costCode,
+    hoursA <- assignMH(hoursT = empT@regOT, hoursR = empR@regOT)
+    mhDB <- data.frame(ID = empR@ID,
+                       mh = hoursA,
+                       mhType = "regOT",
+                       month = 1:12,
+                       np = 0,
+                       costCode = empT@costCode,
                        stringsAsFactors = FALSE)
-
     mhDB <- mhDB[which(mhDB$mh > 0),]
     mhDB <- rbind(results[[1]], mhDB)
-
     return(list(mhDB, empT, empR))
   }
 )
@@ -255,31 +240,16 @@ setMethod(
     tempData.lh <- assignMH(hoursT = empT@lh, hoursR = empR@lh)
     tempData.nh <- assignMH(hoursT = empT@nh, hoursR = empR@nh)
     tempData.sh <- assignMH(hoursT = empT@sh, hoursR = empR@sh)
-
     if (selfAssign) {
-
       tempData.rd <- assignMH(hoursT = empT@rd, hoursR = empR@rd)
       tempData.rs <- assignMH(hoursT = empT@rs, hoursR = empR@rs)
       tempData.rl <- assignMH(hoursT = empT@rl, hoursR = empR@rl)
       tempData.rn <- assignMH(hoursT = empT@rn, hoursR = empR@rn)
-
     } else {
-
-      empT@lh     <- tempData.lh$hoursT
-      empT@nh     <- tempData.nh$hoursT
-      empT@sh     <- tempData.sh$hoursT
-
       tempData.rd <- assignMH(hoursT = empT@reg, hoursR = empR@rd)
-      empT@reg    <- tempData.rd$hoursT
-
       tempData.rl <- assignMH(hoursT = empT@lh, hoursR = empR@rl)
-      empT@lh     <- tempData.rl$hoursT
-
       tempData.rn <- assignMH(hoursT = empT@nh, hoursR = empR@rn)
-      empT@nh     <- tempData.rn$hoursT
-
       tempData.rs <- assignMH(hoursT = empT@sh, hoursR = empR@rs)
-      empT@sh     <- tempData.rs$hoursT
     }
 
     # If a non-regular RF is assigned in a special holiday, add 8 hours per
@@ -311,171 +281,33 @@ setMethod(
     tempData.shOT <- assignMH(hoursT = empT@shOT, hoursR = empR@shOT)
     tempData.lhOT <- assignMH(hoursT = empT@lhOT, hoursR = empR@lhOT)
     tempData.nhOT <- assignMH(hoursT = empT@nhOT, hoursR = empR@nhOT)
-
-    empT@shOT <- tempData.shOT$hoursT
-    empT@lhOT <- tempData.lhOT$hoursT
-    empT@nhOT <- tempData.nhOT$hoursT
-
     if (selfAssign) {
-
       tempData.rdOT <- assignMH(hoursT = empT@rdOT, hoursR = empR@rdOT)
       tempData.rsOT <- assignMH(hoursT = empT@rsOT, hoursR = empR@rsOT)
       tempData.rlOT <- assignMH(hoursT = empT@rlOT, hoursR = empR@rlOT)
       tempData.rnOT <- assignMH(hoursT = empT@rnOT, hoursR = empR@rnOT)
-
-      empT@rd <- tempData.rd$hoursT
-      empT@sh <- tempData.sh$hoursT
-      empT@lh <- tempData.lh$hoursT
-      empT@nh <- tempData.nh$hoursT
-      empT@rs <- tempData.rs$hoursT
-      empT@rl <- tempData.rl$hoursT
-      empT@rn <- tempData.rn$hoursT
-
-      empT@rdOT <- tempData.rdOT$hoursT
-      empT@rsOT <- tempData.rsOT$hoursT
-      empT@rlOT <- tempData.rlOT$hoursT
-      empT@rnOT <- tempData.rnOT$hoursT
-
     } else {
-
       tempData.rdOT <- assignMH(hoursT = empT@regOT, hoursR = empR@rdOT)
       tempData.rsOT <- assignMH(hoursT = empT@shOT, hoursR = empR@rsOT)
       tempData.rlOT <- assignMH(hoursT = empT@lhOT, hoursR = empR@rlOT)
       tempData.rnOT <- assignMH(hoursT = empT@nhOT, hoursR = empR@rnOT)
-
-      empT@regOT <- tempData.rdOT$hoursT
-      empT@shOT  <- tempData.rsOT$hoursT
-      empT@lhOT  <- tempData.rlOT$hoursT
-      empT@nhOT  <- tempData.rnOT$hoursT
     }
 
-    empR@rd <- tempData.rd$hoursR
-    empR@sh <- tempData.sh$hoursR
-    empR@lh <- tempData.lh$hoursR
-    empR@nh <- tempData.nh$hoursR
-    empR@rs <- tempData.rs$hoursR
-    empR@rl <- tempData.rl$hoursR
-    empR@rn <- tempData.rn$hoursR
+    mhDB.rd <- data.frame(ID = empR@ID, mh = tempData.rd, mhType = "rd", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.sh <- data.frame(ID = empR@ID, mh = tempData.sh, mhType = "sh", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.lh <- data.frame(ID = empR@ID, mh = tempData.lh, mhType = "lh", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.nh <- data.frame(ID = empR@ID, mh = tempData.nh, mhType = "nh", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.rs <- data.frame(ID = empR@ID, mh = tempData.rs, mhType = "rs", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.rl <- data.frame(ID = empR@ID, mh = tempData.rl, mhType = "rl", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.rn <- data.frame(ID = empR@ID, mh = tempData.rn, mhType = "rn", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
 
-    empR@rdOT <- tempData.rdOT$hoursR
-    empR@shOT <- tempData.shOT$hoursR
-    empR@lhOT <- tempData.lhOT$hoursR
-    empR@nhOT <- tempData.nhOT$hoursR
-    empR@rsOT <- tempData.rsOT$hoursR
-    empR@rlOT <- tempData.rlOT$hoursR
-    empR@rnOT <- tempData.rnOT$hoursR
-
-    mhDB.rd <- data.frame(ID               = empR@ID,
-                          mh               = tempData.rd$hoursA,
-                          mhType           = "rd",
-                          month            = tempData.rd$month,
-                          np               = 0,
-                          costCode         = empT@costCode,
-                          stringsAsFactors = FALSE)
-
-    mhDB.sh <- data.frame(ID               = empR@ID,
-                          mh               = tempData.sh$hoursA,
-                          mhType           = "sh",
-                          month            = tempData.sh$month,
-                          np               = 0,
-                          costCode         = empT@costCode,
-                          stringsAsFactors = FALSE)
-
-    mhDB.lh <- data.frame(ID               = empR@ID,
-                          mh               = tempData.lh$hoursA,
-                          mhType           = "lh",
-                          month            = tempData.lh$month,
-                          np               = 0,
-                          costCode         = empT@costCode,
-                          stringsAsFactors = FALSE)
-
-    mhDB.nh <- data.frame(ID               = empR@ID,
-                          mh               = tempData.nh$hoursA,
-                          mhType           = "nh",
-                          month            = tempData.nh$month,
-                          np               = 0,
-                          costCode         = empT@costCode,
-                          stringsAsFactors = FALSE)
-
-    mhDB.rs <- data.frame(ID               = empR@ID,
-                          mh               = tempData.rs$hoursA,
-                          mhType           = "rs",
-                          month            = tempData.rs$month,
-                          np               = 0,
-                          costCode         = empT@costCode,
-                          stringsAsFactors = FALSE)
-
-    mhDB.rl <- data.frame(ID               = empR@ID,
-                          mh               = tempData.rl$hoursA,
-                          mhType           = "rl",
-                          month            = tempData.rl$month,
-                          np               = 0,
-                          costCode         = empT@costCode,
-                          stringsAsFactors = FALSE)
-
-    mhDB.rn <- data.frame(ID               = empR@ID,
-                          mh               = tempData.rn$hoursA,
-                          mhType           = "rn",
-                          month            = tempData.rn$month,
-                          np               = 0,
-                          costCode         = empT@costCode,
-                          stringsAsFactors = FALSE)
-
-    mhDB.rdOT <- data.frame(ID               = empR@ID,
-                            mh               = tempData.rdOT$hoursA,
-                            mhType           = "rdOT",
-                            month            = tempData.rdOT$month,
-                            np               = 0,
-                            costCode         = empT@costCode,
-                            stringsAsFactors = FALSE)
-
-    mhDB.shOT <- data.frame(ID               = empR@ID,
-                            mh               = tempData.shOT$hoursA,
-                            mhType           = "shOT",
-                            month            = tempData.shOT$month,
-                            np               = 0,
-                            costCode         = empT@costCode,
-                            stringsAsFactors = FALSE)
-
-    mhDB.lhOT <- data.frame(ID               = empR@ID,
-                            mh               = tempData.lhOT$hoursA,
-                            mhType           = "lhOT",
-                            month            = tempData.lhOT$month,
-                            np               = 0,
-                            costCode         = empT@costCode,
-                            stringsAsFactors = FALSE)
-
-    mhDB.nhOT <- data.frame(ID               = empR@ID,
-                            mh               = tempData.nhOT$hoursA,
-                            mhType           = "nhOT",
-                            month            = tempData.nhOT$month,
-                            np               = 0,
-                            costCode         = empT@costCode,
-                            stringsAsFactors = FALSE)
-
-    mhDB.rsOT <- data.frame(ID               = empR@ID,
-                            mh               = tempData.rsOT$hoursA,
-                            mhType           = "rsOT",
-                            month            = tempData.rsOT$month,
-                            np               = 0,
-                            costCode         = empT@costCode,
-                            stringsAsFactors = FALSE)
-
-    mhDB.rlOT <- data.frame(ID               = empR@ID,
-                            mh               = tempData.rlOT$hoursA,
-                            mhType           = "rlOT",
-                            month            = tempData.rlOT$month,
-                            np               = 0,
-                            costCode         = empT@costCode,
-                            stringsAsFactors = FALSE)
-
-    mhDB.rnOT <- data.frame(ID               = empR@ID,
-                            mh               = tempData.rnOT$hoursA,
-                            mhType           = "rnOT",
-                            month            = tempData.rnOT$month,
-                            np               = 0,
-                            costCode         = empT@costCode,
-                            stringsAsFactors = FALSE)
+    mhDB.rdOT <- data.frame(ID = empR@ID, mh = tempData.rdOT, mhType = "rdOT", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.shOT <- data.frame(ID = empR@ID, mh = tempData.shOT, mhType = "shOT", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.lhOT <- data.frame(ID = empR@ID, mh = tempData.lhOT, mhType = "lhOT", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.nhOT <- data.frame(ID = empR@ID, mh = tempData.nhOT, mhType = "nhOT", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.rsOT <- data.frame(ID = empR@ID, mh = tempData.rsOT, mhType = "rsOT", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.rlOT <- data.frame(ID = empR@ID, mh = tempData.rlOT, mhType = "rlOT", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
+    mhDB.rnOT <- data.frame(ID = empR@ID, mh = tempData.rnOT, mhType = "rnOT", month = 1:12, np = 0, costCode = empT@costCode, stringsAsFactors = FALSE)
 
     mhDB <- data.table::rbindlist(list(results[[1]],
                                        mhDB.rd,
