@@ -124,53 +124,55 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     stop("There must be no duplicated ID's in wage data!")
   }
 
+  # Employee salary link and maximum regular hours per month
+  empSM <- lapply(listR, function(x) {
+    if (forecast) {
+      sm <- data.frame(month = 1:12, sal = "a")
+    } else if (isRF(x)) {
+      sm <- payB
+    } else {
+      sm <- payA
+    }
+    sm$maxReg <- x@maxReg
+    sm$ID <- x@ID
+    return(sm)
+  }) %>% data.table::rbindlist()
+
+  # Employee payment scheme and status
+  empSS <- lapply(listR, function(x) {
+    data.frame(ID = x@ID,
+               scheme = ifelse(isRF(x), "d", "m"),
+               status = x@status,
+               isRF = isRF(x),
+               isStaff = is(x, "Staff"),
+               stringsAsFactors = FALSE)
+  }) %>% data.table::rbindlist()
+  duplicatedID <- empSS$ID[which(duplicated(empSS$ID))]
+  if (length(duplicatedID) > 0)
+    stop(paste0("ID ", duplicatedID, " duplicated"))
+
   # Error if any ID in listR is not in wage$ID
-  empID <- sapply(listR, FUN = function(x) x@ID)
-
-  if (any(!empID %in% wage$ID)) {
-
-    empID <- empID[which(!empID %in% wage$ID)]
-
+  if (any(!empSS$ID %in% wage$ID)) {
+    empID <- empSS$ID[which(!empSS$ID %in% wage$ID)]
     cat(paste("No wage data for :", empID, "\n", sep = ""))
     stop("All ID's must have wage data")
   }
 
-  ##### Assign if employee is RF or not ####
-  wage$isRF <- sapply(wage$ID, FUN = function(x) {
-    index <- which(empID == x)
-    if (length(index) > 1L)
-      stop(paste0("Multiple match for ", x, "."))
-    if (length(index) < 1L)
-      stop(paste0("No match for ", x, "."))
-    isRF(listR[[index]])
-  })
-
-  #### Assign if employee is staff or not ####
-  wage$isStaff <- sapply(wage$ID, FUN = function(x) {
-    index <- which(empID == x)
-    is(listR[[index]], "Staff")
-  })
-
-  ##### Get salary increase ####
-  IDs     <- sapply(listR, FUN = function(x) {x@ID})
-  wage$sB <- apply(wage[, 1:5], MARGIN = 1, FUN = function(x) {
-
-    x     <- sapply(x, trimws)
-    sal   <- as.numeric(x[2])
-    inc   <- as.numeric(x[3])
-
-    if (forecast) {
-      return(sal)
-    } else {
-      return(inc)
-    }
-  })
-  wage$i <- NULL
-  cat("\nEstimated salary increase.\n")
+  # Assign if employee
+  # > isRF
+  # > isStaff
+  # > assign salary increase
+  wage <- dplyr::left_join(wage,
+                           empSS[,c("ID", "isRF", "isStaff")],
+                           by = "ID") %>%
+    dplyr::mutate(sB = dplyr::case_when(
+      forecast ~ .$s,
+      TRUE ~ .$i
+    )) %>%
+    dplyr::mutate(i = NULL)
 
   #### Assign totHours ####
   wage$totHours <- sapply(wage$ID, FUN = function(x) {
-
     # index <- which(empID == x)
     # sum(listR[[index]]@totHours)
 
@@ -180,53 +182,46 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
 
   #### Compute hourly rates ####
   tempData <- apply(wage[, 2:6], MARGIN = 1, FUN = function(x) {
-
     sal <- c(NA, NA)
-
     if (x[2]) {
-
       sal[1] <- x[1] / 8
       sal[2] <- x[4] / 8
-
     } else {
-
       sal[1] <- x[1] / x[5]
       sal[2] <- x[4] / x[5]
-
       sal <- sal * 12
     }
-
     sal <- round(sal, digits = 2)
-
     return(sal)
   })
-
   wage$hRateA <- tempData[1,]
   wage$hRateB <- tempData[2,]
 
-  wageM <- wage[, colnames(wage) %in% c("ID", "s", "sB")]
-  wageH <- wage[, colnames(wage) %in% c("ID", "hRateA", "hRateB")]
+  wageM <- wage[, c("ID", "s", "sB")]
+  wageH <- wage[, c("ID", "hRateA", "hRateB")]
 
   colnames(wageM)[c(2,3)] <- c("a", "b")
   colnames(wageH)[c(2,3)] <- c("a", "b")
 
-  wageM <- wageM %>% tidyr::gather(sal, salM, -ID)
-  wageH <- wageH %>% tidyr::gather(sal, salH, -ID)
+  wageM <- wageM %>%
+    tidyr::pivot_longer(-ID, names_to = "sal", values_to = "salM")
+  wageH <- wageH %>%
+    tidyr::pivot_longer(-ID, names_to = "sal", values_to = "salH")
 
-  wageEmp <- dplyr::left_join(x  = wageM,
-                              y  = wageH,
-                              by = c("ID", "sal"))
+  wageEmp <- dplyr::left_join(x  = wageM, y  = wageH, by = c("ID", "sal")) %>%
+    dplyr::left_join(wage[, c("ID", "isRF")], by = "ID")
 
-  wageEmp <- dplyr::left_join(x  = wageEmp,
-                              y  = wage[,c(1,3)],
-                              by = c("ID"))
+  # Join sal, scheme, status, and maxReg
+  mhDB <- dplyr::left_join(mhDB,
+                           empSS[, c("ID", "scheme", "status")],
+                           by = "ID") %>%
+    dplyr::left_join(empSM, by = c("ID", "month"))
 
   #### Compute Salaries for monthly wagers ####
 
   cat("\nComputing salaries for non-RF.\n")
 
-  mhDB.m <- mhDB[which(mhDB$scheme == "m"),
-                 !colnames(mhDB) %in% c("scheme")]
+  mhDB.m <- mhDB[which(mhDB$scheme == "m"), !colnames(mhDB) %in% c("scheme")]
 
   ## Separate Regular Employees
   mhDB.m.R <- mhDB.m[mhDB.m$status == "reg",

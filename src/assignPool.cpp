@@ -221,16 +221,12 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
 
   Rcpp::StringVector  tempEquip   (0);
   Rcpp::LogicalVector toBeRemoved (0);
-  Rcpp::IntegerVector maxReg      ( 10000, Rcpp::IntegerVector::get_na() );
   Rcpp::IntegerVector mh          ( 10000, Rcpp::IntegerVector::get_na() );
   Rcpp::IntegerVector month       ( 10000, Rcpp::IntegerVector::get_na() );
   Rcpp::IntegerVector np          ( 10000, Rcpp::IntegerVector::get_na() );
   Rcpp::StringVector  costCode    ( 10000, Rcpp::StringVector::get_na()  );
   Rcpp::StringVector  id          ( 10000, Rcpp::StringVector::get_na()  );
   Rcpp::StringVector  mhType      ( 10000, Rcpp::StringVector::get_na()  );
-  Rcpp::StringVector  sal         ( 10000, Rcpp::StringVector::get_na()  );
-  Rcpp::StringVector  scheme      ( 10000, Rcpp::StringVector::get_na()  );
-  Rcpp::StringVector  status      ( 10000, Rcpp::StringVector::get_na()  );
 
   Rcpp::DataFrame mhDB = Rcpp::DataFrame::create(
     Rcpp::Named( "ID"               ) = id,
@@ -239,10 +235,6 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
     Rcpp::Named( "month"            ) = month,
     Rcpp::Named( "np"               ) = np,
     Rcpp::Named( "costCode"         ) = costCode,
-    Rcpp::Named( "sal"              ) = sal,
-    Rcpp::Named( "scheme"           ) = scheme,
-    Rcpp::Named( "status"           ) = status,
-    Rcpp::Named( "maxReg"           ) = maxReg,
     Rcpp::Named( "stringsAsFactors" ) = false
   );
 
@@ -565,27 +557,19 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
 
   costCode = mhDB["costCode"];
   id       = mhDB["ID"      ];
-  maxReg   = mhDB["maxReg"  ];
   mh       = mhDB["mh"      ];
   mhType   = mhDB["mhType"  ];
   month    = mhDB["month"   ];
   np       = mhDB["np"      ];
-  sal      = mhDB["sal"     ];
-  scheme   = mhDB["scheme"  ];
-  status   = mhDB["status"  ];
 
   // Remove NA values at the bottom
   Rcpp::LogicalVector withValues = !Rcpp::is_na( mh );
   costCode = costCode[withValues];
   id       = id      [withValues];
-  maxReg   = maxReg  [withValues];
   mh       = mh      [withValues];
   mhType   = mhType  [withValues];
   month    = month   [withValues];
   np       = np      [withValues];
-  sal      = sal     [withValues];
-  scheme   = scheme  [withValues];
-  status   = status  [withValues];
 
   mhDB = Rcpp::DataFrame::create(
     Rcpp::Named( "ID"               ) = id,
@@ -594,10 +578,6 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
     Rcpp::Named( "month"            ) = month,
     Rcpp::Named( "np"               ) = np,
     Rcpp::Named( "costCode"         ) = costCode,
-    Rcpp::Named( "sal"              ) = sal,
-    Rcpp::Named( "scheme"           ) = scheme,
-    Rcpp::Named( "status"           ) = status,
-    Rcpp::Named( "maxReg"           ) = maxReg,
     Rcpp::Named( "stringsAsFactors" ) = false
   );
 

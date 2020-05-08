@@ -41,18 +41,6 @@ a list containing the following:
           pay}
         \item{costCode}{character string representing accounting cost code
           wherein the man hours is charged}
-        \item{sal}{a single character: \code{"a"} or \code{"b"}
-
-          This represents the salary to be applied (see
-          \code{\link{payA}} and \code{\link{payB}}).}
-        \item{scheme}{character string defining the salary scheme
-
-          This may be \code{"m"} (monthly) or \code{"d"} (daily).}
-        \item{status}{character string defining the employment status of
-          the employee}
-        \item{maxReg}{integer value \cr
-          Number of hours the employee is required to report to enjoy full
-          salary.}
       }
     \item list of \code{\link{Employee-class}} objects representing the
       theoretical employees with un-assigned man hours

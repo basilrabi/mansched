@@ -112,7 +112,7 @@ empR <- initREmployee(theObject = tempEmp,
                       inHouse = inHouse,
                       restday = restday,
                       hol = hol,
-                      OT =OT)
+                      OT = OT)
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
@@ -162,7 +162,7 @@ empR <- initREmployee(theObject = tempEmp,
                       inHouse = inHouse,
                       restday = restday,
                       hol = hol,
-                      OT =OT)
+                      OT = OT)
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
@@ -186,7 +186,7 @@ empR <- initREmployee(theObject = tempEmp,
                       inHouse = inHouse,
                       restday = restday,
                       hol = hol,
-                      OT =OT)
+                      OT = OT)
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
@@ -211,7 +211,7 @@ empR <- initREmployee(theObject = tempEmp,
                       inHouse = inHouse,
                       restday = restday,
                       hol = hol,
-                      OT =OT,
+                      OT = OT,
                       equipment = equipment)
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,

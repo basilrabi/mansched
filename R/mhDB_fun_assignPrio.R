@@ -94,16 +94,9 @@ assignPrio <- function(empReq, empPool, listT, listR) {
 
   }
 
-  tempData4 <- data.frame(ID       = NA,
-                          mh       = NA,
-                          mhType   = NA,
-                          month    = NA,
-                          np       = NA,
-                          costCode = NA,
-                          sal      = NA,
-                          scheme   = NA,
-                          status   = NA,
-                          maxReg   = NA)
+  tempData4 <- data.frame(
+    ID = NA, mh = NA, mhType = NA, month = NA, np = NA, costCode = NA
+  )
 
   if (length(listR) > 0 & !all(is.na(empPool$dcc))) {
 

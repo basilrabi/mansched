@@ -66,18 +66,6 @@ NULL
 #'           pay}
 #'         \item{costCode}{character string representing accounting cost code
 #'           wherein the man hours is charged}
-#'         \item{sal}{a single character: \code{"a"} or \code{"b"}
-#'
-#'           This represents the salary to be applied (see
-#'           \code{\link{payA}} and \code{\link{payB}}).}
-#'         \item{scheme}{character string defining the salary scheme
-#'
-#'           This may be \code{"m"} (monthly) or \code{"d"} (daily).}
-#'         \item{status}{character string defining the employment status of
-#'           the employee}
-#'         \item{maxReg}{integer value \cr
-#'           Number of hours the employee is required to report to enjoy full
-#'           salary.}
 #'       }
 #'     \item an \code{\link{Employee-class}} object representing the theoretical
 #'       employee with reduced man hours
@@ -127,26 +115,9 @@ setMethod(
 
     results <- callNextMethod(empT = empT, empR = empR, selfAssign)
 
-    results[[1]] <- dplyr::left_join(x  = results[[1]],
-                                     y  = payA,
-                                     by = "month")
 
-    if (length(results[[1]]$ID) > 0) {
-
-      results[[1]]$scheme <- "m"
-      results[[1]]$status <- empR@status
-
-      maxReg   <- data.frame(month  = 1:12,
-                             maxReg = empR@maxReg)
-
-      tempData <- dplyr::left_join(x  = results[[1]],
-                                   y  = maxReg,
-                                   by = "month")
-
-      results[[1]] <- as.data.frame(tempData)
-    } else {
+    if (length(results[[1]]$ID) == 0)
       results[[1]] <- NA
-    }
 
     return(results)
   }
@@ -187,39 +158,8 @@ setMethod(
 
     results <- callNextMethod(empT = empT, empR = empR, selfAssign)
 
-    if (length(results[[1]]$ID) > 0) {
-      if (empR@status != "reg") {
-        results[[1]]$sal <- "a"
-      } else {
-        if (empR@isRF) {
-          results[[1]] <- dplyr::left_join(x  = results[[1]],
-                                           y  = payB,
-                                           by = "month")
-        } else {
-          results[[1]] <- dplyr::left_join(x  = results[[1]],
-                                           y  = payA,
-                                           by = "month")
-        }
-      }
-      if (empR@isRF) {
-        results[[1]]$scheme <- "d"
-      } else {
-        results[[1]]$scheme <- "m"
-      }
-
-      results[[1]]$status <- empR@status
-
-      maxReg   <- data.frame(month  = 1:12,
-                             maxReg = empR@maxReg)
-
-      tempData <- dplyr::left_join(x  = results[[1]],
-                                   y  = maxReg,
-                                   by = "month")
-
-      results[[1]] <- as.data.frame(tempData)
-    } else {
+    if (length(results[[1]]$ID) == 0)
       results[[1]] <- NA
-    }
 
     return(results)
   }
@@ -343,29 +283,8 @@ setMethod(
 
     results <- callNextMethod(empT = empT, empR = empR, selfAssign)
 
-    if (length(results[[1]]$ID) > 0) {
-      if (empR@status != "reg") {
-        results[[1]]$sal <- "a"
-      } else {
-        results[[1]] <- dplyr::left_join(x  = results[[1]],
-                                         y  = payA,
-                                         by = "month")
-      }
-
-      results[[1]]$scheme <- "m"
-      results[[1]]$status <- empR@status
-
-      maxReg   <- data.frame(month  = 1:12,
-                             maxReg = empR@maxReg)
-
-      tempData <- dplyr::left_join(x  = results[[1]],
-                                   y  = maxReg,
-                                   by = "month")
-
-      results[[1]] <- as.data.frame(tempData)
-    } else {
+    if (length(results[[1]]$ID) == 0)
       results[[1]] <- NA
-    }
 
     return(results)
   }
@@ -406,28 +325,6 @@ setMethod(
 
     results <- callNextMethod(empT = empT, empR = empR, selfAssign)
 
-    if (class(results[[1]]) != "logical") {
-      if (empR@status != "reg") {
-        results[[1]]$sal <- "a"
-      } else {
-        results[[1]] <- dplyr::left_join(x  = results[[1]],
-                                         y  = payA,
-                                         by = "month")
-      }
-
-      results[[1]]$scheme <- "m"
-      results[[1]]$status <- empR@status
-
-      maxReg   <- data.frame(month  = 1:12,
-                             maxReg = empR@maxReg)
-
-      tempData <- dplyr::left_join(x  = results[[1]],
-                                   y  = maxReg,
-                                   by = "month")
-
-      results[[1]] <- as.data.frame(tempData)
-    }
-
     return(results)
   }
 )
@@ -443,28 +340,6 @@ setMethod(
       stop("Incompatible class!")
 
     results <- callNextMethod(empT = empT, empR = empR, selfAssign)
-
-    if (class(results[[1]]) != "logical") {
-      if (empR@status != "reg") {
-        results[[1]]$sal <- "a"
-      } else {
-        results[[1]] <- dplyr::left_join(x  = results[[1]],
-                                         y  = payB,
-                                         by = "month")
-      }
-
-      results[[1]]$scheme <- "d"
-      results[[1]]$status <- empR@status
-
-      maxReg   <- data.frame(month  = 1:12,
-                             maxReg = empR@maxReg)
-
-      tempData <- dplyr::left_join(x  = results[[1]],
-                                   y  = maxReg,
-                                   by = "month")
-
-      results[[1]] <- as.data.frame(tempData)
-    }
 
     return(results)
   }
@@ -484,28 +359,6 @@ setMethod(
       stop("Unauthorized equipment!")
 
     results <- callNextMethod(empT = empT, empR = empR, selfAssign)
-
-    if (class(results[[1]]) != "logical") {
-      if (empR@status != "reg") {
-        results[[1]]$sal <- "a"
-      } else {
-        results[[1]] <- dplyr::left_join(x  = results[[1]],
-                                         y  = payB,
-                                         by = "month")
-      }
-
-      results[[1]]$scheme <- "d"
-      results[[1]]$status <- empR@status
-
-      maxReg   <- data.frame(month  = 1:12,
-                             maxReg = empR@maxReg)
-
-      tempData <- dplyr::left_join(x  = results[[1]],
-                                   y  = maxReg,
-                                   by = "month")
-
-      results[[1]] <- as.data.frame(tempData)
-    }
 
     return(results)
   }
