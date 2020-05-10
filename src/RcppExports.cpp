@@ -56,12 +56,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// isReg
+bool isReg(const Rcpp::S4& theObject);
+RcppExport SEXP _mansched_isReg(SEXP theObjectSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::S4& >::type theObject(theObjectSEXP);
+    rcpp_result_gen = Rcpp::wrap(isReg(theObject));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_mansched_assignPool", (DL_FUNC) &_mansched_assignPool, 6},
     {"_mansched_assignMH", (DL_FUNC) &_mansched_assignMH, 2},
     {"_mansched_getHours", (DL_FUNC) &_mansched_getHours, 1},
     {"_mansched_getMin", (DL_FUNC) &_mansched_getMin, 2},
+    {"_mansched_isReg", (DL_FUNC) &_mansched_isReg, 1},
     {NULL, NULL, 0}
 };
 

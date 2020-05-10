@@ -78,3 +78,14 @@ getMin <- function(a, b) {
     .Call('_mansched_getMin', PACKAGE = 'mansched', a, b)
 }
 
+#' isReg
+#'
+#' Is the employee regular?
+#'
+#' @param theObject an \code{\link{Employee-class}} object
+#' @return logical value
+#' @export isReg
+isReg <- function(theObject) {
+    .Call('_mansched_isReg', PACKAGE = 'mansched', theObject)
+}
+
