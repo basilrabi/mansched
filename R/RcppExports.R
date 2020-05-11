@@ -89,3 +89,15 @@ isReg <- function(theObject) {
     .Call('_mansched_isReg', PACKAGE = 'mansched', theObject)
 }
 
+#' isRF
+#'
+#' Is the employee rank and file? Also checks whether an RF flag is correctly
+#' assigned to the employees.
+#'
+#' @param theObject an \code{\link{Employee-class}} object
+#' @return logical value
+#' @export isRF
+isRF <- function(theObject) {
+    .Call('_mansched_isRF', PACKAGE = 'mansched', theObject)
+}
+
