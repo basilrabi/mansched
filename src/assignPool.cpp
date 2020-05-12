@@ -1,9 +1,7 @@
 #include <Rcpp.h>
 #include "assignemp.h"
 #include "gethours.h"
-
-Rcpp::Environment mansched  = Rcpp::Environment::namespace_env( "mansched" );
-Rcpp::Function    dfAppend  = mansched["dfAppend"];
+#include "mhdb.h"
 
 // Is employee assignable to requirement? Assignable means both objects have
 // man-hours with the same man-hour type.
@@ -210,22 +208,8 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
 
   Rcpp::StringVector  tempEquip   (0);
   Rcpp::LogicalVector toBeRemoved (0);
-  Rcpp::IntegerVector mh          ( 10000, Rcpp::IntegerVector::get_na() );
-  Rcpp::IntegerVector month       ( 10000, Rcpp::IntegerVector::get_na() );
-  Rcpp::IntegerVector np          ( 10000, Rcpp::IntegerVector::get_na() );
-  Rcpp::StringVector  costCode    ( 10000, Rcpp::StringVector::get_na()  );
-  Rcpp::StringVector  id          ( 10000, Rcpp::StringVector::get_na()  );
-  Rcpp::StringVector  mhType      ( 10000, Rcpp::StringVector::get_na()  );
-
-  Rcpp::DataFrame mhDB = Rcpp::DataFrame::create(
-    Rcpp::Named( "ID"               ) = id,
-    Rcpp::Named( "mh"               ) = mh,
-    Rcpp::Named( "mhType"           ) = mhType,
-    Rcpp::Named( "month"            ) = month,
-    Rcpp::Named( "np"               ) = np,
-    Rcpp::Named( "costCode"         ) = costCode,
-    Rcpp::Named( "stringsAsFactors" ) = false
-  );
+  Rcpp::DataFrame mhDB = mhdbInit( 100 );
+  R_xlen_t idx = 0;
 
   for ( i = 0; i < listTC.length(); i++ )
   {
@@ -339,7 +323,7 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
                         << "\nMH Pool: "
                         << availableHours( listRC[*jj] )
                         << "\n";
-            mhDB = dfAppend( mhDB, tempData );
+            mhDB = dfAppend( mhDB, tempData, idx );
           }
           if ( availableHours(listTC[i] ) < 1 )
             break;
@@ -543,15 +527,15 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
   empPoolC.attr( "class" ) = "data.frame";
   empPoolC.attr( "row.names" ) = Rcpp::IntegerVector::create( NA_INTEGER, XLENGTH( poolID ) );
 
-  costCode = mhDB["costCode"];
-  id       = mhDB["ID"      ];
-  mh       = mhDB["mh"      ];
-  mhType   = mhDB["mhType"  ];
-  month    = mhDB["month"   ];
-  np       = mhDB["np"      ];
+  Rcpp::StringVector  costCode = Rcpp::as<Rcpp::StringVector >( mhDB["costCode"] );
+  Rcpp::StringVector  id       = Rcpp::as<Rcpp::StringVector >( mhDB["ID"      ] );
+  Rcpp::IntegerVector mh       = Rcpp::as<Rcpp::IntegerVector>( mhDB["mh"      ] );
+  Rcpp::StringVector  mhType   = Rcpp::as<Rcpp::StringVector >( mhDB["mhType"  ] );
+  Rcpp::IntegerVector month    = Rcpp::as<Rcpp::IntegerVector>( mhDB["month"   ] );
+  Rcpp::NumericVector np       = Rcpp::as<Rcpp::NumericVector>( mhDB["np"      ] );
 
   // Remove NA values at the bottom
-  Rcpp::LogicalVector withValues = !Rcpp::is_na( mh );
+  Rcpp::LogicalVector withValues = mh > 0;
   costCode = costCode[withValues];
   id       = id      [withValues];
   mh       = mh      [withValues];

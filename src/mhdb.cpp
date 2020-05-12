@@ -21,7 +21,7 @@ Rcpp::DataFrame combineMHDB ( Rcpp::DataFrame a, Rcpp::DataFrame b )
   return mhDB;
 }
 
-Rcpp::DataFrame dfAppend ( Rcpp::DataFrame a, Rcpp::DataFrame b, int& x )
+Rcpp::DataFrame dfAppend ( Rcpp::DataFrame a, Rcpp::DataFrame b, R_xlen_t& x )
 {
   R_xlen_t lengthB = ( Rcpp::as<Rcpp::StringVector>( b["ID"] ) ).length();
   a = testAndExpand( a, x, lengthB );
@@ -42,19 +42,19 @@ Rcpp::DataFrame dfAppend ( Rcpp::DataFrame a, Rcpp::DataFrame b, int& x )
 
   for ( R_xlen_t i = 0; i < lengthB; i++ )
   {
-    idA      [x-1] = idB      [i];
-    mhA      [x-1] = mhB      [i];
-    mhTypeA  [x-1] = mhTypeB  [i];
-    monthA   [x-1] = monthB   [i];
-    npA      [x-1] = npB      [i];
-    costCodeA[x-1] = costCodeB[i];
+    idA      [x] = idB      [i];
+    mhA      [x] = mhB      [i];
+    mhTypeA  [x] = mhTypeB  [i];
+    monthA   [x] = monthB   [i];
+    npA      [x] = npB      [i];
+    costCodeA[x] = costCodeB[i];
     x = x + 1;
   }
 
   return a;
 }
 
-Rcpp::DataFrame mhdbInit ( R_xlen_t n )
+Rcpp::DataFrame mhdbInit ( const R_xlen_t& n )
 {
   Rcpp::StringVector  id       ( 12 * n, Rcpp::StringVector::get_na()  );
   Rcpp::IntegerVector mh       ( 12 * n, 0 );
@@ -87,7 +87,7 @@ Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
   {
     for ( int j = 1; j < 13; j++ )
     {
-      R_xlen_t idx = ( i * 12 ) + ( j - 1 );
+      R_xlen_t idx  = ( i * 12 ) + ( j - 1 );
       id      [idx] = empID;
       mhType  [idx] = mhTypes[i];
       month   [idx] = j;
@@ -97,10 +97,12 @@ Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
   return mhDB;
 }
 
-Rcpp::DataFrame testAndExpand ( Rcpp::DataFrame a, int& x, const int& y )
+Rcpp::DataFrame testAndExpand ( Rcpp::DataFrame a,
+                                const R_xlen_t& x,
+                                const R_xlen_t& y )
 {
   R_xlen_t lengthA = ( Rcpp::as<Rcpp::StringVector>( a["ID"] ) ).length();
-  if ( y <= ( lengthA + 1 - x ) )
+  if ( y <= ( lengthA - x ) )
     return a;
   Rcpp::Rcout << "DataFrame rows not enough. Expanding…\n";
   Rcpp::DataFrame dfy = mhdbInit( y + lengthA );

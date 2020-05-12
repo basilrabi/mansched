@@ -9,10 +9,10 @@ Rcpp::DataFrame combineMHDB ( Rcpp::DataFrame a, Rcpp::DataFrame b );
 // Append man-hours database b to man-hours database a. `x` is the index in R of
 // the first empty row in a where b will be appended to. If the rows are not
 // enough, man-hours database a will be expanded.
-Rcpp::DataFrame dfAppend ( Rcpp::DataFrame a, Rcpp::DataFrame b, int& x );
+Rcpp::DataFrame dfAppend ( Rcpp::DataFrame a, Rcpp::DataFrame b, R_xlen_t& x );
 
 // Initialize an empty man-hours database with n x 12 rows
-Rcpp::DataFrame mhdbInit ( R_xlen_t n );
+Rcpp::DataFrame mhdbInit ( const R_xlen_t& n );
 
 // Initialize an empty man-hours database of an employee. Depending on the
 // Employee sub-class, different number of rows will be created.
@@ -28,6 +28,8 @@ Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
 // `x` is the index in R of the first empty row in a where another man-hours
 // will be appended.
 // `y` is the length of the man-hours database to be appended.
-Rcpp::DataFrame testAndExpand ( Rcpp::DataFrame a, int& x, const int& y );
+Rcpp::DataFrame testAndExpand ( Rcpp::DataFrame a,
+                                const R_xlen_t& x,
+                                const R_xlen_t& y );
 
 #endif
