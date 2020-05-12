@@ -116,7 +116,7 @@ assignPrio <- function(empReq, empPool, listT, listR) {
     listR.dcc <- listR.dcc[which(aviHours > 0)]
 
     for (i in listR.dcc) {
-      tempMHDB  <- assignEmp(empT = i, empR = i)[[1]]
+      tempMHDB  <- assignEmp(empT = i, empR = i, selfAssign = TRUE)
       tempData4 <- dfAppend(tempData4, tempMHDB)
     }
   }
@@ -163,12 +163,9 @@ assignPrio <- function(empReq, empPool, listT, listR) {
       for (i in 1:length(listTN)) {
         if (sum(getHours(listTN[[i]])) > 0) {
 
-          tempData         <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
-          listTN[[i]]      <- tempData[[2]]
-          listR[[i]]       <- tempData[[3]]
-          tempData[[1]]$np <- 0L
-
-          mhDB <- dfAppend(mhDB, tempData[[1]])
+          tempData    <- assignEmp(empT = listTN[[i]], empR = listR[[i]], selfAssign = FALSE)
+          tempData$np <- 0L
+          mhDB        <- dfAppend(mhDB, tempData)
         }
       }
     } else {

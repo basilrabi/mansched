@@ -9,3 +9,10 @@ Rcpp::IntegerVector assignMH ( Rcpp::IntegerVector hoursT,
   hoursR = hoursR - hoursA;
   return hoursA;
 }
+
+Rcpp::IntegerVector assignSelfMH ( Rcpp::IntegerVector hoursT )
+{
+  Rcpp::IntegerVector hours = Rcpp::clone( hoursT );
+  hoursT = hoursT - hours;
+  return hours;
+}

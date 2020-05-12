@@ -180,11 +180,9 @@ getmhDB <- function(empReq,
 
         if (sum(getHours(listTN[[i]])) > 0) {
 
-          tempData         <- assignEmp(empT = listTN[[i]], empR = listR[[i]])
-          listTN[[i]]      <- tempData[[2]]
-          listR[[i]]       <- tempData[[3]]
-          tempData[[1]]$np <- 0L
-          mhDB             <- dfAppend(mhDB, tempData[[1]])
+          tempData    <- assignEmp(empT = listTN[[i]], empR = listR[[i]], selfAssign = FALSE)
+          tempData$np <- 0L
+          mhDB        <- dfAppend(mhDB, tempData)
         }
 
         if (sum(getHours(listTN[[i]])) != 0)

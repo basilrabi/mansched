@@ -27,4 +27,7 @@
 Rcpp::IntegerVector assignMH ( Rcpp::IntegerVector hoursT,
                                Rcpp::IntegerVector hoursR );
 
+// Return the remaining man-hours and assign zero.
+Rcpp::IntegerVector assignSelfMH ( Rcpp::IntegerVector hoursT );
+
 #endif
