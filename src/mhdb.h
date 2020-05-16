@@ -21,10 +21,12 @@ Rcpp::DataFrame mhdbInit ( const R_xlen_t& n );
 // Employee sub-class, different number of rows will be created.
 // `mhTypes` for every man-hour type (mhType), a set of 12-row data frame will be
 // created. Each row will represent a month.
-// `id` employee ID
+// `empID` employee ID
+// `reqID` theoretical/requirement employee ID
 // `cc` cost center to be assigned
 Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
                                    Rcpp::String empID,
+                                   Rcpp::String reqID,
                                    Rcpp::String cc );
 
 // Test man-hours database a whether there is enough blank rows for appending.

@@ -202,7 +202,7 @@ Rcpp::DataFrame assignEmp ( Rcpp::S4 empT,
   {
   Rcpp::StringVector equipT = Rcpp::as<Rcpp::StringVector>( empT.slot( "equipment" ) );
   Rcpp::StringVector equipR = Rcpp::as<Rcpp::StringVector>( empR.slot( "equipment" ) );
-  Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot("costCode") );
+  Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
   if ( Rcpp::is_true( Rcpp::all( isElement( equipR, equipT ) ) )  )
   {
     assignProductionPersonnel( empT, empR, mhdbEmp, selfAssign );
@@ -220,19 +220,19 @@ Rcpp::DataFrame assignEmp ( Rcpp::S4 empT,
   }
   if ( empClass == "Supervisor" || empClass == "Laborer" )
   {
-    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot("costCode") );
+    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
     assignProductionPersonnel( empT, empR, mhdbEmp, selfAssign );
     return mhdbEmp;
   }
   if ( empClass == "Technical" )
   {
-    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot("costCode") );
+    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
     assignOperationPersonnel( empT, empR, mhdbEmp, selfAssign );
     return mhdbEmp;
   }
   else if ( empClass == "Clerk" )
   {
-    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeB, empR.slot( "ID" ), empT.slot("costCode") );
+    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeB, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
     assignNonStaff( empT, empR, mhdbEmp, selfAssign );
     return mhdbEmp;
   }
@@ -241,7 +241,7 @@ Rcpp::DataFrame assignEmp ( Rcpp::S4 empT,
             empClass == "DepartmentManager" ||
             empClass == "SectionHead" )
   {
-    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeA, empR.slot( "ID" ), empT.slot("costCode") );
+    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeA, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
     assignEmployee( empT, empR, mhdbEmp, selfAssign );
     return mhdbEmp;
   }

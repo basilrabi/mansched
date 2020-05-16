@@ -529,6 +529,7 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
 
   Rcpp::StringVector  costCode = Rcpp::as<Rcpp::StringVector >( mhDB["costCode"] );
   Rcpp::StringVector  id       = Rcpp::as<Rcpp::StringVector >( mhDB["ID"      ] );
+  Rcpp::StringVector  reqid    = Rcpp::as<Rcpp::StringVector >( mhDB["reqID"   ] );
   Rcpp::IntegerVector mh       = Rcpp::as<Rcpp::IntegerVector>( mhDB["mh"      ] );
   Rcpp::StringVector  mhType   = Rcpp::as<Rcpp::StringVector >( mhDB["mhType"  ] );
   Rcpp::IntegerVector month    = Rcpp::as<Rcpp::IntegerVector>( mhDB["month"   ] );
@@ -538,6 +539,7 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
   Rcpp::LogicalVector withValues = mh > 0;
   costCode = costCode[withValues];
   id       = id      [withValues];
+  reqid    = reqid   [withValues];
   mh       = mh      [withValues];
   mhType   = mhType  [withValues];
   month    = month   [withValues];
@@ -545,6 +547,7 @@ Rcpp::List assignPool( Rcpp::DataFrame empReq,
 
   mhDB = Rcpp::DataFrame::create(
     Rcpp::Named( "ID"               ) = id,
+    Rcpp::Named( "reqID"            ) = reqid,
     Rcpp::Named( "mh"               ) = mh,
     Rcpp::Named( "mhType"           ) = mhType,
     Rcpp::Named( "month"            ) = month,

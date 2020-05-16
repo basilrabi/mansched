@@ -25,6 +25,8 @@
 //'   \describe{
 //'     \item{ID}{character string representing the unique identifier of the
 //'       real employee}
+//'     \item{reqID}{character string representing the unique identifier of the
+//'       theoretical/requirement employee}
 //'     \item{mh}{integer value representing the man hours assigned}
 //'     \item{mhType}{character string representing the man hour type
 //'
