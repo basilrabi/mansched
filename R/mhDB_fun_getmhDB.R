@@ -154,17 +154,16 @@ getmhDB <- function(empReq,
 
   if (length(u.listR) > 0) {
 
-    listTN   <- lapply(u.listR, FUN = normEmp)
+    listTN <- u.listR
+    lapply(listTN, FUN = normEmp)
 
     u.mhPool <- lapply(listTN, FUN = function(x) {
       mh <- as.data.frame(getHours(x))
       mh$month <- 1:12
       mh$ID <- x@ID
       return(mh)
-    })
-
-    u.mhPool <- data.table::rbindlist(u.mhPool, use.names = TRUE)
-    u.mhPool <- u.mhPool %>%
+    }) %>%
+      data.table::rbindlist() %>%
       tidyr::gather(key = "mhType",
                     value = mh,
                     -month,

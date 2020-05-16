@@ -77,7 +77,6 @@ assignPrio <- function(empReq, empPool, listT, listR) {
     empPool <- tempData2[[2]]
     listT   <- tempData2[[3]]
     listR   <- tempData2[[4]]
-
   }
 
   if (length(listT) > 0 & length(listR) > 0) {
@@ -91,7 +90,6 @@ assignPrio <- function(empReq, empPool, listT, listR) {
     empPool <- tempData3[[2]]
     listT   <- tempData3[[3]]
     listR   <- tempData3[[4]]
-
   }
 
   tempData4 <- data.frame(
@@ -103,14 +101,8 @@ assignPrio <- function(empReq, empPool, listT, listR) {
     tempIndex <- which(!is.na(empPool$dcc))
     listR.dcc <- listR[tempIndex]
     empPool   <- empPool[-tempIndex,]
-    listR     <- listR[-tempIndex]
-    listR.dcc <- sapply(listR.dcc, FUN = function(x) {
-
-      y          <- normEmp(theObject = x)
-      y@costCode <- x@dcc
-
-      return(y)
-    })
+    listR.dcc     <- listR[-tempIndex]
+    lapply(listR.dcc, normEmp)
 
     aviHours  <- sapply(listR.dcc, FUN = function(x) {sum(getHours(x))})
     listR.dcc <- listR.dcc[which(aviHours > 0)]
@@ -135,26 +127,19 @@ assignPrio <- function(empReq, empPool, listT, listR) {
 
   ## Create a theoretical employee list
   if (length(listR) > 0) {
-
-    listTN <- lapply(listR, FUN = normEmp)
-
+    listTN <- listR
+    lapply(listTN, normEmp)
     mhPool <- lapply(listTN, FUN = function(x) {
-
       mh       <- as.data.frame(getHours(x))
       mh$month <- 1:12
       mh$ID    <- x@ID
-
       return(mh)
-    })
-
-    mhPool <- data.table::rbindlist(mhPool, use.names = TRUE)
-
-    mhPool <- mhPool %>%
+    }) %>%
+      data.table::rbindlist() %>%
       tidyr::gather(key   = "mhType",
                     value = mh,
                     -month,
                     -ID)
-
     mhPool <- mhPool[mhPool$mh > 0,]
     mhPool <- as.data.frame(mhPool)
 
@@ -185,17 +170,12 @@ assignPrio <- function(empReq, empPool, listT, listR) {
   if (length(listT) > 0) {
 
     mhReq <- lapply(listT, FUN = function(x) {
-
       mh <- as.data.frame(getHours(x))
       mh$month <- 1:12
       mh$ID <- x@ID
-
       return(mh)
-    })
-
-    mhReq <- data.table::rbindlist(mhReq, use.names = TRUE)
-
-    mhReq <- mhReq %>%
+    }) %>%
+      data.table::rbindlist() %>%
       tidyr::gather(key = "mhType",
                     value = mh,
                     -month,

@@ -21,6 +21,26 @@ Rcpp::DataFrame combineMHDB ( Rcpp::DataFrame a, Rcpp::DataFrame b )
   return mhDB;
 }
 
+Rcpp::DataFrame mhdbBlank ( const Rcpp::S4& emp )
+{
+  Rcpp::StringVector  id       = { Rcpp::as<Rcpp::String>( emp.slot( "ID" ) ) };
+  Rcpp::IntegerVector mh       = { 0 };
+  Rcpp::StringVector  mhType   = { "reg" };
+  Rcpp::IntegerVector month    = { 1 };
+  Rcpp::NumericVector np       = { 0 };
+  Rcpp::StringVector  costCode = { NA_STRING };
+  Rcpp::DataFrame mhDB = Rcpp::DataFrame::create(
+    Rcpp::Named( "ID"               ) = id,
+    Rcpp::Named( "mh"               ) = mh,
+    Rcpp::Named( "mhType"           ) = mhType,
+    Rcpp::Named( "month"            ) = month,
+    Rcpp::Named( "np"               ) = np,
+    Rcpp::Named( "costCode"         ) = costCode,
+    Rcpp::Named( "stringsAsFactors" ) = false
+  );
+  return mhDB;
+}
+
 Rcpp::DataFrame dfAppend ( Rcpp::DataFrame a, Rcpp::DataFrame b, R_xlen_t& x )
 {
   R_xlen_t lengthB = ( Rcpp::as<Rcpp::StringVector>( b["ID"] ) ).length();

@@ -5,6 +5,17 @@
 #include "mhdb.h"
 #include "template.h"
 
+Rcpp::StringVector mhTypeA = { "reg" };
+Rcpp::StringVector mhTypeB = { "reg", "regOT" };
+Rcpp::StringVector mhTypeC = { "reg", "regOT",
+                               "rd", "rdOT",
+                               "sh", "shOT",
+                               "lh", "lhOT",
+                               "nh", "nhOT",
+                               "rs", "rsOT",
+                               "rl", "rlOT",
+                               "rn", "rnOT"};
+
 void assignEmployee ( Rcpp::S4 empT,
                       Rcpp::S4 empR,
                       Rcpp::DataFrame mhDB,
@@ -186,17 +197,6 @@ Rcpp::DataFrame assignEmp ( Rcpp::S4 empT,
                 << "!\n";
     Rcpp::stop( "empT and empR have different classes" );
   }
-
-  Rcpp::StringVector mhTypeA = { "reg" };
-  Rcpp::StringVector mhTypeB = { "reg", "regOT" };
-  Rcpp::StringVector mhTypeC = { "reg", "regOT",
-                                 "rd", "rdOT",
-                                 "sh", "shOT",
-                                 "lh", "lhOT",
-                                 "nh", "nhOT",
-                                 "rs", "rsOT",
-                                 "rl", "rlOT",
-                                 "rn", "rnOT"};
 
   if ( empClass == "Operator" )
   {

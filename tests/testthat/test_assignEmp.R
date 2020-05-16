@@ -131,7 +131,6 @@ test_that("assignment of clerk works", {
   expect_equal(preHours, sum(tempData$mh) + sum(getHours(empR)))
 })
 
-
 tempEmp <- createEmp(empClass = "technical")
 empR    <- initREmployee(theObject   = tempEmp,
                          ID          = ID,
