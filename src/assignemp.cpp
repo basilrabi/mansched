@@ -200,23 +200,23 @@ Rcpp::DataFrame assignEmp ( Rcpp::S4 empT,
 
   if ( empClass == "Operator" )
   {
-  Rcpp::StringVector equipT = Rcpp::as<Rcpp::StringVector>( empT.slot( "equipment" ) );
-  Rcpp::StringVector equipR = Rcpp::as<Rcpp::StringVector>( empR.slot( "equipment" ) );
-  Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
-  if ( Rcpp::is_true( Rcpp::all( isElement( equipR, equipT ) ) )  )
-  {
-    assignProductionPersonnel( empT, empR, mhdbEmp, selfAssign );
-  }
-  else
-  {
-    Rcpp::Rcout << "Employee "
-                << idR
-                << " does not match any equipment required by "
-                << idT
-                << ".\n" ;
-    Rcpp::stop( "Unauthorized equipemnt!" );
-  }
-  return mhdbEmp;
+    Rcpp::StringVector equipT = Rcpp::as<Rcpp::StringVector>( empT.slot( "equipment" ) );
+    Rcpp::StringVector equipR = Rcpp::as<Rcpp::StringVector>( empR.slot( "equipment" ) );
+    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
+    if ( Rcpp::is_true( Rcpp::all( isElement( equipR, equipT ) ) )  )
+    {
+      assignProductionPersonnel( empT, empR, mhdbEmp, selfAssign );
+    }
+    else
+    {
+      Rcpp::Rcout << "Employee "
+                  << idR
+                  << " does not match any equipment required by "
+                  << idT
+                  << ".\n" ;
+      Rcpp::stop( "Unauthorized equipemnt!" );
+    }
+    return mhdbEmp;
   }
   if ( empClass == "Supervisor" || empClass == "Laborer" )
   {

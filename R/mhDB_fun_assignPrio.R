@@ -40,6 +40,8 @@
 #'         \item{mhType}{man hour type}
 #'         \item{mh}{integer value representing the unassigned man hours}
 #'       }
+#'     \item man hour database resulting from discarding OT hours. The structure
+#'       is similar to what is being returned by \code{\link{getmhDB}}.
 #'   }
 #' @export assignPrio
 #' @importFrom data.table rbindlist
@@ -48,11 +50,14 @@
 assignPrio <- function(empReq, empPool, listT, listR) {
 
   # Define global variables
-  ID        <- NULL
-  mh        <- NULL
-  tempData1 <- NULL
-  tempData2 <- NULL
-  tempData3 <- NULL
+  ID              <- NULL
+  discardedOT_00  <- NULL
+  discardedOT_dcc <- NULL
+  mh              <- NULL
+  mhPool          <- NULL
+  tempData1       <- NULL
+  tempData2       <- NULL
+  tempData3       <- NULL
 
   tempData1 <- assignPool(empReq   = empReq,
                           empPool  = empPool,
@@ -66,31 +71,28 @@ assignPrio <- function(empReq, empPool, listT, listR) {
   listR   <- tempData1[[4]]
 
   if (length(listT) > 0 & length(listR) > 0) {
-
     tempData2 <- assignPool(empReq   = empReq,
                             empPool  = empPool,
                             listT    = listT,
                             listR    = listR,
                             prioStat = c("reg", "pro"))
-
     empReq  <- tempData2[[1]]
     empPool <- tempData2[[2]]
     listT   <- tempData2[[3]]
     listR   <- tempData2[[4]]
+
+    if (length(listT) > 0 & length(listR) > 0) {
+      tempData3 <- assignPool(empReq  = empReq,
+                              empPool = empPool,
+                              listT   = listT,
+                              listR   = listR)
+      empReq  <- tempData3[[1]]
+      empPool <- tempData3[[2]]
+      listT   <- tempData3[[3]]
+      listR   <- tempData3[[4]]
+    }
   }
 
-  if (length(listT) > 0 & length(listR) > 0) {
-
-    tempData3 <- assignPool(empReq   = empReq,
-                            empPool  = empPool,
-                            listT    = listT,
-                            listR    = listR)
-
-    empReq  <- tempData3[[1]]
-    empPool <- tempData3[[2]]
-    listT   <- tempData3[[3]]
-    listR   <- tempData3[[4]]
-  }
 
   tempData4 <- data.frame(ID       = NA,
                           reqID    = NA,
@@ -100,39 +102,37 @@ assignPrio <- function(empReq, empPool, listT, listR) {
                           np       = NA,
                           costCode = NA)
 
-  if (length(listR) > 0 & !all(is.na(empPool$dcc))) {
+  if (length(listR) > 0) {
+    poolDCC <- sapply(listR, function(x){x@dcc})
+    # If there are any dump cost centers assigned, assign now.
+    if (!all(is.na(poolDCC))) {
+      tempIndex <- which(!is.na(poolDCC))
+      listR.dcc <- listR[tempIndex]
+      listR <- listR[-tempIndex]
 
-    tempIndex <- which(!is.na(empPool$dcc))
-    listR.dcc <- listR[tempIndex]
-    empPool   <- empPool[-tempIndex,]
-    listR.dcc     <- listR[-tempIndex]
-    lapply(listR.dcc, normEmp)
+      # Drop overtime hours
+      discardedOT_dcc <- lapply(listR.dcc, normEmp) %>%
+        data.table::rbindlist()
+      aviHours <- sapply(listR.dcc, FUN = function(x) {sum(getHours(x))})
+      listR.dcc <- listR.dcc[which(aviHours > 0)]
 
-    aviHours  <- sapply(listR.dcc, FUN = function(x) {sum(getHours(x))})
-    listR.dcc <- listR.dcc[which(aviHours > 0)]
-
-    for (i in listR.dcc) {
-      tempMHDB  <- assignEmp(empT = i, empR = i, selfAssign = TRUE)
-      tempData4 <- dfAppend(tempData4, tempMHDB)
+      for (i in listR.dcc) {
+        i@costCode <- i@dcc
+        tempMHDB  <- assignEmp(empT = i, empR = i, selfAssign = TRUE)
+        tempData4 <- dfAppend(tempData4, tempMHDB)
+      }
     }
   }
 
-  mhDB <- data.table::rbindlist(l = list(tempData1[[5]],
-                                         tempData2[[5]],
-                                         tempData3[[5]],
-                                         tempData4),
-                                use.names = TRUE)
-
-  mhDB <- as.data.frame(mhDB)
+  mhDB <- data.table::rbindlist(l = list(
+    tempData1[[5]], tempData2[[5]], tempData3[[5]], tempData4
+  ), use.names = TRUE) %>% as.data.frame()
 
   # Assign excess regular hours to a dummy cost code
-
-  mhPool <- NULL
-
-  ## Create a theoretical employee list
   if (length(listR) > 0) {
     listTN <- listR
-    lapply(listTN, normEmp)
+    discardedOT_00  <- lapply(listTN, normEmp) %>%
+      data.table::rbindlist()
     mhPool <- lapply(listTN, FUN = function(x) {
       mh       <- as.data.frame(getHours(x))
       mh$month <- 1:12
@@ -149,10 +149,9 @@ assignPrio <- function(empReq, empPool, listT, listR) {
 
     if (nrow(mhPool) > 0) {
 
-      for (i in 1:length(listTN)) {
-        if (sum(getHours(listTN[[i]])) > 0) {
-
-          tempData    <- assignEmp(empT = listTN[[i]], empR = listR[[i]], selfAssign = FALSE)
+      for (i in listTN) {
+        if (sum(getHours(i)) > 0) {
+          tempData    <- assignEmp(empT = i, empR = i, selfAssign = TRUE)
           tempData$np <- 0L
           mhDB        <- dfAppend(mhDB, tempData)
         }
@@ -192,5 +191,9 @@ assignPrio <- function(empReq, empPool, listT, listR) {
     mhReq <- NULL
   }
 
-  return(list(mhDB, listT, listR, mhReq, mhPool))
+  discarded <- data.table::rbindlist(list(discardedOT_dcc, discardedOT_00))
+  if (nrow(discarded) < 1)
+    discarded <- NULL
+
+  return(list(mhDB, listT, listR, mhReq, mhPool, discarded))
 }

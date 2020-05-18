@@ -33,6 +33,8 @@ a list containing the following:
       \describe{
         \item{ID}{character string representing the unique identifier of the
           real employee}
+        \item{reqID}{character string representing the unique identifier of the
+          real employee}
         \item{mh}{integer value representing the man hours assigned}
         \item{mhType}{character string representing the man hours type
           assigned (see \code{\link{assignEmp}})}
@@ -60,15 +62,23 @@ a list containing the following:
         \item{mhType}{man hour type}
         \item{mh}{integer value representing the unassigned man hours}
       }
-    \item \code{\link{data.frame}} containing un-assigned man hours of the
-      real employees
+    \item \code{data.frame} representing the man hours database of the
+      employees with discarded OT hours
 
       This is composed of the following columns:
       \describe{
+        \item{ID}{character string representing the unique identifier of the
+          real employee}
+        \item{reqID}{character string representing the unique identifier of the
+          real employee}
+        \item{mh}{integer value representing the man hours assigned}
+        \item{mhType}{character string representing the man hours type
+          assigned (see \code{\link{assignEmp}})}
         \item{month}{integer value representing the month}
-        \item{ID}{character string representing the employee requirement}
-        \item{mhType}{man hour type}
-        \item{mh}{integer value representing the unassigned man hours}
+        \item{np}{integer value representing the man hours with night premium
+          pay}
+        \item{costCode}{character string representing accounting cost code
+          wherein the man hours is charged}
       }
   }
 }

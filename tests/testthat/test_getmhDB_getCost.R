@@ -1,3 +1,5 @@
+library(data.table)
+library(dplyr)
 library(mansched)
 library(readxl)
 
@@ -25,8 +27,18 @@ empPool[, c("inHouse", "isRF", "field")] <-
 
 listT <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)[[1]]
 listR <- initEmpPool(empPool = empPool, hol = hol, year = year)[[1]]
-totTi <- getHoursL(listT)
-totRi <- getHoursL(listR)
+
+mhInitR <- lapply(listR, function(x) {
+  data.frame(ID = x@ID, mh_initial = sum(getHours(x)), stringsAsFactors = FALSE)
+}) %>% data.table::rbindlist() %>%
+  dplyr::arrange(ID)
+totRi <- sum(mhInitR$mh_initial)
+
+mhInitT <- lapply(listT, function(x) {
+  data.frame(ID = x@ID, mh_initial = sum(getHours(x)), stringsAsFactors = FALSE)
+}) %>% data.table::rbindlist() %>%
+  dplyr::arrange(ID)
+totTi <- sum(mhInitT$mh_initial)
 
 tempData <- getmhDB(empReq   = empReq,
                     empPool  = empPool,
@@ -35,16 +47,28 @@ tempData <- getmhDB(empReq   = empReq,
                     hol      = hol,
                     forecast = forecast)
 
-totTf <- getHoursL(tempData[[4]])
-totRf <- getHoursL(tempData[[5]])
+mhFinR <- data.table::rbindlist(list(tempData[[1]], tempData[[8]])) %>%
+  dplyr::group_by(ID) %>%
+  dplyr::summarise(mh_final = sum(mh)) %>%
+  dplyr::arrange(ID)
+totRf <- sum(tempData[[8]]$mh)
+
+mhFinT <- dplyr::select(tempData[[6]], ID, mh) %>%
+  dplyr::bind_rows(dplyr::select(tempData[[1]], ID = reqID, mh)) %>%
+  dplyr::group_by(ID) %>%
+  dplyr::summarise(mh_final = sum(mh)) %>%
+  dplyr::arrange(ID)
+totTf <- sum(tempData[[6]]$mh)
 
 test_that("getmhDB() works", {
   expect_equal(totTi + totRi,
-               sum(tempData[[1]]$mh)*2 + totTf + totRf)
+               sum(tempData[[1]]$mh) * 2 + totTf + totRf)
   expect_equal(sum(tempData[[1]]$mh),
                totRi - totRf)
   expect_equal(sum(tempData[[1]]$mh),
                totTi - totTf)
+  expect_equal(mhInitR$mh_initial, mhFinR$mh_final)
+  expect_equal(mhInitT$mh_initial, mhFinT$mh_final)
 })
 
 wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")

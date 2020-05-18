@@ -13,3 +13,5 @@
 ^\.git
 ^\.gitignore$
 ^clean\.sh$
+^doc$
+^Meta$

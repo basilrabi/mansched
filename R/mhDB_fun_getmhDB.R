@@ -21,6 +21,8 @@
 #'       \describe{
 #'         \item{ID}{character string representing the unique identifier of the
 #'           real employee}
+#'         \item{reqID}{character string representing the unique identifier of the
+#'           real employee}
 #'         \item{mh}{integer value representing the man hours assigned}
 #'         \item{mhType}{character string representing the man hours type
 #'           assigned (see \code{\link{assignEmp}})}
@@ -48,15 +50,23 @@
 #'         \item{mhType}{man hour type}
 #'         \item{mh}{integer value representing the unassigned man hours}
 #'       }
-#'     \item \code{\link{data.frame}} containing un-assigned man hours of the
-#'       real employees
+#'     \item \code{data.frame} representing the man hours database of the
+#'       employees with discarded OT hours
 #'
 #'       This is composed of the following columns:
 #'       \describe{
+#'         \item{ID}{character string representing the unique identifier of the
+#'           real employee}
+#'         \item{reqID}{character string representing the unique identifier of the
+#'           real employee}
+#'         \item{mh}{integer value representing the man hours assigned}
+#'         \item{mhType}{character string representing the man hours type
+#'           assigned (see \code{\link{assignEmp}})}
 #'         \item{month}{integer value representing the month}
-#'         \item{ID}{character string representing the employee requirement}
-#'         \item{mhType}{man hour type}
-#'         \item{mh}{integer value representing the unassigned man hours}
+#'         \item{np}{integer value representing the man hours with night premium
+#'           pay}
+#'         \item{costCode}{character string representing accounting cost code
+#'           wherein the man hours is charged}
 #'       }
 #'   }
 #' @export getmhDB
@@ -133,12 +143,14 @@ getmhDB <- function(empReq,
                listR   = x[[4]])
   })
 
-  mhDB   <- lapply(assignedData, FUN = function(x) {x[[1]]})
-  mhReq  <- lapply(assignedData, FUN = function(x) {x[[4]]})
-  mhPool <- lapply(assignedData, FUN = function(x) {x[[5]]})
-  mhDB   <- as.data.frame(data.table::rbindlist(mhDB  , use.names = TRUE))
-  mhReq  <- as.data.frame(data.table::rbindlist(mhReq , use.names = TRUE))
-  mhPool <- as.data.frame(data.table::rbindlist(mhPool, use.names = TRUE))
+  mhDB      <- lapply(assignedData, FUN = function(x) {x[[1]]})
+  mhReq     <- lapply(assignedData, FUN = function(x) {x[[4]]})
+  mhPool    <- lapply(assignedData, FUN = function(x) {x[[5]]})
+  discarded <- lapply(assignedData, FUN = function(x) {x[[6]]})
+  mhDB      <- as.data.frame(data.table::rbindlist(mhDB  , use.names = TRUE))
+  mhReq     <- as.data.frame(data.table::rbindlist(mhReq , use.names = TRUE))
+  mhPool    <- as.data.frame(data.table::rbindlist(mhPool, use.names = TRUE))
+  discarded <- as.data.frame(data.table::rbindlist(discarded, use.names = TRUE))
 
   if (nrow(mhDB) < 1)
     mhDB <- NULL
@@ -155,7 +167,8 @@ getmhDB <- function(empReq,
   if (length(u.listR) > 0) {
 
     listTN <- u.listR
-    lapply(listTN, FUN = normEmp)
+    discarded <- lapply(listTN, FUN = normEmp) %>%
+      data.table::rbindlist(discarded)
 
     u.mhPool <- lapply(listTN, FUN = function(x) {
       mh <- as.data.frame(getHours(x))
@@ -164,47 +177,32 @@ getmhDB <- function(empReq,
       return(mh)
     }) %>%
       data.table::rbindlist() %>%
-      tidyr::gather(key = "mhType",
-                    value = mh,
-                    -month,
-                    -ID)
+      tidyr::gather(key = "mhType", value = mh, -month, -ID)
 
     mhPool <- data.table::rbindlist(list(mhPool, u.mhPool), use.names = TRUE)
     mhPool <- mhPool[mhPool$mh > 0,]
     mhPool <- as.data.frame(mhPool)
 
-    if (nrow(mhPool) > 0) {
-
-      for (i in 1:length(listTN)) {
-
-        if (sum(getHours(listTN[[i]])) > 0) {
-
-          tempData    <- assignEmp(empT = listTN[[i]], empR = listR[[i]], selfAssign = FALSE)
+    if (nrow(u.mhPool) > 0) {
+      for (i in listTN) {
+        if (sum(getHours(i)) > 0) {
+          tempData    <- assignEmp(empT = i, empR = i, selfAssign = FALSE)
           tempData$np <- 0L
           mhDB        <- dfAppend(mhDB, tempData)
         }
-
-        if (sum(getHours(listTN[[i]])) != 0)
-          stop("All man hours in listTN not assigned!")
       }
-
     } else {
       mhPool <- NULL
     }
-
   }
 
   if (length(u.listT) > 0) {
-
     u.mhReq <- lapply(u.listT, FUN = function(x) {
-
       mh       <- as.data.frame(getHours(x))
       mh$month <- 1:12
       mh$ID    <- x@ID
-
       return(mh)
     })
-
     u.mhReq <- data.table::rbindlist(u.mhReq, use.names = TRUE)
     u.mhReq <- u.mhReq %>%
       tidyr::gather(key = "mhType", value = mh, -month, -ID)
@@ -213,5 +211,5 @@ getmhDB <- function(empReq,
     mhReq <- as.data.frame(mhReq)
   }
 
-  return(list(mhDB, listT.a, listR.a, listT, listR, mhReq, mhPool))
+  return(list(mhDB, listT.a, listR.a, listT, listR, mhReq, mhPool, discarded))
 }

@@ -44,6 +44,8 @@ a list containing the following:
         \item{mhType}{man hour type}
         \item{mh}{integer value representing the unassigned man hours}
       }
+    \item man hour database resulting from discarding OT hours. The structure
+      is similar to what is being returned by \code{\link{getmhDB}}.
   }
 }
 \description{

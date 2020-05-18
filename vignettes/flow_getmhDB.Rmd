@@ -72,6 +72,7 @@ by separating by class"]
   <TR><TD COLSPAN="2" ALIGN="left">listR &#40;unassigned&#41;</TD></TR>
   <TR><TD COLSPAN="2" ALIGN="left">mhReq &#40;unassigned&#41;</TD></TR>
   <TR><TD COLSPAN="2" ALIGN="left">mhPool &#40;unassigned&#41;</TD></TR>
+  <TR><TD COLSPAN="2" ALIGN="left">discarded &#40;OT&#41;</TD></TR>
 </TABLE>>]
     assignPrioClerk [label = "..."]
     assignPrioLaborer [label = "..."]
@@ -89,6 +90,7 @@ by separating by class"]
   <TR>
     <TD>listR</TD>
     <TD>mhPool</TD>
+    <TD>discarded</TD>
   </TR>
 </TABLE>>]
     normEmp [label = "apply normEmp() to u.listR ->

@@ -1,7 +1,7 @@
 ---
 title: "assignPrio()"
 author: "Basil Eric Rabi"
-date: "September 11, 2018"
+date: "May 17, 2020"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{assignPrio}
@@ -10,3 +10,267 @@ vignette: >
 ---
 
 # Flow
+```{dot, echo=FALSE}
+digraph assignPrio {
+  
+  node [shape = box]
+    assignPrio [label = "assignPrio( empReq, empPool, listT, listR )"]
+    assignPoolA [label =<
+<TABLE BORDER="0">
+  <TR>
+    <TD ALIGN="right">asssignPool&#40;</TD>
+    <TD ALIGN="left">empReq</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">empPool</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">listT</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">listR</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">prioCode = TRUE &#41; -&gt;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">empReq &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">empPool &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">listT &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">listR &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">mhDB1 &#40;assigned - tempData1 &#41;</TD>
+  </TR>
+</TABLE>>]
+    assignPoolB [label =<
+<TABLE BORDER="0">
+  <TR>
+    <TD ALIGN="right">asssignPool&#40;</TD>
+    <TD ALIGN="left">empReq</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">empPool</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">listT</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">listR</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">prioStat = c( "reg", "pro" ) &#41; -&gt;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">empReq &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">empPool &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">listT &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">listR &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">mhDB2 &#40;assigned - tempData2 &#41;</TD>
+  </TR>
+</TABLE>>]
+    assignPoolC [label =<
+<TABLE BORDER="0">
+  <TR>
+    <TD ALIGN="right">asssignPool&#40;</TD>
+    <TD ALIGN="left">empReq</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">empPool</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">listT</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">listR &#41; -&gt;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">empReq &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">empPool &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">listT &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">listR &#40;remaining&#41;</TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" ALIGN="left">mhDB3 &#40;assigned - tempData3 &#41;</TD>
+  </TR>
+</TABLE>>]
+    tempData4 [label = "create empty mhDB
+(tempData4)"]
+    poolDCC [label = "poolDCC = sapply( listR, function( x ){ x@dcc } )"]
+    separateDCC [label =<
+<TABLE BORDER="0">
+  <TR>
+    <TD ALIGN="left">listR.dcc</TD>
+    <TD>&lt;-</TD>
+    <TD ALIGN="left">emplyees with DCC</TD>
+  </TR>
+  <TR>
+    <TD ALIGN="left">listR</TD>
+    <TD>&lt;-</TD>
+    <TD ALIGN="left">emplyees without DCC</TD>
+  </TR>
+</TABLE>>]
+    assignDCC [label =<
+<TABLE BORDER="0">
+  <TR>
+    <TD ALIGN="left">discardedOT_dcc</TD>
+    <TD>&lt;-</TD>
+    <TD ALIGN="left">discarded OT of listR.dcc</TD>
+  </TR>
+  <TR>
+    <TD ALIGN="left">tempData4</TD>
+    <TD>&lt;-</TD>
+    <TD ALIGN="left">tempData4 +</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD></TD>
+    <TD ALIGN="left">mhdb from dcc assignment of listR.dcc</TD>
+  </TR>
+</TABLE>>]
+    rbind_mhdb [label =<
+<TABLE BORDER="0">
+  <TR>
+    <TD ALIGN="right">mhDB &lt;-</TD>
+    <TD ALIGN="left">mhDB1 +</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">mhDB2 +</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">mhDB3 +</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">tempData4</TD>
+  </TR>
+</TABLE>>]
+    assign00 [label =<
+<TABLE BORDER="0">
+  <TR>
+    <TD ALIGN="left">listTN</TD>
+    <TD>&lt;-</TD>
+    <TD ALIGN="left">listR</TD>
+  </TR>
+  <TR>
+    <TD ALIGN="left">discardedOT_00</TD>
+    <TD>&lt;-</TD>
+    <TD ALIGN="left">discarded OT of listTN</TD>
+  </TR>
+  <TR>
+    <TD ALIGN="left">mhPool</TD>
+    <TD>&lt;-</TD>
+    <TD ALIGN="left">Excess non-OT hours of listTN</TD>
+  </TR>
+  <TR>
+    <TD ALIGN="left">mhDB</TD>
+    <TD>&lt;-</TD>
+    <TD ALIGN="left">mhDB +</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD></TD>
+    <TD ALIGN="left">mhdb from 0-0 assignment of listTN</TD>
+  </TR>
+</TABLE>>]
+    mhReq [label ="mhReq <- Excess hours of listT"]
+    return [label =<
+<TABLE BORDER="0">
+  <TR>
+    <TD ALIGN="right">return list&#40;</TD>
+    <TD ALIGN="left">mhDB</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">listT</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">listR</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">mhReq</TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD ALIGN="left">mhPool &#41;</TD>
+  </TR>
+</TABLE>>]
+  
+  node [shape = diamond]
+    len_empA [label = "Is
+length( listT ) > 0,
+length( listR ) > 0
+"]
+    len_empB [label = "Is
+length( listT ) > 0,
+length( listR ) > 0
+"]
+    len_empC [label = "Is
+length( listR ) > 0"]
+    notNA_dcc [label = "Is there any
+dump cost centers
+assigned?"]
+    len_empD [label = "Is
+length( listR ) > 0"]
+    len_empE [label = "Is
+length( listT ) > 0"]
+  
+  assignPrio -> assignPoolA
+  assignPoolA -> len_empA
+  len_empA -> assignPoolB [label = "yes"]
+  len_empA -> tempData4 [label = "no"]
+  assignPoolB -> len_empB
+  len_empB -> assignPoolC [label = "yes"]
+  len_empB -> tempData4 [label = "no"]
+  assignPoolC -> tempData4
+  tempData4 -> len_empC
+  len_empC -> poolDCC
+  poolDCC -> notNA_dcc
+  notNA_dcc -> rbind_mhdb [label = "no"]
+  notNA_dcc -> separateDCC [label = "yes"]
+  separateDCC -> assignDCC
+  assignDCC -> rbind_mhdb
+  rbind_mhdb -> len_empD
+  len_empD -> assign00 [label = "yes"]
+  len_empD -> len_empE [label = "no"]
+  assign00 -> len_empE
+  len_empE -> mhReq [label = "yes"]
+  len_empE -> return [label = "no"]
+  mhReq -> return
+}
+```
