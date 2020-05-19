@@ -203,7 +203,7 @@ Rcpp::DataFrame assignEmp ( Rcpp::S4 empT,
     Rcpp::StringVector equipT = Rcpp::as<Rcpp::StringVector>( empT.slot( "equipment" ) );
     Rcpp::StringVector equipR = Rcpp::as<Rcpp::StringVector>( empR.slot( "equipment" ) );
     Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
-    if ( Rcpp::is_true( Rcpp::all( isElement( equipR, equipT ) ) )  )
+    if ( Rcpp::is_true( Rcpp::all( isElement( equipT, equipR ) ) )  )
     {
       assignProductionPersonnel( empT, empR, mhdbEmp, selfAssign );
     }

@@ -191,7 +191,6 @@ test_that("assignment of laborer works", {
   expect_equal(preHours, sum(tempData$mh) + sum(getHours(empR)))
 })
 
-equipment <- "TX"
 tempEmp <- createEmp(empClass = "operator")
 empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
@@ -204,14 +203,14 @@ empR <- initREmployee(theObject = tempEmp,
                       restday = restday,
                       hol = hol,
                       OT = OT,
-                      equipment = equipment)
+                      equipment = "TX WX")
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
                       costCode = costCode,
                       OT = OT,
                       mdtProb = mdtProb,
-                      equipment = equipment)
+                      equipment = "TX")
 tempData <- assignEmp(empT = empT, empR = empR, selfAssign = FALSE)
 test_that("assignment of operator works", {
   expect_equal(preHours, sum(tempData$mh) + sum(getHours(empR)))
