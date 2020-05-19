@@ -4,20 +4,9 @@
 \alias{assignPool}
 \title{Assign pool to requirement faster}
 \usage{
-assignPool(
-  empReq,
-  empPool,
-  listT,
-  listR,
-  prioStat = NA_character_,
-  prioCode = FALSE
-)
+assignPool(listT, listR, prioStat = NA_character_, prioCode = FALSE)
 }
 \arguments{
-\item{empReq}{passed from \code{\link{assignPrio}}}
-
-\item{empPool}{passed from \code{\link{assignPrio}}}
-
 \item{listT}{list of theoretical employees created from empReq}
 
 \item{listR}{list of real employees created fro empPool}
@@ -31,8 +20,6 @@ Is cost code prioritized in assigning?}
 \value{
 a list containing the following:
   \enumerate{
-    \item remaining empReq
-    \item remaining empPool
     \item remaining listT
     \item remaining listR
     \item man hour database resulting from the assignment

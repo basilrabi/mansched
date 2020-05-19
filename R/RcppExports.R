@@ -5,8 +5,6 @@
 #'
 #' This is used in \code{\link{assignPrio}}.
 #'
-#' @param empReq passed from \code{\link{assignPrio}}
-#' @param empPool passed from \code{\link{assignPrio}}
 #' @param listT list of theoretical employees created from empReq
 #' @param listR list of real employees created fro empPool
 #' @param prioStat character vector defining the employee status that are
@@ -15,8 +13,6 @@
 #'   Is cost code prioritized in assigning?
 #' @return a list containing the following:
 #'   \enumerate{
-#'     \item remaining empReq
-#'     \item remaining empPool
 #'     \item remaining listT
 #'     \item remaining listR
 #'     \item man hour database resulting from the assignment
@@ -24,8 +20,8 @@
 #'       This is also merged and described well in \code{\link{getmhDB}}.
 #'   }
 #' @export
-assignPool <- function(empReq, empPool, listT, listR, prioStat = NA_character_, prioCode = FALSE) {
-    .Call('_mansched_assignPool', PACKAGE = 'mansched', empReq, empPool, listT, listR, prioStat, prioCode)
+assignPool <- function(listT, listR, prioStat = NA_character_, prioCode = FALSE) {
+    .Call('_mansched_assignPool', PACKAGE = 'mansched', listT, listR, prioStat, prioCode)
 }
 
 #' Assign an employee

@@ -4,13 +4,9 @@
 \alias{assignPrio}
 \title{Assign pool by priority}
 \usage{
-assignPrio(empReq, empPool, listT, listR)
+assignPrio(listT, listR)
 }
 \arguments{
-\item{empReq}{passed from \code{\link{getmhDB}}}
-
-\item{empPool}{passed from \code{\link{getmhDB}}}
-
 \item{listT}{list of theoretical employees created from empReq}
 
 \item{listR}{list of real employees created fro empPool}

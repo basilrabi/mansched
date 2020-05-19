@@ -118,10 +118,8 @@ getmhDB <- function(empReq,
   indexReq <- which(empReq$personnelClass %in% personnelClass)
 
   # Separate Employee-class objects that cannot be assigned
-  u.empPool <- empPool[-indexPool,]
-  u.empReq  <- empReq[-indexReq,]
-  u.listR   <- listR[-indexPool]
-  u.listT   <- listT[-indexReq]
+  u.listR <- listR[-indexPool]
+  u.listT <- listT[-indexReq]
 
   empPool <- empPool[indexPool,]
   empReq  <- empReq[indexReq,]
@@ -131,16 +129,13 @@ getmhDB <- function(empReq,
   personnelSet <- lapply(personnelClass, FUN = function(x) {
     iP <- which(empPool$personnelClass == x)
     iR <- which(empReq$personnelClass == x)
-    return(list(empReq[iR,], empPool[iP,], listT[iR], listR[iP]))
+    return(list(listT[iR], listR[iP]))
   })
 
   cat("Assigning employees.\n")
 
   assignedData <- lapply(X = personnelSet, FUN = function(x) {
-    assignPrio(empReq  = x[[1]],
-               empPool = x[[2]],
-               listT   = x[[3]],
-               listR   = x[[4]])
+    assignPrio(listT = x[[1]], listR = x[[2]])
   })
 
   mhDB      <- lapply(assignedData, FUN = function(x) {x[[1]]})
