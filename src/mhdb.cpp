@@ -45,6 +45,37 @@ Rcpp::DataFrame mhdbBlank ( const Rcpp::S4& emp )
   return mhDB;
 }
 
+Rcpp::DataFrame mhdbFilter ( Rcpp::DataFrame mhdb )
+{
+  Rcpp::StringVector  id       = Rcpp::as<Rcpp::StringVector >( mhdb["ID"       ] );
+  Rcpp::StringVector  reqid    = Rcpp::as<Rcpp::StringVector >( mhdb["reqID"    ] );
+  Rcpp::IntegerVector mh       = Rcpp::as<Rcpp::IntegerVector>( mhdb["mh"       ] );
+  Rcpp::StringVector  mhType   = Rcpp::as<Rcpp::StringVector >( mhdb["mhType"   ] );
+  Rcpp::IntegerVector month    = Rcpp::as<Rcpp::IntegerVector>( mhdb["month"    ] );
+  Rcpp::NumericVector np       = Rcpp::as<Rcpp::NumericVector>( mhdb["np"       ] );
+  Rcpp::StringVector  costCode = Rcpp::as<Rcpp::StringVector >( mhdb["costCode" ] );
+
+  Rcpp::LogicalVector withValues = mh > 0;
+  id       = id      [withValues];
+  reqid    = reqid   [withValues];
+  mh       = mh      [withValues];
+  mhType   = mhType  [withValues];
+  month    = month   [withValues];
+  np       = np      [withValues];
+  costCode = costCode[withValues];
+  Rcpp::DataFrame mhDB = Rcpp::DataFrame::create(
+    Rcpp::Named( "ID"               ) = id,
+    Rcpp::Named( "reqID"            ) = reqid,
+    Rcpp::Named( "mh"               ) = mh,
+    Rcpp::Named( "mhType"           ) = mhType,
+    Rcpp::Named( "month"            ) = month,
+    Rcpp::Named( "np"               ) = np,
+    Rcpp::Named( "costCode"         ) = costCode,
+    Rcpp::Named( "stringsAsFactors" ) = false
+  );
+  return mhDB;
+}
+
 Rcpp::DataFrame dfAppend ( Rcpp::DataFrame a, Rcpp::DataFrame b, R_xlen_t& x )
 {
   R_xlen_t lengthB = ( Rcpp::as<Rcpp::StringVector>( b["ID"] ) ).length();

@@ -9,6 +9,9 @@ Rcpp::DataFrame combineMHDB ( Rcpp::DataFrame a, Rcpp::DataFrame b );
 // 1-row manhours database
 Rcpp::DataFrame mhdbBlank ( const Rcpp::S4& emp );
 
+// Exclude rows with zero man-hours in mhdb
+Rcpp::DataFrame mhdbFilter ( Rcpp::DataFrame mhdb );
+
 // Append man-hours database b to man-hours database a. `x` is the index in R of
 // the first empty row in a where b will be appended to. If the rows are not
 // enough, man-hours database a will be expanded.

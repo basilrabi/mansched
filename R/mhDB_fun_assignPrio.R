@@ -43,7 +43,7 @@
 #'   }
 #' @export assignPrio
 #' @importFrom data.table rbindlist
-#' @importFrom dplyr "%>%"
+#' @importFrom dplyr "%>%" bind_rows
 #' @importFrom tidyr gather
 assignPrio <- function(listT, listR) {
 
@@ -73,13 +73,14 @@ assignPrio <- function(listT, listR) {
     }
   }
 
-  tempData4 <- data.frame(ID       = NA,
-                          reqID    = NA,
-                          mh       = NA,
-                          mhType   = NA,
-                          month    = NA,
-                          np       = NA,
-                          costCode = NA)
+  tempData4 <- data.frame(ID       = as.character(NA),
+                          reqID    = as.character(NA),
+                          mh       = as.integer(NA),
+                          mhType   = as.character(NA),
+                          month    = as.integer(NA),
+                          np       = as.numeric(NA),
+                          costCode = as.character(NA),
+                          stringsAsFactors = FALSE)
 
   if (length(listR) > 0) {
     poolDCC <- sapply(listR, function(x){x@dcc})
@@ -95,11 +96,12 @@ assignPrio <- function(listT, listR) {
       aviHours <- sapply(listR.dcc, FUN = function(x) {sum(getHours(x))})
       listR.dcc <- listR.dcc[which(aviHours > 0)]
 
-      for (i in listR.dcc) {
-        i@costCode <- i@dcc
-        tempMHDB  <- assignEmp(empT = i, empR = i, selfAssign = TRUE)
-        tempData4 <- dfAppend(tempData4, tempMHDB)
-      }
+      tempData4 <- lapply(listR.dcc, function(x) {
+        x@costCode <- x@dcc
+        return(assignEmp(empT = x, empR = x, selfAssign = TRUE))
+      }) %>%
+        data.table::rbindlist() %>%
+        dplyr::bind_rows(tempData4)
     }
   }
 
@@ -127,14 +129,13 @@ assignPrio <- function(listT, listR) {
     mhPool <- as.data.frame(mhPool)
 
     if (nrow(mhPool) > 0) {
-
-      for (i in listTN) {
-        if (sum(getHours(i)) > 0) {
-          tempData    <- assignEmp(empT = i, empR = i, selfAssign = TRUE)
-          tempData$np <- 0L
-          mhDB        <- dfAppend(mhDB, tempData)
-        }
-      }
+      mhDB <- lapply(listTN, function(x) {
+        tempData <- assignEmp(empT = x, empR = x, selfAssign = TRUE)
+        tempData$np <- 0
+        return(tempData)
+      }) %>%
+        data.table::rbindlist() %>%
+        dplyr::bind_rows(mhDB)
     } else {
       mhPool <- NULL
     }

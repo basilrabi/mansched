@@ -216,25 +216,25 @@ Rcpp::DataFrame assignEmp ( Rcpp::S4 empT,
                   << ".\n" ;
       Rcpp::stop( "Unauthorized equipemnt!" );
     }
-    return mhdbEmp;
+    return mhdbFilter( mhdbEmp );
   }
   if ( empClass == "Supervisor" || empClass == "Laborer" )
   {
     Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
     assignProductionPersonnel( empT, empR, mhdbEmp, selfAssign );
-    return mhdbEmp;
+    return mhdbFilter( mhdbEmp );
   }
   if ( empClass == "Technical" )
   {
     Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
     assignOperationPersonnel( empT, empR, mhdbEmp, selfAssign );
-    return mhdbEmp;
+    return mhdbFilter( mhdbEmp );
   }
   else if ( empClass == "Clerk" )
   {
     Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeB, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
     assignNonStaff( empT, empR, mhdbEmp, selfAssign );
-    return mhdbEmp;
+    return mhdbFilter( mhdbEmp );
   }
   else if ( empClass == "DivisionManager" ||
             empClass == "GroupManager" ||
@@ -243,7 +243,7 @@ Rcpp::DataFrame assignEmp ( Rcpp::S4 empT,
   {
     Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeA, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot("costCode") );
     assignEmployee( empT, empR, mhdbEmp, selfAssign );
-    return mhdbEmp;
+    return mhdbFilter( mhdbEmp );
   }
   else
   {
