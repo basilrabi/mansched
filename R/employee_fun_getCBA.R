@@ -32,17 +32,11 @@ setMethod(
   signature  = "Employee",
   definition = function(theObject) {
 
-    uniform <- 1750
-    maong <- 800
-    packBag <- 1000
-    waterJug <- 400
-    if (theObject@forecast) {
-      uniform <- 1600
-      maong <- 700
-      packBag <- 980
-      waterJug <- 380
-    }
-    price <- 2 * uniform + maong + packBag + waterJug
+    uniform <- 3500
+    pants <- 800
+    bag <- 1000
+    lunchBox <- 450
+    price <- uniform + pants + bag + lunchBox
     cba <- getCM(theObject)
 
     if (theObject@status != "reg")
