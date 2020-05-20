@@ -74,7 +74,7 @@ NULL
 #'       budget templates.
 #'   }
 #' @export getCost
-#' @importFrom dplyr left_join group_by summarise mutate "%>%"
+#' @importFrom dplyr "%>%" case_when group_by left_join mutate summarise ungroup
 #' @importFrom data.table rbindlist
 #' @importFrom tidyr gather pivot_longer pivot_wider spread
 getCost <- function(mhDB, listR, wage, forecast = FALSE,
@@ -84,6 +84,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   absenteeList   <- NULL
   costCenters    <- NULL
   costCode       <- NULL
+  costCodeNew    <- NULL
   cost           <- NULL
   ID             <- NULL
   LC             <- NULL
@@ -215,7 +216,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   mhDB <- dplyr::left_join(mhDB,
                            empSS[, c("ID", "scheme", "status")],
                            by = "ID") %>%
-    dplyr::left_join(empSM, by = c("ID", "month"))
+    dplyr::left_join(empSM, by = c("ID", "month")) %>%
+    dplyr::mutate(costCode = cleanCC(costCode))
 
   #### Compute Salaries for monthly wagers ####
 
@@ -891,32 +893,22 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
 
   mhDB.SB <- mhDB %>%
     dplyr::group_by(costCode, month) %>%
-    dplyr::summarise(mh = sum(mh))
-
-  mhDB.SB$cost <- round(mhDB.SB$mh * 0.2, digits = 2)
-
-  mhDB.SB$costCodeNew <- sapply(
-    mhDB.SB$costCode,
-    FUN = function(x) {
-
-      if (grepl("13100", x = x))
-        return("13100")
-
-      if (x == "0-0")
-        return("0-0")
-
-      if (grepl("14\\d00", x = x))
-        return("14000")
-
-      if (grepl("1100-A", x = x))
-        return("01100-A")
-
-      else
-        return("01100-B")
-    }
-  )
-
-  mhDB.SB$costCode <- mhDB.SB$costCodeNew
+    dplyr::summarise(mh = sum(mh)) %>%
+    dplyr::mutate(
+      cost = round(mh * 0.2, digits = 2),
+      costCodeNew = dplyr::case_when(
+        grepl("1100CM", x = costCode) ~ "1100CM",
+        grepl("1100DM", x = costCode) ~ "1100DM",
+        grepl("1100MP", x = costCode) ~ "1100MP",
+        grepl("13[0-4][0-9]{2,}", x = costCode) ~ "13102D",
+        grepl("14\\d00", x = costCode) ~ "14000",
+        grepl("1100Y", x = costCode) ~ "1100B",
+        grepl("1100Z", x = costCode) ~ "1100B",
+        TRUE ~ "1100B"
+      )
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(costCode = costCodeNew)
 
   #### Compute for Pag-ibig contribution of employer ####
   cat("\nComputing Pag-ibig contributions.\n")
