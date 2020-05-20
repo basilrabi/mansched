@@ -43,7 +43,7 @@
 #'   }
 #' @export assignPrio
 #' @importFrom data.table rbindlist
-#' @importFrom dplyr "%>%" bind_rows
+#' @importFrom dplyr "%>%" bind_rows mutate
 #' @importFrom tidyr gather
 assignPrio <- function(listT, listR) {
 
@@ -92,7 +92,8 @@ assignPrio <- function(listT, listR) {
 
       # Drop overtime hours
       discardedOT_dcc <- lapply(listR.dcc, normEmp) %>%
-        data.table::rbindlist()
+        data.table::rbindlist() %>%
+        dplyr::filter(mh > 0)
       aviHours <- sapply(listR.dcc, FUN = function(x) {sum(getHours(x))})
       listR.dcc <- listR.dcc[which(aviHours > 0)]
 
@@ -113,7 +114,8 @@ assignPrio <- function(listT, listR) {
   if (length(listR) > 0) {
     listTN <- listR
     discardedOT_00  <- lapply(listTN, normEmp) %>%
-      data.table::rbindlist()
+      data.table::rbindlist() %>%
+      dplyr::filter(mh > 0)
     mhPool <- lapply(listTN, FUN = function(x) {
       mh       <- as.data.frame(getHours(x))
       mh$month <- 1:12
@@ -130,8 +132,8 @@ assignPrio <- function(listT, listR) {
 
     if (nrow(mhPool) > 0) {
       mhDB <- lapply(listTN, function(x) {
-        tempData <- assignEmp(empT = x, empR = x, selfAssign = TRUE)
-        tempData$np <- 0
+        tempData <- assignEmp(empT = x, empR = x, selfAssign = TRUE) %>%
+          dplyr::mutate(np = 0)
         return(tempData)
       }) %>%
         data.table::rbindlist() %>%
