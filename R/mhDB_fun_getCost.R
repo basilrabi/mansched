@@ -74,32 +74,61 @@ NULL
 #'       budget templates.
 #'   }
 #' @export getCost
-#' @importFrom dplyr "%>%" case_when group_by left_join mutate summarise ungroup
-#' @importFrom data.table rbindlist
+#' @importFrom dplyr "%>%" case_when filter group_by left_join mutate select summarise ungroup
+#' @importFrom data.table data.table rbindlist
 #' @importFrom tidyr gather pivot_longer pivot_wider spread
 getCost <- function(mhDB, listR, wage, forecast = FALSE,
                     bonusFactorYearEnd = 1.5, absentee = NA, monthStart = 1L) {
 
   # Fix for "no visible binding for global variable" note in R CMD check
+  HM             <- NULL
+  ID             <- NULL
+  LC             <- NULL
+  PI             <- NULL
+  X              <- NULL
+  XholHours      <- NULL
+  Xmh            <- NULL
+  abCost         <- NULL
+  abHours        <- NULL
   absenteeList   <- NULL
+  code           <- NULL
+  cost           <- NULL
   costCenters    <- NULL
   costCode       <- NULL
   costCodeNew    <- NULL
-  cost           <- NULL
-  ID             <- NULL
-  LC             <- NULL
+  costNP         <- NULL
+  costWage       <- NULL
+  hRateA         <- NULL
+  hRateB         <- NULL
+  i              <- NULL
+  isOT.R         <- NULL
+  isOT.S         <- NULL
+  isStaff        <- NULL
+  maxReg         <- NULL
   mh             <- NULL
+  mhDB.m.R.Reg.M <- NULL
+  mhTot          <- NULL
   mhType         <- NULL
+  mp             <- NULL
+  np             <- NULL
+  npR            <- NULL
+  npS            <- NULL
+  premiumR       <- NULL
+  premiumS       <- NULL
   retentionBonus <- NULL
+  riceSub        <- NULL
+  s              <- NULL
+  sB             <- NULL
   sal            <- NULL
   salH           <- NULL
   salM           <- NULL
+  salMB          <- NULL
+  scheme         <- NULL
+  sg             <- NULL
   status         <- NULL
   totalCost      <- NULL
   totMH          <- NULL
   totMHCostCode  <- NULL
-  X              <- NULL
-  XholHours      <- NULL
   distType  <- c("reg", "rd", "sh", "lh", "nh", "rs", "rl", "rn")
 
   # Arrange absentee to a data.frame
@@ -118,9 +147,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
 
   # Error if any ID in wage is duplicated
   if (anyDuplicated(wage$ID) > 0) {
-
     tempData <- wage$ID[which(duplicated(wage$ID))]
-
     cat(paste("Duplicated :", tempData, "\n", sep = ""))
     stop("There must be no duplicated ID's in wage data!")
   }
@@ -164,13 +191,13 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   # > isStaff
   # > assign salary increase
   wage <- dplyr::left_join(wage,
-                           empSS[,c("ID", "isRF", "isStaff")],
+                           dplyr::select(empSS, ID, isRF, isStaff),
                            by = "ID") %>%
     dplyr::mutate(sB = dplyr::case_when(
-      forecast ~ .$s,
-      TRUE ~ .$i
+      forecast ~ s,
+      TRUE ~ i
     )) %>%
-    dplyr::mutate(i = NULL)
+    dplyr::select(-i)
 
   #### Assign totHours ####
   wage$totHours <- sapply(wage$ID, FUN = function(x) {
@@ -198,8 +225,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   wage$hRateA <- tempData[1,]
   wage$hRateB <- tempData[2,]
 
-  wageM <- wage[, c("ID", "s", "sB")]
-  wageH <- wage[, c("ID", "hRateA", "hRateB")]
+  wageM <- dplyr::select(wage, ID, s, sB)
+  wageH <- dplyr::select(wage, ID, hRateA, hRateB)
 
   colnames(wageM)[c(2,3)] <- c("a", "b")
   colnames(wageH)[c(2,3)] <- c("a", "b")
@@ -210,11 +237,11 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     tidyr::pivot_longer(-ID, names_to = "sal", values_to = "salH")
 
   wageEmp <- dplyr::left_join(x  = wageM, y  = wageH, by = c("ID", "sal")) %>%
-    dplyr::left_join(wage[, c("ID", "isRF")], by = "ID")
+    dplyr::left_join(dplyr::select(wage, ID, isRF), by = "ID")
 
   # Join sal, scheme, status, and maxReg
   mhDB <- dplyr::left_join(mhDB,
-                           empSS[, c("ID", "scheme", "status")],
+                           dplyr::select(empSS,  ID, scheme, status),
                            by = "ID") %>%
     dplyr::left_join(empSM, by = c("ID", "month")) %>%
     dplyr::mutate(costCode = cleanCC(costCode))
@@ -223,438 +250,212 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
 
   cat("\nComputing salaries for non-RF.\n")
 
-  mhDB.m <- mhDB[which(mhDB$scheme == "m"), !colnames(mhDB) %in% c("scheme")]
+  mhDB.m <- dplyr::filter(mhDB, scheme == "m") %>% dplyr::select(-scheme)
 
   ## Separate Regular Employees
-  mhDB.m.R <- mhDB.m[mhDB.m$status == "reg",
-                     !colnames(mhDB.m) %in% c("sal", "status", "maxReg")]
-
-  ### Get isOT.R
-  mhDB.m.R <- dplyr::left_join(x = mhDB.m.R,
-                               y = premium.nonRF[,c("isOT.R",
-                                                    "premiumR",
-                                                    "npR",
-                                                    "mhType")],
-                               by = c("mhType"))
+  mhDB.m.R <- dplyr::filter(mhDB.m, status == "reg") %>%
+    dplyr::select(-c(sal, status, maxReg)) %>%
+    dplyr::left_join(
+      dplyr::select(premium.nonRF, isOT.R, premiumR, npR, mhType),
+      by = c("mhType")
+    )
 
   ### Separate non-OT
-  mhDB.m.R.Reg <- mhDB.m.R[which(!mhDB.m.R$isOT.R),
-                           !colnames(mhDB.m.R) %in% c("mhType",
-                                                      "isOT.R",
-                                                      "premiumR")]
+  mhDB.m.R.Reg <- dplyr::filter(mhDB.m.R, !isOT.R) %>%
+    dplyr::select(-c(mhType, isOT.R, premiumR))
 
   #### Get monthly wage minus absences
-
   mhDB.m.R.Reg.M <- mhDB.m.R.Reg %>%
     dplyr::group_by(ID, month) %>%
-    dplyr::summarise(mhTot = sum(mh))
-
-  mhDB.m.R.Reg.M <- dplyr::left_join(
-    x  = mhDB.m.R.Reg.M,
-    y  = unique(mhDB[, c("ID", "month", "maxReg")]),
-    by = c("ID", "month")
-  )
-
-  ##### Get absences hours
-  mhDB.m.R.Reg.M$abHours <- mhDB.m.R.Reg.M$maxReg - mhDB.m.R.Reg.M$mhTot
-
-  ##### Get salary scheme
-  mhDB.m.R.Reg.M <- dplyr::left_join(
-    x  = mhDB.m.R.Reg.M,
-    y  = unique(mhDB[,c("ID", "month", "sal")]),
-    by = c("ID", "month")
-  )
-
-  ##### Get monthly and hourly salary
-  mhDB.m.R.Reg.M <- dplyr::left_join(
-    x  = mhDB.m.R.Reg.M,
-    y  = wageEmp[, !colnames(wageEmp) %in% c("isRF")],
-    by = c("ID", "sal")
-  )
-
-  ##### Get absences cost
-  mhDB.m.R.Reg.M$abCost <- round(
-    mhDB.m.R.Reg.M$salH * mhDB.m.R.Reg.M$abHours, digits = 2
-  )
-
-  ##### monthly wage minus absences = salMB
-  mhDB.m.R.Reg.M$salMB <- mhDB.m.R.Reg.M$salM - mhDB.m.R.Reg.M$abCost
+    dplyr::summarise(mhTot = sum(mh)) %>%
+    dplyr::left_join(
+      unique(dplyr::select(mhDB, ID, month, maxReg)),
+      by = c("ID", "month")
+    ) %>%
+    dplyr::mutate(abHours = maxReg - mhTot) %>%
+    dplyr::left_join(unique(dplyr::select(mhDB, ID, month, sal)),
+                     by = c("ID", "month")) %>%
+    dplyr::left_join(dplyr::select(wageEmp, -isRF),
+                     by = c("ID", "sal")) %>%
+    dplyr::mutate(abCost = round(salH * abHours, digits = 2)) %>%
+    dplyr::mutate(salMB = salM - abCost)
 
   #### Combine salMB
   mhDB.m.R.Reg <- dplyr::left_join(
     x  = mhDB.m.R.Reg,
-    y  = mhDB.m.R.Reg.M[,c("ID", "month", "mhTot", "salH", "salMB")],
+    y  = dplyr::select(mhDB.m.R.Reg.M, ID, month, mhTot, salH, salMB),
     by = c("ID", "month")
-  )
-
-  #### Get man hour fraction of each cost code per month
-  mhDB.m.R.Reg$Xmh <- mhDB.m.R.Reg$mh / mhDB.m.R.Reg$mhTot
-
-  #### Compute Costs
-  #### These costs are purely worked
-  mhDB.m.R.Reg$costWage <- round(mhDB.m.R.Reg$Xmh * mhDB.m.R.Reg$salMB,
-                                 digits = 2)
-  mhDB.m.R.Reg$costNP   <- round(
-    mhDB.m.R.Reg$salH * mhDB.m.R.Reg$np * mhDB.m.R.Reg$npR, digits = 2)
+  ) %>%
+    dplyr::mutate(Xmh = mh / mhTot) %>%
+    dplyr::mutate(costWage = round(Xmh * salMB, digits = 2),
+                  costNP = round(salH * np * npR, digits = 2))
 
   ### Separate OT
-
-  mhDB.m.R.OT <- mhDB.m.R[which(mhDB.m.R$isOT.R),
-                          !colnames(mhDB.m.R) %in% c("mhType")]
-
-  #### Get salary scheme
-  mhDB.m.R.OT <- dplyr::left_join(
-    x  = mhDB.m.R.OT,
-    y  = unique(mhDB[,c("ID", "month", "sal")]),
-    by = c("ID", "month")
-  )
-
-  #### Get hourly wage
-  mhDB.m.R.OT <- dplyr::left_join(
-    x  = mhDB.m.R.OT,
-    y  = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")],
-    by = c("ID", "sal")
-  )
-
-  #### Compute Costs
-  mhDB.m.R.OT$costWage <- round(
-    mhDB.m.R.OT$salH * mhDB.m.R.OT$mh * mhDB.m.R.OT$premiumR, digits = 2
-  )
-
-  mhDB.m.R.OT$costNP   <- round(
-    mhDB.m.R.OT$salH * mhDB.m.R.OT$np * mhDB.m.R.OT$npR, digits = 2
-  )
+  mhDB.m.R.OT <- dplyr::filter(mhDB.m.R, isOT.R) %>%
+    dplyr::select(-mhType) %>%
+    dplyr::left_join(unique(dplyr::select(mhDB, ID, month, sal)),
+                     by = c("ID", "month")) %>%
+    dplyr::left_join(dplyr::select(wageEmp, -c(salM, isRF)),
+                     by = c("ID", "sal")) %>%
+    dplyr::mutate(costWage = round(salH * mh * premiumR, digits = 2),
+                  costNP = round(salH * np * npR, digits = 2))
 
   ## Separate probationary employees
-
-  mhDB.m.P <- mhDB.m[mhDB.m$status == "pro",
-                     !colnames(mhDB.m) %in% c("sal", "status", "maxReg")]
-
-  ### Get isOT.S
-  mhDB.m.P <- dplyr::left_join(x  = mhDB.m.P,
-                               y  = premium.nonRF[, c("isOT.S",
-                                                      "premiumS",
-                                                      "npS",
-                                                      "mhType")],
-                               by = "mhType")
+  mhDB.m.P <- dplyr::filter(mhDB.m, status == "pro") %>%
+    dplyr::select(-c(sal, status, maxReg)) %>%
+    dplyr::left_join(
+      dplyr::select(premium.nonRF, isOT.S, premiumS, npS, mhType),
+      by = "mhType"
+    )
 
   ### Separate non-OT
-  mhDB.m.P.Reg <- mhDB.m.P[which(!mhDB.m.P$isOT.S),
-                           !colnames(mhDB.m.P) %in% c("mhType",
-                                                      "isOT.S",
-                                                      "premiumS")]
+  mhDB.m.P.Reg <- dplyr::filter(mhDB.m.P, !isOT.S) %>%
+    dplyr::select(-c(mhType, isOT.S, premiumS))
 
   #### Get monthly wage minus absences
-
   mhDB.m.P.Reg.M <- mhDB.m.P.Reg %>%
     dplyr::group_by(ID, month) %>%
-    dplyr::summarise(mhTot = sum(mh))
-
-  mhDB.m.P.Reg.M <- dplyr::left_join(
-    x  = mhDB.m.P.Reg.M,
-    y  = unique(mhDB[, c("ID", "month", "maxReg")]),
-    by = c("ID", "month")
-  )
-
-  ##### Get absences hours
-  mhDB.m.P.Reg.M$abHours <- mhDB.m.P.Reg.M$maxReg - mhDB.m.P.Reg.M$mhTot
-
-  ##### Get salary scheme
-  mhDB.m.P.Reg.M <- dplyr::left_join(
-    x  = mhDB.m.P.Reg.M,
-    y  = unique(mhDB[, c("ID", "month", "sal")]),
-    by = c("ID", "month")
-  )
-
-  ##### Get monthly and hourly salary
-  mhDB.m.P.Reg.M <- dplyr::left_join(
-    x = mhDB.m.P.Reg.M,
-    y = wageEmp[, !colnames(wageEmp) %in% c("isRF")],
-    by = c("ID", "sal")
-  )
-
-  ##### Get absences cost
-  mhDB.m.P.Reg.M$abCost <- round(
-    mhDB.m.P.Reg.M$salH * mhDB.m.P.Reg.M$abHours, digits = 2
-  )
-
-  ##### monthly wage minus absences = salMB
-  mhDB.m.P.Reg.M$salMB <- mhDB.m.P.Reg.M$salM - mhDB.m.P.Reg.M$abCost
+    dplyr::summarise(mhTot = sum(mh)) %>%
+    dplyr::left_join(unique(dplyr::select(mhDB, ID, month, maxReg)),
+                     by = c("ID", "month")) %>%
+    dplyr::mutate(abHours = maxReg - mhTot) %>%
+    dplyr::left_join(unique(dplyr::select(mhDB, ID, month, sal)),
+                     by = c("ID", "month")) %>%
+    dplyr::left_join(dplyr::select(wageEmp, -isRF),
+                     by = c("ID", "sal")) %>%
+    dplyr::mutate(abCost = round(salH * abHours, digits = 2)) %>%
+    dplyr::mutate(salMB = salM - abCost)
 
   #### Combine salMB
   mhDB.m.P.Reg <- dplyr::left_join(
     x  = mhDB.m.P.Reg,
-    y  = mhDB.m.P.Reg.M[, c("ID", "month", "mhTot", "salH", "salMB")],
+    y  = dplyr::select(mhDB.m.P.Reg.M, ID, month, mhTot, salH, salMB),
     by = c("ID", "month")
-  )
-
-  #### Get man hour fraction of each cost code per month
-  mhDB.m.P.Reg$Xmh <- mhDB.m.P.Reg$mh / mhDB.m.P.Reg$mhTot
-
-  #### Compute Costs
-  #### These costs are purely worked
-  mhDB.m.P.Reg$costWage <- round(mhDB.m.P.Reg$Xmh * mhDB.m.P.Reg$salMB,
-                                 digits = 2)
-
-  mhDB.m.P.Reg$costNP   <- round(
-    mhDB.m.P.Reg$salH * mhDB.m.P.Reg$np * mhDB.m.P.Reg$npS, digits = 2
-  )
+  ) %>%
+    dplyr::mutate(Xmh = mh / mhTot) %>%
+    dplyr::mutate(costWage = round(Xmh * salMB, digits = 2),
+                  costNP = round(salH * np * npS, digits = 2))
 
   ### Separate OT
-  mhDB.m.P.OT <- mhDB.m.P[which(mhDB.m.P$isOT.S),
-                          !colnames(mhDB.m.P) %in% c("mhType")]
-
-  #### Get salary scheme
-  mhDB.m.P.OT <- dplyr::left_join(
-    x  = mhDB.m.P.OT,
-    y  = unique(mhDB[, c("ID", "month", "sal")]),
-    by = c("ID", "month")
-  )
-
-  #### Get hourly wage
-  mhDB.m.P.OT <- dplyr::left_join(
-    x = mhDB.m.P.OT,
-    y = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")],
-    by = c("ID", "sal")
-  )
-
-  #### Compute costs
-  mhDB.m.P.OT$costWage <- round(
-    mhDB.m.P.OT$salH * mhDB.m.P.OT$mh * mhDB.m.P.OT$premiumS, digits = 2
-  )
-
-  mhDB.m.P.OT$costNP   <- round(
-    mhDB.m.P.OT$salH * mhDB.m.P.OT$np * mhDB.m.P.OT$npS, digits = 2
-  )
+  mhDB.m.P.OT <- dplyr::filter(mhDB.m.P, isOT.S) %>%
+    dplyr::select(-mhType) %>%
+    dplyr::left_join(unique(dplyr::select(mhDB, ID, month, sal)),
+                     by = c("ID", "month")) %>%
+    dplyr::left_join(dplyr::select(wageEmp, -c(salM, isRF)),
+                     by = c("ID", "sal")) %>%
+    dplyr::mutate(costWage = round(salH * mh * premiumS, digits = 2),
+                  costNP = round(salH * np * npS, digits = 2))
 
   ## Separate seasonal employees
-
-  mhDB.m.S <- mhDB.m[mhDB.m$status == "sea",
-                     !colnames(mhDB.m) %in% c("sal", "status", "maxReg")]
-
-  ### Get isOT.S
-  mhDB.m.S <- dplyr::left_join(x  = mhDB.m.S,
-                               y  = premium.nonRF[, c("isOT.S",
-                                                      "premiumS",
-                                                      "npS",
-                                                      "mhType")],
-                               by = "mhType")
+  mhDB.m.S <- dplyr::filter(mhDB.m, status == "sea") %>%
+    dplyr::select(-c(sal, status, maxReg)) %>%
+    dplyr::left_join(
+      dplyr::select(premium.nonRF, isOT.S, premiumS, npS, mhType),
+      by = "mhType"
+    )
 
   ### Separate non-OT
-  mhDB.m.S.Reg <- mhDB.m.S[which(!mhDB.m.S$isOT.S),
-                           !colnames(mhDB.m.S) %in% c("mhType",
-                                                      "isOT.S",
-                                                      "premiumS")]
+  mhDB.m.S.Reg <- dplyr::filter(mhDB.m.S, !isOT.S) %>%
+    dplyr::select(-c(mhType, isOT.S, premiumS))
 
   #### Get monthly wage minus absences
-
   mhDB.m.S.Reg.M <- mhDB.m.S.Reg %>%
     dplyr::group_by(ID, month) %>%
-    dplyr::summarise(mhTot = sum(mh))
-
-  mhDB.m.S.Reg.M <- dplyr::left_join(
-    x  = mhDB.m.S.Reg.M,
-    y  = unique(mhDB[, c("ID", "month", "maxReg")]),
-    by = c("ID", "month")
-  )
-
-  ##### Get absences hours
-  mhDB.m.S.Reg.M$abHours <- mhDB.m.S.Reg.M$maxReg - mhDB.m.S.Reg.M$mhTot
-
-  ##### Get salary scheme
-  mhDB.m.S.Reg.M <- dplyr::left_join(
-    x  = mhDB.m.S.Reg.M,
-    y  = unique(mhDB[, c("ID", "month", "sal")]),
-    by = c("ID", "month")
-  )
-
-  ##### Get monthly and hourly salary
-  mhDB.m.S.Reg.M <- dplyr::left_join(
-    x  = mhDB.m.S.Reg.M,
-    y  = wageEmp[, !colnames(wageEmp) %in% c("isRF")],
-    by = c("ID", "sal")
-  )
-
-  ##### Get absences cost
-  mhDB.m.S.Reg.M$abCost <- round(
-    mhDB.m.S.Reg.M$salH * mhDB.m.S.Reg.M$abHours, digits = 2
-  )
-
-  ##### monthly wage minus absences = salMB
-  mhDB.m.S.Reg.M$salMB <- mhDB.m.S.Reg.M$salM - mhDB.m.S.Reg.M$abCost
+    dplyr::summarise(mhTot = sum(mh)) %>%
+    dplyr::left_join(
+      unique(dplyr::select(mhDB, ID, month, maxReg)),
+      by = c("ID", "month")
+    ) %>%
+    dplyr::mutate(abHours = maxReg - mhTot) %>%
+    dplyr::left_join(unique(dplyr::select(mhDB, ID, month, sal)),
+                     by = c("ID", "month")) %>%
+    dplyr::left_join(dplyr::select(wageEmp, -isRF),
+                     by = c("ID", "sal")) %>%
+    dplyr::mutate(abCost = round(salH * abHours, digits = 2)) %>%
+    dplyr::mutate(salMB = salM - abCost)
 
   #### Combine salMB
   mhDB.m.S.Reg <- dplyr::left_join(
     x  = mhDB.m.S.Reg,
-    y  = mhDB.m.S.Reg.M[, c("ID", "month", "mhTot", "salH", "salMB")],
+    y  = dplyr::select(mhDB.m.S.Reg.M, ID, month, mhTot, salH, salMB),
     by = c("ID", "month")
-  )
-
-  #### Get man hour fraction of each cost code per month
-  mhDB.m.S.Reg$Xmh <- mhDB.m.S.Reg$mh / mhDB.m.S.Reg$mhTot
-
-  #### Compute Costs
-  #### These costs are purely worked
-  mhDB.m.S.Reg$costWage <- round(mhDB.m.S.Reg$Xmh * mhDB.m.S.Reg$salMB,
-                                 digits = 2)
-
-  mhDB.m.S.Reg$costNP <- round(
-    mhDB.m.S.Reg$salH * mhDB.m.S.Reg$np * mhDB.m.S.Reg$npS, digits = 2
-  )
+  ) %>%
+    dplyr::mutate(Xmh = mh / mhTot) %>%
+    dplyr::mutate(costWage = round(Xmh * salMB, digits = 2),
+                  costNP = round(salH * np * npS, digits = 2))
 
   ### Separate OT
-  mhDB.m.S.OT <- mhDB.m.S[which(mhDB.m.S$isOT.S),
-                          !colnames(mhDB.m.S) %in% c("mhType")]
-
-  #### Get salary scheme
-  mhDB.m.S.OT <- dplyr::left_join(
-    x  = mhDB.m.S.OT,
-    y  = unique(mhDB[, c("ID", "month", "sal")]),
-    by = c("ID", "month")
-  )
-
-  #### Get hourly wage
-  mhDB.m.S.OT <- dplyr::left_join(
-    x  = mhDB.m.S.OT,
-    y  = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")],
-    by = c("ID", "sal")
-  )
-
-  #### Compute costs
-  mhDB.m.S.OT$costWage <- round(
-    mhDB.m.S.OT$salH * mhDB.m.S.OT$mh * mhDB.m.S.OT$premiumS, digits = 2
-  )
-
-  mhDB.m.S.OT$costNP   <- round(
-    mhDB.m.S.OT$salH * mhDB.m.S.OT$np * mhDB.m.S.OT$npS, digits = 2
-  )
+  mhDB.m.S.OT <- dplyr::filter(mhDB.m.S, isOT.S) %>%
+    dplyr::select(-mhType) %>%
+    dplyr::left_join(unique(dplyr::select(mhDB, ID, month, sal)),
+                     by = c("ID", "month")) %>%
+    dplyr::left_join(dplyr::select(wageEmp, -c(salM, isRF)),
+                     by = c("ID", "sal")) %>%
+    dplyr::mutate(costWage = round(salH * mh * premiumS, digits = 2),
+                  costNP = round(salH * np * npS, digits = 2))
 
   #### Compute Salaries for daily wagers ####
   cat("\nComputing salaries for RF.\n")
 
-  mhDB.d <- mhDB[which(mhDB$scheme == "d"),
-                 !colnames(mhDB) %in% c("scheme")]
-
-  ## Get hourly salary
-  mhDB.d <- dplyr::left_join(
-    x  = mhDB.d,
-    y  = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")],
-    by = c("ID", "sal")
-  )
+  mhDB.d <- dplyr::filter(mhDB, scheme == "d") %>%
+    dplyr::select(-scheme) %>%
+    dplyr::left_join(dplyr::select(wageEmp, -c(salM, isRF)),
+                     by = c("ID", "sal"))
 
   ## Separate Regular Employees
-  mhDB.d.R <- mhDB.d[mhDB.d$status == "reg",
-                     !colnames(mhDB.d) %in% c("status", "maxReg")]
+  mhDB.d.R <- dplyr::filter(mhDB.d, status == "reg") %>%
+    dplyr::select(-c(status, maxReg)) %>%
+    dplyr::left_join(
+      y  = dplyr::select(premium.RF, isOT.R, premiumR, npR, mhType),
+      by = "mhType"
+    ) %>%
+    dplyr::mutate(costWage = round(salH * mh * premiumR, digits = 2),
+                  costNP = round(salH * np * npR, digits = 2))
 
-  ### Get premium
-  mhDB.d.R <- dplyr::left_join(
-    x  = mhDB.d.R,
-    y  = premium.RF[, c("isOT.R", "premiumR", "npR", "mhType")],
-    by = "mhType"
-  )
-
-  ### Get cost
-  mhDB.d.R$costWage <- round(
-    mhDB.d.R$salH * mhDB.d.R$mh * mhDB.d.R$premiumR, digits = 2
-  )
-
-  mhDB.d.R$costNP   <- round(
-    mhDB.d.R$salH * mhDB.d.R$np * mhDB.d.R$npR, digits = 2
-  )
-
-  ### Separate non-OT
-  mhDB.d.R.Reg <- mhDB.d.R[which(!mhDB.d.R$isOT.R),]
-
-  ### Separate OT
-  mhDB.d.R.OT <- mhDB.d.R[which(mhDB.d.R$isOT.R),]
+  ### Separate non-OT and OT
+  mhDB.d.R.Reg <- dplyr::filter(mhDB.d.R, !isOT.R)
+  mhDB.d.R.OT <- dplyr::filter(mhDB.d.R, isOT.R)
 
   ## Separate probationary employees
-  mhDB.d.P <- mhDB.d[mhDB.d$status == "pro",
-                     !colnames(mhDB.d) %in% c("status", "maxReg")]
+  mhDB.d.P <- dplyr::filter(mhDB.d, status == "pro") %>%
+    dplyr::select(-c(status, maxReg)) %>%
+    dplyr::left_join(dplyr::select(premium.RF, isOT.S, premiumS, npS, mhType),
+                     by = "mhType") %>%
+    dplyr::mutate(costWage = round(salH * mh * premiumS, digits = 2),
+                  costNP = round(salH * np * npS, digits = 2))
 
-  ### Get premium
-  mhDB.d.P <- dplyr::left_join(
-    x  = mhDB.d.P,
-    y  = premium.RF[, c("isOT.S", "premiumS", "npS", "mhType")],
-    by = "mhType"
-  )
-
-  ### Get cost
-  mhDB.d.P$costWage <- round(
-    mhDB.d.P$salH * mhDB.d.P$mh * mhDB.d.P$premiumS, digits = 2
-  )
-
-  mhDB.d.P$costNP   <- round(
-    mhDB.d.P$salH * mhDB.d.P$np * mhDB.d.P$npS , digits = 2
-  )
-
-  ### Separate non-OT
-  mhDB.d.P.Reg <- mhDB.d.P[which(!mhDB.d.P$isOT.S),]
-
-  ### Separate OT
-  mhDB.d.P.OT <- mhDB.d.P[which(mhDB.d.P$isOT.S),]
+  ### Separate non-OT and OT
+  mhDB.d.P.Reg <- dplyr::filter(mhDB.d.P, !isOT.S)
+  mhDB.d.P.OT <- dplyr::filter(mhDB.d.P, isOT.S)
 
   ## Separate seasonal employees
-  mhDB.d.S <- mhDB.d[mhDB.d$status == "sea",
-                     !colnames(mhDB.d) %in% c("status", "maxReg")]
+  mhDB.d.S <- dplyr::filter(mhDB.d, status == "sea") %>%
+    dplyr::select(-c(status, maxReg)) %>%
+    dplyr::left_join(dplyr::select(premium.RF, isOT.S, premiumS, npS, mhType),
+                     by = "mhType") %>%
+    dplyr::mutate(costWage = round(salH * mh * premiumS, digits = 2),
+                  costNP = round(salH * np * npS, digits = 2))
 
-  ### Get premium
-  mhDB.d.S <- dplyr::left_join(
-    x  = mhDB.d.S,
-    y  = premium.RF[, c("isOT.S", "premiumS", "npS", "mhType")],
-    by = "mhType"
-  )
-
-  ### Get cost
-  mhDB.d.S$costWage <- round(
-    mhDB.d.S$salH * mhDB.d.S$mh * mhDB.d.S$premiumS, digits = 2
-  )
-
-  mhDB.d.S$costNP   <- round(
-    mhDB.d.S$salH * mhDB.d.S$np * mhDB.d.S$npS, digits = 2
-  )
-
-  ### Separate non-OT
-  mhDB.d.S.Reg <- mhDB.d.S[which(!mhDB.d.S$isOT.S),]
-
-  ### Separate OT
-  mhDB.d.S.OT <- mhDB.d.S[which(mhDB.d.S$isOT.S),]
+  ### Separate non-OT and OT
+  mhDB.d.S.Reg <- dplyr::filter(mhDB.d.S, !isOT.S)
+  mhDB.d.S.OT <- dplyr::filter(mhDB.d.S, isOT.S)
 
   ## Separate agency employees
-  mhDB.d.A <- mhDB.d[mhDB.d$status == "age",
-                     !colnames(mhDB.d) %in% c("status", "maxReg")]
-
-  ### Get premium
-  mhDB.d.A <- dplyr::left_join(
-    x  = mhDB.d.A,
-    y  = premium.RF[, c("isOT.S", "premiumS", "npS", "mhType")],
-    by = "mhType"
-  )
-
-  ### Get cost
-  mhDB.d.A$costWage <- round(
-    mhDB.d.A$salH * mhDB.d.A$mh * mhDB.d.A$premiumS, digits = 2
-  )
-
-  mhDB.d.A$costNP   <- round(
-    mhDB.d.A$salH * mhDB.d.A$np * mhDB.d.A$npS, digits = 2
-  )
-
-  mhDB.d.A$cost <- mhDB.d.A$costWage + mhDB.d.A$costNP
+  mhDB.d.A <- dplyr::filter(mhDB.d, status == "age") %>%
+    dplyr::select(-c(status, maxReg)) %>%
+    dplyr::left_join(dplyr::select(premium.RF, isOT.S, premiumS, npS, mhType),
+                     by = "mhType") %>%
+    dplyr::mutate(costWage = round(salH * mh * premiumS, digits = 2),
+                  costNP = round(salH * np * npS, digits = 2)) %>%
+    dplyr::mutate(cost = costWage + costNP)
 
   #### Distribute holHours ####
-
-  hol.mhDB <- mhDB[mhDB$mhType == "reg",
-                   !colnames(mhDB) %in% c("mhType", "np", "scheme", "maxReg")]
-
-  hol.mhDB <- dplyr::left_join(
-    x  = hol.mhDB,
-    y  = unique(wageEmp[, colnames(wageEmp) %in% c("ID", "isRF")]),
-    by = "ID"
-  )
-
-  hol.mhDB.m <- hol.mhDB[!hol.mhDB$isRF, ]
-  hol.mhDB.d <- hol.mhDB[hol.mhDB$isRF,  ]
+  hol.mhDB <- dplyr::filter(mhDB, mhType == "reg") %>%
+    dplyr::select(-c(mhType, np, scheme, maxReg)) %>%
+    dplyr::left_join(unique(dplyr::select(wageEmp, ID, isRF)),
+                     by = "ID")
+  hol.mhDB.m <- dplyr::filter(hol.mhDB, !isRF)
+  hol.mhDB.d <- dplyr::filter(hol.mhDB, isRF)
 
   ## Create data.frame of holHours
   holHours <- lapply(listR, FUN = function(x) {
@@ -662,42 +463,27 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
                month            = 1:12,
                holHours         = x@holHours,
                stringsAsFactors = FALSE)
-  })
+  }) %>%
+    data.table::rbindlist(use.names = TRUE) %>%
+    dplyr::left_join(unique(dplyr::select(mhDB, ID, month, sal)),
+                     by = c("ID", "month")) %>%
+    dplyr::left_join(dplyr::select(wageEmp, -salM),
+                     by = c("ID", "sal"))
 
-  holHours <- data.table::rbindlist(holHours, use.names = TRUE)
-
-  ## Get sal
-  holHours <- dplyr::left_join(
-    x  = holHours,
-    y  = unique(mhDB[, c("ID", "month", "sal")]),
-    by = c("ID", "month")
-  )
-
-  ## Get salH
-  holHours <- dplyr::left_join(
-    x  = holHours,
-    y  = wageEmp[, !colnames(wageEmp) %in% c("salM")],
-    by = c("ID", "sal")
-  )
-
-  holHours.m <- holHours[!holHours$isRF, ]
-  holHours.d <- holHours[holHours$isRF,  ]
-
-  holHours.d$costWage <- holHours.d$salH * holHours.d$holHours
+  holHours.m <- dplyr::filter(holHours, !isRF)
+  holHours.d <- dplyr::filter(holHours, isRF) %>%
+    dplyr::mutate(costWage = salH * holHours)
 
   ## Merge costWage and holHours to hol.mhDB.d
   hol.mhDB.d <- dplyr::left_join(
     x  = hol.mhDB.d,
-    y  = unique(holHours.d[, colnames(holHours.d) %in% c("ID",
-                                                         "month",
-                                                         "holHours",
-                                                         "costWage")]),
+    y  = unique(dplyr::select(holHours.d, ID, month, holHours, costWage)),
     by = c("ID", "month")
   )
 
   hol.mhDB.m <- dplyr::left_join(
     x  = hol.mhDB.m,
-    y  = holHours.m[, colnames(holHours.m) %in% c("ID", "month", "holHours")],
+    y  = dplyr::select(holHours.m, ID, month, holHours),
     by = c("ID", "month")
   )
 
@@ -720,66 +506,51 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   hol.mhDB.d$XcostWage <- round(hol.mhDB.d$X * hol.mhDB.d$costWage, digits = 2)
 
   ## Separate employees by status
-  hol.mhDB.d.R <- hol.mhDB.d[hol.mhDB.d$status %in% c("reg", "pro"),]
-  hol.mhDB.d.S <- hol.mhDB.d[hol.mhDB.d$status == "sea",]
-  hol.mhDB.d.A <- hol.mhDB.d[hol.mhDB.d$status == "age",]
+  hol.mhDB.d.R <- dplyr::filter(hol.mhDB.d, status %in% c("reg", "pro"))
+  hol.mhDB.d.S <- dplyr::filter(hol.mhDB.d, status == "sea")
+  hol.mhDB.d.A <- dplyr::filter(hol.mhDB.d, status == "age")
 
   #### Compute for Employee Allowances ####
   cat("\nComputing employee allowances.\n")
 
   allowance  <- data.table::rbindlist(lapply(listR, getAllowance),
                                       use.names = TRUE)
-  mhDB.allow <- mhDB[mhDB$mhType %in% distType, ] %>%
+  mhDB.allow <- dplyr::filter(mhDB, mhType %in% distType) %>%
     dplyr::group_by(ID, month, costCode, status) %>%
-    dplyr::summarise(mh = sum(mh))
-
-  mhDB.allow <- mhDB.allow %>%
+    dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month, status) %>%
-    dplyr::mutate(totMH = sum(mh))
-
-  mhDB.allow <- dplyr::left_join(mhDB.allow, allowance, by = c("ID", "month"))
-
-  mhDB.allow$X    <- mhDB.allow$mh / mhDB.allow$totMH
-  mhDB.allow$cost <- round(mhDB.allow$X * mhDB.allow$allowance, digits = 2)
+    dplyr::mutate(totMH = sum(mh)) %>%
+    dplyr::left_join(allowance, by = c("ID", "month")) %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::mutate(cost = round(X * allowance, digits = 2))
 
   #### Compute for Safety Gadgets ####
   cat("\nComputing safety gadgets.\n")
 
   safetyGadgets <- data.table::rbindlist(lapply(listR, getSafetyGadgets),
                                          use.names = TRUE)
-  mhDB.safetyGadgets <- mhDB[mhDB$mhType %in% distType, ] %>%
+  mhDB.safetyGadgets <- dplyr::filter(mhDB, mhType %in% distType) %>%
     dplyr::group_by(ID, month, costCode, status) %>%
-    dplyr::summarise(mh = sum(mh))
-
-  mhDB.safetyGadgets <- mhDB.safetyGadgets %>%
+    dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month, status) %>%
-    dplyr::mutate(totMH = sum(mh))
-
-  mhDB.safetyGadgets <- dplyr::left_join(mhDB.safetyGadgets,
-                                         safetyGadgets,
-                                         by = c("ID", "month"))
-  mhDB.safetyGadgets$X <- mhDB.safetyGadgets$mh / mhDB.safetyGadgets$totMH
-  mhDB.safetyGadgets$cost <- round(mhDB.safetyGadgets$X * mhDB.safetyGadgets$sg,
-                                   digits = 2)
+    dplyr::mutate(totMH = sum(mh)) %>%
+    dplyr::left_join(safetyGadgets, by = c("ID", "month")) %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::mutate(cost = round(X * sg, digits = 2))
 
   #### Compute for Group Life Insurance ####
   cat("\nComputing for group life insurance.\n")
 
   groupLife <- data.table::rbindlist(lapply(listR, getGroupLife),
                                      use.names = TRUE)
-  mhDB.groupLife <- mhDB[mhDB$mhType %in% distType, ] %>%
+  mhDB.groupLife <- dplyr::filter(mhDB, mhType %in% distType) %>%
     dplyr::group_by(ID, month, costCode) %>%
-    dplyr::summarise(mh = sum(mh))
-
-  mhDB.groupLife <- mhDB.groupLife %>%
+    dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month) %>%
-    dplyr::mutate(totMH = sum(mh))
-
-  mhDB.groupLife <- dplyr::left_join(mhDB.groupLife,
-                                     groupLife,
-                                     by = c("ID", "month"))
-  mhDB.groupLife$X <- mhDB.groupLife$mh / mhDB.groupLife$totMH
-  mhDB.groupLife$cost <- round(mhDB.groupLife$X * mhDB.groupLife$gl, digits = 2)
+    dplyr::mutate(totMH = sum(mh)) %>%
+    dplyr::left_join(groupLife, by = c("ID", "month")) %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::mutate(cost = round(X * gl, digits = 2))
 
   ####  Compute for Signing Bonus ####
   cat("\nComputing for Signing Bonus.\n")
@@ -787,20 +558,18 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   if (!forecast) {
     signingBonus <- data.table::rbindlist(lapply(listR, getSigningBonus),
                                           use.names = TRUE)
-    mhDB.signingBonus <- mhDB[mhDB$mhType %in% distType & mhDB$month < 6, ] %>%
+    mhDB.signingBonus <- dplyr::filter(mhDB,
+                                       mhType %in% distType,
+                                       mhDB$month < 6) %>%
       dplyr::group_by(ID, costCode) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
-      dplyr::mutate(totMH = sum(mh))
-    mhDB.signingBonus$month <- 5L
-    mhDB.signingBonus$X <- mhDB.signingBonus$mh / mhDB.signingBonus$totMH
-    mhDB.signingBonus <- dplyr::left_join(x = mhDB.signingBonus,
-                                          y = signingBonus,
-                                          by = c("ID", "month"))
-    mhDB.signingBonus$cost <- round(
-      mhDB.signingBonus$X * mhDB.signingBonus$signingBonus, digits = 2
-    )
-    mhDB.signingBonus <- mhDB.signingBonus[!is.na(mhDB.signingBonus$cost),] %>%
+      dplyr::mutate(totMH = sum(mh),
+                    month = 5L) %>%
+      dplyr::mutate(X = mh / totMH) %>%
+      dplyr::left_join(signingBonus, by = c("ID", "month")) %>%
+      dplyr::mutate(cost = round(X * signingBonus, digits = 2)) %>%
+      dplyr::filter(!is.na(cost)) %>%
       dplyr::group_by(costCode, month) %>%
       dplyr::summarise(cost = sum(cost))
   }
@@ -809,17 +578,14 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   cat("\nComputing for HMO.\n")
 
   hmo <- data.table::rbindlist(lapply(listR, getHMO), use.names = TRUE)
-  mhDB.hmo <- mhDB[mhDB$mhType %in% distType, ] %>%
+  mhDB.hmo <- dplyr::filter(mhDB, mhType %in% distType) %>%
     dplyr::group_by(ID, month, costCode) %>%
-    dplyr::summarise(mh = sum(mh))
-
-  mhDB.hmo <- mhDB.hmo %>%
+    dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month) %>%
-    dplyr::mutate(totMH = sum(mh))
-
-  mhDB.hmo <- dplyr::left_join(mhDB.hmo, hmo, by = c("ID", "month"))
-  mhDB.hmo$X <- mhDB.hmo$mh / mhDB.hmo$totMH
-  mhDB.hmo$cost <- round(mhDB.hmo$X * mhDB.hmo$hmo, digits = 2)
+    dplyr::mutate(totMH = sum(mh)) %>%
+    dplyr::left_join(hmo, by = c("ID", "month")) %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::mutate(cost = round(X * hmo, digits = 2))
 
   #### Employee benefits ####
   # cat("\nComputing for employee benefits.\n")
@@ -839,21 +605,17 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     dplyr::group_by(month, ID) %>%
     dplyr::summarise(benefits = sum(benefits))
 
-  mhDB.benefits <- mhDB[mhDB$mhType %in% distType, ] %>%
+  mhDB.benefits <- dplyr::filter(mhDB, mhType %in% distType) %>%
     dplyr::group_by(ID, month, costCode, status) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month) %>%
-    dplyr::mutate(totMH = sum(mh))
+    dplyr::mutate(totMH = sum(mh)) %>%
+    dplyr::left_join(benefits, by = c("ID", "month")) %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::mutate(cost = round(X * benefits, digits = 2))
 
-  mhDB.benefits <- dplyr::left_join(mhDB.benefits,
-                                    benefits,
-                                    by = c("ID", "month"))
-  mhDB.benefits$X <- mhDB.benefits$mh / mhDB.benefits$totMH
-  mhDB.benefits$cost <- round(mhDB.benefits$X * mhDB.benefits$benefits,
-                              digits = 2)
-
-  mhDB.benefits.sea <- mhDB.benefits[mhDB.benefits$status == "sea",]
-  mhDB.benefits.sea$status <- NULL
+  mhDB.benefits.sea <- dplyr::filter(mhDB.benefits, status == "sea") %>%
+    dplyr::select(-status)
   mhDB.benefits$status <- NULL
 
   gcSea <- data.table::rbindlist(lapply(listR, FUN = function(x) {
@@ -865,26 +627,25 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }) , use.names = TRUE)
 
   if (nrow(gcSea) > 0) {
-    mhDB.GC.sea <- mhDB[mhDB$mhType %in% distType &
-                          mhDB$status == "sea" &
-                          mhDB$month %in% 4:10, ] %>%
+    mhDB.GC.sea <- dplyr::filter(mhDB,
+                                 mhType %in% distType,
+                                 status == "sea",
+                                 month %in% 4:10) %>%
       dplyr::group_by(ID, costCode) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
-      dplyr::mutate(totMH = sum(mh))
-    mhDB.GC.sea$month <- 11L
-    mhDB.GC.sea$X <- mhDB.GC.sea$mh / mhDB.GC.sea$totMH
-    mhDB.GC.sea <- dplyr::left_join(x = mhDB.GC.sea,
-                                    y = gcSea,
-                                    by = c("ID", "month"))
-    mhDB.GC.sea$cost <- round(mhDB.GC.sea$X * mhDB.GC.sea$benefits, digits = 2)
+      dplyr::mutate(totMH = sum(mh)) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(month = 11L,
+                    X = mh / totMH) %>%
+      dplyr::left_join(gcSea, by = c("ID", "month")) %>%
+      dplyr::mutate(cost = round(X * benefits, digits = 2))
     mhDB.benefits.sea <- data.table::rbindlist(list(mhDB.benefits.sea,
                                                     mhDB.GC.sea),
                                                use.names = TRUE)
   } else {
     mhDB.GC.sea  <- NULL
   }
-
   mhDB.benefits <- data.table::rbindlist(list(mhDB.benefits, mhDB.GC.sea),
                                          use.names = TRUE)
 
@@ -913,19 +674,19 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   #### Compute for Pag-ibig contribution of employer ####
   cat("\nComputing Pag-ibig contributions.\n")
 
-  mhDB.PI <- mhDB[mhDB$mhType %in% distType, ] %>%
+  mhDB.PI <- dplyr::filter(mhDB, mhType %in% distType) %>%
     dplyr::group_by(ID, month, costCode, status) %>%
-    dplyr::summarise(mh = sum(mh))
-
-  mhDB.PI$PI <- 100
-  mhDB.PI    <- mhDB.PI %>%
+    dplyr::summarise(mh = sum(mh)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(PI = 100) %>%
     dplyr::group_by(ID, month, status) %>%
-    dplyr::mutate(totMH = sum(mh))
+    dplyr::mutate(totMH = sum(mh)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::mutate(cost = round(X * PI, digits = 2))
 
-  mhDB.PI$X    <- mhDB.PI$mh / mhDB.PI$totMH
-  mhDB.PI$cost <- round(mhDB.PI$X * mhDB.PI$PI, digits = 2)
-  mhDB.PI.A    <- mhDB.PI[mhDB.PI$status == "age", ]
-  mhDB.PI      <- mhDB.PI[mhDB.PI$status != "age", ]
+  mhDB.PI.A <- dplyr::filter(mhDB.PI, status == "age")
+  mhDB.PI <- dplyr::filter(mhDB.PI, status != "age")
 
   #### Compute for Phil-Health contribution of employer ####
   cat("\nComputing Philhealth contribution.\n")
@@ -949,55 +710,42 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     }
 
     if (isRF(x)) {
-
       tempData <- dplyr::left_join(
         x  = tempData,
-        y  = wageEmp[wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
-        by = c("ID", "sal"))
-
-      tempData$salM2 <- round(tempData$salM * 313 / 12, digits = 2)
-      tempData$salM  <- tempData$salM2
-      tempData       <- tempData[, !colnames(tempData) %in% c("salM2")]
-
+        y  = dplyr::filter(wageEmp, isRF) %>% dplyr::select(-c(salH, isRF)),
+        by = c("ID", "sal")
+      ) %>%
+        dplyr::mutate(salM = round(salM * 313 / 12, digits = 2))
     } else {
-
       tempData <- dplyr::left_join(
         x  = tempData,
-        y  = wageEmp[!wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
+        y  = dplyr::filter(wageEmp, !isRF) %>% dplyr::select(-c(salH, isRF)),
         by = c("ID", "sal")
       )
     }
 
     tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
-
     tempData$PHIC <- sapply(tempData$salG, FUN = function(x) {
       PHIC$c[which(PHIC$r1 <= x & PHIC$r2 >= x)]
     })
 
-    tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "PHIC")]
-    tempData <- as.data.frame(tempData)
-
+    tempData <- dplyr::select(tempData, month, ID, PHIC)
     tempData
-  })
+  }) %>%
+    data.table::rbindlist(use.names = TRUE)
 
-  PHICdb <- data.table::rbindlist(PHICdb, use.names = TRUE)
-
-  mhDB.PHIC <- mhDB[mhDB$mhType %in% distType, ] %>%
+  mhDB.PHIC <- dplyr::filter(mhDB, mhType %in% distType) %>%
     dplyr::group_by(ID, month, costCode, status) %>%
-    dplyr::summarise(mh = sum(mh))
-
-  mhDB.PHIC <- mhDB.PHIC %>%
+    dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month, status) %>%
-    dplyr::mutate(totMH = sum(mh))
+    dplyr::mutate(totMH = sum(mh)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::left_join(PHICdb, by = c("ID", "month")) %>%
+    dplyr::mutate(cost = round(X * PHIC, digits = 2))
 
-  mhDB.PHIC$X    <- mhDB.PHIC$mh / mhDB.PHIC$totMH
-  mhDB.PHIC      <- dplyr::left_join(x = mhDB.PHIC,
-                                     y = PHICdb,
-                                     by = c("ID", "month"))
-
-  mhDB.PHIC$cost <- round(mhDB.PHIC$X * mhDB.PHIC$PHIC, digits = 2)
-  mhDB.PHIC.A    <- mhDB.PHIC[mhDB.PHIC$status == "age", ]
-  mhDB.PHIC      <- mhDB.PHIC[mhDB.PHIC$status != "age", ]
+  mhDB.PHIC.A <- dplyr::filter(mhDB.PHIC, status == "age")
+  mhDB.PHIC <- dplyr::filter(mhDB.PHIC, status != "age")
 
   #### Compute for Leave Commutation ####
   cat("\nComputing leave commutation.\n")
@@ -1014,7 +762,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
 
   if (length(maxRegDB) > 0) {
     ### Get total reg hours attendance (RH)
-    mhDB.RH <- mhDB[mhDB$status == "reg" & mhDB$mhType == "reg", ] %>%
+    mhDB.RH <- dplyr::filter(mhDB, status == "reg", mhType == "reg") %>%
       dplyr::group_by(ID, month) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       tidyr::pivot_wider(names_from = month,
@@ -1039,11 +787,9 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
       )
 
     ### Join RH to maxRegDB then compute leave hours (LH) per month
-    tempID   <- sapply(listR, FUN = function(x) {x@ID})
+    tempID <- sapply(listR, FUN = function(x) {x@ID})
     maxRegDB <- lapply(maxRegDB, FUN = function(z) {
-
       z <- dplyr::left_join(x = z, y = mhDB.RH, by = c("ID", "month"))
-
       z[is.na(z)] <- 0L
       z$absence <- z$maxReg - z$mh
 
@@ -1051,8 +797,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
         stop("Absence must not be less than 0!")
 
       tempIndex <- which(tempID == z$ID[1])
-      LC        <- listR[[tempIndex]]@leaveHours
-      z$LH      <- 0
+      LC <- listR[[tempIndex]]@leaveHours
+      z$LH <- 0
 
       for (i in 1:12) {
         if (LC > 0) {
@@ -1070,20 +816,13 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
       return(z)
     })
 
-    maxRegDB <- data.table::rbindlist(maxRegDB, use.names = TRUE)
-
-    ### Compute LC cost
-    maxRegDB <- dplyr::left_join(
-      x  = maxRegDB,
-      y  = wageEmp[, !colnames(wageEmp) %in% c("salM", "isRF")],
-      by = c("ID", "sal")
-    )
-    maxRegDB$LC <- maxRegDB$salH * maxRegDB$LH
+    maxRegDB <- data.table::rbindlist(maxRegDB, use.names = TRUE) %>%
+      dplyr::left_join(dplyr::select(wageEmp, -c(salM, isRF)),
+                       by = c("ID", "sal")) %>%
+      dplyr::mutate(LC = salH * LH)
 
     ### Filter-out months with full absences but with leave
-    vacationMode <- dplyr::filter(maxRegDB,
-                                  LC > 0,
-                                  mh < 1)
+    vacationMode <- dplyr::filter(maxRegDB, LC > 0, mh < 1)
 
     if (nrow(vacationMode) > 0) {
       if (is.null(absenteeList))
@@ -1103,21 +842,17 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     }
 
     ### Distribute LC cost for regular employees
-    mhDB.LC.R <-mhDB[mhDB$mhType %in% distType & mhDB$status == "reg", ] %>%
+    mhDB.LC.R <- dplyr::filter(mhDB, mhType %in% distType, status == "reg") %>%
       dplyr::group_by(ID, month, costCode) %>%
-      dplyr::summarise(mh = sum(mh))
-
-    mhDB.LC.R <- mhDB.LC.R %>%
+      dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID, month) %>%
-      dplyr::mutate(totMH = sum(mh))
+      dplyr::mutate(totMH = sum(mh)) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(X = mh / totMH) %>%
+      dplyr::left_join(dplyr::select(maxRegDB, ID, month, LC),
+                       by = c("ID", "month")) %>%
+      dplyr::mutate(cost = round(X * LC, digits = 2))
 
-    mhDB.LC.R$X <- mhDB.LC.R$mh / mhDB.LC.R$totMH
-    mhDB.LC.R   <- dplyr::left_join(
-      x  = mhDB.LC.R,
-      y  = maxRegDB[, colnames(maxRegDB) %in% c("ID", "month", "LC")],
-      by = c("ID", "month")
-    )
-    mhDB.LC.R$cost <- round(mhDB.LC.R$X * mhDB.LC.R$LC, digits = 2)
     if (nrow(vacationMode) > 0 &&
         !is.null(absenteeCost) &&
         nrow(absenteeCost) > 0) {
@@ -1148,41 +883,35 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   if (nrow(LH) > 0) {
     ### Get LC cost per employee for the whole year
     LH <- dplyr::left_join(x  = LH,
-                           y  = wageEmp[ ,
-                                         !colnames(wageEmp) %in% c("salM",
-                                                                   "isRF")],
-                           by = c("ID", "sal"))
-
-    LH$LC <- LH$LH * LH$salH
+                           y  = dplyr::select(wageEmp, -c(salM, isRF)),
+                           by = c("ID", "sal")) %>%
+      dplyr::mutate(LC = LH * salH)
 
     ### Distribute LC throughout the year
-    mhDB.LC.S <- mhDB[mhDB$status %in% c("sea", "age") &
-                        mhDB$mhType %in% distType, ] %>%
+    mhDB.LC.S <- dplyr::filter(mhDB,
+                               status %in% c("sea", "age"),
+                               mhType %in% distType) %>%
       dplyr::group_by(ID, month, costCode, status) %>%
-      dplyr::summarise(mh = sum(mh))
-
-    mhDB.LC.S <- mhDB.LC.S %>%
+      dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
-      dplyr::mutate(totMH = sum(mh))
-
-    mhDB.LC.S$X <- mhDB.LC.S$mh / mhDB.LC.S$totMH
-    mhDB.LC.S   <- dplyr::left_join(
-      x  = mhDB.LC.S,
-      y  = LH[, colnames(LH) %in% c("ID", "LC")],
-      by = "ID"
-    )
-
-    mhDB.LC.S$cost <- round(mhDB.LC.S$X * mhDB.LC.S$LC, digits = 2)
+      dplyr::mutate(totMH = sum(mh)) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(X = mh / totMH) %>%
+      dplyr::left_join(dplyr::select(LH, ID, LC), by = "ID") %>%
+      dplyr::mutate(cost = round(X * LC, digits = 2))
   } else {
-    mhDB.LC.S <- NULL
+    mhDB.LC.S <- data.table::data.table(ID = character(),
+                                        status = character(),
+                                        costCode = character(),
+                                        month = integer(),
+                                        cost = numeric())
   }
 
   ## Get cost
-  mhDB.LC <- mhDB.LC.S[mhDB.LC.S$status == "sea",
-                       c("costCode", "month", "cost")]
-
-  mhDB.LC.A <- mhDB.LC.S[mhDB.LC.S$status == "age",
-                         c("costCode", "month", "cost")]
+  mhDB.LC <- dplyr::filter(mhDB.LC.S, status == "sea") %>%
+    dplyr::select(costCode, month, cost)
+  mhDB.LC.A <- dplyr::filter(mhDB.LC.S, status == "age") %>%
+    dplyr::select(costCode, month, cost)
 
   ##### Compute for SSS contribution of employer ####
   cat("\nComputing SSS contribution.\n")
@@ -1318,30 +1047,29 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
         data.frame(ID = x@ID, status = x@status, stringsAsFactors = FALSE)
       }) %>%
         data.table::rbindlist(use.names = TRUE)
-    )
+    ) %>%
+    dplyr::ungroup()
 
-  mhDB.SSS.A    <- mhDB.SSS[mhDB.SSS$status == "age", ]
-  mhDB.SSS      <- mhDB.SSS[mhDB.SSS$status != "age", ]
+  mhDB.SSS.A <- dplyr::filter(mhDB.SSS, status == "age")
+  mhDB.SSS <- dplyr::filter(mhDB.SSS, status != "age")
 
   #### Compute for Hospital and Medical Expenses ####
   cat("\nComputing hospital and medical expenses.\n")
 
   hm <- data.table::rbindlist(lapply(listR, getHM), use.names = TRUE)
 
-  mhDB.HM <- mhDB[mhDB$mhType %in% distType, ] %>%
+  mhDB.HM <- dplyr::filter(mhDB, mhType %in% distType) %>%
     dplyr::group_by(ID, month, costCode, status) %>%
-    dplyr::summarise(mh = sum(mh))
-
-  mhDB.HM <- mhDB.HM %>%
+    dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month, status) %>%
-    dplyr::mutate(totMH = sum(mh))
+    dplyr::mutate(totMH = sum(mh)) %>%
+    dplyr::ungroup() %>%
+    dplyr::left_join(hm, by = c("ID", "month")) %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::mutate(cost = round(X * HM, digits = 2))
 
-  mhDB.HM      <- dplyr::left_join(x = mhDB.HM, y = hm, by = c("ID", "month"))
-  mhDB.HM$X    <- mhDB.HM$mh / mhDB.HM$totMH
-  mhDB.HM$cost <- round(mhDB.HM$X * mhDB.HM$HM, digits = 2)
-
-  mhDB.HM.A <- mhDB.HM[mhDB.HM$status == "age", ]
-  mhDB.HM   <- mhDB.HM[mhDB.HM$status != "age", ]
+  mhDB.HM.A <- dplyr::filter(mhDB.HM, status == "age")
+  mhDB.HM <- dplyr::filter(mhDB.HM, status != "age")
 
   #### Compute for 13th month pay ####
   cat("\nComputing 13th month pay.\n")
@@ -1355,46 +1083,37 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     return(tempData)
   }), use.names = TRUE)
 
-  mhDB.13mp <- mhDB[mhDB$mhType %in% distType, ] %>%
+  mhDB.13mp <- dplyr::filter(mhDB, mhType %in% distType) %>%
     dplyr::group_by(ID, month, costCode, status) %>%
-    dplyr::summarise(mh = sum(mh))
-
-  mhDB.13mp <- mhDB.13mp %>%
+    dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month, status) %>%
-    dplyr::mutate(totMH = sum(mh))
-
-  mhDB.13mp$X <- mhDB.13mp$mh / mhDB.13mp$totMH
-
-  mhDB.13mp <- dplyr::left_join(x = mhDB.13mp, y = mp13, by = c("ID", "month"))
-
-  mhDB.13mp$cost <- round(mhDB.13mp$X * mhDB.13mp$mp, digits = 2)
-  mhDB.13mp      <- mhDB.13mp %>%
+    dplyr::mutate(totMH = sum(mh)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::left_join(mp13, by = c("ID", "month")) %>%
+    dplyr::mutate(cost = round(X * mp, digits = 2)) %>%
     dplyr::group_by(costCode, status, month) %>%
-    dplyr::summarise(cost = sum(cost))
+    dplyr::summarise(cost = sum(cost)) %>%
+    dplyr::ungroup()
 
-  mhDB.13mp.A <- mhDB.13mp[mhDB.13mp$status == "age", ]
-  mhDB.13mp   <- mhDB.13mp[mhDB.13mp$status != "age", ]
+  mhDB.13mp.A <- dplyr::filter(mhDB.13mp, status == "age")
+  mhDB.13mp <- dplyr::filter(mhDB.13mp, status != "age")
 
   ## Separate 13th month pay for regular and non-regular in-house as requested
   ## by accounting
 
-  accr.13mp <- mhDB.13mp %>%
-    dplyr::group_by(status, costCode, month) %>%
+  accr.13mp <- dplyr::group_by(mhDB.13mp, status, costCode, month) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     tidyr::spread(month, cost, fill = 0)
 
   # Sum all man-hours
-
-  mhDB.mh1 <- mhDB %>%
-    dplyr::group_by(costCode, month) %>%
+  mhDB.mh1 <- dplyr::group_by(mhDB, costCode, month) %>%
     dplyr::summarise(cost = sum(mh))
 
-  mhDB.mh2 <- hol.mhDB.m %>%
-    dplyr::group_by(costCode, month) %>%
+  mhDB.mh2 <- dplyr::group_by(hol.mhDB.m, costCode, month) %>%
     dplyr::summarise(cost = sum(XholHours))
 
-  mhDB.mh3 <- hol.mhDB.d %>%
-    dplyr::group_by(costCode, month) %>%
+  mhDB.mh3 <- dplyr::group_by(hol.mhDB.d, costCode, month) %>%
     dplyr::summarise(cost = sum(XholHours))
 
   mhDB.mh <- data.table::rbindlist(list(mhDB.mh1, mhDB.mh2, mhDB.mh3),
@@ -1417,27 +1136,18 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     tempData <- getCM(x)
 
     if (isRF(x)) {
-
-      tempData <- dplyr::left_join(x = tempData, y = payB, by = "month")
-      tempData <- dplyr::left_join(
-        x  = tempData,
-        y  = wageEmp[wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
-        by = c("ID", "sal")
-      )
-
-      tempData$salM2 <- round(tempData$salM * 26, digits = 2)
-      tempData$salM  <- tempData$salM2
-      tempData       <- tempData[, !colnames(tempData) %in% c("salM2")]
-
+      tempData <- dplyr::left_join(x = tempData, y = payB, by = "month") %>%
+        dplyr::left_join(
+          y  = dplyr::filter(wageEmp, isRF) %>% dplyr::select(-c(salH, isRF)),
+          by = c("ID", "sal")
+        ) %>%
+        dplyr::mutate(salM = round(salM * 26, digits = 2))
     } else {
-
-      tempData <- dplyr::left_join(x = tempData, y = payA, by = "month")
-      tempData <- dplyr::left_join(
-        x  = tempData,
-        y  = wageEmp[!wageEmp$isRF, !colnames(wageEmp) %in% c("salH", "isRF")],
-        by = c("ID", "sal")
-      )
-
+      tempData <- dplyr::left_join(x = tempData, y = payA, by = "month") %>%
+        dplyr::left_join(
+          dplyr::filter(wageEmp, !isRF) %>% dplyr::select(-c(salH, isRF)),
+          by = c("ID", "sal")
+        )
     }
 
     tempData$salG  <- round(tempData$salM * tempData$allow, digits = 2)
@@ -1492,14 +1202,15 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
                                         by = c("ID", "month"))
 
     mhDB.bonus <- data.table::rbindlist(list(mhDB.bonusMid, mhDB.bonusEnd),
-                                        use.names = TRUE)
-    mhDB.bonus$cost <- round(mhDB.bonus$X * mhDB.bonus$bonus, digits = 2)
-    mhDB.bonus <- mhDB.bonus[!is.na(mhDB.bonus$cost),]
-    mhDB.bonus <- mhDB.bonus %>%
+                                        use.names = TRUE) %>%
+      dplyr::mutate(cost = round(X * bonus, digits = 2)) %>%
+      dplyr::filter(!is.na(cost)) %>%
       dplyr::group_by(costCode, month) %>%
       dplyr::summarise(cost = sum(cost))
   } else {
-    mhDB.bonus <- NULL
+    mhDB.bonus <- data.table::data.table(costCode = character(),
+                                         month = integer(),
+                                         cost = numeric())
   }
 
   #### Compute for Seasonal Employees Bonuses ####
@@ -1543,8 +1254,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   # Combine Bonuses
   mhDB.RB <- data.table::rbindlist(list(mhDB.signingBonusSea,
                                         mhDB.retentionBonusSea),
-                                   use.names = TRUE)
-  mhDB.RB <- mhDB.RB %>%
+                                   use.names = TRUE) %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
@@ -1556,26 +1266,21 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   if (length(listR.A) > 0) {
 
     ## Get rice subsidy per month per employee
-    riceSub.A <- lapply(listR.A, FUN = getRiceSub)
-    riceSub.A <- data.table::rbindlist(riceSub.A, use.names = TRUE)
+    riceSub.A <- lapply(listR.A, FUN = getRiceSub) %>%
+      data.table::rbindlist(use.names = TRUE)
 
     ## Distribute rice subsidy
-    mhDB.riceSub.A <- mhDB[mhDB$mhType %in% distType &
-                             mhDB$status == "age",] %>%
+    mhDB.riceSub.A <- dplyr::filter(mhDB,
+                                    mhType %in% distType,
+                                    status == "age") %>%
       dplyr::group_by(ID, month, costCode) %>%
-      dplyr::summarise(mh = sum(mh))
-
-    mhDB.riceSub.A <- mhDB.riceSub.A %>%
+      dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID, month) %>%
-      dplyr::mutate(totMH = sum(mh))
-
-    mhDB.riceSub.A$X <- mhDB.riceSub.A$mh / mhDB.riceSub.A$totMH
-    mhDB.riceSub.A   <- dplyr::left_join(x  = mhDB.riceSub.A,
-                                         y  = riceSub.A,
-                                         by = c("ID", "month"))
-
-    mhDB.riceSub.A$cost <- round(mhDB.riceSub.A$X * mhDB.riceSub.A$riceSub,
-                                 digits = 2)
+      dplyr::mutate(totMH = sum(mh)) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(X = mh / totMH) %>%
+      dplyr::left_join(riceSub.A, by = c("ID", "month")) %>%
+      dplyr::mutate(cost = round(X * riceSub, digits = 2))
   } else {
     mhDB.riceSub.A <- NULL
   }
@@ -1588,22 +1293,21 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   if (length(listR.I) > 0) {
 
     ## Get rice subsidy per month per employee
-    riceSub.I <- lapply(listR.I, FUN = getRiceSub)
-    riceSub.I <- data.table::rbindlist(riceSub.I, use.names = TRUE)
+    riceSub.I <- lapply(listR.I, FUN = getRiceSub) %>%
+      data.table::rbindlist(use.names = TRUE)
 
     ## Distribute rice subsidy
-    mhDB.riceSub.I <- mhDB[mhDB$mhType %in% distType &
-                             mhDB$status != "age",] %>%
+    mhDB.riceSub.I <- dplyr::filter(mhDB,
+                                    mhType %in% distType,
+                                    mhDB$status != "age") %>%
       dplyr::group_by(ID, month, costCode, status) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID, month) %>%
-      dplyr::mutate(totMH = sum(mh))
-
-    mhDB.riceSub.I$X <- mhDB.riceSub.I$mh / mhDB.riceSub.I$totMH
-    mhDB.riceSub.I <-
-      dplyr::left_join(x = mhDB.riceSub.I, y = riceSub.I, by = c("ID", "month"))
-    mhDB.riceSub.I$cost <- round(mhDB.riceSub.I$X * mhDB.riceSub.I$riceSub,
-                                 digits = 2)
+      dplyr::mutate(totMH = sum(mh)) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(X = mh / totMH) %>%
+      dplyr::left_join(riceSub.I, by = c("ID", "month")) %>%
+      dplyr::mutate(cost = round(X * riceSub, digits = 2))
   } else {
     mhDB.riceSub.I <- NULL
   }
@@ -1790,8 +1494,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### Employee Allowance ####
-  r05 <- mhDB.allow %>%
-    dplyr::group_by(costCode, month) %>%
+  r05 <- dplyr::group_by(mhDB.allow, costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
   if (nrow(r05) > 0) {
@@ -1800,8 +1503,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     r05 <- NULL
   }
 
-  r05.sea <- mhDB.allow %>%
-    dplyr::filter(status == "sea") %>%
+  r05.sea <- dplyr::filter(mhDB.allow, status == "sea") %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
@@ -1812,7 +1514,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### Employee Benefits ####
-  r06 <- mhDB.SB[, !colnames(mhDB.SB) %in% c("mh", "costCodeNew")]
+  r06 <- dplyr::select(mhDB.SB, -c(mh, costCodeNew))
 
   if (nrow(r06) > 0) {
     r06$row <- "Employee Benefits"
@@ -1821,7 +1523,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### Premium SSS, EC ####
-  r07 <- mhDB.SSS[, c("costCode", "month", "cost")]
+  r07 <- dplyr::select(mhDB.SSS, costCode, month, cost)
 
   if (nrow(r07) > 0) {
     r07$row <- "Premium SSS, EC"
@@ -1829,7 +1531,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     r07 <- NULL
   }
 
-  r07.sea <- mhDB.SSS[mhDB.SSS$status == "sea", c("costCode", "month", "cost")]
+  r07.sea <- dplyr::filter(mhDB.SSS, status == "sea") %>%
+    dplyr::select(costCode, month, cost)
 
   if (nrow(r07.sea) > 0) {
     r07.sea$row <- "Premium SSS, EC"
@@ -1838,7 +1541,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### Prem-HDMF (Pag-ibig) ####
-  r08 <- mhDB.PI[, c("costCode", "month", "cost")]
+  r08 <- dplyr::select(mhDB.PI, costCode, month, cost)
 
   if (nrow(r08) > 0) {
     r08$row <- "Prem-HDMF (Pag-ibig)"
@@ -1846,7 +1549,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     r08 <- NULL
   }
 
-  r08.sea <- mhDB.PI[mhDB.PI$status == "sea", c("costCode", "month", "cost")]
+  r08.sea <- dplyr::filter(mhDB.PI, status == "sea") %>%
+    dplyr::select(costCode, month, cost)
 
   if (nrow(r08.sea) > 0) {
     r08.sea$row <- "Prem-HDMF (Pag-ibig)"
@@ -1855,7 +1559,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### Philhealth ####
-  r09 <- mhDB.PHIC[, c("costCode", "month", "cost")]
+  r09 <- dplyr::select(mhDB.PHIC, costCode, month, cost)
 
   if (nrow(r09) > 0) {
     r09$row <- "Philhealth"
@@ -1863,7 +1567,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     r09 <- NULL
   }
 
-  r09.sea <- mhDB.PHIC[mhDB.PHIC$status == "sea", c("costCode", "month", "cost")]
+  r09.sea <- dplyr::filter(mhDB.PHIC, status == "sea") %>%
+    dplyr::select(costCode, month, cost)
 
   if (nrow(r09.sea) > 0) {
     r09.sea$row <- "Philhealth"
@@ -1872,7 +1577,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### Leave Commutation ####
-  r10 <- mhDB.LC[, c("costCode", "month", "cost")]
+  r10 <- dplyr::select(mhDB.LC, costCode, month, cost)
 
   if (!is.null(r10) && nrow(r10) > 0) {
     r10$row <- "Leave Commutation"
@@ -1880,8 +1585,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     r10 <- NULL
   }
 
-  r10.sea <- mhDB.LC.S[mhDB.LC.S$status == "sea",
-                       colnames(mhDB.LC.S) %in% c("costCode", "month", "cost")]
+  r10.sea <- dplyr::filter(mhDB.LC.S, status == "sea") %>%
+    dplyr::select(costCode, month, cost)
 
   if (!is.null(r10.sea)) {
     if (nrow(r10.sea) > 0)
@@ -1889,7 +1594,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### Hospital and Medical Expenses ####
-  r11 <- mhDB.HM[, c("costCode", "month", "cost")]
+  r11 <- dplyr::select(mhDB.HM, costCode, month, cost)
 
   if (nrow(r11) > 0) {
     r11$row <- "Hospital and Medical Expenses"
@@ -1897,7 +1602,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     r11 <- NULL
   }
 
-  r11.sea <- mhDB.HM[mhDB.HM$status == "sea", c("costCode", "month", "cost")]
+  r11.sea <- dplyr::filter(mhDB.HM, status == "sea") %>%
+    dplyr::select(costCode, month, cost)
 
   if (nrow(r11.sea) > 0) {
     r11.sea$row <- "Hospital and Medical Expenses"
@@ -1906,13 +1612,13 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### 13th Month Pay ####
-  r12 <- mhDB.13mp[, c("costCode", "month", "cost")]
-  bonus <- mhDB.bonus[, c("costCode", "month", "cost")]
+  r12 <- dplyr::select(mhDB.13mp, costCode, month, cost)
+  bonus <- dplyr::select(mhDB.bonus, costCode, month, cost)
   signingBonus <- NULL
 
   ## In 2020 budget, signing bonus of RF is part of 13th Month Pay cost code
   if (!forecast)
-    signingBonus <- mhDB.signingBonus[, c("costCode", "month", "cost")]
+    signingBonus <- dplyr::select(mhDB.signingBonus, costCode, month, cost)
   r12 <- data.table::rbindlist(list(r12, bonus, signingBonus, mhDB.RB),
                                use.names = TRUE)
 
@@ -1965,9 +1671,8 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
                month            = mhDB.13mp.A$month,
                cost             = mhDB.13mp.A$cost,
                stringsAsFactors = FALSE)
-  ) , use.names = TRUE)
-
-  r14$cost <- round(r14$cost * 1.3117, digits = 2)
+  ) , use.names = TRUE) %>%
+    dplyr::mutate(cost = round(cost * 1.3117, digits = 2))
 
   r14 <- data.table::rbindlist(list(
     r14,
@@ -1984,8 +1689,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### Safety Gadgets ####
-  r15 <- mhDB.safetyGadgets %>%
-    dplyr::group_by(costCode, month) %>%
+  r15 <- dplyr::group_by(mhDB.safetyGadgets, costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
   if (nrow(r15) > 0) {
@@ -1994,8 +1698,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     r15 <- NULL
   }
 
-  r15.sea <- mhDB.safetyGadgets %>%
-    dplyr::filter(status == "sea") %>%
+  r15.sea <- dplyr::filter(mhDB.safetyGadgets, status == "sea") %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
@@ -2006,8 +1709,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### Group Life Insurance ####
-  r16 <- mhDB.groupLife %>%
-    dplyr::group_by(costCode, month) %>%
+  r16 <- dplyr::group_by(mhDB.groupLife, costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
   if (nrow(r16) > 0) {
@@ -2017,8 +1719,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### HMO ####
-  r17 <- mhDB.hmo %>%
-    dplyr::group_by(costCode, month) %>%
+  r17 <- dplyr::group_by(mhDB.hmo, costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
   if (nrow(r17) > 0) {
@@ -2028,8 +1729,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   ##### Employee Benefits ####
-  r18 <- mhDB.benefits %>%
-    dplyr::group_by(costCode, month) %>%
+  r18 <- dplyr::group_by(mhDB.benefits, costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
   if (nrow(r18) > 0) {
@@ -2038,8 +1738,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     r18 <- NULL
   }
 
-  r18.sea <- mhDB.benefits.sea %>%
-    dplyr::group_by(costCode, month) %>%
+  r18.sea <- dplyr::group_by(mhDB.benefits.sea, costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
   if (nrow(r18.sea) > 0) {
@@ -2049,8 +1748,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
 
   #### Food Allowance / Rice Subsidy ####
-  r19 <- mhDB.riceSub.I %>%
-    dplyr::group_by(costCode, month) %>%
+  r19 <- dplyr::group_by(mhDB.riceSub.I, costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
   if (nrow(r19) > 0) {
@@ -2059,8 +1757,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     r19 <- NULL
   }
 
-  r19.sea <- mhDB.riceSub.I %>%
-    dplyr::filter(status == "sea") %>%
+  r19.sea <- dplyr::filter(mhDB.riceSub.I, status == "sea") %>%
     dplyr::group_by(costCode, month) %>%
     dplyr::summarise(cost = sum(cost))
 
@@ -2072,15 +1769,10 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
 
   costDB <- data.table::rbindlist(list(
     r01, r02, r03, r04, r05, r06, r07, r08, r09, r10,
-    r11, r12, r13, r14, r15, r16, r17, r18, r19), use.names = TRUE)
-
-  costDB <- costDB %>%
+    r11, r12, r13, r14, r15, r16, r17, r18, r19), use.names = TRUE) %>%
     dplyr::group_by(costCode, row, month) %>%
-    dplyr::summarise(cost = sum(cost))
-
-  costDB <- dplyr::left_join(x = costDB, y = ac, by = "row")
-
-  costDB <- costDB %>%
+    dplyr::summarise(cost = sum(cost)) %>%
+    dplyr::left_join(y = ac, by = "row") %>%
     tidyr::spread(month, cost, fill = 0)
 
   costDB.sea <- data.table::rbindlist(list(
@@ -2101,10 +1793,10 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   }
   export <- export[, c("costCode", "row", "code", "concat", as.character(1:12))]
 
-  export.mh     <- costDB[costDB$code == 999999,
-                          !colnames(costDB) %in% c("row", "code")]
-  export.mh     <- as.data.frame(export.mh)
-  export.mh     <- export.mh[order(export.mh$costCode),]
+  export.mh <- dplyr::filter(costDB, code == 999999) %>%
+    dplyr::select(-c(row, code)) %>%
+    dplyr::arrange(costCode) %>%
+    as.data.frame()
   missingCols <- (1:12)[which(!1:12 %in% colnames(export.mh))]
   for (i in missingCols) {
     cmd <- paste0("export.mh$`", i, "` <- 0")
@@ -2114,13 +1806,9 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   export.mh$SUM <- apply(export.mh[, 2:13], MARGIN = 1, FUN = sum)
 
   if (nrow(costDB.sea) > 0) {
-    costDB.sea <- costDB.sea %>%
-      dplyr::group_by(costCode, row, month) %>%
-      dplyr::summarise(cost = sum(cost))
-
-    costDB.sea <- dplyr::left_join(x = costDB.sea, y = ac, by = "row")
-
-    costDB.sea <- costDB.sea %>%
+    costDB.sea <- dplyr::group_by(costDB.sea, costCode, row, month) %>%
+      dplyr::summarise(cost = sum(cost)) %>%
+      dplyr::left_join(ac, by = "row") %>%
       tidyr::spread(month, cost, fill = 0)
   }
 
