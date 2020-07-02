@@ -15,7 +15,7 @@ assignPool(listT, listR, prioStat = NA_character_, prioCode = FALSE)
 prioritized in assigning man hours}
 
 \item{prioCode}{logical value \cr
-Is cost code prioritized in assigning?}
+Is cost center prioritized in assigning?}
 }
 \value{
 a list containing the following:

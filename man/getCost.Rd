@@ -61,9 +61,9 @@ a list containing the following:
       column (accounting code). The 3rd column is the description of the
       accounting code.
 
-    \item tabulated total man hours per month per cost code
-    \item tabulated 13th month pay per month per cost code
-    \item tabulated bonus cost per month per cost code
+    \item tabulated total man hours per month per cost center
+    \item tabulated 13th month pay per month per cost center
+    \item tabulated bonus cost per month per cost center
     \item a data.frame with 15 columns
 
       This is similar to the first object returned but composed of only
@@ -73,7 +73,7 @@ a list containing the following:
   }
 }
 \description{
-Calculates monthly personnel cost for each cost code. Personnel costs are
+Calculates monthly personnel cost for each cost center Personnel costs are
   comprised by:
   \describe{
     \item{521001}{Salaries-Regular}

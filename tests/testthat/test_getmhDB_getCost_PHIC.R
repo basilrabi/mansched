@@ -18,10 +18,10 @@ forecast <- FALSE
 
 mCols <- as.character(1:12)
 
-empReq  <- as.data.frame(empReq)
+empReq <- as.data.frame(empReq)
 empPool <- as.data.frame(empPool)
-sched   <- as.data.frame(sched)
-hol     <- as.data.frame(hol)
+sched <- as.data.frame(sched)
+hol <- as.data.frame(hol)
 
 empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
                                          as.character)
@@ -31,11 +31,11 @@ empPool[, c("inHouse", "isRF", "field")] <-
 listT <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)[[1]]
 listR <- initEmpPool(empPool = empPool, hol = hol, year = year)[[1]]
 
-tempData <- getmhDB(empReq   = empReq,
-                    empPool  = empPool,
-                    sched    = sched,
-                    year     = year,
-                    hol      = hol,
+tempData <- getmhDB(empReq = empReq,
+                    empPool = empPool,
+                    sched = sched,
+                    year = year,
+                    hol = hol,
                     forecast = forecast)
 
 wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
@@ -47,7 +47,7 @@ tempData <- getCost(mhDB = tempData[[1]],
 
 cost <- tempData[[1]]
 cost <- cost[cost$code %in% c(521001L, 521002L, 521008L),
-             c("costCode", "row", mCols)]
+             c("costCenter", "row", mCols)]
 
 test_that("Correct PHIC in Budget", {
   expect_equal(437.5, cost$`1`[1])
@@ -63,10 +63,10 @@ forecast <- TRUE
 
 mCols <- as.character(1:12)
 
-empReq  <- as.data.frame(empReq)
+empReq <- as.data.frame(empReq)
 empPool <- as.data.frame(empPool)
-sched   <- as.data.frame(sched)
-hol     <- as.data.frame(hol)
+sched <- as.data.frame(sched)
+hol <- as.data.frame(hol)
 
 empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],
                                          as.character)
@@ -76,11 +76,11 @@ empPool[, c("inHouse", "isRF", "field")] <-
 listT <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)[[1]]
 listR <- initEmpPool(empPool = empPool, hol = hol, year = year)[[1]]
 
-tempData <- getmhDB(empReq   = empReq,
-                    empPool  = empPool,
-                    sched    = sched,
-                    year     = year,
-                    hol      = hol,
+tempData <- getmhDB(empReq = empReq,
+                    empPool = empPool,
+                    sched = sched,
+                    year = year,
+                    hol = hol,
                     forecast = forecast)
 
 wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
@@ -92,7 +92,7 @@ tempData <- getCost(mhDB = tempData[[1]],
 
 cost <- tempData[[1]]
 cost <- cost[cost$code %in% c(521001L, 521002L, 521008L),
-             c("costCode", "row", mCols)]
+             c("costCenter", "row", mCols)]
 
 test_that("Correct PHIC in Budget", {
   expect_equal(cost$`1`[1], 437.5)

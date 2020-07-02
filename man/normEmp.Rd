@@ -15,6 +15,6 @@ a \code{\link{data.frame}} of dropped man-hours. The columns of the
 }
 \description{
 This function modifies an \code{\link{Employee-class}} object with overtime
-  hours removed (see \code{\link{premium}}). The cost code is also changed
-  into a dummy cost code \code{"0-0"}.
+  hours removed (see \code{\link{premium}}). The cost center is also changed
+  into a dummy cost center \code{"0-0"}.
 }

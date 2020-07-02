@@ -97,7 +97,7 @@ Rcpp::IntegerVector sortedIdx( const Rcpp::IntegerVector& v ) {
 //' @param prioStat character vector defining the employee status that are
 //'   prioritized in assigning man hours
 //' @param prioCode logical value \cr
-//'   Is cost code prioritized in assigning?
+//'   Is cost center prioritized in assigning?
 //' @return a list containing the following:
 //'   \enumerate{
 //'     \item remaining listT
@@ -157,11 +157,11 @@ Rcpp::List assignPool( Rcpp::List listT,
       tempEquip = NA_STRING;
     }
 
-    Rcpp::StringVector tempCostCode = Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "costCode" );
-    Rcpp::LogicalVector matchClass    ( listRC.length(), FALSE );
-    Rcpp::LogicalVector matchEquip    ( listRC.length(), FALSE );
-    Rcpp::LogicalVector matchCostCode ( listRC.length(), TRUE  );
-    Rcpp::LogicalVector choice        ( listRC.length(), FALSE );
+    Rcpp::StringVector tempCostCenter = Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "costCenter" );
+    Rcpp::LogicalVector matchClass      ( listRC.length(), FALSE );
+    Rcpp::LogicalVector matchEquip      ( listRC.length(), FALSE );
+    Rcpp::LogicalVector matchCostCenter ( listRC.length(), TRUE  );
+    Rcpp::LogicalVector choice          ( listRC.length(), FALSE );
     for ( j = 0; j < listRC.length(); j++ )
     {
       if ( Rcpp::any( Rcpp::is_na( prioStat ) ).is_true() )
@@ -179,12 +179,12 @@ Rcpp::List assignPool( Rcpp::List listT,
         matchEquip[j] = TRUE;
 
       if ( prioCode &&
-           Rcpp::intersect( tempCostCode, Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[j] ).slot( "costCode" ) ) ).length() < 1 )
-        matchCostCode[j] = FALSE;
+           Rcpp::intersect( tempCostCenter, Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[j] ).slot( "costCenter" ) ) ).length() < 1 )
+        matchCostCenter[j] = FALSE;
 
       choice[j] = matchClass[j] &&
                   matchEquip[j] &&
-                  matchCostCode[j];
+                  matchCostCenter[j];
     }
     Rcpp::LogicalVector choices = choice[choice == TRUE];
     Rcpp::Rcout << "Identified "
@@ -274,23 +274,23 @@ Rcpp::List assignPool( Rcpp::List listT,
   if ( Rcpp::any( toBeRemoved ).is_true() )
     listTC = listTC[!toBeRemoved];
 
-  Rcpp::StringVector  costCode = Rcpp::as<Rcpp::StringVector >( mhDB["costCode"] );
-  Rcpp::StringVector  id       = Rcpp::as<Rcpp::StringVector >( mhDB["ID"      ] );
-  Rcpp::StringVector  reqid    = Rcpp::as<Rcpp::StringVector >( mhDB["reqID"   ] );
-  Rcpp::IntegerVector mh       = Rcpp::as<Rcpp::IntegerVector>( mhDB["mh"      ] );
-  Rcpp::StringVector  mhType   = Rcpp::as<Rcpp::StringVector >( mhDB["mhType"  ] );
-  Rcpp::IntegerVector month    = Rcpp::as<Rcpp::IntegerVector>( mhDB["month"   ] );
-  Rcpp::NumericVector np       = Rcpp::as<Rcpp::NumericVector>( mhDB["np"      ] );
+  Rcpp::StringVector  costCenter = Rcpp::as<Rcpp::StringVector >( mhDB["costCenter"] );
+  Rcpp::StringVector  id         = Rcpp::as<Rcpp::StringVector >( mhDB["ID"        ] );
+  Rcpp::StringVector  reqid      = Rcpp::as<Rcpp::StringVector >( mhDB["reqID"     ] );
+  Rcpp::IntegerVector mh         = Rcpp::as<Rcpp::IntegerVector>( mhDB["mh"        ] );
+  Rcpp::StringVector  mhType     = Rcpp::as<Rcpp::StringVector >( mhDB["mhType"    ] );
+  Rcpp::IntegerVector month      = Rcpp::as<Rcpp::IntegerVector>( mhDB["month"     ] );
+  Rcpp::NumericVector np         = Rcpp::as<Rcpp::NumericVector>( mhDB["np"        ] );
 
   // Remove NA values at the bottom
   Rcpp::LogicalVector withValues = mh > 0;
-  costCode = costCode[withValues];
-  id       = id      [withValues];
-  reqid    = reqid   [withValues];
-  mh       = mh      [withValues];
-  mhType   = mhType  [withValues];
-  month    = month   [withValues];
-  np       = np      [withValues];
+  costCenter = costCenter[withValues];
+  id         = id        [withValues];
+  reqid      = reqid     [withValues];
+  mh         = mh        [withValues];
+  mhType     = mhType    [withValues];
+  month      = month     [withValues];
+  np         = np        [withValues];
 
   mhDB = Rcpp::DataFrame::create(
     Rcpp::Named( "ID"               ) = id,
@@ -299,7 +299,7 @@ Rcpp::List assignPool( Rcpp::List listT,
     Rcpp::Named( "mhType"           ) = mhType,
     Rcpp::Named( "month"            ) = month,
     Rcpp::Named( "np"               ) = np,
-    Rcpp::Named( "costCode"         ) = costCode,
+    Rcpp::Named( "costCenter"       ) = costCenter,
     Rcpp::Named( "stringsAsFactors" ) = false
   );
 

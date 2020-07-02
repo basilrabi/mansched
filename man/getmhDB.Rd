@@ -41,7 +41,7 @@ a list containing the following:
         \item{month}{integer value representing the month}
         \item{np}{integer value representing the man hours with night premium
           pay}
-        \item{costCode}{character string representing accounting cost code
+        \item{costCenter}{character string representing the cost center
           wherein the man hours is charged}
       }
     \item list of \code{\link{Employee-class}} objects representing the
@@ -77,7 +77,7 @@ a list containing the following:
         \item{month}{integer value representing the month}
         \item{np}{integer value representing the man hours with night premium
           pay}
-        \item{costCode}{character string representing accounting cost code
+        \item{costCenter}{character string representing the cost center
           wherein the man hours is charged}
       }
   }

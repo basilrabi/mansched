@@ -19,7 +19,7 @@ node [shape = box]
   pB [label = "import list of Employees"]
   pC [label = "i = 1"]
   pD [label = "empReq = Requirement[[i]]"]
-  pE [label = "Employees <- Employees[with matching costCode]"]
+  pE [label = "Employees <- Employees[with matching costCenter]"]
   pF [label = "Employees <- Employees"]
   pG [label = "Employees <- Employees[with qualified status]"]
   pH [label = "Employees <- Employees"]
@@ -30,7 +30,7 @@ node [shape = box]
   
 node [shape = diamond]
 
-  dA [label = "Is costCode prioritized?"]
+  dA [label = "Is costCenter prioritized?"]
   dB [label = "Is there a prioritized Status?"]
   dC [label = "Is it the final Requirement?"]
 

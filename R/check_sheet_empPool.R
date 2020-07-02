@@ -14,7 +14,7 @@ sanityCheckEmpPool <- function(empPool) {
                         "designation",
                         "personnelClass",
                         "equipment",
-                        "costCode",
+                        "costCenter",
                         "status",
                         "cBegin",
                         "cEnd",
@@ -55,8 +55,8 @@ sanityCheckEmpPool <- function(empPool) {
   if (!all(is.na(empPool$equipment)) & class(empPool$equipment) != "character")
     stop("Column equipment in Pool is not character!")
 
-  if (!all(is.na(empPool$equipment)) & class(empPool$costCode) != "character")
-    stop("Column costCode in Pool is not character!")
+  if (!all(is.na(empPool$equipment)) & class(empPool$costCenter) != "character")
+    stop("Column costCenter in Pool is not character!")
 
   if (!all(is.na(empPool$dcc)) & class(empPool$dcc) != "character")
     stop("Column dcc in Pool is not character!")

@@ -29,7 +29,7 @@
 #'         \item{month}{integer value representing the month}
 #'         \item{np}{integer value representing the man hours with night premium
 #'           pay}
-#'         \item{costCode}{character string representing accounting cost code
+#'         \item{costCenter}{character string representing the cost center
 #'           wherein the man hours is charged}
 #'       }
 #'     \item list of \code{\link{Employee-class}} objects representing the
@@ -65,7 +65,7 @@
 #'         \item{month}{integer value representing the month}
 #'         \item{np}{integer value representing the man hours with night premium
 #'           pay}
-#'         \item{costCode}{character string representing accounting cost code
+#'         \item{costCenter}{character string representing the cost center
 #'           wherein the man hours is charged}
 #'       }
 #'   }
@@ -80,9 +80,9 @@ getmhDB <- function(empReq,
                     forecast = FALSE) {
 
   # Define global variables
-  ID    <- NULL
-  mh    <- NULL
-  mhReq <- NULL
+  ID <-
+    mh <-
+    mhReq <- NULL
 
   if (is.na(year)) {
     year <- as.integer(format(Sys.Date() + 365, "%Y"))
@@ -94,18 +94,18 @@ getmhDB <- function(empReq,
     message("Using built-in holidays list.")
   }
 
-  tempData <- initEmpPool(empPool  = empPool,
-                          hol      = hol,
-                          year     = year,
+  tempData <- initEmpPool(empPool = empPool,
+                          hol = hol,
+                          year = year,
                           forecast = forecast)
-  listR    <- tempData[[1]]
-  listR.a  <- listR
-  empPool  <- tempData[[2]]
+  listR <- tempData[[1]]
+  listR.a <- listR
+  empPool <- tempData[[2]]
 
   tempData <- initEmpReq(empReq = empReq, sched = sched, hol = hol, year = year)
-  listT    <- tempData[[1]]
-  listT.a  <- listT
-  empReq   <- tempData[[2]]
+  listT <- tempData[[1]]
+  listT.a <- listT
+  empReq <- tempData[[2]]
 
   # Assign only Employee-class objects that are present both in the pool and
   #   the requirement
@@ -122,9 +122,9 @@ getmhDB <- function(empReq,
   u.listT <- listT[-indexReq]
 
   empPool <- empPool[indexPool,]
-  empReq  <- empReq[indexReq,]
-  listR   <- listR[indexPool]
-  listT   <- listT[indexReq]
+  empReq <- empReq[indexReq,]
+  listR <- listR[indexPool]
+  listT <- listT[indexReq]
 
   personnelSet <- lapply(personnelClass, FUN = function(x) {
     iP <- which(empPool$personnelClass == x)
@@ -138,13 +138,13 @@ getmhDB <- function(empReq,
     assignPrio(listT = x[[1]], listR = x[[2]])
   })
 
-  mhDB      <- lapply(assignedData, FUN = function(x) {x[[1]]})
-  mhReq     <- lapply(assignedData, FUN = function(x) {x[[4]]})
-  mhPool    <- lapply(assignedData, FUN = function(x) {x[[5]]})
+  mhDB <- lapply(assignedData, FUN = function(x) {x[[1]]})
+  mhReq <- lapply(assignedData, FUN = function(x) {x[[4]]})
+  mhPool <- lapply(assignedData, FUN = function(x) {x[[5]]})
   discarded <- lapply(assignedData, FUN = function(x) {x[[6]]})
-  mhDB      <- as.data.frame(data.table::rbindlist(mhDB  , use.names = TRUE))
-  mhReq     <- as.data.frame(data.table::rbindlist(mhReq , use.names = TRUE))
-  mhPool    <- as.data.frame(data.table::rbindlist(mhPool, use.names = TRUE))
+  mhDB <- as.data.frame(data.table::rbindlist(mhDB  , use.names = TRUE))
+  mhReq <- as.data.frame(data.table::rbindlist(mhReq , use.names = TRUE))
+  mhPool <- as.data.frame(data.table::rbindlist(mhPool, use.names = TRUE))
   discarded <- as.data.frame(data.table::rbindlist(discarded, use.names = TRUE))
 
   if (nrow(mhDB) < 1)
@@ -181,9 +181,9 @@ getmhDB <- function(empReq,
     if (nrow(u.mhPool) > 0) {
       for (i in listTN) {
         if (sum(getHours(i)) > 0) {
-          tempData    <- assignEmp(empT = i, empR = i, selfAssign = FALSE)
+          tempData <- assignEmp(empT = i, empR = i, selfAssign = FALSE)
           tempData$np <- 0L
-          mhDB        <- dfAppend(mhDB, tempData)
+          mhDB <- dfAppend(mhDB, tempData)
         }
       }
     } else {
@@ -193,9 +193,9 @@ getmhDB <- function(empReq,
 
   if (length(u.listT) > 0) {
     u.mhReq <- lapply(u.listT, FUN = function(x) {
-      mh       <- as.data.frame(getHours(x))
+      mh <- as.data.frame(getHours(x))
       mh$month <- 1:12
-      mh$ID    <- x@ID
+      mh$ID <- x@ID
       return(mh)
     })
     u.mhReq <- data.table::rbindlist(u.mhReq, use.names = TRUE)

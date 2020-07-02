@@ -10,7 +10,7 @@
 #' @param prioStat character vector defining the employee status that are
 #'   prioritized in assigning man hours
 #' @param prioCode logical value \cr
-#'   Is cost code prioritized in assigning?
+#'   Is cost center prioritized in assigning?
 #' @return a list containing the following:
 #'   \enumerate{
 #'     \item remaining listT
@@ -85,7 +85,7 @@ assignPool <- function(listT, listR, prioStat = NA_character_, prioCode = FALSE)
 #'     \item{month}{integer value representing the month}
 #'     \item{np}{integer value representing the man hours with night premium
 #'       pay}
-#'     \item{costCode}{character string representing accounting cost code
+#'     \item{costCenter}{character string representing the cost center
 #'       wherein the man hours is charged}
 #'   }
 #' @export
@@ -169,8 +169,8 @@ isRF <- function(theObject) {
 #' Strip all over time hours from an employee
 #'
 #' This function modifies an \code{\link{Employee-class}} object with overtime
-#'   hours removed (see \code{\link{premium}}). The cost code is also changed
-#'   into a dummy cost code \code{"0-0"}.
+#'   hours removed (see \code{\link{premium}}). The cost center is also changed
+#'   into a dummy cost center \code{"0-0"}.
 #'
 #' @param emp an \code{\link{Employee-class}} object
 #' @return a \code{\link{data.frame}} of dropped man-hours. The columns of the

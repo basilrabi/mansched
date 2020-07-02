@@ -19,7 +19,7 @@ initREmployee(
   name,
   designation,
   attendance = rep(1, times = 12),
-  costCode = "NONE",
+  costCenter = "NONE",
   status = "reg",
   cBegin,
   cEnd = NA,
@@ -46,7 +46,7 @@ initREmployee(
   name,
   designation,
   attendance = rep(1, times = 12),
-  costCode = "NONE",
+  costCenter = "NONE",
   status = "reg",
   cBegin,
   cEnd = NA,
@@ -69,7 +69,7 @@ initREmployee(
   name,
   designation,
   attendance = rep(1, times = 12),
-  costCode = "NONE",
+  costCenter = "NONE",
   status = "reg",
   cBegin,
   cEnd = NA,
@@ -92,7 +92,7 @@ initREmployee(
   name,
   designation,
   attendance = rep(1, times = 12),
-  costCode = "NONE",
+  costCenter = "NONE",
   status = "reg",
   cBegin,
   cEnd = NA,
@@ -116,7 +116,7 @@ initREmployee(
   name,
   designation,
   attendance = rep(1, times = 12),
-  costCode = "NONE",
+  costCenter = "NONE",
   status = "reg",
   cBegin,
   cEnd = NA,
@@ -141,7 +141,7 @@ initREmployee(
   name,
   designation,
   attendance = rep(1, times = 12),
-  costCode = "NONE",
+  costCenter = "NONE",
   status = "reg",
   cBegin,
   cEnd = NA,
@@ -166,7 +166,7 @@ initREmployee(
   name,
   designation,
   attendance = rep(1, times = 12),
-  costCode = "NONE",
+  costCenter = "NONE",
   status = "reg",
   cBegin,
   cEnd = NA,
@@ -191,7 +191,7 @@ initREmployee(
   name,
   designation,
   attendance = rep(1, times = 12),
-  costCode = "NONE",
+  costCenter = "NONE",
   status = "reg",
   cBegin,
   cEnd = NA,
@@ -216,7 +216,7 @@ initREmployee(
   name,
   designation,
   attendance = rep(1, times = 12),
-  costCode = "NONE",
+  costCenter = "NONE",
   status = "reg",
   cBegin,
   cEnd = NA,
@@ -241,7 +241,7 @@ initREmployee(
   name,
   designation,
   attendance = rep(1, times = 12),
-  costCode = "NONE",
+  costCenter = "NONE",
   status = "reg",
   cBegin,
   cEnd = NA,
@@ -276,7 +276,7 @@ initREmployee(
   This may be used as correction factor to estimate the workable man hours of
   an employee.}
 
-\item{costCode}{character vector containing the cost codes wherein the
+\item{costCenter}{character vector containing the cost centers wherein the
 employee will be charged}
 
 \item{status}{character string representing the employment status of the
@@ -324,8 +324,8 @@ employee is budgeted to report to work per month}
 \item{d.rh}{integer value defining the number of rest days during a holiday
 the employee is budgeted to report to work per month}
 
-\item{dcc}{character string defining the cost code wherein the excess regular
-man hours of the employee will be charged}
+\item{dcc}{character string defining the cost center wherein the excess
+regular man hours of the employee will be charged}
 
 \item{forecast}{logical value \cr
 Compute cost for forecast?}
@@ -352,7 +352,7 @@ Initializes employee data and its working hours. This function can be
 \section{Functions}{
 \itemize{
 \item \code{initREmployee,Employee-method}: Initialize ID, name, designation, attendance,
-costCode, status, cBegin, cEnd, inHouse, restday and calDays
+costCenter, status, cBegin, cEnd, inHouse, restday and calDays
 (see \code{\link{getCalDays}})
 
 \item \code{initREmployee,Staff-method}: Return only the \code{\link{Staff-class}} object

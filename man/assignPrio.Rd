@@ -48,7 +48,7 @@ a list containing the following:
 This is used in \code{\link{getmhDB}}.
   Assignment is done in the following order:
   \enumerate{
-    \item Any employee with a designated cost code is assigned.
+    \item Any employee with a designated cost center is assigned.
     \item Any regular or probationary employee is assigned.
     \item All employees are assigned.
   }

@@ -16,7 +16,7 @@ NULL
 #'
 #'   This may be used as correction factor to estimate the workable man hours of
 #'   an employee.
-#' @param costCode character vector containing the cost codes wherein the
+#' @param costCenter character vector containing the cost centers wherein the
 #'   employee will be charged
 #' @param status character string representing the employment status of the
 #'   employee
@@ -51,8 +51,8 @@ NULL
 #'   employee is budgeted to report to work per month
 #' @param d.rh integer value defining the number of rest days during a holiday
 #'   the employee is budgeted to report to work per month
-#' @param dcc character string defining the cost code wherein the excess regular
-#'   man hours of the employee will be charged
+#' @param dcc character string defining the cost center wherein the excess
+#'   regular man hours of the employee will be charged
 #' @param forecast logical value \cr
 #'   Compute cost for forecast?
 #' @param field logical value \cr
@@ -72,25 +72,25 @@ setGeneric(
                   name,
                   designation,
                   attendance = rep(1, times = 12),
-                  costCode   = "NONE",
-                  status     = "reg",
+                  costCenter = "NONE",
+                  status = "reg",
                   cBegin,
-                  cEnd       = NA,
-                  inHouse    = FALSE,
-                  restday    = "Sunday",
+                  cEnd = NA,
+                  inHouse = FALSE,
+                  restday = "Sunday",
                   hol,
-                  RF         = FALSE,
+                  RF = FALSE,
                   equipment,
-                  OT         = 3,
-                  d.rd       = rep(NA, times = 12),
-                  d.ho       = rep(NA, times = 12),
-                  d.rh       = rep(NA, times = 12),
-                  dcc        = "NA",
-                  forecast   = FALSE,
-                  field      = TRUE,
+                  OT = 3,
+                  d.rd = rep(NA, times = 12),
+                  d.ho = rep(NA, times = 12),
+                  d.rh = rep(NA, times = 12),
+                  dcc = "NA",
+                  forecast = FALSE,
+                  field = TRUE,
                   dependents = NA,
-                  VL         = NA,
-                  SL         = NA) {
+                  VL = NA,
+                  SL = NA) {
     standardGeneric("initREmployee")
   }
 )
@@ -105,40 +105,40 @@ setGeneric(
 # d.rh - If the value is NA, d.rd defaults to 0.
 
 #' @describeIn initREmployee Initialize ID, name, designation, attendance,
-#'   costCode, status, cBegin, cEnd, inHouse, restday and calDays
+#'   costCenter, status, cBegin, cEnd, inHouse, restday and calDays
 #'   (see \code{\link{getCalDays}})
 setMethod(
-  f          = "initREmployee",
-  signature  = "Employee",
+  f = "initREmployee",
+  signature = "Employee",
   definition = function(theObject,
                         ID,
                         name,
                         designation,
                         attendance = rep(1, times = 12),
-                        costCode   = "NONE",
-                        status     = "reg",
+                        costCenter = "NONE",
+                        status = "reg",
                         cBegin,
-                        cEnd       = NA,
-                        inHouse    = FALSE,
+                        cEnd = NA,
+                        inHouse = FALSE,
                         hol,
-                        d.rd       = rep(NA, times = 12),
-                        d.ho       = rep(NA, times = 12),
-                        d.rh       = rep(NA, times = 12),
-                        dcc        = "NA",
-                        forecast   = FALSE,
-                        field      = TRUE,
+                        d.rd = rep(NA, times = 12),
+                        d.ho = rep(NA, times = 12),
+                        d.rh = rep(NA, times = 12),
+                        dcc = "NA",
+                        forecast = FALSE,
+                        field = TRUE,
                         dependents = NA,
-                        VL         = NA,
-                        SL         = NA) {
+                        VL = NA,
+                        SL = NA) {
     # Checking of the validity of all arguments must be done prior to calling
     #  initREmployee()
 
-    theObject@ID          <- ID
-    theObject@name        <- name
+    theObject@ID <- ID
+    theObject@name <- name
     theObject@designation <- designation
-    theObject@dcc         <- dcc
-    theObject@forecast    <- forecast
-    theObject@field       <- field
+    theObject@dcc <- dcc
+    theObject@forecast <- forecast
+    theObject@field <- field
 
     if (length(dependents) == 12L & is.integer(dependents)) {
       isNA <- is.na(dependents)
@@ -149,17 +149,17 @@ setMethod(
     # attendance must be <= 1 and => 0
     theObject@attendance <- attendance
 
-    # Vectorize costCode
+    # Vectorize costCenter
     #  This is done under the assumption that white spaces and punctuation are
     #  already removed. Also, all characters are in upper case.
-    theObject@costCode <-
-      strsplit(x = costCode, split = " ", fixed = TRUE)[[1]]
+    theObject@costCenter <-
+      strsplit(x = costCenter, split = " ", fixed = TRUE)[[1]]
 
     # status must be an element of c("reg", "pro", "sea", "age)
     theObject@status <- status
     theObject@cBegin <- cBegin
 
-    year     <- lubridate::year(hol$date[1])
+    year <- lubridate::year(hol$date[1])
     tempCEnd <- paste(year, "12-31", sep = "-")
 
     if (is.na(cEnd)) {
@@ -177,9 +177,9 @@ setMethod(
       theObject@inHouse <- inHouse
     }
 
-    calDays <- getCalDays(cBegin  = theObject@cBegin,
-                          cEnd    = theObject@cEnd,
-                          hol     = hol,
+    calDays <- getCalDays(cBegin = theObject@cBegin,
+                          cEnd = theObject@cEnd,
+                          hol = hol,
                           restday = theObject@restday)
 
     if (any(is.na(d.rd)))
@@ -222,14 +222,14 @@ setMethod(
 
     }
 
-    regDays              <- calDays[ ,c("reg")]
-    theObject@holHours   <- holDays * 8L
-    theObject@maxReg     <- maxRegF * 8L
-    theObject@reg        <- as.integer(regDays* 8 * theObject@attendance)
+    regDays <- calDays[ ,c("reg")]
+    theObject@holHours <- holDays * 8L
+    theObject@maxReg <- maxRegF * 8L
+    theObject@reg <- as.integer(regDays* 8 * theObject@attendance)
 
     theObject@leaveHours <- getLeaveHours(cBegin = theObject@cBegin,
-                                          cEnd   = theObject@cEnd,
-                                          year   = lubridate::year(hol$date[1]),
+                                          cEnd = theObject@cEnd,
+                                          year = lubridate::year(hol$date[1]),
                                           status = theObject@status)
 
     return(list(theObject, calDays))
@@ -238,54 +238,54 @@ setMethod(
 
 #' @describeIn initREmployee Return only the \code{\link{Staff-class}} object
 setMethod(
-  f          = "initREmployee",
-  signature  = "Staff",
+  f = "initREmployee",
+  signature = "Staff",
   definition = function(theObject,
                         ID,
                         name,
                         designation,
                         attendance = rep(1, times = 12),
-                        costCode   = "NONE",
-                        status     = "reg",
+                        costCenter = "NONE",
+                        status = "reg",
                         cBegin,
-                        cEnd       = NA,
-                        inHouse    = FALSE,
+                        cEnd = NA,
+                        inHouse = FALSE,
                         hol,
-                        d.rd       = rep(NA, times = 12),
-                        d.ho       = rep(NA, times = 12),
-                        d.rh       = rep(NA, times = 12),
-                        dcc        = "NA",
-                        forecast   = FALSE,
-                        field      = TRUE,
+                        d.rd = rep(NA, times = 12),
+                        d.ho = rep(NA, times = 12),
+                        d.rh = rep(NA, times = 12),
+                        dcc = "NA",
+                        forecast = FALSE,
+                        field = TRUE,
                         dependents = NA,
-                        VL         = NA,
-                        SL         = NA) {
+                        VL = NA,
+                        SL = NA) {
 
     # For all staff, assign a rest day of Sunday for computation purposes.
-    # This is because in a theortical Staff, the working days do not include
+    # This is because in a theoretical Staff, the working days do not include
     # Sundays.
     theObject@restday <- "Sunday"
 
-    tempData <- callNextMethod(theObject   = theObject,
-                               ID          = ID,
-                               name        = name,
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
                                designation = designation,
-                               attendance  = attendance,
-                               costCode    = costCode,
-                               status      = status,
-                               cBegin      = cBegin,
-                               cEnd        = cEnd,
-                               inHouse     = inHouse,
-                               hol         = hol,
-                               d.rd        = d.rd,
-                               d.ho        = d.ho,
-                               d.rh        = d.rh,
-                               dcc         = dcc,
-                               forecast    = forecast,
-                               field       = field,
-                               dependents  = dependents,
-                               VL          = VL,
-                               SL          = SL)
+                               attendance = attendance,
+                               costCenter = costCenter,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               hol = hol,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh,
+                               dcc = dcc,
+                               forecast = forecast,
+                               field = field,
+                               dependents = dependents,
+                               VL = VL,
+                               SL = SL)
 
     return(tempData[[1]])
   }
@@ -293,56 +293,56 @@ setMethod(
 
 #' @describeIn initREmployee Initialize regOT
 setMethod(
-  f          = "initREmployee",
-  signature  = "NonStaff",
+  f = "initREmployee",
+  signature = "NonStaff",
   definition = function(theObject,
                         ID,
                         name,
                         designation,
                         attendance = rep(1, times = 12),
-                        costCode   = "NONE",
-                        status     = "reg",
+                        costCenter = "NONE",
+                        status = "reg",
                         cBegin,
-                        cEnd       = NA,
-                        inHouse    = FALSE,
+                        cEnd = NA,
+                        inHouse = FALSE,
                         hol,
-                        OT         = 3,
-                        d.rd       = rep(NA, times = 12),
-                        d.ho       = rep(NA, times = 12),
-                        d.rh       = rep(NA, times = 12),
-                        dcc        = "NA",
-                        forecast   = FALSE,
-                        field      = TRUE,
+                        OT = 3,
+                        d.rd = rep(NA, times = 12),
+                        d.ho = rep(NA, times = 12),
+                        d.rh = rep(NA, times = 12),
+                        dcc = "NA",
+                        forecast = FALSE,
+                        field = TRUE,
                         dependents = NA,
-                        VL         = NA,
-                        SL         = NA) {
+                        VL = NA,
+                        SL = NA) {
 
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject   = theObject,
-                               ID          = ID,
-                               name        = name,
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
                                designation = designation,
-                               attendance  = attendance,
-                               costCode    = costCode,
-                               status      = status,
-                               cBegin      = cBegin,
-                               cEnd        = cEnd,
-                               inHouse     = inHouse,
-                               hol         = hol,
-                               d.rd        = d.rd,
-                               d.ho        = d.ho,
-                               d.rh        = d.rh,
-                               dcc         = dcc,
-                               forecast    = forecast,
-                               field       = field,
-                               dependents  = dependents,
-                               VL          = VL,
-                               SL          = SL)
+                               attendance = attendance,
+                               costCenter = costCenter,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               hol = hol,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh,
+                               dcc = dcc,
+                               forecast = forecast,
+                               field = field,
+                               dependents = dependents,
+                               VL = VL,
+                               SL = SL)
 
     theObject <- tempData[[1]]
-    calDays   <- tempData[[2]]
+    calDays <- tempData[[2]]
 
     theObject@regOT <- as.integer(
       calDays[,c("reg")] * theObject@attendance * OT
@@ -355,33 +355,33 @@ setMethod(
 #' @describeIn initREmployee Initialize RF and return only the
 #'   \code{\link{Clerk-class}} object
 setMethod(
-  f          = "initREmployee",
-  signature  = "Clerk",
+  f = "initREmployee",
+  signature = "Clerk",
   definition = function(theObject,
                         ID,
                         name,
                         designation,
                         attendance = rep(1, times = 12),
-                        costCode   = "NONE",
-                        status     = "reg",
+                        costCenter = "NONE",
+                        status = "reg",
                         cBegin,
-                        cEnd       = NA,
-                        inHouse    = FALSE,
+                        cEnd = NA,
+                        inHouse = FALSE,
                         hol,
-                        RF         = FALSE,
-                        OT         = 3,
-                        d.rd       = rep(NA, times = 12),
-                        d.ho       = rep(NA, times = 12),
-                        d.rh       = rep(NA, times = 12),
-                        dcc        = "NA",
-                        forecast   = FALSE,
-                        field      = TRUE,
+                        RF = FALSE,
+                        OT = 3,
+                        d.rd = rep(NA, times = 12),
+                        d.ho = rep(NA, times = 12),
+                        d.rh = rep(NA, times = 12),
+                        dcc = "NA",
+                        forecast = FALSE,
+                        field = TRUE,
                         dependents = NA,
-                        VL         = NA,
-                        SL         = NA) {
+                        VL = NA,
+                        SL = NA) {
 
     # For all clerk, assign a rest day of Sunday for computation purposes.
-    # This is because in a theortical clerk, the working days do not include
+    # This is because in a theoretical clerk, the working days do not include
     # Sundays.
     theObject@restday <- "Sunday"
 
@@ -391,56 +391,48 @@ setMethod(
     if (is.na(RF))
       RF <- FALSE
 
-    tempData <- callNextMethod(theObject   = theObject,
-                               ID          = ID,
-                               name        = name,
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
                                designation = designation,
-                               attendance  = attendance,
-                               costCode    = costCode,
-                               status      = status,
-                               cBegin      = cBegin,
-                               cEnd        = cEnd,
-                               inHouse     = inHouse,
-                               hol         = hol,
-                               OT          = OT,
-                               d.rd        = d.rd,
-                               d.ho        = d.ho,
-                               d.rh        = d.rh,
-                               dcc         = dcc,
-                               forecast    = forecast,
-                               field       = field,
-                               dependents  = dependents,
-                               VL          = VL,
-                               SL          = SL)
+                               attendance = attendance,
+                               costCenter = costCenter,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               hol = hol,
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh,
+                               dcc = dcc,
+                               forecast = forecast,
+                               field = field,
+                               dependents = dependents,
+                               VL = VL,
+                               SL = SL)
 
     theObject <- tempData[[1]]
-    calDays   <- tempData[[2]]
+    calDays <- tempData[[2]]
 
     theObject@isRF <- RF
 
     if (theObject@isRF) {
 
       if (theObject@status == "reg") {
-
-        holDays <- apply(
-          calDays[, colnames(calDays) %in% c("lh",
-                                             "sh",
-                                             "nh",
-                                             "rl",
-                                             "rs",
-                                             "rn")],
-          MARGIN = 1,
-          FUN = sum
-        )
-
+        holDays <- apply(calDays[, colnames(calDays) %in% c("lh",
+                                                            "sh",
+                                                            "nh",
+                                                            "rl",
+                                                            "rs",
+                                                            "rn")],
+                         MARGIN = 1,
+                         FUN = sum)
       } else {
-
-        holDays <- apply(
-          calDays[, colnames(calDays) %in% c("lh", "rl")],
-          MARGIN = 1,
-          FUN    = sum
-        )
-
+        holDays <- apply(calDays[, colnames(calDays) %in% c("lh", "rl")],
+                         MARGIN = 1,
+                         FUN    = sum)
       }
 
       theObject@holHours <- holDays * 8L
@@ -471,23 +463,23 @@ setMethod(
                         name,
                         designation,
                         attendance = rep(1, times = 12),
-                        costCode   = "NONE",
-                        status     = "reg",
+                        costCenter = "NONE",
+                        status = "reg",
                         cBegin,
-                        cEnd       = NA,
-                        inHouse    = FALSE,
-                        restday    = "Sunday",
+                        cEnd = NA,
+                        inHouse = FALSE,
+                        restday = "Sunday",
                         hol,
-                        OT         = 3,
-                        d.rd       = rep(NA, times = 12),
-                        d.ho       = rep(NA, times = 12),
-                        d.rh       = rep(NA, times = 12),
-                        dcc        = "NA",
-                        forecast   = FALSE,
-                        field      = TRUE,
+                        OT = 3,
+                        d.rd = rep(NA, times = 12),
+                        d.ho = rep(NA, times = 12),
+                        d.rh = rep(NA, times = 12),
+                        dcc = "NA",
+                        forecast = FALSE,
+                        field = TRUE,
                         dependents = NA,
-                        VL         = NA,
-                        SL         = NA) {
+                        VL = NA,
+                        SL = NA) {
 
     # restday must be a valid weekday prior to calling initEmployee
     if (is.na(restday))
@@ -498,31 +490,31 @@ setMethod(
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject   = theObject,
-                               ID          = ID,
-                               name        = name,
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
                                designation = designation,
-                               attendance  = attendance,
-                               costCode    = costCode,
-                               status      = status,
-                               cBegin      = cBegin,
-                               cEnd        = cEnd,
-                               inHouse     = inHouse,
-                               restday     = restday,
-                               hol         = hol,
-                               OT          = OT,
-                               d.rd        = d.rd,
-                               d.ho        = d.ho,
-                               d.rh        = d.rh,
-                               dcc         = dcc,
-                               forecast    = forecast,
-                               field       = field,
-                               dependents  = dependents,
-                               VL          = VL,
-                               SL          = SL)
+                               attendance = attendance,
+                               costCenter = costCenter,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               restday = restday,
+                               hol = hol,
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh,
+                               dcc = dcc,
+                               forecast = forecast,
+                               field = field,
+                               dependents = dependents,
+                               VL = VL,
+                               SL = SL)
 
     theObject <- tempData[[1]]
-    calDays   <- tempData[[2]]
+    calDays <- tempData[[2]]
 
     if ("rd" %in% colnames(calDays)) {
       theObject@rd <- as.integer(
@@ -601,52 +593,50 @@ setMethod(
                         name,
                         designation,
                         attendance = rep(1, times = 12),
-                        costCode   = "NONE",
-                        status     = "reg",
+                        costCenter = "NONE",
+                        status = "reg",
                         cBegin,
-                        cEnd       = NA,
-                        inHouse    = FALSE,
-                        restday    = "Sunday",
+                        cEnd = NA,
+                        inHouse = FALSE,
+                        restday = "Sunday",
                         hol,
-                        OT         = 3,
-                        d.rd       = rep(NA, times = 12),
-                        d.ho       = rep(NA, times = 12),
-                        d.rh       = rep(NA, times = 12),
-                        dcc        = "NA",
-                        forecast   = FALSE,
-                        field      = TRUE,
+                        OT = 3,
+                        d.rd = rep(NA, times = 12),
+                        d.ho = rep(NA, times = 12),
+                        d.rh = rep(NA, times = 12),
+                        dcc = "NA",
+                        forecast = FALSE,
+                        field = TRUE,
                         dependents = NA,
-                        VL         = NA,
-                        SL         = NA) {
+                        VL = NA,
+                        SL = NA) {
 
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject   = theObject,
-                               ID          = ID,
-                               name        = name,
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
                                designation = designation,
-                               attendance  = attendance,
-                               costCode    = costCode,
-                               status      = status,
-                               cBegin      = cBegin,
-                               cEnd        = cEnd,
-                               inHouse     = inHouse,
-                               restday     = restday,
-                               hol         = hol,
-                               OT          = OT,
-                               d.rd        = d.rd,
-                               d.ho        = d.ho,
-                               d.rh        = d.rh,
-                               dcc         = dcc,
-                               forecast    = forecast,
-                               field       = field,
-                               dependents  = dependents,
-                               VL          = VL,
-                               SL          = SL)
-
+                               attendance = attendance,
+                               costCenter = costCenter,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               restday = restday,
+                               hol = hol,
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh,
+                               dcc = dcc,
+                               forecast = forecast,
+                               field = field,
+                               dependents = dependents,
+                               VL = VL,
+                               SL = SL)
     theObject <- tempData[[1]]
-
     theObject@isRF <- FALSE
     return(theObject)
   }
@@ -663,53 +653,51 @@ setMethod(
                         name,
                         designation,
                         attendance = rep(1, times = 12),
-                        costCode   = "NONE",
-                        status     = "reg",
+                        costCenter = "NONE",
+                        status = "reg",
                         cBegin,
-                        cEnd       = NA,
-                        inHouse    = FALSE,
-                        restday    = "Sunday",
+                        cEnd = NA,
+                        inHouse = FALSE,
+                        restday = "Sunday",
                         hol,
-                        OT         = 3,
-                        d.rd       = rep(NA, times = 12),
-                        d.ho       = rep(NA, times = 12),
-                        d.rh       = rep(NA, times = 12),
-                        dcc        = "NA",
-                        forecast   = FALSE,
-                        field      = TRUE,
+                        OT = 3,
+                        d.rd = rep(NA, times = 12),
+                        d.ho = rep(NA, times = 12),
+                        d.rh = rep(NA, times = 12),
+                        dcc = "NA",
+                        forecast = FALSE,
+                        field = TRUE,
                         dependents = NA,
-                        VL         = NA,
-                        SL         = NA) {
+                        VL = NA,
+                        SL = NA) {
 
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject   = theObject,
-                               ID          = ID,
-                               name        = name,
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
                                designation = designation,
-                               attendance  = attendance,
-                               costCode    = costCode,
-                               status      = status,
-                               cBegin      = cBegin,
-                               cEnd        = cEnd,
-                               inHouse     = inHouse,
-                               restday     = restday,
-                               hol         = hol,
-                               OT          = OT,
-                               d.rd        = d.rd,
-                               d.ho        = d.ho,
-                               d.rh        = d.rh,
-                               dcc         = dcc,
-                               forecast    = forecast,
-                               field       = field,
-                               dependents  = dependents,
-                               VL          = VL,
-                               SL          = SL)
-
-    theObject      <- tempData[[1]]
+                               attendance = attendance,
+                               costCenter = costCenter,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               restday = restday,
+                               hol = hol,
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh,
+                               dcc = dcc,
+                               forecast = forecast,
+                               field = field,
+                               dependents = dependents,
+                               VL = VL,
+                               SL = SL)
+    theObject <- tempData[[1]]
     theObject@isRF <- FALSE
-
     return(theObject)
   }
 )
@@ -725,52 +713,51 @@ setMethod(
                         name,
                         designation,
                         attendance = rep(1, times = 12),
-                        costCode   = "NONE",
-                        status     = "reg",
+                        costCenter = "NONE",
+                        status = "reg",
                         cBegin,
-                        cEnd       = NA,
-                        inHouse    = FALSE,
-                        restday    = "Sunday",
+                        cEnd = NA,
+                        inHouse = FALSE,
+                        restday = "Sunday",
                         hol,
-                        OT         = 3,
-                        d.rd       = rep(NA, times = 12),
-                        d.ho       = rep(NA, times = 12),
-                        d.rh       = rep(NA, times = 12),
-                        dcc        = "NA",
-                        forecast   = FALSE,
-                        field      = TRUE,
+                        OT = 3,
+                        d.rd = rep(NA, times = 12),
+                        d.ho = rep(NA, times = 12),
+                        d.rh = rep(NA, times = 12),
+                        dcc = "NA",
+                        forecast = FALSE,
+                        field = TRUE,
                         dependents = NA,
-                        VL         = NA,
-                        SL         = NA) {
+                        VL = NA,
+                        SL = NA) {
 
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject   = theObject,
-                               ID          = ID,
-                               name        = name,
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
                                designation = designation,
-                               attendance  = attendance,
-                               costCode    = costCode,
-                               status      = status,
-                               cBegin      = cBegin,
-                               cEnd        = cEnd,
-                               inHouse     = inHouse,
-                               restday     = restday,
-                               hol         = hol,
-                               OT          = OT,
-                               d.rd        = d.rd,
-                               d.ho        = d.ho,
-                               d.rh        = d.rh,
-                               dcc         = dcc,
-                               forecast    = forecast,
-                               field       = field,
-                               dependents  = dependents,
-                               VL          = VL,
-                               SL          = SL)
-
-    theObject      <- tempData[[1]]
-    calDays        <- tempData[[2]]
+                               attendance = attendance,
+                               costCenter = costCenter,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               restday = restday,
+                               hol = hol,
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh,
+                               dcc = dcc,
+                               forecast = forecast,
+                               field = field,
+                               dependents = dependents,
+                               VL = VL,
+                               SL = SL)
+    theObject <- tempData[[1]]
+    calDays <- tempData[[2]]
     theObject@isRF <- TRUE
 
     if (theObject@status == "reg") {
@@ -785,7 +772,6 @@ setMethod(
     }
 
     theObject@holHours <- holDays * 8L
-
     return(theObject)
   }
 )
@@ -805,53 +791,52 @@ setMethod(
                         name,
                         designation,
                         attendance = rep(1, times = 12),
-                        costCode   = "NONE",
-                        status     = "reg",
+                        costCenter = "NONE",
+                        status = "reg",
                         cBegin,
-                        cEnd       = NA,
-                        inHouse    = FALSE,
-                        restday    = "Sunday",
+                        cEnd = NA,
+                        inHouse = FALSE,
+                        restday = "Sunday",
                         hol,
                         equipment,
-                        OT         = 3,
-                        d.rd       = rep(NA, times = 12),
-                        d.ho       = rep(NA, times = 12),
-                        d.rh       = rep(NA, times = 12),
-                        dcc        = "NA",
-                        forecast   = FALSE,
-                        field      = TRUE,
+                        OT = 3,
+                        d.rd = rep(NA, times = 12),
+                        d.ho = rep(NA, times = 12),
+                        d.rh = rep(NA, times = 12),
+                        dcc = "NA",
+                        forecast = FALSE,
+                        field = TRUE,
                         dependents = NA,
-                        VL         = NA,
-                        SL         = NA) {
+                        VL = NA,
+                        SL = NA) {
 
     if (is.na(OT))
       OT <- 3
 
-    tempData <- callNextMethod(theObject   = theObject,
-                               ID          = ID,
-                               name        = name,
+    tempData <- callNextMethod(theObject = theObject,
+                               ID = ID,
+                               name = name,
                                designation = designation,
-                               attendance  = attendance,
-                               costCode    = costCode,
-                               status      = status,
-                               cBegin      = cBegin,
-                               cEnd        = cEnd,
-                               inHouse     = inHouse,
-                               restday     = restday,
-                               hol         = hol,
-                               OT          = OT,
-                               d.rd        = d.rd,
-                               d.ho        = d.ho,
-                               d.rh        = d.rh,
-                               dcc         = dcc,
-                               forecast    = forecast,
-                               field       = field,
-                               dependents  = dependents,
-                               VL          = VL,
-                               SL          = SL)
-
-    theObject      <- tempData[[1]]
-    calDays        <- tempData[[2]]
+                               attendance = attendance,
+                               costCenter = costCenter,
+                               status = status,
+                               cBegin = cBegin,
+                               cEnd = cEnd,
+                               inHouse = inHouse,
+                               restday = restday,
+                               hol = hol,
+                               OT = OT,
+                               d.rd = d.rd,
+                               d.ho = d.ho,
+                               d.rh = d.rh,
+                               dcc = dcc,
+                               forecast = forecast,
+                               field = field,
+                               dependents = dependents,
+                               VL = VL,
+                               SL = SL)
+    theObject <- tempData[[1]]
+    calDays <- tempData[[2]]
     theObject@isRF <- TRUE
 
     if (theObject@status == "reg") {
@@ -893,8 +878,8 @@ setMethod(
 #'
 #' @param theObject \code{\link{Employee-class}} object
 #' @param ID character string representing the employee's unique identifier
-#' @param costCode character string representing the accounting cost code
-#'   wherein the employee's man hour cost will be charged
+#' @param costCenter character string representing the cost center wherein the
+#'   employee's man hour cost will be charged
 #' @param equipment character string representing the equipment type which the
 #'   employee was given authority to operate
 #' @param OT integer value defining the budgeted overtime hours
@@ -914,24 +899,24 @@ setGeneric(
   name = "initTEmployee",
   def  = function(theObject,
                   ID,
-                  costCode,
+                  costCenter,
                   equipment,
-                  OT          = 0,
+                  OT = 0,
                   calDays,
                   mdtProb,
                   spareFactor = 1,
-                  monthSched  = NA) {
+                  monthSched = NA) {
     standardGeneric("initTEmployee")
   }
 )
 
-#' @describeIn initTEmployee Initialize ID, costCode and spareFactor
+#' @describeIn initTEmployee Initialize ID, costCenter and spareFactor
 setMethod(
-  f          = "initTEmployee",
-  signature  = "Employee",
+  f = "initTEmployee",
+  signature = "Employee",
   definition = function(theObject,
                         ID,
-                        costCode,
+                        costCenter,
                         spareFactor = 1) {
     # Checking of the validity of all arguments must be done prior to calling
     #  initTEmployee()
@@ -939,8 +924,8 @@ setMethod(
     if (is.na(spareFactor))
       spareFactor <- 1
 
-    theObject@ID          <- ID
-    theObject@costCode    <- costCode
+    theObject@ID <- ID
+    theObject@costCenter <- costCenter
     theObject@spareFactor <- spareFactor
 
     return(theObject)
@@ -949,26 +934,28 @@ setMethod(
 
 #' @describeIn initTEmployee Initialize reg
 setMethod(
-  f          = "initTEmployee",
-  signature  = "Staff",
+  f = "initTEmployee",
+  signature = "Staff",
   definition = function(theObject,
                         ID,
-                        costCode,
+                        costCenter,
                         calDays,
                         mdtProb,
                         spareFactor = 1,
-                        monthSched  = NA) {
+                        monthSched = NA) {
 
     if (is.na(spareFactor))
       spareFactor <- 1
 
-    theObject <- callNextMethod(theObject   = theObject,
-                                ID          = ID,
-                                costCode    = costCode,
+    theObject <- callNextMethod(theObject = theObject,
+                                ID = ID,
+                                costCenter = costCenter,
                                 spareFactor = spareFactor)
 
     if (any(is.na(monthSched))) {
-      theObject@reg <- as.integer(calDays[,c("reg")] * 8 * theObject@spareFactor)
+      theObject@reg <- as.integer(
+        calDays[,c("reg")] * 8 * theObject@spareFactor
+      )
     } else {
       d.reg <- mdtProb$reg + mdtProb$rd
       reg <- d.reg * theObject@spareFactor * 8
@@ -982,16 +969,16 @@ setMethod(
 
 #' @describeIn initTEmployee Initialize reg and regOT
 setMethod(
-  f          = "initTEmployee",
-  signature  = "Clerk",
+  f = "initTEmployee",
+  signature = "Clerk",
   definition = function(theObject,
                         ID,
-                        costCode,
-                        OT          = 0,
+                        costCenter,
+                        OT = 0,
                         calDays,
                         mdtProb,
                         spareFactor = 1,
-                        monthSched  = NA) {
+                        monthSched = NA) {
 
     if (is.na(OT))
       OT <- 0
@@ -999,9 +986,9 @@ setMethod(
     if (is.na(spareFactor))
       spareFactor <- 1
 
-    theObject <- callNextMethod(theObject   = theObject,
-                                ID          = ID,
-                                costCode    = costCode,
+    theObject <- callNextMethod(theObject = theObject,
+                                ID = ID,
+                                costCenter = costCenter,
                                 spareFactor = spareFactor)
 
     if (any(is.na(monthSched))) {
@@ -1024,15 +1011,15 @@ setMethod(
 #' @describeIn initTEmployee Initialize all man hour type using man day type
 #'   probabilities
 setMethod(
-  f          = "initTEmployee",
-  signature  = "OperationPersonnel",
+  f = "initTEmployee",
+  signature = "OperationPersonnel",
   definition = function(theObject,
                         ID,
-                        costCode,
-                        OT          = 0,
+                        costCenter,
+                        OT = 0,
                         mdtProb,
                         spareFactor = 1,
-                        monthSched  = NA) {
+                        monthSched = NA) {
 
     if (is.na(OT))
       OT <- 0
@@ -1040,50 +1027,42 @@ setMethod(
     if (is.na(spareFactor))
       spareFactor <- 1
 
-    theObject <- callNextMethod(theObject   = theObject,
-                                ID          = ID,
-                                costCode    = costCode,
+    theObject <- callNextMethod(theObject = theObject,
+                                ID = ID,
+                                costCenter = costCenter,
                                 spareFactor = spareFactor)
 
     d.reg <- mdtProb$reg + mdtProb$rd
-    d.sh  <- mdtProb$sh  + mdtProb$rs
-    d.lh  <- mdtProb$lh  + mdtProb$rl
-    d.nh  <- mdtProb$nh  + mdtProb$rn
-
+    d.sh <- mdtProb$sh + mdtProb$rs
+    d.lh <- mdtProb$lh + mdtProb$rl
+    d.nh <- mdtProb$nh + mdtProb$rn
     reg <- d.reg * theObject@spareFactor * 8
-    sh  <- d.sh  * theObject@spareFactor * 8
-    lh  <- d.lh  * theObject@spareFactor * 8
-    nh  <- d.nh  * theObject@spareFactor * 8
-
+    sh <- d.sh * theObject@spareFactor * 8
+    lh <- d.lh * theObject@spareFactor * 8
+    nh <- d.nh * theObject@spareFactor * 8
     regOT <- d.reg * theObject@spareFactor * OT
-    shOT  <- d.sh  * theObject@spareFactor * OT
-    lhOT  <- d.lh  * theObject@spareFactor * OT
-    nhOT  <- d.nh  * theObject@spareFactor * OT
+    shOT <- d.sh * theObject@spareFactor * OT
+    lhOT <- d.lh * theObject@spareFactor * OT
+    nhOT <- d.nh * theObject@spareFactor * OT
 
     if (any(is.na(monthSched))) {
-
       theObject@reg <- as.integer(reg * mdtProb$days + 0.5)
-      theObject@sh  <- as.integer(sh  * mdtProb$days + 0.5)
-      theObject@lh  <- as.integer(lh  * mdtProb$days + 0.5)
-      theObject@nh  <- as.integer(nh  * mdtProb$days + 0.5)
-
+      theObject@sh <- as.integer(sh * mdtProb$days + 0.5)
+      theObject@lh <- as.integer(lh * mdtProb$days + 0.5)
+      theObject@nh <- as.integer(nh * mdtProb$days + 0.5)
       theObject@regOT <- as.integer(regOT * mdtProb$days + 0.5)
-      theObject@shOT  <- as.integer(shOT  * mdtProb$days + 0.5)
-      theObject@lhOT  <- as.integer(lhOT  * mdtProb$days + 0.5)
-      theObject@nhOT  <- as.integer(nhOT  * mdtProb$days + 0.5)
-
+      theObject@shOT <- as.integer(shOT * mdtProb$days + 0.5)
+      theObject@lhOT <- as.integer(lhOT * mdtProb$days + 0.5)
+      theObject@nhOT <- as.integer(nhOT * mdtProb$days + 0.5)
     } else {
-
       theObject@reg <- as.integer(reg * monthSched + 0.5)
-      theObject@sh  <- as.integer(sh  * monthSched + 0.5)
-      theObject@lh  <- as.integer(lh  * monthSched + 0.5)
-      theObject@nh  <- as.integer(nh  * monthSched + 0.5)
-
+      theObject@sh <- as.integer(sh * monthSched + 0.5)
+      theObject@lh <- as.integer(lh * monthSched + 0.5)
+      theObject@nh <- as.integer(nh * monthSched + 0.5)
       theObject@regOT <- as.integer(regOT * monthSched + 0.5)
-      theObject@shOT  <- as.integer(shOT  * monthSched + 0.5)
-      theObject@lhOT  <- as.integer(lhOT  * monthSched + 0.5)
-      theObject@nhOT  <- as.integer(nhOT  * monthSched + 0.5)
-
+      theObject@shOT <- as.integer(shOT * monthSched + 0.5)
+      theObject@lhOT <- as.integer(lhOT * monthSched + 0.5)
+      theObject@nhOT <- as.integer(nhOT * monthSched + 0.5)
     }
 
     return(theObject)
@@ -1092,16 +1071,16 @@ setMethod(
 
 #' @describeIn initTEmployee Initialize equipment
 setMethod(
-  f          = "initTEmployee",
-  signature  = "Operator",
+  f = "initTEmployee",
+  signature = "Operator",
   definition = function(theObject,
                         ID,
-                        costCode,
+                        costCenter,
                         equipment,
-                        OT          = 0,
+                        OT = 0,
                         mdtProb,
                         spareFactor = 1,
-                        monthSched  = NA) {
+                        monthSched = NA) {
 
     if (is.na(OT))
       OT <- 0
@@ -1109,13 +1088,13 @@ setMethod(
     if (is.na(spareFactor))
       spareFactor <- 1
 
-    theObject <- callNextMethod(theObject   = theObject,
-                                ID          = ID,
-                                costCode    = costCode,
-                                OT          = OT,
-                                mdtProb     = mdtProb,
+    theObject <- callNextMethod(theObject = theObject,
+                                ID = ID,
+                                costCenter = costCenter,
+                                OT = OT,
+                                mdtProb = mdtProb,
                                 spareFactor = spareFactor,
-                                monthSched  = monthSched)
+                                monthSched = monthSched)
 
     if (is.na(equipment))
       stop("No equipment assigned")
@@ -1141,13 +1120,13 @@ setMethod(
 #' @export createEmp
 createEmp <- function(empClass) {
   switch(empClass,
-         "divisionmanager"   = division_manager(),
-         "groupmanager"      = group_manager(),
+         "divisionmanager" = division_manager(),
+         "groupmanager" = group_manager(),
          "departmentmanager" = department_manager(),
-         "sectionhead"       = section_head(),
-         "clerk"             = clerk(),
-         "technical"         = technical(),
-         "supervisor"        = supervisor(),
-         "laborer"           = laborer(),
-         "operator"          = operator())
+         "sectionhead" = section_head(),
+         "clerk" = clerk(),
+         "technical" = technical(),
+         "supervisor" = supervisor(),
+         "laborer" = laborer(),
+         "operator" = operator())
 }

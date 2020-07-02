@@ -4,7 +4,7 @@
 #'   All man hours are stored in only one theoretical employee.
 #'
 #' @param x a list of \code{\link{Employee-class}} representing theoretical
-#'   employees with the same class and the same costCode slot
+#'   employees with the same class and the same costCenter slot
 #'
 #'   For \code{\link{Operator-class}}, the equipment slot must also be the same.
 #' @return an \code{\link{Employee-class}} object
@@ -18,7 +18,7 @@ mergeEmp <- function(x) {
 
     if (is(x[[1]], "Employee")) {
 
-      x[[1]]@ID <- paste(class(x[[1]]), x[[1]]@costCode, sep = "-")
+      x[[1]]@ID <- paste(class(x[[1]]), x[[1]]@costCenter, sep = "-")
 
       if (is(x[[1]], "Operator"))
         x[[1]]@ID <- paste(x[[1]]@ID, x[[1]]@equipment, sep = "-")
@@ -33,20 +33,20 @@ mergeEmp <- function(x) {
   if (!is(x[[1]], "Employee"))
     stop("Argument is not a list of Employee-class objects!")
 
-  tempEmp   <- x[[1]]
+  tempEmp <- x[[1]]
   tempClass <- sapply(x, FUN = function(x) {class(x)})
   tempClass <- unique(tempClass)
 
   if (length(tempClass) > 1)
     stop("Incompatible Employee-class!")
 
-  tempCostCode <- sapply(x, FUN = function(x) {x@costCode})
-  tempCostCode <- unique(tempCostCode)
+  tempCostCenter <- sapply(x, FUN = function(x) {x@costCenter})
+  tempCostCenter <- unique(tempCostCenter)
 
-  if (length(tempCostCode) > 1)
-    stop("Incompatible cost code!")
+  if (length(tempCostCenter) > 1)
+    stop("Incompatible cost center!")
 
-  tempEmp@ID <- paste(tempClass, tempCostCode, sep = "-")
+  tempEmp@ID <- paste(tempClass, tempCostCenter, sep = "-")
 
   if (is(x[[1]], "Operator")) {
 
@@ -62,41 +62,35 @@ mergeEmp <- function(x) {
 
   zero <- rep(0L, times = 12)
 
-  reg         <- sapply(x, FUN = function(y) {y@reg})
-  reg         <- apply(reg, MARGIN = 1, FUN = sum)
+  reg <- sapply(x, FUN = function(y) {y@reg})
+  reg <- apply(reg, MARGIN = 1, FUN = sum)
   tempEmp@reg <- reg
 
   if (is(tempEmp, "NonStaff")) {
-
-    regOT         <- sapply(x, FUN = function(y) {y@regOT})
-    regOT         <- apply(regOT, MARGIN = 1, FUN = sum)
+    regOT <- sapply(x, FUN = function(y) {y@regOT})
+    regOT <- apply(regOT, MARGIN = 1, FUN = sum)
     tempEmp@regOT <- regOT
-
   }
 
   if (is(tempEmp, "OperationPersonnel")) {
-
-    sh   <- sapply(x, FUN = function(y) {y@sh  })
-    lh   <- sapply(x, FUN = function(y) {y@lh  })
-    nh   <- sapply(x, FUN = function(y) {y@nh  })
+    sh <- sapply(x, FUN = function(y) {y@sh})
+    lh <- sapply(x, FUN = function(y) {y@lh})
+    nh <- sapply(x, FUN = function(y) {y@nh})
     shOT <- sapply(x, FUN = function(y) {y@shOT})
     lhOT <- sapply(x, FUN = function(y) {y@lhOT})
     nhOT <- sapply(x, FUN = function(y) {y@nhOT})
-
-    sh   <- apply(sh,   MARGIN = 1, FUN = sum)
-    lh   <- apply(lh,   MARGIN = 1, FUN = sum)
-    nh   <- apply(nh,   MARGIN = 1, FUN = sum)
+    sh <- apply(sh, MARGIN = 1, FUN = sum)
+    lh <- apply(lh, MARGIN = 1, FUN = sum)
+    nh <- apply(nh, MARGIN = 1, FUN = sum)
     shOT <- apply(shOT, MARGIN = 1, FUN = sum)
     lhOT <- apply(lhOT, MARGIN = 1, FUN = sum)
     nhOT <- apply(nhOT, MARGIN = 1, FUN = sum)
-
-    tempEmp@sh   <- sh
-    tempEmp@lh   <- lh
-    tempEmp@nh   <- nh
+    tempEmp@sh <- sh
+    tempEmp@lh <- lh
+    tempEmp@nh <- nh
     tempEmp@shOT <- shOT
     tempEmp@lhOT <- lhOT
     tempEmp@nhOT <- nhOT
-
   }
 
   return(tempEmp)

@@ -3,7 +3,7 @@
 #' This is used in \code{\link{getmhDB}}.
 #'   Assignment is done in the following order:
 #'   \enumerate{
-#'     \item Any employee with a designated cost code is assigned.
+#'     \item Any employee with a designated cost center is assigned.
 #'     \item Any regular or probationary employee is assigned.
 #'     \item All employees are assigned.
 #'   }
@@ -47,39 +47,38 @@
 #' @importFrom tidyr gather
 assignPrio <- function(listT, listR) {
 
-  # Define global variables
-  ID              <- NULL
-  discardedOT_00  <- NULL
-  discardedOT_dcc <- NULL
-  mh              <- NULL
-  mhPool          <- NULL
-  tempData1       <- NULL
-  tempData2       <- NULL
-  tempData3       <- NULL
+  ID <-
+    discardedOT_00 <-
+    discardedOT_dcc <-
+    mh <-
+    mhPool <-
+    tempData1 <-
+    tempData2 <-
+    tempData3 <- NULL
 
   tempData1 <- assignPool(listT, listR, prioCode = TRUE)
-  listT   <- tempData1[[1]]
-  listR   <- tempData1[[2]]
+  listT <- tempData1[[1]]
+  listR <- tempData1[[2]]
 
   if (length(listT) > 0 & length(listR) > 0) {
     tempData2 <- assignPool(listT, listR, prioStat = c("reg", "pro"))
-    listT   <- tempData2[[1]]
-    listR   <- tempData2[[2]]
+    listT <- tempData2[[1]]
+    listR <- tempData2[[2]]
 
     if (length(listT) > 0 & length(listR) > 0) {
       tempData3 <- assignPool(listT, listR)
-      listT   <- tempData3[[1]]
-      listR   <- tempData3[[2]]
+      listT <- tempData3[[1]]
+      listR <- tempData3[[2]]
     }
   }
 
-  tempData4 <- data.frame(ID       = as.character(NA),
-                          reqID    = as.character(NA),
-                          mh       = as.integer(NA),
-                          mhType   = as.character(NA),
-                          month    = as.integer(NA),
-                          np       = as.numeric(NA),
-                          costCode = as.character(NA),
+  tempData4 <- data.frame(ID = as.character(NA),
+                          reqID = as.character(NA),
+                          mh = as.integer(NA),
+                          mhType = as.character(NA),
+                          month = as.integer(NA),
+                          np = as.numeric(NA),
+                          costCenter = as.character(NA),
                           stringsAsFactors = FALSE)
 
   if (length(listR) > 0) {
@@ -98,7 +97,7 @@ assignPrio <- function(listT, listR) {
       listR.dcc <- listR.dcc[which(aviHours > 0)]
 
       tempData4 <- lapply(listR.dcc, function(x) {
-        x@costCode <- x@dcc
+        x@costCenter <- x@dcc
         return(assignEmp(empT = x, empR = x, selfAssign = TRUE))
       }) %>%
         data.table::rbindlist() %>%
@@ -110,23 +109,20 @@ assignPrio <- function(listT, listR) {
     tempData1[[3]], tempData2[[3]], tempData3[[3]], tempData4
   ), use.names = TRUE) %>% as.data.frame()
 
-  # Assign excess regular hours to a dummy cost code
+  # Assign excess regular hours to a dummy cost center
   if (length(listR) > 0) {
     listTN <- listR
     discardedOT_00  <- lapply(listTN, normEmp) %>%
       data.table::rbindlist() %>%
       dplyr::filter(mh > 0)
     mhPool <- lapply(listTN, FUN = function(x) {
-      mh       <- as.data.frame(getHours(x))
+      mh <- as.data.frame(getHours(x))
       mh$month <- 1:12
-      mh$ID    <- x@ID
+      mh$ID <- x@ID
       return(mh)
     }) %>%
       data.table::rbindlist() %>%
-      tidyr::gather(key   = "mhType",
-                    value = mh,
-                    -month,
-                    -ID)
+      tidyr::gather(key = "mhType", value = mh, -month, -ID)
     mhPool <- mhPool[mhPool$mh > 0,]
     mhPool <- as.data.frame(mhPool)
 

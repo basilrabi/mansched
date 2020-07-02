@@ -23,7 +23,7 @@ employee [label=<
   </TR>
   <TR>
     <TD>ID</TD>
-    <TD>costCode</TD>
+    <TD>costCenter</TD>
     <TD>restday</TD>
   </TR>
   <TR>

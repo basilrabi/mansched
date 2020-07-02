@@ -64,7 +64,7 @@ a \code{\link{data.frame}} containing the man hours database
     \item{month}{integer value representing the month}
     \item{np}{integer value representing the man hours with night premium
       pay}
-    \item{costCode}{character string representing accounting cost code
+    \item{costCenter}{character string representing the cost center
       wherein the man hours is charged}
   }
 }

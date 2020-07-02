@@ -1,7 +1,7 @@
 library(mansched)
 
 ID <- "Materials Handling General Employee"
-costCode <- "14000"
+costCenter <- "14000"
 spareFactor <- 1
 mdtProb <- getMDTProb(getHol(hol = holidays, year = 2018))
 calDays <- getCalDays(cBegin = "2018-01-01",
@@ -13,7 +13,7 @@ testDays <- c(25, 24, 27, 22, 25, 23, 25, 25, 24, 26, 24, 24)
 tempEmp <- createEmp("divisionmanager")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
-                         costCode = costCode,
+                         costCenter = costCenter,
                          calDays = calDays)
 
 test_that("division_manager() works", {
@@ -25,7 +25,7 @@ test_that("division_manager() works", {
 tempEmp <- createEmp("groupmanager")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
-                         costCode = costCode,
+                         costCenter = costCenter,
                          calDays = calDays)
 
 test_that("group_manager() works", {
@@ -37,7 +37,7 @@ test_that("group_manager() works", {
 tempEmp <- createEmp("departmentmanager")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
-                         costCode = costCode,
+                         costCenter = costCenter,
                          calDays = calDays)
 
 test_that("department_manager() works", {
@@ -49,7 +49,7 @@ test_that("department_manager() works", {
 tempEmp <- createEmp("sectionhead")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
-                         costCode = costCode,
+                         costCenter = costCenter,
                          calDays = calDays)
 
 test_that("section_head() works", {
@@ -62,7 +62,7 @@ OT <- 2
 tempEmp <- createEmp("clerk")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
-                         costCode = costCode,
+                         costCenter = costCenter,
                          mdtProb = mdtProb,
                          calDays = calDays,
                          OT = OT)
@@ -77,7 +77,7 @@ test_that("clerk() works", {
 tempEmp <- createEmp("technical")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
-                         costCode = costCode,
+                         costCenter = costCenter,
                          mdtProb = mdtProb,
                          OT = OT)
 
@@ -90,7 +90,7 @@ test_that("technical() works", {
 tempEmp <- createEmp("supervisor")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
-                         costCode = costCode,
+                         costCenter = costCenter,
                          mdtProb = mdtProb,
                          OT = OT)
 
@@ -103,7 +103,7 @@ test_that("supervisor() works", {
 tempEmp <- createEmp("laborer")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
-                         costCode = costCode,
+                         costCenter = costCenter,
                          mdtProb = mdtProb,
                          OT = OT)
 
@@ -118,7 +118,7 @@ equipment <- "DT"
 tempEmp <- createEmp("operator")
 tempEmp <- initTEmployee(theObject = tempEmp,
                          ID = ID,
-                         costCode = costCode,
+                         costCenter = costCenter,
                          mdtProb = mdtProb,
                          OT = OT,
                          equipment = equipment)
