@@ -8,7 +8,7 @@ mergeEmp(x)
 }
 \arguments{
 \item{x}{a list of \code{\link{Employee-class}} representing theoretical
-  employees with the same class and the same costCode slot
+  employees with the same class and the same costCenter slot
 
   For \code{\link{Operator-class}}, the equipment slot must also be the same.}
 }

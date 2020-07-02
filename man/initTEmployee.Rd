@@ -12,7 +12,7 @@
 initTEmployee(
   theObject,
   ID,
-  costCode,
+  costCenter,
   equipment,
   OT = 0,
   calDays,
@@ -21,12 +21,12 @@ initTEmployee(
   monthSched = NA
 )
 
-\S4method{initTEmployee}{Employee}(theObject, ID, costCode, spareFactor = 1)
+\S4method{initTEmployee}{Employee}(theObject, ID, costCenter, spareFactor = 1)
 
 \S4method{initTEmployee}{Staff}(
   theObject,
   ID,
-  costCode,
+  costCenter,
   calDays,
   mdtProb,
   spareFactor = 1,
@@ -36,7 +36,7 @@ initTEmployee(
 \S4method{initTEmployee}{Clerk}(
   theObject,
   ID,
-  costCode,
+  costCenter,
   OT = 0,
   calDays,
   mdtProb,
@@ -47,7 +47,7 @@ initTEmployee(
 \S4method{initTEmployee}{OperationPersonnel}(
   theObject,
   ID,
-  costCode,
+  costCenter,
   OT = 0,
   mdtProb,
   spareFactor = 1,
@@ -57,7 +57,7 @@ initTEmployee(
 \S4method{initTEmployee}{Operator}(
   theObject,
   ID,
-  costCode,
+  costCenter,
   equipment,
   OT = 0,
   mdtProb,
@@ -70,8 +70,8 @@ initTEmployee(
 
 \item{ID}{character string representing the employee's unique identifier}
 
-\item{costCode}{character string representing the accounting cost code
-wherein the employee's man hour cost will be charged}
+\item{costCenter}{character string representing the cost center wherein the
+employee's man hour cost will be charged}
 
 \item{equipment}{character string representing the equipment type which the
 employee was given authority to operate}
@@ -102,7 +102,7 @@ Initialize employee data and its working hours. This function can be applied
 }
 \section{Functions}{
 \itemize{
-\item \code{initTEmployee,Employee-method}: Initialize ID, costCode and spareFactor
+\item \code{initTEmployee,Employee-method}: Initialize ID, costCenter and spareFactor
 
 \item \code{initTEmployee,Staff-method}: Initialize reg
 

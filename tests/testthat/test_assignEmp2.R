@@ -3,7 +3,7 @@ library(mansched)
 ID <- "S-240"
 name <- "Basil Eric Rabi"
 designation <- "Materials Engineering Supervisor"
-costCode <- "14000"
+costCenter <- "14000"
 status <- "reg"
 cBegin <- "2012-10-15"
 inHouse <- TRUE
@@ -17,7 +17,7 @@ empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
                       designation = designation,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       status = status,
                       cBegin = cBegin,
                       inHouse = inHouse,
@@ -26,7 +26,7 @@ empR <- initREmployee(theObject = tempEmp,
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       calDays = calDays)
 tempData <- assignEmp(empT = empT, empR = empR, selfAssign = FALSE)
 test_that("assignment of division manager works", {
@@ -38,7 +38,7 @@ empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
                       designation = designation,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       status = status,
                       cBegin = cBegin,
                       inHouse = inHouse,
@@ -47,7 +47,7 @@ empR <- initREmployee(theObject = tempEmp,
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       calDays = calDays)
 tempData <- assignEmp(empT = empT, empR = empR, selfAssign = FALSE)
 test_that("assignment of group manager works", {
@@ -59,7 +59,7 @@ empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
                       designation = designation,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       status = status,
                       cBegin = cBegin,
                       inHouse = inHouse,
@@ -68,7 +68,7 @@ empR <- initREmployee(theObject = tempEmp,
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       calDays = calDays)
 tempData <- assignEmp(empT = empT, empR = empR, selfAssign = FALSE)
 test_that("assignment of department manager works", {
@@ -80,7 +80,7 @@ empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
                       designation = designation,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       status = status,
                       cBegin = cBegin,
                       inHouse = inHouse,
@@ -89,7 +89,7 @@ empR <- initREmployee(theObject = tempEmp,
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       calDays = calDays)
 tempData <- assignEmp(empT = empT, empR = empR, selfAssign = FALSE)
 test_that("assignment of section head works", {
@@ -102,7 +102,7 @@ empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
                       designation = designation,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       status = status,
                       cBegin = cBegin,
                       inHouse = inHouse,
@@ -112,7 +112,7 @@ empR <- initREmployee(theObject = tempEmp,
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       OT = OT,
                       mdtProb = mdtProb,
                       calDays = calDays)
@@ -126,7 +126,7 @@ empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
                       designation = designation,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       status = status,
                       cBegin = cBegin,
                       inHouse = inHouse,
@@ -137,7 +137,7 @@ empR <- initREmployee(theObject = tempEmp,
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       OT = OT,
                       mdtProb = mdtProb)
 tempData <- assignEmp(empT = empT, empR = empR, selfAssign = FALSE)
@@ -150,7 +150,7 @@ empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
                       designation = designation,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       status = status,
                       cBegin = cBegin,
                       inHouse = inHouse,
@@ -160,7 +160,7 @@ empR <- initREmployee(theObject = tempEmp,
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       OT = OT,
                       mdtProb = mdtProb)
 tempData <- assignEmp(empT = empT, empR = empR, selfAssign = FALSE)
@@ -173,7 +173,7 @@ empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
                       designation = designation,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       status = status,
                       cBegin = cBegin,
                       inHouse = inHouse,
@@ -183,7 +183,7 @@ empR <- initREmployee(theObject = tempEmp,
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       OT = OT,
                       mdtProb = mdtProb)
 tempData <- assignEmp(empT = empT, empR = empR, selfAssign = FALSE)
@@ -196,7 +196,7 @@ empR <- initREmployee(theObject = tempEmp,
                       ID = ID,
                       name = name,
                       designation = designation,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       status = status,
                       cBegin = cBegin,
                       inHouse = inHouse,
@@ -207,7 +207,7 @@ empR <- initREmployee(theObject = tempEmp,
 preHours <- sum(getHours(empR))
 empT <- initTEmployee(theObject = tempEmp,
                       ID = ID,
-                      costCode = costCode,
+                      costCenter = costCenter,
                       OT = OT,
                       mdtProb = mdtProb,
                       equipment = "TX")

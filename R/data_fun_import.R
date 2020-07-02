@@ -19,10 +19,10 @@
 #'       the employee was authorized to operate.
 #'
 #'       Each equipment type must be separated by a space.}
-#'     \item{costCode}{character string representing the preferred cost code
+#'     \item{costCenter}{character string representing the preferred cost center
 #'       wherein the employee shall be assigned.
 #'
-#'       Multiple cost codes must be separated by spaces.}
+#'       Multiple cost centers must be separated by spaces.}
 #'     \item{status}{character string representing the employment status of the
 #'       employee
 #'
@@ -171,58 +171,57 @@
 #' @importFrom dplyr "%>%"
 initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
 
-  a_1     <- NULL
-  a_2     <- NULL
-  a_3     <- NULL
-  a_4     <- NULL
-  a_5     <- NULL
-  a_6     <- NULL
-  a_7     <- NULL
-  a_8     <- NULL
-  a_9     <- NULL
-  a_10    <- NULL
-  a_11    <- NULL
-  a_12    <- NULL
-  d.rd_1  <- NULL
-  d.rd_2  <- NULL
-  d.rd_3  <- NULL
-  d.rd_4  <- NULL
-  d.rd_5  <- NULL
-  d.rd_6  <- NULL
-  d.rd_7  <- NULL
-  d.rd_8  <- NULL
-  d.rd_9  <- NULL
-  d.rd_10 <- NULL
-  d.rd_11 <- NULL
-  d.rd_12 <- NULL
-  d.ho_1  <- NULL
-  d.ho_2  <- NULL
-  d.ho_3  <- NULL
-  d.ho_4  <- NULL
-  d.ho_5  <- NULL
-  d.ho_6  <- NULL
-  d.ho_7  <- NULL
-  d.ho_8  <- NULL
-  d.ho_9  <- NULL
-  d.ho_10 <- NULL
-  d.ho_11 <- NULL
-  d.ho_12 <- NULL
-  d.rh_1  <- NULL
-  d.rh_2  <- NULL
-  d.rh_3  <- NULL
-  d.rh_4  <- NULL
-  d.rh_5  <- NULL
-  d.rh_6  <- NULL
-  d.rh_7  <- NULL
-  d.rh_8  <- NULL
-  d.rh_9  <- NULL
-  d.rh_10 <- NULL
-  d.rh_11 <- NULL
-  d.rh_12 <- NULL
+  a_1 <-
+    a_2 <-
+    a_3 <-
+    a_4 <-
+    a_5 <-
+    a_6 <-
+    a_7 <-
+    a_8 <-
+    a_9 <-
+    a_10 <-
+    a_11 <-
+    a_12 <-
+    d.ho_1 <-
+    d.ho_2 <-
+    d.ho_3 <-
+    d.ho_4 <-
+    d.ho_5 <-
+    d.ho_6 <-
+    d.ho_7 <-
+    d.ho_8 <-
+    d.ho_9 <-
+    d.ho_10 <-
+    d.ho_11 <-
+    d.ho_12 <-
+    d.rd_1 <-
+    d.rd_2 <-
+    d.rd_3 <-
+    d.rd_4 <-
+    d.rd_5 <-
+    d.rd_6 <-
+    d.rd_7 <-
+    d.rd_8 <-
+    d.rd_9 <-
+    d.rd_10 <-
+    d.rd_11 <-
+    d.rd_12 <-
+    d.rh_1 <-
+    d.rh_2 <-
+    d.rh_3 <-
+    d.rh_4 <-
+    d.rh_5 <-
+    d.rh_6 <-
+    d.rh_7 <-
+    d.rh_8 <-
+    d.rh_9 <-
+    d.rh_10 <-
+    d.rh_11 <-
+    d.rh_12 <- NULL
 
   # Error if any ID is duplicated
   if (anyDuplicated(empPool$ID) > 0) {
-
     tempData <- empPool$ID[which(duplicated(empPool$ID))]
 
     for (i in tempData)
@@ -232,9 +231,9 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   }
 
   # Remove white spaces (including leading and trailing spaces)
-  empPool[, c("name", "personnelClass", "equipment", "costCode", "dcc")] <-
+  empPool[, c("name", "personnelClass", "equipment", "costCenter", "dcc")] <-
     lapply(
-      empPool[, c("name", "personnelClass", "equipment", "costCode", "dcc")],
+      empPool[, c("name", "personnelClass", "equipment", "costCenter", "dcc")],
       FUN = rmWS)
 
   empPool[, c("inHouse", "isRF", "field")] <-
@@ -244,8 +243,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   empPool$status <- rmS(empPool$status)
 
   # Remove leading zeroes for purely numeric characters
-  empPool[ ,c("costCode", "dcc")] <- lapply(
-    X = empPool[, c("costCode", "dcc")], FUN = rmLead0)
+  empPool[ ,c("costCenter", "dcc")] <- lapply(
+    X = empPool[, c("costCenter", "dcc")], FUN = rmLead0)
 
   # Convert to lower case
   empPool[, c("personnelClass", "status")] <- lapply(
@@ -257,15 +256,14 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
                                  x = empPool$personnelClass)
 
   # Change to upper case
-  empPool[, c("name", "equipment", "costCode", "dcc")] <-
-    lapply(empPool[, c("name", "equipment", "costCode", "dcc")], FUN = toupper)
+  empPool[, c("name", "equipment", "costCenter", "dcc")] <-
+    lapply(empPool[, c("name", "equipment", "costCenter", "dcc")], FUN = toupper)
 
   # Get only the first 3 characters for employee status
   empPool$status <- substr(x = empPool$status, start = 1L, stop = 3L)
 
   # Check all personnelClass if valid
   if (any(!empPool$personnelClass %in% validEmpClass)) {
-
     tempIndex <- which(!empPool$personnelClass %in% validEmpClass)
 
     for (i in tempIndex)
@@ -278,7 +276,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   empPool <- dplyr::mutate(
     empPool,
     attendance = paste(a_1, a_2, a_3, a_4, a_5, a_6,
-                   a_7, a_8, a_9, a_10, a_11, a_12)
+                       a_7, a_8, a_9, a_10, a_11, a_12)
   )
   attendance <- strsplit(empPool$attendance, split = " ") %>%
     sapply(function(x) {as.numeric(x)}, simplify = FALSE)
@@ -298,9 +296,9 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   }
 
   dependentsCol <- month.abb %>% toupper()
-  d.rdCol       <- paste0("d.rd_", 1:12)
-  d.hoCol       <- paste0("d.ho_", 1:12)
-  d.rhCol       <- paste0("d.rh_", 1:12)
+  d.rdCol <- paste0("d.rd_", 1:12)
+  d.hoCol <- paste0("d.ho_", 1:12)
+  d.rhCol <- paste0("d.rh_", 1:12)
   empPool[, c(d.rdCol, d.hoCol, d.rhCol, dependentsCol)] <-
     lapply(empPool[, c(d.rdCol, d.hoCol, d.rhCol, dependentsCol)],
            FUN = as.integer)
@@ -320,7 +318,6 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   hol <- getHol(hol = hol, year = year)
 
   for (i in 1:length(empPool[,1])) {
-
     field <- empPool$field[i]
     if (is.na(field))
       field <- TRUE
@@ -359,29 +356,29 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
     )
 
     tempEmp <- createEmp(empPool$personnelClass[i])
-    tempEmp <- initREmployee(theObject   = tempEmp,
-                             ID          = empPool$ID[i],
-                             name        = empPool$name[i],
+    tempEmp <- initREmployee(theObject = tempEmp,
+                             ID = empPool$ID[i],
+                             name = empPool$name[i],
                              designation = empPool$designation[i],
-                             attendance  = attendance,
-                             costCode    = empPool$costCode[i],
-                             status      = empPool$status[i],
-                             cBegin      = empPool$cBegin[i],
-                             cEnd        = empPool$cEnd[i],
-                             inHouse     = empPool$inHouse[i],
-                             restday     = empPool$restday[i],
-                             hol         = hol,
-                             RF          = empPool$isRF[i],
-                             equipment   = empPool$equipment[i],
-                             d.rd        = d.rd,
-                             d.ho        = d.ho,
-                             d.rh        = d.rh,
-                             dcc         = empPool$dcc[i],
-                             forecast    = forecast,
-                             field       = field,
-                             dependents  = dependents,
-                             VL          = empPool$VL[i],
-                             SL          = empPool$SL[i])
+                             attendance = attendance,
+                             costCenter = empPool$costCenter[i],
+                             status = empPool$status[i],
+                             cBegin = empPool$cBegin[i],
+                             cEnd = empPool$cEnd[i],
+                             inHouse = empPool$inHouse[i],
+                             restday = empPool$restday[i],
+                             hol = hol,
+                             RF = empPool$isRF[i],
+                             equipment = empPool$equipment[i],
+                             d.rd = d.rd,
+                             d.ho = d.ho,
+                             d.rh = d.rh,
+                             dcc = empPool$dcc[i],
+                             forecast = forecast,
+                             field = field,
+                             dependents = dependents,
+                             VL = empPool$VL[i],
+                             SL = empPool$SL[i])
     manPool[[i]] <- tempEmp
   }
 
@@ -421,7 +418,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
 #'       for more than 8 hours per shift
 #'
 #'       This only applies to \code{\link{NonStaff-class}} personnel.}
-#'     \item{costCode}{character string representing the accounting cost code
+#'     \item{costCenter}{character string representing the  cost center
 #'       wherein all personnel costs of this employee requirement will be
 #'       charged}
 #'   }
@@ -470,7 +467,6 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
 
   # Warning if scheduled activity has no personnel assigned
   if (!all(sched$activity %in% unique(empReq$activity))) {
-
     tempData <- sched$activity[!sched$activity %in% unique(empReq$activity)]
 
     for (i in tempData)
@@ -481,13 +477,12 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
 
   # Error if personnel assignment is duplicated
   if (anyDuplicated(empReq) > 0) {
-
     tempIndex <- which(duplicated(empReq))
 
     cat(paste("Duplicate row:",
               empReq$activity[tempIndex],
               empReq$personnelClass[tempIndex],
-              empReq$costCode[tempIndex],
+              empReq$costCenter[tempIndex],
               "\n",
               sep = " "))
 
@@ -497,14 +492,14 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   # Trim and remove white spaces
   empReq$personnelClass <- rmWS(empReq$personnelClass)
 
-  # Remove spaces for costCode and equipment
-  empReq[, c("equipment", "costCode")] <- lapply(
-    empReq[, c("equipment", "costCode")],
+  # Remove spaces for costCenter and equipment
+  empReq[, c("equipment", "costCenter")] <- lapply(
+    empReq[, c("equipment", "costCenter")],
     FUN = rmS
   )
 
   # Remove leading zero
-  empReq$costCode <- rmLead0(empReq$costCode)
+  empReq$costCenter <- rmLead0(empReq$costCenter)
 
   # Change to lower case
   empReq$personnelClass <- tolower(empReq$personnelClass)
@@ -515,8 +510,8 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
                                 x = empReq$personnelClass)
 
   # Change to upper case
-  empReq[,c("equipment", "costCode")] <- lapply(
-    empReq[,c("equipment", "costCode")], FUN = toupper
+  empReq[,c("equipment", "costCenter")] <- lapply(
+    empReq[,c("equipment", "costCenter")], FUN = toupper
   )
 
   # Check accepted employee class
@@ -526,12 +521,10 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   }
 
   # Initialize premium probabilities
-  hol     <- getHol(hol = hol, year = year)
-
-  calDays <- getCalDays(cBegin  = paste(year,"-01-01", sep = ""),
-                        hol     = hol,
+  hol <- getHol(hol = hol, year = year)
+  calDays <- getCalDays(cBegin = paste(year,"-01-01", sep = ""),
+                        hol = hol,
                         restday = "Sunday")
-
   mdtProb <- getMDTProb(hol = hol)
 
   # Pre-allocate list of Employee-class objects
@@ -540,12 +533,12 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   for (i in 1:length(empReq[,1])) {
 
     schedIndex <- which(sched$activity == empReq$activity[i])
-    tempEmp    <- createEmp(empReq$personnelClass[i])
+    tempEmp <- createEmp(empReq$personnelClass[i])
 
     if (all(is.na(sched[schedIndex,c(2:13)]))) {
       workSched <- NA
     } else {
-      workSched                   <- as.integer(sched[schedIndex,c(2:13)])
+      workSched <- as.integer(sched[schedIndex,c(2:13)])
       workSched[is.na(workSched)] <- 0L
     }
 
@@ -556,47 +549,41 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
       empReq$OT[i] <- 0
 
     tempEmp <- initTEmployee(
-      theObject   = tempEmp,
-      ID          = paste(empReq$activity[i],
-                          empReq$personnelClass[i],
-                          sep = "-"),
-      costCode    = empReq$costCode[i],
-      equipment   = empReq$equipment[i],
-      OT          = empReq$OT[i],
-      calDays     = calDays,
-      mdtProb     = mdtProb,
+      theObject = tempEmp,
+      ID = paste(empReq$activity[i], empReq$personnelClass[i], sep = "-"),
+      costCenter = empReq$costCenter[i],
+      equipment = empReq$equipment[i],
+      OT = empReq$OT[i],
+      calDays = calDays,
+      mdtProb = mdtProb,
       spareFactor = empReq$spareFactor[i] * empReq$quantity[i],
-      monthSched  = workSched
+      monthSched = workSched
     )
 
     manReq[[i]] <- tempEmp
   }
 
   empReq$equipment[is.na(empReq$equipment)] <- ""
-
   empReq$merged <- paste(empReq$personnelClass,
                          empReq$equipment,
-                         empReq$costCode,
+                         empReq$costCenter,
                          sep = "-")
 
-  toMerge   <- unique(empReq$merged)
-
+  toMerge <- unique(empReq$merged)
   mergedReq <- lapply(toMerge, FUN = function(x) {
 
     tempIndex <- which(empReq$merged == x)
-    tempEmp   <- mergeEmp(manReq[tempIndex])
-    empTab    <- c(tempEmp@ID,
-                   tempEmp@costCode,
-                   tolower(as.character(class(tempEmp))))
+    tempEmp <- mergeEmp(manReq[tempIndex])
+    empTab <- c(tempEmp@ID,
+                tempEmp@costCenter,
+                tolower(as.character(class(tempEmp))))
 
     return(list(empTab, tempEmp))
   })
 
-  empReqMerged           <- t(sapply(mergedReq, FUN = function(x) {x[[1]]}))
-  colnames(empReqMerged) <- c("ID", "costCode", "personnelClass")
-  empReqMerged           <- as.data.frame(empReqMerged,
-                                          stringsAsFactors = FALSE)
-
+  empReqMerged <- t(sapply(mergedReq, FUN = function(x) {x[[1]]}))
+  colnames(empReqMerged) <- c("ID", "costCenter", "personnelClass")
+  empReqMerged <- as.data.frame(empReqMerged, stringsAsFactors = FALSE)
   manReqMerged <- lapply(mergedReq, FUN = function(x) {x[[2]]})
 
   return(list(manReqMerged, empReqMerged))

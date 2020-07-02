@@ -35,7 +35,7 @@ initEmpReq(empReq, sched, hol = NA, year = NA)
       for more than 8 hours per shift
 
       This only applies to \code{\link{NonStaff-class}} personnel.}
-    \item{costCode}{character string representing the accounting cost code
+    \item{costCenter}{character string representing the  cost center
       wherein all personnel costs of this employee requirement will be
       charged}
   }}

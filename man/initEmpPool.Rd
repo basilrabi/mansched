@@ -23,10 +23,10 @@ initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
       the employee was authorized to operate.
 
       Each equipment type must be separated by a space.}
-    \item{costCode}{character string representing the preferred cost code
+    \item{costCenter}{character string representing the preferred cost center
       wherein the employee shall be assigned.
 
-      Multiple cost codes must be separated by spaces.}
+      Multiple cost centers must be separated by spaces.}
     \item{status}{character string representing the employment status of the
       employee
 

@@ -41,7 +41,7 @@ employee}
   assigned. The spare factor defaults to 1 for real employees. For
   theoretical employees, a value greater than 1 may be used.}
 
-\item{\code{costCode}}{character vector containing the cost codes wherein the
+\item{\code{costCenter}}{character vector containing the cost centers wherein the
 employee will be charged}
 
 \item{\code{status}}{character string defining the employment status of the employee}
@@ -95,8 +95,8 @@ employee is not required to report to work}
 
   This equates to paid vacation or sick leave.}
 
-\item{\code{dcc}}{character string defining the cost code wherein the excess regular
-man hours of the employee will be charged}
+\item{\code{dcc}}{character string defining the cost center wherein the excess
+regular man hours of the employee will be charged}
 
 \item{\code{forecast}}{logical value \cr
 Is the computation used for forecasting the present year?}

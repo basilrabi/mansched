@@ -15,7 +15,7 @@ sanityCheckEmpReq <- function(empReq) {
                        "spareFactor",
                        "equipment",
                        "OT",
-                       "costCode")
+                       "costCenter")
 
   empReq <- empReq[, empReq.colnames]
 
@@ -46,11 +46,11 @@ sanityCheckEmpReq <- function(empReq) {
   if (class(empReq$OT) != "numeric")
     stop("Column OT in Requirement is not numeric!")
 
-  if (class(empReq$costCode) != "character")
-    stop("Column costCode in Requirement is not character!")
+  if (class(empReq$costCenter) != "character")
+    stop("Column costCenter in Requirement is not character!")
 
-  if (any(is.na(empReq$costCode)))
-    stop("Requirement without cost code detected!")
+  if (any(is.na(empReq$costCenter)))
+    stop("Requirement without cost center detected!")
 
   empReq[, c("quantity", "OT")] <- lapply(empReq[, c("quantity", "OT")],
                                           FUN = as.integer)

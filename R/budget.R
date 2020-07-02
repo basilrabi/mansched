@@ -16,14 +16,14 @@
 budget <- function(xlsxFile, year, forecast = FALSE) {
 
   # Define global variables
-  costCode       <- NULL
-  equipment      <- NULL
-  ID             <- NULL
-  manhours       <- NULL
-  mh             <- NULL
-  mhType         <- NULL
-  personnelClass <- NULL
-  status         <- NULL
+  costCenter <-
+    equipment <-
+    ID <-
+    manhours <-
+    mh <-
+    mhType <-
+    personnelClass <-
+    status <- NULL
 
   empReq <- readxl::read_xlsx(path = xlsxFile, sheet = "Requirement")
   empReq <- sanityCheckEmpReq(empReq)
@@ -44,24 +44,24 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
   empReq$activity <- toupper(empReq$activity)
   sched$activity <- toupper(sched$activity)
 
-  tempData <- getmhDB(empReq   = empReq,
-                      empPool  = empPool,
-                      sched    = sched,
-                      year     = year,
-                      hol      = hol,
+  tempData <- getmhDB(empReq = empReq,
+                      empPool = empPool,
+                      sched = sched,
+                      year = year,
+                      hol = hol,
                       forecast = forecast)
 
-  mhDB   <- tempData[[1]]
-  listR  <- tempData[[3]]
-  mhReq  <- tempData[[6]]
+  mhDB <- tempData[[1]]
+  listR <- tempData[[3]]
+  mhReq <- tempData[[6]]
   mhPool <- tempData[[7]]
 
   wage <- readxl::read_xlsx(path = xlsxFile, sheet = "Wage")
   wage <- sanityCheckWage(wage, empPool)
 
-  costDB <- getCost(mhDB     = mhDB,
-                    listR    = listR,
-                    wage     = wage,
+  costDB <- getCost(mhDB = mhDB,
+                    listR = listR,
+                    wage = wage,
                     forecast = forecast)
 
   tempFolder <- getwd()
@@ -81,7 +81,7 @@ budget <- function(xlsxFile, year, forecast = FALSE) {
                    row.names = FALSE)
 
   manHours <- mhDB %>%
-    dplyr::group_by(status, costCode, mhType, month) %>%
+    dplyr::group_by(status, costCenter, mhType, month) %>%
     dplyr::summarise(manhours = sum(mh)) %>%
     tidyr::spread(month, manhours, fill = 0) %>%
     as.data.frame(row.names = NULL)

@@ -14,8 +14,8 @@ Rcpp::StringVector mhTypeOTC = { "regOT",
 
 void normEmployee ( Rcpp::S4 emp )
 {
-  Rcpp::StringVector costCode = Rcpp::as<Rcpp::StringVector>( emp.slot( "costCode" ) );
-  costCode[0] = "0-0";
+  Rcpp::StringVector costCenter = Rcpp::as<Rcpp::StringVector>( emp.slot( "costCenter" ) );
+  costCenter[0] = "0-0";
 }
 
 void normNonStaff ( Rcpp::S4 emp, Rcpp::DataFrame mhDB )
