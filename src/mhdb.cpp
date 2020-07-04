@@ -137,7 +137,9 @@ Rcpp::DataFrame mhdbInit ( const R_xlen_t& n )
 Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
                                    Rcpp::String empID,
                                    Rcpp::String reqID,
-                                   Rcpp::String cc )
+                                   Rcpp::String cc,
+                                   Rcpp::StringVector dcc,
+                                   bool selfAssign )
 {
   Rcpp::DataFrame mhDB = mhdbInit( mhTypes.length() );
   Rcpp::StringVector id         = Rcpp::as<Rcpp::StringVector >( mhDB["ID"        ] );
@@ -150,11 +152,16 @@ Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
     for ( int j = 1; j < 13; j++ )
     {
       R_xlen_t idx  = ( i * 12 ) + ( j - 1 );
-      id        [idx] = empID;
-      reqid     [idx] = reqID;
-      mhType    [idx] = mhTypes[i];
-      month     [idx] = j;
-      costCenter[idx] = cc;
+      id    [idx] = empID;
+      reqid [idx] = reqID;
+      mhType[idx] = mhTypes[i];
+      month [idx] = j;
+
+      if ( !selfAssign )
+        costCenter[idx] = cc;
+      else
+        costCenter[idx] = dcc[j - 1];
+
     }
   }
   return mhDB;

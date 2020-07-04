@@ -82,19 +82,22 @@ assignPrio <- function(listT, listR) {
                           stringsAsFactors = FALSE)
 
   if (length(listR) > 0) {
-    poolDCC <- sapply(listR, function(x){x@dcc})
+    hasDCC <- sapply(listR, function(x) {
+      if (!all(is.na(x@dcc)))
+        return(TRUE)
+      return(FALSE)
+    })
     # If there are any dump cost centers assigned, assign now.
-    if (!all(is.na(poolDCC))) {
-      tempIndex <- which(!is.na(poolDCC))
-      listR.dcc <- listR[tempIndex]
-      listR <- listR[-tempIndex]
+    if (any(hasDCC)) {
+      listR.dcc <- listR[hasDCC]
+      listR <- listR[!hasDCC]
 
       # Drop overtime hours
       discardedOT_dcc <- lapply(listR.dcc, normEmp) %>%
         data.table::rbindlist() %>%
         dplyr::filter(mh > 0)
       aviHours <- sapply(listR.dcc, FUN = function(x) {sum(getHours(x))})
-      listR.dcc <- listR.dcc[which(aviHours > 0)]
+      listR.dcc <- listR.dcc[aviHours > 0]
 
       tempData4 <- lapply(listR.dcc, function(x) {
         x@costCenter <- x@dcc

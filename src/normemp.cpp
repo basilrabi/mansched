@@ -2,7 +2,7 @@
 #include "normemp.h"
 #include "mhdb.h"
 
-Rcpp::StringVector mhTypeOTB = { "regOT" };;
+Rcpp::StringVector mhTypeOTB = { "regOT" };
 Rcpp::StringVector mhTypeOTC = { "regOT",
                                  "rd", "rdOT",
                                  "sh", "shOT",
@@ -95,12 +95,13 @@ Rcpp::DataFrame normEmp ( Rcpp::S4 emp )
   Rcpp::String empClass = Rcpp::as<Rcpp::String>( emp.attr( "class" ) );
   Rcpp::String id = Rcpp::as<Rcpp::String>( emp.slot( "ID" ) );
   Rcpp::String cc = NA_STRING;
+  Rcpp::StringVector dcc = Rcpp::as<Rcpp::StringVector>( emp.slot( "dcc" ) );
 
   if ( empClass == "Operator" )
   {
     Rcpp::StringVector equip = Rcpp::as<Rcpp::StringVector>( emp.slot( "equipment" ) );
     equip = equip[0];
-    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTC, id, id, cc );
+    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTC, id, id, cc, dcc, false );
     normOperationPersonnel( emp, mhdbEmp );
     return mhdbEmp;
   }
@@ -108,13 +109,13 @@ Rcpp::DataFrame normEmp ( Rcpp::S4 emp )
        empClass == "Laborer" ||
        empClass == "Technical" )
   {
-    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTC, id, id, cc );
+    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTC, id, id, cc, dcc, false );
     normOperationPersonnel( emp, mhdbEmp );
     return mhdbEmp;
   }
   else if ( empClass == "Clerk" )
   {
-    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTB, id, id, cc );
+    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTB, id, id, cc, dcc, false );
     normNonStaff( emp, mhdbEmp );
     return mhdbEmp;
   }

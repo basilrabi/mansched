@@ -7,7 +7,7 @@
 initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
 }
 \arguments{
-\item{empPool}{a \code{data.frame} with 40 columns
+\item{empPool}{a \code{data.frame} with 87 columns
 
   Each row represents a real employee. The columns are:
   \describe{
@@ -48,18 +48,6 @@ initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
       the employee is not required to report to work}
     \item{isRF}{logical value \cr
       Is the employee rank and file?}
-    \item{JAN}{number of dependents for the month}
-    \item{FEB}{number of dependents for the month}
-    \item{MAR}{number of dependents for the month}
-    \item{APR}{number of dependents for the month}
-    \item{MAY}{number of dependents for the month}
-    \item{JUN}{number of dependents for the month}
-    \item{JUL}{number of dependents for the month}
-    \item{AUG}{number of dependents for the month}
-    \item{SEP}{number of dependents for the month}
-    \item{OCT}{number of dependents for the month}
-    \item{NOV}{number of dependents for the month}
-    \item{DEC}{number of dependents for the month}
     \item{d.rd_1}{integer value defining how many rest days the employee can
       report to work on January}
     \item{d.rd_2}{integer value defining how many rest days the employee can
@@ -132,6 +120,42 @@ initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
       employee can report to work on November}
     \item{d.rh_12}{integer value defining how many rest days on holidays the
       employee can report to work on December}
+    \item{dcc_1}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on January}
+    \item{dcc_2}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on February}
+    \item{dcc_3}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on March}
+    \item{dcc_4}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on April}
+    \item{dcc_5}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on May}
+    \item{dcc_6}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on June}
+    \item{dcc_7}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on July}
+    \item{dcc_8}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on August}
+    \item{dcc_9}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on September}
+    \item{dcc_10}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on October}
+    \item{dcc_11}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on November}
+    \item{dcc_12}{character string representing the cost center wherein the
+      idle hours of the employee will be charged on December}
+    \item{JAN}{number of dependents for the month}
+    \item{FEB}{number of dependents for the month}
+    \item{MAR}{number of dependents for the month}
+    \item{APR}{number of dependents for the month}
+    \item{MAY}{number of dependents for the month}
+    \item{JUN}{number of dependents for the month}
+    \item{JUL}{number of dependents for the month}
+    \item{AUG}{number of dependents for the month}
+    \item{SEP}{number of dependents for the month}
+    \item{OCT}{number of dependents for the month}
+    \item{NOV}{number of dependents for the month}
+    \item{DEC}{number of dependents for the month}
     \item{VL}{numeric value representing the number of vacation leave
       credits}
     \item{SL}{numeric value representing the number of sick leave
