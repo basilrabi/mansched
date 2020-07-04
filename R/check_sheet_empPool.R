@@ -6,9 +6,10 @@
 sanityCheckEmpPool <- function(empPool) {
   dependentsCol <- month.abb %>% toupper()
   attendanceCol <- paste0("a_", 1:12)
-  d.rdCol       <- paste0("d.rd_", 1:12)
-  d.hoCol       <- paste0("d.ho_", 1:12)
-  d.rhCol       <- paste0("d.rh_", 1:12)
+  d.rdCol <- paste0("d.rd_", 1:12)
+  d.hoCol <- paste0("d.ho_", 1:12)
+  d.rhCol <- paste0("d.rh_", 1:12)
+  dcc <- paste0("dcc_", 1:12)
   empPool.colnames <- c("ID",
                         "name",
                         "designation",
@@ -24,7 +25,7 @@ sanityCheckEmpPool <- function(empPool) {
                         d.rdCol,
                         d.hoCol,
                         d.rhCol,
-                        "dcc",
+                        dcc,
                         "field",
                         dependentsCol,
                         attendanceCol,
@@ -72,6 +73,11 @@ sanityCheckEmpPool <- function(empPool) {
 
   if (class(empPool$restday) != "character")
     stop("Column restday in Pool is not character!")
+
+  for (i in dcc) {
+    if (!all(is.na(empPool[[i]])) & class(empPool[[i]]) != "character")
+      stop(sprintf("Column %s is not character.", i))
+  }
 
   for (i in dependentsCol) {
     if (class(empPool[[i]]) != "numeric") {

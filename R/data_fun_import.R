@@ -3,7 +3,7 @@
 #' Initializes the list of the pool of employees and their corresponding
 #'   maximum man hours which can be assigned to any activity.
 #'
-#' @param empPool a \code{data.frame} with 40 columns
+#' @param empPool a \code{data.frame} with 87 columns
 #'
 #'   Each row represents a real employee. The columns are:
 #'   \describe{
@@ -44,18 +44,6 @@
 #'       the employee is not required to report to work}
 #'     \item{isRF}{logical value \cr
 #'       Is the employee rank and file?}
-#'     \item{JAN}{number of dependents for the month}
-#'     \item{FEB}{number of dependents for the month}
-#'     \item{MAR}{number of dependents for the month}
-#'     \item{APR}{number of dependents for the month}
-#'     \item{MAY}{number of dependents for the month}
-#'     \item{JUN}{number of dependents for the month}
-#'     \item{JUL}{number of dependents for the month}
-#'     \item{AUG}{number of dependents for the month}
-#'     \item{SEP}{number of dependents for the month}
-#'     \item{OCT}{number of dependents for the month}
-#'     \item{NOV}{number of dependents for the month}
-#'     \item{DEC}{number of dependents for the month}
 #'     \item{d.rd_1}{integer value defining how many rest days the employee can
 #'       report to work on January}
 #'     \item{d.rd_2}{integer value defining how many rest days the employee can
@@ -128,6 +116,42 @@
 #'       employee can report to work on November}
 #'     \item{d.rh_12}{integer value defining how many rest days on holidays the
 #'       employee can report to work on December}
+#'     \item{dcc_1}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on January}
+#'     \item{dcc_2}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on February}
+#'     \item{dcc_3}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on March}
+#'     \item{dcc_4}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on April}
+#'     \item{dcc_5}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on May}
+#'     \item{dcc_6}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on June}
+#'     \item{dcc_7}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on July}
+#'     \item{dcc_8}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on August}
+#'     \item{dcc_9}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on September}
+#'     \item{dcc_10}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on October}
+#'     \item{dcc_11}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on November}
+#'     \item{dcc_12}{character string representing the cost center wherein the
+#'       idle hours of the employee will be charged on December}
+#'     \item{JAN}{number of dependents for the month}
+#'     \item{FEB}{number of dependents for the month}
+#'     \item{MAR}{number of dependents for the month}
+#'     \item{APR}{number of dependents for the month}
+#'     \item{MAY}{number of dependents for the month}
+#'     \item{JUN}{number of dependents for the month}
+#'     \item{JUL}{number of dependents for the month}
+#'     \item{AUG}{number of dependents for the month}
+#'     \item{SEP}{number of dependents for the month}
+#'     \item{OCT}{number of dependents for the month}
+#'     \item{NOV}{number of dependents for the month}
+#'     \item{DEC}{number of dependents for the month}
 #'     \item{VL}{numeric value representing the number of vacation leave
 #'       credits}
 #'     \item{SL}{numeric value representing the number of sick leave
@@ -219,6 +243,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
     d.rh_10 <-
     d.rh_11 <-
     d.rh_12 <- NULL
+  dcc <- paste0("dcc_", 1:12)
 
   # Error if any ID is duplicated
   if (anyDuplicated(empPool$ID) > 0) {
@@ -231,24 +256,22 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   }
 
   # Remove white spaces (including leading and trailing spaces)
-  empPool[, c("name", "personnelClass", "equipment", "costCenter", "dcc")] <-
-    lapply(
-      empPool[, c("name", "personnelClass", "equipment", "costCenter", "dcc")],
-      FUN = rmWS)
+  cols <- c("name", "personnelClass", "equipment", "costCenter", dcc)
+  empPool[, cols] <- lapply(empPool[, cols], FUN = rmWS)
 
-  empPool[, c("inHouse", "isRF", "field")] <-
-    lapply(empPool[, c("inHouse", "isRF", "field")], FUN = as.logical)
+  cols <- c("inHouse", "isRF", "field")
+  empPool[, cols] <- lapply(empPool[, cols], FUN = as.logical)
 
   # Remove space for status
   empPool$status <- rmS(empPool$status)
 
   # Remove leading zeroes for purely numeric characters
-  empPool[ ,c("costCenter", "dcc")] <- lapply(
-    X = empPool[, c("costCenter", "dcc")], FUN = rmLead0)
+  cols <- c("costCenter", dcc)
+  empPool[, cols] <- lapply(X = empPool[, cols], FUN = rmLead0)
 
   # Convert to lower case
-  empPool[, c("personnelClass", "status")] <- lapply(
-    empPool[, c("personnelClass", "status")], FUN = tolower)
+  cols <- c("personnelClass", "status")
+  empPool[, cols] <- lapply(empPool[, cols], FUN = tolower)
 
   # Remove space
   empPool$personnelClass <- gsub(pattern = " ",
@@ -256,8 +279,8 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
                                  x = empPool$personnelClass)
 
   # Change to upper case
-  empPool[, c("name", "equipment", "costCenter", "dcc")] <-
-    lapply(empPool[, c("name", "equipment", "costCenter", "dcc")], FUN = toupper)
+  cols <- c("name", "equipment", "costCenter", dcc)
+  empPool[, cols] <- lapply(empPool[, cols], FUN = toupper)
 
   # Get only the first 3 characters for employee status
   empPool$status <- substr(x = empPool$status, start = 1L, stop = 3L)
@@ -273,11 +296,9 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   }
 
   # Check for acceptable attendance
-  empPool <- dplyr::mutate(
-    empPool,
-    attendance = paste(a_1, a_2, a_3, a_4, a_5, a_6,
-                       a_7, a_8, a_9, a_10, a_11, a_12)
-  )
+  empPool <- dplyr::mutate(empPool,
+                           attendance = paste(a_1, a_2, a_3, a_4, a_5, a_6,
+                                              a_7, a_8, a_9, a_10, a_11, a_12))
   attendance <- strsplit(empPool$attendance, split = " ") %>%
     sapply(function(x) {as.numeric(x)}, simplify = FALSE)
   for (i in 1:nrow(empPool)) {
@@ -321,40 +342,39 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
     field <- empPool$field[i]
     if (is.na(field))
       field <- TRUE
-
     dependents <- c(
       empPool$JAN[i], empPool$FEB[i], empPool$MAR[i], empPool$APR[i],
       empPool$MAY[i], empPool$JUN[i], empPool$JUL[i], empPool$AUG[i],
       empPool$SEP[i], empPool$OCT[i], empPool$NOV[i], empPool$DEC[i]
     )
-
     attendance <- as.numeric(c(
       empPool$a_1[i], empPool$a_2[i], empPool$a_3[i], empPool$a_4[i],
       empPool$a_5[i], empPool$a_6[i], empPool$a_7[i], empPool$a_8[i],
       empPool$a_9[i], empPool$a_10[i], empPool$a_11[i], empPool$a_12[i]
     ))
-
     d.rd <- c(
       empPool$d.rd_1[i], empPool$d.rd_2[i], empPool$d.rd_3[i],
       empPool$d.rd_4[i], empPool$d.rd_5[i], empPool$d.rd_6[i],
       empPool$d.rd_7[i], empPool$d.rd_8[i], empPool$d.rd_9[i],
       empPool$d.rd_10[i], empPool$d.rd_11[i], empPool$d.rd_12[i]
     )
-
     d.ho <- c(
       empPool$d.ho_1[i], empPool$d.ho_2[i], empPool$d.ho_3[i],
       empPool$d.ho_4[i], empPool$d.ho_5[i], empPool$d.ho_6[i],
       empPool$d.ho_7[i], empPool$d.ho_8[i], empPool$d.ho_9[i],
       empPool$d.ho_10[i], empPool$d.ho_11[i], empPool$d.ho_12[i]
     )
-
     d.rh <- c(
       empPool$d.rh_1[i], empPool$d.rh_2[i], empPool$d.rh_3[i],
       empPool$d.rh_4[i], empPool$d.rh_5[i], empPool$d.rh_6[i],
       empPool$d.rh_7[i], empPool$d.rh_8[i], empPool$d.rh_9[i],
       empPool$d.rh_10[i], empPool$d.rh_11[i], empPool$d.rh_12[i]
     )
-
+    dcc <- c(
+      empPool$dcc_1[i], empPool$dcc_2[i], empPool$dcc_3[i], empPool$dcc_4[i],
+      empPool$dcc_5[i], empPool$dcc_6[i], empPool$dcc_7[i], empPool$dcc_8[i],
+      empPool$dcc_9[i], empPool$dcc_10[i], empPool$dcc_11[i], empPool$dcc_12[i]
+    )
     tempEmp <- createEmp(empPool$personnelClass[i])
     tempEmp <- initREmployee(theObject = tempEmp,
                              ID = empPool$ID[i],
@@ -373,7 +393,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
                              d.rd = d.rd,
                              d.ho = d.ho,
                              d.rh = d.rh,
-                             dcc = empPool$dcc[i],
+                             dcc = dcc,
                              forecast = forecast,
                              field = field,
                              dependents = dependents,
