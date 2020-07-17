@@ -144,18 +144,18 @@ initEmpPool(empPool, hol = NA, year = NA, forecast = FALSE)
       idle hours of the employee will be charged on November}
     \item{dcc_12}{character string representing the cost center wherein the
       idle hours of the employee will be charged on December}
-    \item{JAN}{number of dependents for the month}
-    \item{FEB}{number of dependents for the month}
-    \item{MAR}{number of dependents for the month}
-    \item{APR}{number of dependents for the month}
-    \item{MAY}{number of dependents for the month}
-    \item{JUN}{number of dependents for the month}
-    \item{JUL}{number of dependents for the month}
-    \item{AUG}{number of dependents for the month}
-    \item{SEP}{number of dependents for the month}
-    \item{OCT}{number of dependents for the month}
-    \item{NOV}{number of dependents for the month}
-    \item{DEC}{number of dependents for the month}
+    \item{dependents_1}{number of dependents in January}
+    \item{dependents_2}{number of dependents in February}
+    \item{dependents_3}{number of dependents in March}
+    \item{dependents_4}{number of dependents in April}
+    \item{dependents_5}{number of dependents in May}
+    \item{dependents_6}{number of dependents in June}
+    \item{dependents_7}{number of dependents in July}
+    \item{dependents_8}{number of dependents in August}
+    \item{dependents_9}{number of dependents in September}
+    \item{dependents_10}{number of dependents in October}
+    \item{dependents_11}{number of dependents in November}
+    \item{dependents_12}{number of dependents in December}
     \item{VL}{numeric value representing the number of vacation leave
       credits}
     \item{SL}{numeric value representing the number of sick leave

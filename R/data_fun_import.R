@@ -140,18 +140,18 @@
 #'       idle hours of the employee will be charged on November}
 #'     \item{dcc_12}{character string representing the cost center wherein the
 #'       idle hours of the employee will be charged on December}
-#'     \item{JAN}{number of dependents for the month}
-#'     \item{FEB}{number of dependents for the month}
-#'     \item{MAR}{number of dependents for the month}
-#'     \item{APR}{number of dependents for the month}
-#'     \item{MAY}{number of dependents for the month}
-#'     \item{JUN}{number of dependents for the month}
-#'     \item{JUL}{number of dependents for the month}
-#'     \item{AUG}{number of dependents for the month}
-#'     \item{SEP}{number of dependents for the month}
-#'     \item{OCT}{number of dependents for the month}
-#'     \item{NOV}{number of dependents for the month}
-#'     \item{DEC}{number of dependents for the month}
+#'     \item{dependents_1}{number of dependents in January}
+#'     \item{dependents_2}{number of dependents in February}
+#'     \item{dependents_3}{number of dependents in March}
+#'     \item{dependents_4}{number of dependents in April}
+#'     \item{dependents_5}{number of dependents in May}
+#'     \item{dependents_6}{number of dependents in June}
+#'     \item{dependents_7}{number of dependents in July}
+#'     \item{dependents_8}{number of dependents in August}
+#'     \item{dependents_9}{number of dependents in September}
+#'     \item{dependents_10}{number of dependents in October}
+#'     \item{dependents_11}{number of dependents in November}
+#'     \item{dependents_12}{number of dependents in December}
 #'     \item{VL}{numeric value representing the number of vacation leave
 #'       credits}
 #'     \item{SL}{numeric value representing the number of sick leave
@@ -316,10 +316,10 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
     }
   }
 
-  dependentsCol <- month.abb %>% toupper()
   d.rdCol <- paste0("d.rd_", 1:12)
   d.hoCol <- paste0("d.ho_", 1:12)
   d.rhCol <- paste0("d.rh_", 1:12)
+  dependentsCol <- paste0("dependents_", 1:12)
   empPool[, c(d.rdCol, d.hoCol, d.rhCol, dependentsCol)] <-
     lapply(empPool[, c(d.rdCol, d.hoCol, d.rhCol, dependentsCol)],
            FUN = as.integer)
@@ -342,11 +342,6 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
     field <- empPool$field[i]
     if (is.na(field))
       field <- TRUE
-    dependents <- c(
-      empPool$JAN[i], empPool$FEB[i], empPool$MAR[i], empPool$APR[i],
-      empPool$MAY[i], empPool$JUN[i], empPool$JUL[i], empPool$AUG[i],
-      empPool$SEP[i], empPool$OCT[i], empPool$NOV[i], empPool$DEC[i]
-    )
     attendance <- as.numeric(c(
       empPool$a_1[i], empPool$a_2[i], empPool$a_3[i], empPool$a_4[i],
       empPool$a_5[i], empPool$a_6[i], empPool$a_7[i], empPool$a_8[i],
@@ -374,6 +369,14 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
       empPool$dcc_1[i], empPool$dcc_2[i], empPool$dcc_3[i], empPool$dcc_4[i],
       empPool$dcc_5[i], empPool$dcc_6[i], empPool$dcc_7[i], empPool$dcc_8[i],
       empPool$dcc_9[i], empPool$dcc_10[i], empPool$dcc_11[i], empPool$dcc_12[i]
+    )
+    dependents <- c(
+      empPool$dependents_1[i], empPool$dependents_2[i],
+      empPool$dependents_3[i], empPool$dependents_4[i],
+      empPool$dependents_5[i], empPool$dependents_6[i],
+      empPool$dependents_7[i], empPool$dependents_8[i],
+      empPool$dependents_9[i], empPool$dependents_10[i],
+      empPool$dependents_11[i], empPool$dependents_12[i]
     )
     tempEmp <- createEmp(empPool$personnelClass[i])
     tempEmp <- initREmployee(theObject = tempEmp,

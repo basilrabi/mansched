@@ -4,12 +4,12 @@
 #' @return empPool with the columns cBegin and cEnd converted to characters.
 #' @export sanityCheckEmpPool
 sanityCheckEmpPool <- function(empPool) {
-  dependentsCol <- month.abb %>% toupper()
   attendanceCol <- paste0("a_", 1:12)
   d.rdCol <- paste0("d.rd_", 1:12)
   d.hoCol <- paste0("d.ho_", 1:12)
   d.rhCol <- paste0("d.rh_", 1:12)
   dcc <- paste0("dcc_", 1:12)
+  dependentsCol <- paste0("dependents_", 1:12)
   empPool.colnames <- c("ID",
                         "name",
                         "designation",
