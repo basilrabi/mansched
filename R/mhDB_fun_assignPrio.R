@@ -56,16 +56,19 @@ assignPrio <- function(listT, listR) {
     tempData2 <-
     tempData3 <- NULL
 
+  message("1/3 run. Priority: with cost centers")
   tempData1 <- assignPool(listT, listR, prioCode = TRUE)
   listT <- tempData1[[1]]
   listR <- tempData1[[2]]
 
   if (length(listT) > 0 & length(listR) > 0) {
+    message("2/3 run. Priority: regular and probationary")
     tempData2 <- assignPool(listT, listR, prioStat = c("reg", "pro"))
     listT <- tempData2[[1]]
     listR <- tempData2[[2]]
 
     if (length(listT) > 0 & length(listR) > 0) {
+      message("3/3 run. Priority: none")
       tempData3 <- assignPool(listT, listR)
       listT <- tempData3[[1]]
       listR <- tempData3[[2]]

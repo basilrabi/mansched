@@ -132,9 +132,8 @@ getmhDB <- function(empReq,
     return(list(listT[iR], listR[iP]))
   })
 
-  cat("Assigning employees.\n")
-
   assignedData <- lapply(X = personnelSet, FUN = function(x) {
+    message(paste0("Assigning ", class(x[[1]][[1]]), "."))
     assignPrio(listT = x[[1]], listR = x[[2]])
   })
 

@@ -11,6 +11,7 @@
 #'   prioritized in assigning man hours
 #' @param prioCode logical value \cr
 #'   Is cost center prioritized in assigning?
+#' @param debug logical flag for debugging
 #' @return a list containing the following:
 #'   \enumerate{
 #'     \item remaining listT
@@ -20,8 +21,8 @@
 #'       This is also merged and described well in \code{\link{getmhDB}}.
 #'   }
 #' @export
-assignPool <- function(listT, listR, prioStat = NA_character_, prioCode = FALSE) {
-    .Call('_mansched_assignPool', PACKAGE = 'mansched', listT, listR, prioStat, prioCode)
+assignPool <- function(listT, listR, prioStat = NA_character_, prioCode = FALSE, debug = FALSE) {
+    .Call('_mansched_assignPool', PACKAGE = 'mansched', listT, listR, prioStat, prioCode, debug)
 }
 
 #' Assign an employee

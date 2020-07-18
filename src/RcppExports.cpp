@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // assignPool
-Rcpp::List assignPool(Rcpp::List listT, Rcpp::List listR, Rcpp::StringVector prioStat, bool prioCode);
-RcppExport SEXP _mansched_assignPool(SEXP listTSEXP, SEXP listRSEXP, SEXP prioStatSEXP, SEXP prioCodeSEXP) {
+Rcpp::List assignPool(Rcpp::List listT, Rcpp::List listR, Rcpp::StringVector prioStat, bool prioCode, bool debug);
+RcppExport SEXP _mansched_assignPool(SEXP listTSEXP, SEXP listRSEXP, SEXP prioStatSEXP, SEXP prioCodeSEXP, SEXP debugSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -15,7 +15,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::List >::type listR(listRSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type prioStat(prioStatSEXP);
     Rcpp::traits::input_parameter< bool >::type prioCode(prioCodeSEXP);
-    rcpp_result_gen = Rcpp::wrap(assignPool(listT, listR, prioStat, prioCode));
+    Rcpp::traits::input_parameter< bool >::type debug(debugSEXP);
+    rcpp_result_gen = Rcpp::wrap(assignPool(listT, listR, prioStat, prioCode, debug));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -102,7 +103,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_mansched_assignPool", (DL_FUNC) &_mansched_assignPool, 4},
+    {"_mansched_assignPool", (DL_FUNC) &_mansched_assignPool, 5},
     {"_mansched_assignEmp", (DL_FUNC) &_mansched_assignEmp, 3},
     {"_mansched_assignMH", (DL_FUNC) &_mansched_assignMH, 2},
     {"_mansched_getHours", (DL_FUNC) &_mansched_getHours, 1},

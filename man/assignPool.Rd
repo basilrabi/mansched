@@ -4,7 +4,13 @@
 \alias{assignPool}
 \title{Assign pool to requirement faster}
 \usage{
-assignPool(listT, listR, prioStat = NA_character_, prioCode = FALSE)
+assignPool(
+  listT,
+  listR,
+  prioStat = NA_character_,
+  prioCode = FALSE,
+  debug = FALSE
+)
 }
 \arguments{
 \item{listT}{list of theoretical employees created from empReq}
@@ -16,6 +22,8 @@ prioritized in assigning man hours}
 
 \item{prioCode}{logical value \cr
 Is cost center prioritized in assigning?}
+
+\item{debug}{logical flag for debugging}
 }
 \value{
 a list containing the following:

@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <fmt/core.h>
 #include "assignemp.h"
 #include "gethours.h"
 #include "mhdb.h"
@@ -98,6 +99,7 @@ Rcpp::IntegerVector sortedIdx( const Rcpp::IntegerVector& v ) {
 //'   prioritized in assigning man hours
 //' @param prioCode logical value \cr
 //'   Is cost center prioritized in assigning?
+//' @param debug logical flag for debugging
 //' @return a list containing the following:
 //'   \enumerate{
 //'     \item remaining listT
@@ -111,13 +113,18 @@ Rcpp::IntegerVector sortedIdx( const Rcpp::IntegerVector& v ) {
 Rcpp::List assignPool( Rcpp::List listT,
                        Rcpp::List listR,
                        Rcpp::StringVector prioStat = NA_STRING,
-                       bool prioCode = false )
+                       bool prioCode = false,
+                       bool debug = false )
 {
-  Rcpp::Rcout << "\n\n*************************"
-              << "* Begin asignPool *"
-              << "*************************\n\n";
+  if ( debug )
+  {
+    Rcpp::Rcout << "\n\n*************************"
+                << "* Begin asignPool *"
+                << "*************************\n\n";
+  }
 
   int empHours, i, j, k;
+  float progress;
   Rcpp::List listTC = Rcpp::clone( listT );
   Rcpp::List listRC = Rcpp::clone( listR );
 
@@ -132,18 +139,27 @@ Rcpp::List assignPool( Rcpp::List listT,
     if ( empHours == 0 )
       continue;
 
-    Rcpp::Rcout << "Assigning personnel for "
-                << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "ID" ) )
-                << ".\n"
-                << "Iteration: "
-                << i
-                << " / "
-                << listTC.length()
-                << ".\n";
+    if ( debug )
+    {
+      Rcpp::Rcout << "Assigning personnel for "
+                  << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "ID" ) )
+                  << ".\n"
+                  << "Iteration: "
+                  << i
+                  << " / "
+                  << listTC.length()
+                  << ".\n";
+    }
+    else
+    {
+      progress = float( i + 1 ) * 100 / float( listTC.length() );
+      Rcpp::Rcout << fmt::format("Assigning...{: >6.2f}%\r", progress);
+    }
 
     if ( listRC.length() < 1 )
     {
-      Rcpp::Rcout << "No more available employee pool for the required personnel.";
+      if ( debug )
+        Rcpp::Rcout << "No more available employee pool for the required personnel.";
       listRC = R_NilValue;
       break;
     }
@@ -187,11 +203,14 @@ Rcpp::List assignPool( Rcpp::List listT,
                   matchCostCenter[j];
     }
     Rcpp::LogicalVector choices = choice[choice == TRUE];
-    Rcpp::Rcout << "Identified "
-                << choices.length()
-                << " personnel to be assigned to "
-                << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "ID" ) )
-                << ".\n";
+    if ( debug )
+    {
+      Rcpp::Rcout << "Identified "
+                  << choices.length()
+                  << " personnel to be assigned to "
+                  << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "ID" ) )
+                  << ".\n";
+    }
     if ( choices.length() > 0 )
     {
       Rcpp::IntegerVector index = which( choice );
@@ -215,29 +234,37 @@ Rcpp::List assignPool( Rcpp::List listT,
           if ( !assignable( listTC[i] , listRC[*jj] ) )
             continue;
 
-          Rcpp::Rcout << "Assigning "
-                      << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[*jj] ).slot( "ID" ) )
-                      << " to "
-                      << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "ID" ) )
-                      << "\n"
-                      << "MH Req: "
-                      << availableHours( listTC[i] )
-                      << "\nMH Pool: "
-                      << availableHours( listRC[*jj] )
-                      << "\n";
-          Rcpp::DataFrame tempData = assignEmp( listTC[i], listRC[*jj], false );
-          Rcpp::Rcout << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[*jj] ).slot( "ID" ) );
-
-          int assignedMH = Rcpp::sum(Rcpp::as<Rcpp::IntegerVector>( tempData["mh"] ) );
-          if ( assignedMH > 0 )
+          if ( debug )
           {
-            Rcpp::Rcout << " assigned.\nTotal Assigned: "
-                        << assignedMH
-                        << "\nRemaining man-hours\nMH Req: "
+            Rcpp::Rcout << "Assigning "
+                        << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[*jj] ).slot( "ID" ) )
+                        << " to "
+                        << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "ID" ) )
+                        << "\n"
+                        << "MH Req: "
                         << availableHours( listTC[i] )
                         << "\nMH Pool: "
                         << availableHours( listRC[*jj] )
                         << "\n";
+          }
+
+          Rcpp::DataFrame tempData = assignEmp( listTC[i], listRC[*jj], false );
+          if ( debug )
+            Rcpp::Rcout << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[*jj] ).slot( "ID" ) );
+
+          int assignedMH = Rcpp::sum(Rcpp::as<Rcpp::IntegerVector>( tempData["mh"] ) );
+          if ( assignedMH > 0 )
+          {
+            if ( debug )
+            {
+              Rcpp::Rcout << " assigned.\nTotal Assigned: "
+                          << assignedMH
+                          << "\nRemaining man-hours\nMH Req: "
+                          << availableHours( listTC[i] )
+                          << "\nMH Pool: "
+                          << availableHours( listRC[*jj] )
+                          << "\n";
+            }
             mhDB = dfAppend( mhDB, tempData, idx );
           }
           if ( availableHours(listTC[i] ) < 1 )
@@ -251,8 +278,11 @@ Rcpp::List assignPool( Rcpp::List listT,
         if ( availableHours( listRC[j] ) < 1 )
         {
           toBeRemoved[j] = TRUE;
-          Rcpp::Rcout << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[j] ).slot( "ID" ) )
-                      << " is fully spent.\n";
+          if ( debug )
+          {
+            Rcpp::Rcout << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[j] ).slot( "ID" ) )
+                        << " is fully spent.\n";
+          }
         }
       }
       // Retain personnel pool with available man hours
@@ -267,8 +297,11 @@ Rcpp::List assignPool( Rcpp::List listT,
     if ( availableHours( listTC[i] ) < 1 )
     {
       toBeRemoved[i] = TRUE;
-      Rcpp::Rcout << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "ID" ) )
-                  << " is fully spent.\n";
+      if ( debug )
+      {
+        Rcpp::Rcout << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listTC[i] ).slot( "ID" ) )
+                    << " is fully spent.\n";
+      }
     }
   }
   if ( Rcpp::any( toBeRemoved ).is_true() )
@@ -304,8 +337,15 @@ Rcpp::List assignPool( Rcpp::List listT,
   );
 
   Rcpp::List out = Rcpp::List::create( listTC, listRC, mhDB );
-  Rcpp::Rcout << "\n\n***********************"
-              << "**** End asignPool ****"
-              << "***********************\n\n";
+  if ( debug )
+  {
+    Rcpp::Rcout << "\n\n***********************"
+                << "**** End asignPool ****"
+                << "***********************\n\n";
+  }
+  else
+  {
+    Rcpp::Rcout << "\n";
+  }
   return out;
 }
