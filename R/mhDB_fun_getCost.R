@@ -672,7 +672,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     dplyr::group_by(ID, month, costCenter, status) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(PI = 100) %>%
+    dplyr::mutate(PI = 150) %>%
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
     dplyr::ungroup() %>%
