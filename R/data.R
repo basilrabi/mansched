@@ -28,6 +28,7 @@
 #'     \item{MDT}{mini dump truck}
 #'     \item{MOC}{mobile crusher}
 #'     \item{MOS}{mobile screen}
+#'     \item{MTX}{mini tracked excavator}
 #'     \item{PB}{pump boat}
 #'     \item{PMT}{prime mover (trailer)}
 #'     \item{RADIO}{radio}
@@ -52,6 +53,7 @@ validEquipment <- c("ADT",
                     "MDT",
                     "MOC",
                     "MOS",
+                    "MTX",
                     "PB",
                     "PMT",
                     "RADIO",
