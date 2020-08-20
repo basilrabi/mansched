@@ -8,18 +8,19 @@
 character vector:
 
   \describe{
-    \item{BREAKER}{Breaker}
+    \item{ADT}{articulated dump truck}
+    \item{BREAKER}{breaker}
     \item{CRANE}{crane}
     \item{CT}{bull dozer}
     \item{DT}{dump truck}
     \item{FL}{fuel truck}
     \item{FORKLIFT}{forklift}
-    \item{MDT}{Mini Dump Truck}
-    \item{MOC}{Mobile Crusher}
-    \item{MOS}{Mobile Screen}
-    \item{PB}{Pump boat}
+    \item{MDT}{mini dump truck}
+    \item{MOC}{mobile crusher}
+    \item{MOS}{mobile screen}
+    \item{PB}{pump boat}
     \item{PMT}{prime mover (trailer)}
-    \item{RADIO}{Radio}
+    \item{RADIO}{radio}
     \item{RG}{road grader}
     \item{SB}{service bus}
     \item{SP}{service pickup}
