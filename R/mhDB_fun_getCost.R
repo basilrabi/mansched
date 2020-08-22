@@ -90,6 +90,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
     abCost <-
     abHours <-
     absenteeList <-
+    allow <-
     code <-
     cost <-
     costCenters <-
@@ -717,13 +718,15 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
         by = c("ID", "sal")
       )
     }
-
-    tempData$salG <- round(tempData$salM * tempData$allow, digits = 2)
-    tempData$PHIC <- sapply(tempData$salG, FUN = function(x) {
-      PHIC$c[which(PHIC$r1 <= x & PHIC$r2 >= x)]
-    })
-
-    tempData <- dplyr::select(tempData, month, ID, PHIC)
+    tempData <- dplyr::mutate(tempData,
+                              salG = round(salM * allow, digits = 2)) %>%
+      dplyr::mutate(PHIC = dplyr::case_when(
+        salG < 0.01 ~ 0,
+        salG < 10000.01 ~ 175,
+        salG < 70000 ~ round(salG * 0.0175, digits = 2),
+        TRUE ~ 1225
+      )) %>%
+      dplyr::select(month, ID, PHIC)
     tempData
   }) %>%
     data.table::rbindlist(use.names = TRUE)
