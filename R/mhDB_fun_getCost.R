@@ -83,6 +83,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
   HM <-
     ID <-
     LC <-
+    PHIC <-
     PI <-
     X <-
     XholHours <-

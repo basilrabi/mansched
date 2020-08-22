@@ -161,7 +161,7 @@ Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
       {
         costCenter[idx] = cc;
       }
-      else if ( Rcpp::StringVector::is_na( dcc ) )
+      else if ( Rcpp::StringVector::is_na( dcc[j - 1] ) )
       {
         costCenter[idx] = "0-0";
       }

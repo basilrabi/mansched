@@ -7,8 +7,8 @@
 #'   characters
 #' @export cleanCC
 cleanCC <- function(x) {
-  x <- gsub(pattern = "^0*", replacement = "", x = rmS(toupper(x)))
   x <- gsub(pattern = "[^[:alnum:]]", replacement = "", x = x)
+  x <- gsub(pattern = "^0*([^-].*)", replacement = "\\1", x = rmS(toupper(x)))
   return(x)
 }
 
