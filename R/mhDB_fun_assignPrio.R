@@ -134,7 +134,6 @@ assignPrio <- function(listT, listR) {
 
     if (nrow(mhPool) > 0) {
       mhDB <- lapply(listTN, function(x) {
-        x@costCenter <- "0-0"
         tempData <- assignEmp(empT = x, empR = x, selfAssign = TRUE) %>%
           dplyr::mutate(np = 0)
         return(tempData)

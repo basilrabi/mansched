@@ -158,9 +158,17 @@ Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
       month [idx] = j;
 
       if ( !selfAssign )
+      {
         costCenter[idx] = cc;
+      }
+      else if ( Rcpp::StringVector::is_na( dcc ) )
+      {
+        costCenter[idx] = "0-0";
+      }
       else
+      {
         costCenter[idx] = dcc[j - 1];
+      }
 
     }
   }
