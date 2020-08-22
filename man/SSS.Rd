@@ -5,7 +5,7 @@
 \alias{SSS}
 \title{Employer's SSS Contribution}
 \format{
-An object of class \code{data.frame} with 37 rows and 3 columns.
+An object of class \code{data.frame} with 45 rows and 3 columns.
 }
 \usage{
 SSS
