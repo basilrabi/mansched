@@ -18,7 +18,7 @@ NULL
 #'     \item{521012}{Leave Commutation}
 #'     \item{521011}{Food Allowance / Rice Subsidy}
 #'     \item{521017}{Hospital and Medical Expenses}
-#'     \item{521009}{13th Month Pay}
+#'     \item{521009}{Bonus}
 #'     \item{521018}{HMO}
 #'     \item{524037}{Grouplife}
 #'     \item{523011}{Safety Gadgets}
@@ -1595,7 +1595,7 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
                                use.names = TRUE)
 
   if (nrow(r12) > 0) {
-    r12$row <- "13th Month Pay"
+    r12$row <- "Bonus"
   } else {
     r12 <- NULL
   }

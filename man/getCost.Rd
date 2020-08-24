@@ -88,7 +88,7 @@ Calculates monthly personnel cost for each cost center Personnel costs are
     \item{521012}{Leave Commutation}
     \item{521011}{Food Allowance / Rice Subsidy}
     \item{521017}{Hospital and Medical Expenses}
-    \item{521009}{13th Month Pay}
+    \item{521009}{Bonus}
     \item{521018}{HMO}
     \item{524037}{Grouplife}
     \item{523011}{Safety Gadgets}

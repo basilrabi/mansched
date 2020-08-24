@@ -100,10 +100,8 @@ validEmpStatus <- c("reg", "pro", "sea", "age")
 #'
 #' @format \code{\link{data.frame}} with 12 rows and two columns
 #' @export payA
-payA <- data.frame(month            = 1:12,
-                   sal              = c(rep("a", times = 0),
-                                        rep("b", times = 12)),
-                   stringsAsFactors = FALSE)
+payA <- data.frame(month = 1:12,
+                   sal = c(rep("a", times = 0), rep("b", times = 12)))
 
 #' Payment scheme for regular RF
 #'
@@ -111,9 +109,8 @@ payA <- data.frame(month            = 1:12,
 #'
 #' @format \code{\link{data.frame}} with 12 rows and two columns
 #' @export payB
-payB <- data.frame(month            = 1:12,
-                   sal              = c("a", rep("b", times = 11)),
-                   stringsAsFactors = FALSE)
+payB <- data.frame(month = 1:12,
+                   sal = c("a", rep("b", times = 11)))
 
 #' Wage premiums
 #'
@@ -254,16 +251,15 @@ premium <- data.frame(mhType = c("reg",
                                  TRUE,
                                  TRUE,
                                  TRUE,
-                                 TRUE),
-                      stringsAsFactors = FALSE)
+                                 TRUE))
 
 #' Wage premiums for Rank and File
 #'
 #' @seealso \code{\link{premium}} \code{\link{premium.nonRF}}
 #' @export premium.RF
 premium.RF <- premium
-iR         <- premium.RF$mhType %in% c("sh", "lh", "nh", "rs", "rl", "rn")
-iS         <- premium.RF$mhType %in% c("sh", "lh", "rs", "rl")
+iR <- premium.RF$mhType %in% c("sh", "lh", "nh", "rs", "rl", "rn")
+iS <- premium.RF$mhType %in% c("sh", "lh", "rs", "rl")
 premium.RF[iR, c("premiumR")] <-  premium.RF[iR, c("premiumR")] - 1
 premium.RF[iS, c("premiumS")] <-  premium.RF[iS, c("premiumS")] - 1
 
@@ -437,7 +433,7 @@ ac <- data.frame(row = c("Salaries-Regular",
                          "Philhealth",
                          "Leave Commutation",
                          "Hospital and Medical Expenses",
-                         "13th Month Pay",
+                         "Bonus",
                          "man-hours",
                          "CF Others",
                          "CF Manpower Services",
@@ -445,7 +441,11 @@ ac <- data.frame(row = c("Salaries-Regular",
                          "Grouplife",
                          "HMO",
                          "Food Allowance / Rice Subsidy",
-                         "Retirement Benefits"),
+                         "Retirement Benefits",
+                         "Food and Food Supplies",
+                         "Transportation Expense",
+                         "Representation Expense",
+                         "Office Supplies"),
                  code = c(521001L,
                           521021L,
                           521002L,
@@ -465,5 +465,8 @@ ac <- data.frame(row = c("Salaries-Regular",
                           524037L,
                           521018L,
                           521011L,
-                          521030L),
-                 stringsAsFactors = FALSE)
+                          521030L,
+                          523010L,
+                          524002L,
+                          524003L,
+                          524030L))

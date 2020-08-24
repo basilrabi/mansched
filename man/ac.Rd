@@ -5,7 +5,7 @@
 \alias{ac}
 \title{Employee costs accounting codes}
 \format{
-An object of class \code{data.frame} with 20 rows and 2 columns.
+An object of class \code{data.frame} with 24 rows and 2 columns.
 }
 \usage{
 ac
