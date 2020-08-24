@@ -177,6 +177,10 @@ setMethod(
       theObject@inHouse <- inHouse
     }
 
+    if (!is.na(theObject@cEnd)){
+      if (theObject@cEnd < theObject@cBegin)
+        stop(paste0(theObject@ID, "'s contract ends before it begins."))
+    }
     calDays <- getCalDays(cBegin = theObject@cBegin,
                           cEnd = theObject@cEnd,
                           hol = hol,
