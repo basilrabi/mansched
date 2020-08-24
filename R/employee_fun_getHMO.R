@@ -49,10 +49,11 @@ setMethod(
 
     hmo <- callNextMethod(theObject)
 
-    principal <- 16003
+    principal <- 18803.45
+    mental_health <- 400
 
     employeeHMO <- principal / 12
-    dependentHMO <- principal * theObject@dependents / 12
+    dependentHMO <- (principal - mental_health) * theObject@dependents / 12
 
     cost <- employeeHMO + dependentHMO
     hmo$hmo <- round(hmo$allow * cost, digits = 2)
@@ -68,15 +69,16 @@ setMethod(
   definition = function(theObject) {
 
     hmo <- callNextMethod(theObject)
+    mental_health <- 400
 
     if (isRF(theObject)) {
-      principal <- 11383
+      principal <- 13490.45
       employeeHMO <- principal / 12
-      dependentHMO <- principal / 12
+      dependentHMO <- (principal - mental_health) / 12
     } else {
-      principal <- 12025
+      principal <- 14228.75
       employeeHMO <- principal / 12
-      dependentHMO <- principal / 12
+      dependentHMO <- (principal - mental_health) / 12
     }
 
     cost <- employeeHMO + (dependentHMO * theObject@dependents)

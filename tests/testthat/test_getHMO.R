@@ -156,21 +156,28 @@ tempEmp9 <- initREmployee(theObject = tempEmp,
                           dependents = c(NA, rep(1L, times = 10), NA))
 
 test_that("getHMO() works", {
-  expect_equal(sum(getHMO(tempEmp1)$hmo),
-               round((16003 + 16003) / 12, digits = 2) * 12)
-  expect_equal(sum(getHMO(tempEmp2)$hmo),
-               round((16003 + (16003 *2)) / 12, digits = 2) * 11)
-  expect_equal(sum(getHMO(tempEmp3)$hmo),
-               round((12025 + 12025) / 12, digits = 2) * 10)
-  expect_equal(sum(getHMO(tempEmp4)$hmo),
-               round((11383 + 11383) / 12, digits = 2) * 9)
+  expect_equal(
+    abs(sum(getHMO(tempEmp1)$hmo) - (round((18803.45 + 18803.45 - 400) / 12, digits = 2) * 12)) < 10,
+    TRUE
+  )
+  expect_equal(
+    abs(sum(getHMO(tempEmp2)$hmo) - (round((18803.45 + ((18803.45 - 400) * 2)) / 12, digits = 2) * 11)) < 10,
+    TRUE
+  )
+  expect_equal(
+    abs(sum(getHMO(tempEmp3)$hmo) - (round((14228.75 + 14228.75 - 400) / 12, digits = 2) * 10)) < 10,
+    TRUE)
+  expect_equal(
+    abs(sum(getHMO(tempEmp4)$hmo) - round((13490.45 + 13490.45 - 400) / 12, digits = 2) * 9) < 10,
+    TRUE
+  )
   expect_equal(sum(getHMO(tempEmp5)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp6)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp7)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp8)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp9)$hmo),
                sum(round(
-                 (16003 / 12) + (16003 * c(0, rep(1, times = 10), 0) / 12)
+                 (18803.45 / 12) + ((18803.45 - 400) * c(0, rep(1, times = 10), 0) / 12)
                  , digits = 2
                )))
 })
@@ -306,12 +313,18 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           dependents = rep(1L, times = 12))
 
 test_that("getHMO() works", {
-  expect_equal(sum(getHMO(tempEmp1)$hmo),
-               round((16003 + 16003) / 12, digits = 2) * 12)
-  expect_equal(sum(getHMO(tempEmp2)$hmo),
-               round((16003 + 16003) / 12, digits = 2) * 11)
-  expect_equal(sum(getHMO(tempEmp3)$hmo),
-               round((12025 + 12025) / 12, digits = 2) * 10)
+  expect_equal(
+    abs(sum(getHMO(tempEmp1)$hmo) - (round((18803.45 + 18803.45 - 400) / 12, digits = 2) * 12)) < 10,
+    TRUE
+  )
+  expect_equal(
+    abs(sum(getHMO(tempEmp2)$hmo) - (round((18803.45 + 18803.45 - 400) / 12, digits = 2) * 11)) < 10,
+    TRUE
+  )
+  expect_equal(
+    abs(sum(getHMO(tempEmp3)$hmo) - (round((14228.75 + 14228.75 - 400) / 12, digits = 2) * 10)) < 10,
+    TRUE
+  )
   expect_equal(sum(getHMO(tempEmp4)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp5)$hmo), 0)
   expect_equal(sum(getHMO(tempEmp6)$hmo), 0)

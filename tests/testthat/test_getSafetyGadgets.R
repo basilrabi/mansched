@@ -116,12 +116,12 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           hol = hol)
 
 test_that("getSafetyGadgets() works", {
-  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), 5499.96)
-  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), 458.33 * 11)
-  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), 458.33 * 10)
-  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), 458.33 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), 458.33 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), 341.67 * 7)
+  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), 516.67 * 12)
+  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), 516.67 * 11)
+  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), 516.67 * 10)
+  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), 516.67 * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), 516.67 * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), 400 * 7)
   expect_equal(sum(getSafetyGadgets(tempEmp7)$sg), 0)
 })
 
@@ -249,12 +249,12 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           forecast = TRUE)
 
 test_that("getSafetyGadgets() works", {
-  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), 5499.96)
-  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), 458.33 * 11)
-  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), 458.33 * 10)
-  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), 458.33 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), 458.33 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), 458.33 * 7)
+  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), 516.67 * 12)
+  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), 516.67 * 11)
+  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), 516.67 * 10)
+  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), 516.67 * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), 516.67 * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), 516.67 * 7)
   expect_equal(sum(getSafetyGadgets(tempEmp7)$sg), 0)
 })
 

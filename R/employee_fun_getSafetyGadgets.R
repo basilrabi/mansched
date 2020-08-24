@@ -32,7 +32,8 @@ setMethod(
   definition = function(theObject) {
 
     shoes <- rep(2800 / 12, times = 12L)
-    others <- rep(1300 / 12, times = 12L)
+    # Umbrella, raincoat, rain boots
+    others <- rep(2000 / 12, times = 12L)
     sg <- getCM(theObject)
 
     if (theObject@status == "age") {
