@@ -136,7 +136,7 @@ setMethod(
     theObject@ID <- ID
     theObject@name <- name
     theObject@designation <- designation
-    theObject@dcc <- dcc
+    theObject@dcc <- cleanCC(dcc)
     theObject@forecast <- forecast
     theObject@field <- field
 
@@ -152,8 +152,9 @@ setMethod(
     # Vectorize costCenter
     #  This is done under the assumption that white spaces and punctuation are
     #  already removed. Also, all characters are in upper case.
-    theObject@costCenter <-
+    theObject@costCenter <- cleanCC(
       strsplit(x = costCenter, split = " ", fixed = TRUE)[[1]]
+    )
 
     # status must be an element of c("reg", "pro", "sea", "age)
     theObject@status <- status

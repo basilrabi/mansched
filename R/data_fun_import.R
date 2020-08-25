@@ -512,17 +512,13 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
     stop("Check duplicate!")
   }
 
+  empReq$costCenter <- cleanCC(empReq$costCenter)
+
   # Trim and remove white spaces
   empReq$personnelClass <- rmWS(empReq$personnelClass)
 
-  # Remove spaces for costCenter and equipment
-  empReq[, c("equipment", "costCenter")] <- lapply(
-    empReq[, c("equipment", "costCenter")],
-    FUN = rmS
-  )
-
-  # Remove leading zero
-  empReq$costCenter <- rmLead0(empReq$costCenter)
+  # Clean equipment
+  empReq$equipment <- toupper(rmS(empReq$equipment))
 
   # Change to lower case
   empReq$personnelClass <- tolower(empReq$personnelClass)
@@ -531,11 +527,6 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   empReq$personnelClass <- gsub(pattern = " ",
                                 replacement = "",
                                 x = empReq$personnelClass)
-
-  # Change to upper case
-  empReq[,c("equipment", "costCenter")] <- lapply(
-    empReq[,c("equipment", "costCenter")], FUN = toupper
-  )
 
   # Check accepted employee class
   if (any(!empReq$personnelClass %in% validEmpClass)) {
