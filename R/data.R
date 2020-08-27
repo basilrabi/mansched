@@ -419,7 +419,7 @@ SSS <- data.frame(r1 = c(-1,
 
 #' Employee costs accounting codes
 #'
-#' M3 codes used by accounting for employee costs.
+#' M3 codes used by accounting.
 #'
 #' @export ac
 ac <- data.frame(row = c("Salaries-Regular",
@@ -445,7 +445,8 @@ ac <- data.frame(row = c("Salaries-Regular",
                          "Food and Food Supplies",
                          "Transportation Expense",
                          "Representation Expense",
-                         "Office Supplies"),
+                         "Office Supplies",
+                         "Depletion Expense"),
                  code = c(521001L,
                           521021L,
                           521002L,
@@ -469,4 +470,5 @@ ac <- data.frame(row = c("Salaries-Regular",
                           523010L,
                           524002L,
                           524003L,
-                          524030L))
+                          524030L,
+                          525002L))

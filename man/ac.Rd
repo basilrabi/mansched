@@ -5,12 +5,12 @@
 \alias{ac}
 \title{Employee costs accounting codes}
 \format{
-An object of class \code{data.frame} with 24 rows and 2 columns.
+An object of class \code{data.frame} with 25 rows and 2 columns.
 }
 \usage{
 ac
 }
 \description{
-M3 codes used by accounting for employee costs.
+M3 codes used by accounting.
 }
 \keyword{datasets}
