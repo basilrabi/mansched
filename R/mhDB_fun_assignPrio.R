@@ -43,15 +43,18 @@
 #'   }
 #' @export assignPrio
 #' @importFrom data.table rbindlist
-#' @importFrom dplyr "%>%" bind_rows mutate
+#' @importFrom dplyr "%>%" bind_rows filter mutate select
 #' @importFrom tidyr gather
 assignPrio <- function(listT, listR) {
 
   ID <-
+    costCenter <-
     discardedOT_00 <-
     discardedOT_dcc <-
     mh <-
     mhPool <-
+    mhType <-
+    partialDccLess <-
     tempData1 <-
     tempData2 <-
     tempData3 <- NULL
@@ -108,6 +111,9 @@ assignPrio <- function(listT, listR) {
       }) %>%
         data.table::rbindlist() %>%
         dplyr::bind_rows(tempData4)
+      partialDccLess <- dplyr::filter(tempData4, costCenter == "0-0") %>%
+        dplyr::select(month, ID, mhType, mh)
+      tempData4 <- dplyr::filter(tempData4, costCenter != "0-0")
     }
   }
 
@@ -140,6 +146,11 @@ assignPrio <- function(listT, listR) {
       }) %>%
         data.table::rbindlist() %>%
         dplyr::bind_rows(mhDB)
+      if (!is.null(partialDccLess)) {
+        mhPool <- dplyr::bind_rows(mhPool, partialDccLess)
+      }
+    } else if (!is.null(partialDccLess)) {
+      mhPool <- partialDccLess
     } else {
       mhPool <- NULL
     }

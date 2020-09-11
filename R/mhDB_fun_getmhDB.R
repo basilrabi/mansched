@@ -50,6 +50,16 @@
 #'         \item{mhType}{man hour type}
 #'         \item{mh}{integer value representing the unassigned man hours}
 #'       }
+#'     \item \code{\link{data.frame}} containing un-assigned man hours of the
+#'       real employees
+#'
+#'       This is composed of the following columns:
+#'       \describe{
+#'         \item{month}{integer value representing the month}
+#'         \item{ID}{character string representing the employee requirement}
+#'         \item{mhType}{man hour type}
+#'         \item{mh}{integer value representing the unassigned man hours}
+#'       }
 #'     \item \code{data.frame} representing the man hours database of the
 #'       employees with discarded OT hours
 #'
