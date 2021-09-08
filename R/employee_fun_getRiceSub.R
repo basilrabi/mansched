@@ -34,7 +34,7 @@ setMethod(
 
     rice <- 2500
     if (theObject@forecast)
-      rice <- 2300
+      rice <- 2400
 
     if (grepl("BARGE MAIN", theObject@name))
       rice <- 0
