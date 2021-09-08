@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // assignPool
 Rcpp::List assignPool(Rcpp::List listT, Rcpp::List listR, Rcpp::StringVector prioStat, bool prioCode, bool debug);
 RcppExport SEXP _mansched_assignPool(SEXP listTSEXP, SEXP listRSEXP, SEXP prioStatSEXP, SEXP prioCodeSEXP, SEXP debugSEXP) {

@@ -50,9 +50,14 @@ setMethod(
     cost      <- 0
 
     # Allowances
-    food <- 2100
-    lighting <- 1150
-    housing <- 1150
+    food <- 2200
+    lighting <- 1200
+    housing <- 1200
+    if (theObject@forecast) {
+      food <- 2100
+      lighting <- 1150
+      housing <- 1150
+    }
 
     if (!theObject@inHouse)
       cost <- cost + food + lighting
@@ -81,21 +86,21 @@ setMethod(
       }
     } else {
 
-      foodForTechSup <- 2000
+      food <- 2100
+      lighting <- 1200
+      housing <- 1200
+      if (theObject@forecast) {
+        food <- 2000
+        lighting <- 1150
+        housing <- 1150
+      }
 
-      # Food allowance in 2018
-      if (theObject@forecast)
-        foodForTechSup <- 2000
+      cost <- cost + food
 
-      cost <- cost + foodForTechSup
-
-      if (isReg(theObject = theObject)) {
-
-        cost <- cost + 1150 # for housing
-
-        if (!theObject@inHouse) {
-          cost <- cost + 1150 # for lighting
-        }
+      if (isReg(theObject)) {
+        cost <- cost + housing
+        if (!theObject@inHouse)
+          cost <- cost + lighting
       }
     }
 
