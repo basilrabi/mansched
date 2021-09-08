@@ -31,7 +31,9 @@ setMethod(
   signature  = "Employee",
   definition = function(theObject) {
 
-    price <- 3 * 450
+    price <- 1400
+    if (theObject@forecast)
+      price <- 1350
 
     longShirt  <- getCM(theObject)
 
