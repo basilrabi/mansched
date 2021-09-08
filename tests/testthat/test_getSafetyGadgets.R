@@ -115,13 +115,13 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           restday = restday,
                           hol = hol)
 
-test_that("getSafetyGadgets() works", {
-  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), 516.67 * 12)
-  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), 516.67 * 11)
-  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), 516.67 * 10)
-  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), 516.67 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), 516.67 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), 400 * 7)
+test_that("getSafetyGadgets() works for budget", {
+  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), 543.75 * 12)
+  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), 543.75 * 11)
+  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), 543.75 * 10)
+  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), 543.75 * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), 543.75 * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), 429.17 * 7)
   expect_equal(sum(getSafetyGadgets(tempEmp7)$sg), 0)
 })
 
@@ -248,13 +248,13 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           hol = hol,
                           forecast = TRUE)
 
-test_that("getSafetyGadgets() works", {
-  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), 516.67 * 12)
-  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), 516.67 * 11)
-  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), 516.67 * 10)
-  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), 516.67 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), 516.67 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), 516.67 * 7)
+test_that("getSafetyGadgets() works for forecast", {
+  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), 527.08 * 12)
+  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), 527.08 * 11)
+  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), 527.08 * 10)
+  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), 527.08 * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), 527.08 * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), 527.08 * 7)
   expect_equal(sum(getSafetyGadgets(tempEmp7)$sg), 0)
 })
 

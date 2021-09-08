@@ -31,20 +31,25 @@ setMethod(
   signature  = "Employee",
   definition = function(theObject) {
 
-    shoes <- rep(2800 / 12, times = 12L)
-    # Umbrella, raincoat, rain boots
-    others <- rep(2000 / 12, times = 12L)
-    sg <- getCM(theObject)
-
-    if (theObject@status == "age") {
-      shoes <-  shoes * 0
-      others <- others * 0
+    boots <- 400
+    raincoat <- 1600
+    shoes <- 2750
+    umbrella <- 400
+    if (theObject@forecast) {
+      boots <- 300
+      umbrella <- 300
     }
 
     if (theObject@field)
       shoes <- shoes * 1.5
 
-    sg$sg <- round(sg$allow * (shoes + others), digits = 2)
+    cost <- boots + raincoat + shoes + umbrella
+    if (theObject@status == "age")
+      cost <- 0
+
+    monthly_cost <- rep(cost / 12, times = 12L)
+    sg <- getCM(theObject)
+    sg$sg <- round(sg$allow * monthly_cost, digits = 2)
 
     return(sg[, c("month", "ID", "sg")])
   }
