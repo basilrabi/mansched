@@ -38,8 +38,12 @@ setMethod(
     gc$gc <- 0
     gc$benefits <- gc$gc
 
+    gcPrice <- 1600
+    if (theObject@forecast)
+      gcPrice <- 1500
+
     if (theObject@status %in% c("reg")) {
-      gc$gc[gc$month == 12L] <- 1500
+      gc$gc[gc$month == 12L] <- gcPrice
       gc$benefits <- round(gc$allow * gc$gc, digits = 2)
     }
 
@@ -50,7 +54,7 @@ setMethod(
       } else {
         multiplier <- sum(gc$allow)
       }
-      gc$gc[gc$month == 11L] <- round((3000 / 7) * multiplier, digits = 2)
+      gc$gc[gc$month == 11L] <- round((gcPrice * 2 / 7) * multiplier, digits = 2)
       gc$benefits <- gc$gc
     }
 
