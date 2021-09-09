@@ -77,8 +77,13 @@ NULL
 #' @importFrom dplyr "%>%" case_when filter group_by left_join mutate select summarise ungroup
 #' @importFrom data.table data.table rbindlist
 #' @importFrom tidyr gather pivot_longer pivot_wider spread
-getCost <- function(mhDB, listR, wage, forecast = FALSE,
-                    bonusFactorYearEnd = 1.5, absentee = NA, monthStart = 1L) {
+getCost <- function(mhDB,
+                    listR,
+                    wage,
+                    forecast = FALSE,
+                    bonusFactorYearEnd = 1.5,
+                    absentee = NA,
+                    monthStart = 1L) {
 
   HM <-
     ID <-
@@ -693,6 +698,17 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
 
   PHICdb <- lapply(listR, FUN = function(x) {
 
+    max_salary <- 80000
+    phic_premium <- 0.02
+    phic_premium_max <- 1600
+    phic_premium_min <- 200
+    if (forecast) {
+      max_salary <- 70000
+      phic_premium <- 0.0175
+      phic_premium_max <- 1225
+      phic_premium_min <- 175
+    }
+
     tempData <- getCM(x)
 
     if (!isReg(x)) {
@@ -723,9 +739,9 @@ getCost <- function(mhDB, listR, wage, forecast = FALSE,
                               salG = round(salM * allow, digits = 2)) %>%
       dplyr::mutate(PHIC = dplyr::case_when(
         salG < 0.01 ~ 0,
-        salG < 10000.01 ~ 175,
-        salG < 70000 ~ round(salG * 0.0175, digits = 2),
-        TRUE ~ 1225
+        salG < 10000.01 ~ phic_premium_min,
+        salG < max_salary ~ round(salG * phic_premium, digits = 2),
+        TRUE ~ phic_premium_max
       )) %>%
       dplyr::select(month, ID, PHIC)
     tempData
