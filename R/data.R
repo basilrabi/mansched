@@ -417,7 +417,7 @@ SSS <- data.frame(r1 = c(-1,
                         2112.50,
                         2155.00))
 
-#' Employee costs accounting codes
+#' Costs accounting codes in M3
 #'
 #' M3 codes used by accounting.
 #'
@@ -472,3 +472,8 @@ ac <- data.frame(row = c("Salaries-Regular",
                           524003L,
                           524030L,
                           525002L))
+
+#' Cost accounting codes in SAP
+#'
+#' SAP cost codes used by accounting.
+"acSAP"

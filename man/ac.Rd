@@ -3,7 +3,7 @@
 \docType{data}
 \name{ac}
 \alias{ac}
-\title{Employee costs accounting codes}
+\title{Costs accounting codes in M3}
 \format{
 An object of class \code{data.frame} with 25 rows and 2 columns.
 }
