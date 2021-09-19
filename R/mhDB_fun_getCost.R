@@ -557,24 +557,22 @@ getCost <- function(mhDB,
 
   ####  Compute for Signing Bonus ####
   cat("\nComputing for Signing Bonus.\n")
-  mhDB.signingBonus <- NULL
-  if (!forecast) {
-    signingBonus <- data.table::rbindlist(lapply(listR, getSigningBonus),
-                                          use.names = TRUE)
-    mhDB.signingBonus <- dplyr::filter(mhDB,
-                                       mhType %in% distType,
-                                       mhDB$month < 6) %>%
-      dplyr::group_by(ID, costCenter) %>%
-      dplyr::summarise(mh = sum(mh)) %>%
-      dplyr::group_by(ID) %>%
-      dplyr::mutate(totMH = sum(mh), month = 5L) %>%
-      dplyr::mutate(X = mh / totMH) %>%
-      dplyr::left_join(signingBonus, by = c("ID", "month")) %>%
-      dplyr::mutate(cost = round(X * signingBonus, digits = 2)) %>%
-      dplyr::filter(!is.na(cost)) %>%
-      dplyr::group_by(costCenter, month) %>%
-      dplyr::summarise(cost = sum(cost))
-  }
+
+  signingBonus <- data.table::rbindlist(lapply(listR, getSigningBonus),
+                                        use.names = TRUE)
+  mhDB.signingBonus <- dplyr::filter(mhDB,
+                                     mhType %in% distType,
+                                     mhDB$month < 6) %>%
+    dplyr::group_by(ID, costCenter) %>%
+    dplyr::summarise(mh = sum(mh)) %>%
+    dplyr::group_by(ID) %>%
+    dplyr::mutate(totMH = sum(mh), month = 5L) %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::left_join(signingBonus, by = c("ID", "month")) %>%
+    dplyr::mutate(cost = round(X * signingBonus, digits = 2)) %>%
+    dplyr::filter(!is.na(cost)) %>%
+    dplyr::group_by(costCenter, month) %>%
+    dplyr::summarise(cost = sum(cost))
 
   #### Compute for HMO ####
   cat("\nComputing for HMO.\n")

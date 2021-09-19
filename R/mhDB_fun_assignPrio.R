@@ -106,14 +106,17 @@ assignPrio <- function(listT, listR) {
       listR.dcc <- listR.dcc[aviHours > 0]
 
       tempData4 <- lapply(listR.dcc, function(x) {
-        x@costCenter <- x@dcc
+        x@costCenter <- sapply(X = x@dcc, FUN = function(y) {
+          if (is.na(y))
+            return("0-0")
+          return(y)
+        })
         return(assignEmp(empT = x, empR = x, selfAssign = TRUE))
       }) %>%
         data.table::rbindlist() %>%
         dplyr::bind_rows(tempData4)
       partialDccLess <- dplyr::filter(tempData4, costCenter == "0-0") %>%
         dplyr::select(month, ID, mhType, mh)
-      tempData4 <- dplyr::filter(tempData4, costCenter != "0-0")
     }
   }
 
