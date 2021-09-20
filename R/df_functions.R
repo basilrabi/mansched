@@ -125,20 +125,9 @@ rmS <- function(x) {
 #' @return character vector with leading zero removed
 #' @export rmLead0
 rmLead0 <- function(x) {
-  y <- rep(NA, times = length(x))
-  for (i in 1:length(x)) {
-    tryCatch(
-      {
-        j <- as.character(as.integer(j <- x[i]))
-      },
-      warning = function(w) {
-        j <- j <- x[i]
-      },
-      finally = {
-        y[i] <- j
-        j <- NULL
-      }
-    )
-  }
-  y
+  sapply(x, function(y) {
+    if (length(grep("\\D", y)) > 0)
+      return(y)
+    return(as.character(as.integer(y)))
+  }, USE.NAMES = FALSE)
 }
