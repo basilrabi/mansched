@@ -11,6 +11,17 @@
 #'   }
 "holidays"
 
+#' Cost accounting codes in SAP
+#'
+#' SAP cost codes used by accounting.
+#'
+#' @format \code{\link{data.frame}} with 124 rows and 2 columns:
+#'   \describe{
+#'     \item{code}{accounting code}
+#'     \item{description}{cost component}
+#'   }
+"acSAP"
+
 #' Valid equipment types
 #'
 #' A character vector containing the valid equipment types in Taganito Mine.
@@ -472,8 +483,3 @@ ac <- data.frame(row = c("Salaries-Regular",
                           524003L,
                           524030L,
                           525002L))
-
-#' Cost accounting codes in SAP
-#'
-#' SAP cost codes used by accounting.
-"acSAP"

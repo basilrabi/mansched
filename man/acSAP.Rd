@@ -5,7 +5,11 @@
 \alias{acSAP}
 \title{Cost accounting codes in SAP}
 \format{
-An object of class \code{spec_tbl_df} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 123 rows and 2 columns.
+\code{\link{data.frame}} with 124 rows and 2 columns:
+  \describe{
+    \item{code}{accounting code}
+    \item{description}{cost component}
+  }
 }
 \usage{
 acSAP

@@ -2,6 +2,7 @@ library(data.table)
 library(dplyr)
 library(mansched)
 library(readxl)
+library(stringr)
 
 set.seed(1)
 
@@ -81,23 +82,20 @@ tempData <- getCost(mhDB = tempData[[1]],
 c14000 <- tempData[[1]][tempData[[1]]$costCenter == "14000",]
 c14100 <- tempData[[1]][tempData[[1]]$costCenter == "14100",]
 
-mh14000 <- sum(c14000[c14000$row == "man-hours", c(as.character(1:12))])
-mh14100 <- sum(c14100[c14100$row == "man-hours", c(as.character(1:12))])
+mh14000 <- sum(c14000[c14000$description == "Man-hours", c(as.character(1:12))])
+mh14100 <- sum(c14100[c14100$description == "Man-hours", c(as.character(1:12))])
 totMH <- sum(tempData[[2]][,c(as.character(1:12))])
 
-PI14000 <- sum(c14000[c14000$row == "Prem-HDMF (Pag-ibig)",
+PI14000 <- sum(c14000[stringr::str_detect(c14000$description, "HDMF"),
                       c(as.character(1:12))])
-PI14100 <- sum(c14100[c14100$row == "Prem-HDMF (Pag-ibig)",
+PI14100 <- sum(c14100[stringr::str_detect(c14100$description, "HDMF"),
                       c(as.character(1:12))])
 
-riceSub <- tempData[[1]]
-riceSub <- riceSub[riceSub$code == 521011L,]
-riceSub <- riceSub[, as.character(1:12)] %>% as.matrix()
+# TODO: Diminis
 
 test_that("getCost() works", {
   expect_equal(mh14000 + mh14100, totMH)
   expect_equal(PI14000 + PI14100, 750 * 12)
-  expect_equal(sum(riceSub), 5 * 2500 * 12)
 })
 
 rm(list = ls())

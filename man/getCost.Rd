@@ -64,12 +64,6 @@ a list containing the following:
     \item tabulated total man hours per month per cost center
     \item tabulated 13th month pay per month per cost center
     \item tabulated bonus cost per month per cost center
-    \item a data.frame with 15 columns
-
-      This is similar to the first object returned but composed of only
-      seasonal employee-related costs.
-      Also, there is no concat column since this will not be linked to the
-      budget templates.
   }
 }
 \description{
