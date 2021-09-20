@@ -1567,20 +1567,18 @@ getCost <- function(mhDB,
     dplyr::group_by(costCenter, description, month) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     dplyr::left_join(y = mansched::acSAP, by = "description") %>%
-    tidyr::spread(month, cost, fill = 0)
+    tidyr::spread(month, cost, fill = 0) %>%
+    as.data.frame()
 
   costCenter <- unique(costDB$costCenter)
 
   cat("\nExporting data.\n")
-
-  export <- cbind(paste0(costDB$costCenter, costDB$code), as.data.frame(costDB))
-  colnames(export)[1] <- "concat"
-  missingCols <- (1:12)[which(!1:12 %in% colnames(export))]
+  missingCols <- (1:12)[which(!1:12 %in% colnames(costDB))]
   for (i in missingCols) {
-    cmd <- paste0("export$`", i, "` <- 0")
+    cmd <- paste0("costDB$`", i, "` <- 0")
     eval(parse(text = cmd))
   }
-  export <- export[, c("costCenter", "description", "code", "concat", as.character(1:12))]
+  costDB <- costDB[, c("costCenter", "description", "code", as.character(1:12))]
 
   export.mh <- dplyr::filter(costDB, code == 99999999L) %>%
     dplyr::select(-c(description, code)) %>%
@@ -1594,5 +1592,5 @@ getCost <- function(mhDB,
   export.mh <- export.mh[, c("costCenter", as.character(1:12))]
   export.mh$SUM <- apply(export.mh[, 2:13], MARGIN = 1, FUN = sum)
 
-  return(list(export, export.mh, accr.13mp, mhDB.bonus))
+  return(list(costDB, export.mh, accr.13mp, mhDB.bonus))
 }
