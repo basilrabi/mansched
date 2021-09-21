@@ -50,6 +50,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// copy
+Rcpp::List copy(Rcpp::List x);
+RcppExport SEXP _mansched_copy(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(copy(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getHours
 Rcpp::DataFrame getHours(const Rcpp::S4& employee);
 RcppExport SEXP _mansched_getHours(SEXP employeeSEXP) {
@@ -111,6 +122,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mansched_assignPool", (DL_FUNC) &_mansched_assignPool, 5},
     {"_mansched_assignEmp", (DL_FUNC) &_mansched_assignEmp, 3},
     {"_mansched_assignMH", (DL_FUNC) &_mansched_assignMH, 2},
+    {"_mansched_copy", (DL_FUNC) &_mansched_copy, 1},
     {"_mansched_getHours", (DL_FUNC) &_mansched_getHours, 1},
     {"_mansched_getMin", (DL_FUNC) &_mansched_getMin, 2},
     {"_mansched_isReg", (DL_FUNC) &_mansched_isReg, 1},

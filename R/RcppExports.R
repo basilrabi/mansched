@@ -118,6 +118,16 @@ assignMH <- function(hoursT, hoursR) {
     .Call('_mansched_assignMH', PACKAGE = 'mansched', hoursT, hoursR)
 }
 
+#' Deep copy a list
+#'
+#' @param x a list
+#' @return a deep copy of the input list
+#'
+#' @export
+copy <- function(x) {
+    .Call('_mansched_copy', PACKAGE = 'mansched', x)
+}
+
 #' Get remaining working hours
 #'
 #' This function returns all remaining man hour types including overtime.

@@ -126,7 +126,7 @@ assignPrio <- function(listT, listR) {
 
   # Assign excess regular hours to a dummy cost center
   if (length(listR) > 0) {
-    listTN <- lapply(listR, function(x){x})
+    listTN <- copy(listR)
     discardedOT_00  <- lapply(listTN, normEmp) %>%
       data.table::rbindlist() %>%
       dplyr::filter(mh > 0)
