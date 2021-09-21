@@ -557,7 +557,7 @@ getCost <- function(mhDB,
                                         use.names = TRUE)
   mhDB.signingBonus <- dplyr::filter(mhDB,
                                      mhType %in% distType,
-                                     mhDB$month < 6) %>%
+                                     month < 6) %>%
     dplyr::group_by(ID, costCenter) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID) %>%
@@ -1306,7 +1306,7 @@ getCost <- function(mhDB,
     ## Distribute rice subsidy
     mhDB.riceSub.I <- dplyr::filter(mhDB,
                                     mhType %in% distType,
-                                    mhDB$status != "age") %>%
+                                    status != "age") %>%
       dplyr::group_by(ID, month, costCenter, status) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID, month) %>%
