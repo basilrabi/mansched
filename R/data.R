@@ -15,7 +15,7 @@
 #'
 #' SAP cost codes used by accounting.
 #'
-#' @format \code{\link{data.frame}} with 124 rows and 2 columns:
+#' @format \code{\link{data.frame}} with 125 rows and 2 columns:
 #'   \describe{
 #'     \item{code}{accounting code}
 #'     \item{description}{cost component}
