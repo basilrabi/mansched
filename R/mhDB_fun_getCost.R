@@ -53,6 +53,8 @@ NULL
 #'     }
 #'   }
 #' @param monthStart an integer representing the month of start of forecasting
+#' @param leaveConversionFactor numeric value for the monthly salary fraction
+#'   assumed as leave conversion
 #' @return a list containing the following:
 #'
 #'   \enumerate{
@@ -77,7 +79,8 @@ getCost <- function(mhDB,
                     forecast = FALSE,
                     bonusFactorYearEnd = 1.5,
                     absentee = NA,
-                    monthStart = 1L) {
+                    monthStart = 1L,
+                    leaveConversionFactor = 0.5) {
 
   HM <-
     ID <-
@@ -92,6 +95,7 @@ getCost <- function(mhDB,
     absenteeList <-
     allow <-
     code <-
+    conversion <-
     cost <-
     costCenters <-
     costCenter <-
@@ -1165,13 +1169,12 @@ getCost <- function(mhDB,
     tempData <- as.data.frame(tempData)
 
     return(tempData)
-  })
-
-  bonus <- data.table::rbindlist(bonus, use.names = TRUE)
+  }) %>%
+    data.table::rbindlist(use.names = TRUE)
 
   if (length(bonus) > 0) {
 
-    # Distrubute mid-year bonus to all manhours from January to May.
+    # Distribute mid-year bonus to all manhours from January to May.
     # TODO: in forecast, use actual manhours per employee.
     # If forecasting, temporarily drop man-hours before the start of forecasted
     # month so the the cost center "0-0" is not given bonus
@@ -1183,30 +1186,23 @@ getCost <- function(mhDB,
       dplyr::group_by(ID, costCenter) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
-      dplyr::mutate(totMH = sum(mh))
-    mhDB.bonusMid$month <- 5L
-    mhDB.bonusMid$X <- mhDB.bonusMid$mh / mhDB.bonusMid$totMH
-    mhDB.bonusMid <- dplyr::left_join(x = mhDB.bonusMid,
-                                      y = bonus,
-                                      by = c("ID", "month"))
+      dplyr::mutate(totMH = sum(mh), month = 5L) %>%
+      dplyr::mutate(X = mh / totMH) %>%
+      dplyr::left_join(bonus, by = c("ID", "month"))
 
-    # Distrubute year-and bonus to all manhours from January to December
+    # Distribute year-and bonus to all manhours from January to December
     # TODO: in forecast, use actual manhours per employee.
     # If forecasting, temporarily drop man-hours before the start of forecasted
     # month so the the cost center "0-0" is not given bonus
-    mhDB.bonusEnd <- dplyr::filter(mhDB,
-                                   mhType %in% distType,
-                                   month >= monthStart,
-                                   status == "reg") %>%
+    mhDB.bonusEnd <- dplyr::filter(
+      mhDB, mhType %in% distType, month >= monthStart, status == "reg"
+    ) %>%
       dplyr::group_by(ID, costCenter) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
-      dplyr::mutate(totMH = sum(mh))
-    mhDB.bonusEnd$month <- 12L
-    mhDB.bonusEnd$X <- mhDB.bonusEnd$mh / mhDB.bonusEnd$totMH
-    mhDB.bonusEnd <- dplyr::left_join(x = mhDB.bonusEnd,
-                                      y = bonus,
-                                      by = c("ID", "month"))
+      dplyr::mutate(totMH = sum(mh), month = 12L) %>%
+      dplyr::mutate(X = mh / totMH) %>%
+      dplyr::left_join(bonus, by = c("ID", "month"))
 
     mhDB.bonus <- data.table::rbindlist(list(mhDB.bonusMid, mhDB.bonusEnd),
                                         use.names = TRUE) %>%
@@ -1218,6 +1214,64 @@ getCost <- function(mhDB,
     mhDB.bonus <- data.table::data.table(costCenter = character(),
                                          month = integer(),
                                          cost = numeric())
+  }
+
+
+  #### Compute for Leave Conversion of Regular Employees ####
+  cat("\nComputing leave conversion.\n")
+
+  leaveConversion <- lapply(listR, FUN = function(x) {
+
+    if (!isReg(x))
+      return(NULL)
+
+    tempData <- getCM(x)
+
+    if (isRF(x)) {
+      tempData <- dplyr::left_join(x = tempData, y = payB, by = "month") %>%
+        dplyr::left_join(
+          y  = dplyr::filter(wageEmp, isRF) %>% dplyr::select(-c(salH, isRF)),
+          by = c("ID", "sal")
+        ) %>%
+        dplyr::mutate(salM = round(salM * 26, digits = 2))
+    } else {
+      tempData <- dplyr::left_join(x = tempData, y = payA, by = "month") %>%
+        dplyr::left_join(
+          dplyr::filter(wageEmp, !isRF) %>% dplyr::select(-c(salH, isRF)),
+          by = c("ID", "sal")
+        )
+    }
+
+    tempData$salG  <- round(tempData$salM * tempData$allow, digits = 2)
+    tempData$conversion <-
+      tempData$salG * c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, leaveConversionFactor)
+
+    tempData <- tempData[, colnames(tempData) %in% c("month", "ID", "conversion")]
+    tempData <- as.data.frame(tempData)
+
+    return(tempData)
+  }) %>%
+    data.table::rbindlist(use.names = TRUE)
+
+  if (length(leaveConversion) > 0) {
+    # Distribute leave conversion to all manhours from January to December
+    mhDB.leaveConversion <- dplyr::filter(
+      mhDB, mhType %in% distType, month >= monthStart, status == "reg"
+      ) %>%
+      dplyr::group_by(ID, costCenter) %>%
+      dplyr::summarise(mh = sum(mh)) %>%
+      dplyr::group_by(ID) %>%
+      dplyr::mutate(totMH = sum(mh)) %>%
+      dplyr::mutate(month = 12L, X = mh / totMH) %>%
+      dplyr::left_join(leaveConversion, by = c("ID", "month")) %>%
+      dplyr::mutate(cost = round(X * conversion, digits = 2)) %>%
+      dplyr::filter(!is.na(cost)) %>%
+      dplyr::group_by(costCenter, month) %>%
+      dplyr::summarise(cost = sum(cost))
+  } else {
+    mhDB.leaveConversion <- data.table::data.table(costCenter = character(),
+                                                   month = integer(),
+                                                   cost = numeric())
   }
 
   #### Compute for Seasonal Employees Bonuses ####
@@ -1337,7 +1391,10 @@ getCost <- function(mhDB,
                cost = mhDB.m.P.Reg$costWage),
     data.frame(costCenter = mhDB.d.P.Reg$costCenter,
                month = mhDB.d.P.Reg$month,
-               cost = mhDB.d.P.Reg$costWage)
+               cost = mhDB.d.P.Reg$costWage),
+    data.frame(costCenter = mhDB.LC.R$costCenter,
+               month = mhDB.LC.R$month,
+               cost = mhDB.LC.R$cost)
   ) %>%
     dplyr::mutate(description = "Payroll - Salaries (Regular)")
 
@@ -1432,9 +1489,9 @@ getCost <- function(mhDB,
     dplyr::mutate(description = "Payroll - 13th Month and Other Bonuses (Seasonal)")
 
 
-  c60300011 <- data.frame(costCenter = mhDB.LC.R$costCenter,
-                          month = mhDB.LC.R$month,
-                          cost = mhDB.LC.R$cost) %>%
+  c60300011 <- data.frame(costCenter = mhDB.leaveConversion$costCenter,
+                          month = mhDB.leaveConversion$month,
+                          cost = mhDB.leaveConversion$cost) %>%
     dplyr::mutate(description = "Payroll - Leave Commutation (Regular)")
 
   c60300012 <- data.frame(costCenter = mhDB.LC$costCenter,

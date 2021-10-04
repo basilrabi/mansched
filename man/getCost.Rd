@@ -11,7 +11,8 @@ getCost(
   forecast = FALSE,
   bonusFactorYearEnd = 1.5,
   absentee = NA,
-  monthStart = 1L
+  monthStart = 1L,
+  leaveConversionFactor = 0.5
 )
 }
 \arguments{
@@ -49,6 +50,9 @@ year-end bonus}
 }}
 
 \item{monthStart}{an integer representing the month of start of forecasting}
+
+\item{leaveConversionFactor}{numeric value for the monthly salary fraction
+assumed as leave conversion}
 }
 \value{
 a list containing the following:
