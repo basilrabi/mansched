@@ -82,8 +82,8 @@ tempData <- getCost(mhDB = tempData[[1]],
 c14000 <- tempData[[1]][tempData[[1]]$costCenter == "14000",]
 c14100 <- tempData[[1]][tempData[[1]]$costCenter == "14100",]
 
-mh14000 <- sum(c14000[c14000$description == "Man-hours", c(as.character(1:12))])
-mh14100 <- sum(c14100[c14100$description == "Man-hours", c(as.character(1:12))])
+mh14000 <- sum(c14000[c14000$description == "TMC Tools - Man-hours", c(as.character(1:12))])
+mh14100 <- sum(c14100[c14100$description == "TMC Tools - Man-hours", c(as.character(1:12))])
 totMH <- sum(tempData[[2]][,c(as.character(1:12))])
 
 PI14000 <- sum(c14000[stringr::str_detect(c14000$description, "HDMF"),

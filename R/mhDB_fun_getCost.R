@@ -1596,7 +1596,7 @@ getCost <- function(mhDB,
     dplyr::mutate(description = "Safety Equipment and Supplies")
 
   c99999999 <- as.data.frame(mhDB.mh) %>%
-    dplyr::mutate(description = "Man-hours")
+    dplyr::mutate(description = "TMC Tools - Man-hours")
 
   costDB <- dplyr::bind_rows(c60300000,
                              c60300001,
