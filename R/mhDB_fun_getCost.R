@@ -1539,8 +1539,8 @@ getCost <- function(mhDB,
     dplyr::select(costCenter, month, cost) %>%
     dplyr::mutate(description = "HDMF Contributions (Seasonal)")
 
-  c60300028 <- dplyr::select(mhDB.SB, -c(mh, costCenterNew)) %>%
-    dplyr::mutate(description = "Employee Benefits")
+  c60300036 <- dplyr::select(mhDB.SB, -c(mh, costCenterNew)) %>%
+    dplyr::mutate(description = "Awards and Prizes")
 
   c60300029 <- dplyr::group_by(mhDB.allow, costCenter, month) %>%
     dplyr::summarise(cost = sum(cost)) %>%
@@ -1614,7 +1614,7 @@ getCost <- function(mhDB,
                              c60300021,
                              c60300023,
                              c60300024,
-                             c60300028,
+                             c60300036,
                              c60300029,
                              c60300033,
                              c60900000,
