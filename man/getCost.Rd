@@ -60,10 +60,11 @@ a list containing the following:
   \enumerate{
     \item a data.frame with 16 columns
 
-      The last 12 columns represents the cost per month. The first column
-      is a concatenated string from the 2nd column (Cost Center) and 4th
-      column (accounting code). The 3rd column is the description of the
-      accounting code.
+      The last 12 columns represents the cost per month.
+      The first column is the activity cost center.
+      The 2nd column is the description of the general ledger code.
+      The 3rd column is the equipment type used.
+      The 4rth column is the general ledger code.
 
     \item tabulated total man hours per month per cost center
     \item tabulated 13th month pay per month per cost center

@@ -60,10 +60,11 @@ NULL
 #'   \enumerate{
 #'     \item a data.frame with 16 columns
 #'
-#'       The last 12 columns represents the cost per month. The first column
-#'       is a concatenated string from the 2nd column (Cost Center) and 4th
-#'       column (accounting code). The 3rd column is the description of the
-#'       accounting code.
+#'       The last 12 columns represents the cost per month.
+#'       The first column is the activity cost center.
+#'       The 2nd column is the description of the general ledger code.
+#'       The 3rd column is the equipment type used.
+#'       The 4rth column is the general ledger code.
 #'
 #'     \item tabulated total man hours per month per cost center
 #'     \item tabulated 13th month pay per month per cost center
@@ -177,8 +178,7 @@ getCost <- function(mhDB,
                scheme = ifelse(isRF(x), "d", "m"),
                status = x@status,
                isRF = isRF(x),
-               isStaff = is(x, "Staff"),
-               stringsAsFactors = FALSE)
+               isStaff = is(x, "Staff"))
   }) %>% data.table::rbindlist()
   duplicatedID <- empSS$ID[which(duplicated(empSS$ID))]
   if (length(duplicatedID) > 0)
@@ -461,10 +461,7 @@ getCost <- function(mhDB,
 
   ## Create data.frame of holHours
   holHours <- lapply(listR, FUN = function(x) {
-    data.frame(ID = x@ID,
-               month = 1:12,
-               holHours = x@holHours,
-               stringsAsFactors = FALSE)
+    data.frame(ID = x@ID, month = 1:12, holHours = x@holHours)
   }) %>%
     data.table::rbindlist(use.names = TRUE) %>%
     dplyr::left_join(unique(dplyr::select(mhDB, ID, month, sal)),
@@ -518,7 +515,7 @@ getCost <- function(mhDB,
   allowance  <- data.table::rbindlist(lapply(listR, getAllowance),
                                       use.names = TRUE)
   mhDB.allow <- dplyr::filter(mhDB, mhType %in% distType) %>%
-    dplyr::group_by(ID, month, costCenter, status) %>%
+    dplyr::group_by(ID, month, costCenter, status, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
@@ -532,7 +529,7 @@ getCost <- function(mhDB,
   safetyGadgets <- data.table::rbindlist(lapply(listR, getSafetyGadgets),
                                          use.names = TRUE)
   mhDB.safetyGadgets <- dplyr::filter(mhDB, mhType %in% distType) %>%
-    dplyr::group_by(ID, month, costCenter, status) %>%
+    dplyr::group_by(ID, month, costCenter, status, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
@@ -546,7 +543,7 @@ getCost <- function(mhDB,
   groupLife <- data.table::rbindlist(lapply(listR, getGroupLife),
                                      use.names = TRUE)
   mhDB.groupLife <- dplyr::filter(mhDB, mhType %in% distType) %>%
-    dplyr::group_by(ID, month, costCenter) %>%
+    dplyr::group_by(ID, month, costCenter, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
@@ -562,7 +559,7 @@ getCost <- function(mhDB,
   mhDB.signingBonus <- dplyr::filter(mhDB,
                                      mhType %in% distType,
                                      month < 6) %>%
-    dplyr::group_by(ID, costCenter) %>%
+    dplyr::group_by(ID, costCenter, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID) %>%
     dplyr::mutate(totMH = sum(mh), month = 5L) %>%
@@ -570,7 +567,7 @@ getCost <- function(mhDB,
     dplyr::left_join(signingBonus, by = c("ID", "month")) %>%
     dplyr::mutate(cost = round(X * signingBonus, digits = 2)) %>%
     dplyr::filter(!is.na(cost)) %>%
-    dplyr::group_by(costCenter, month) %>%
+    dplyr::group_by(costCenter, month, equipment) %>%
     dplyr::summarise(cost = sum(cost))
 
   #### Compute for HMO ####
@@ -578,7 +575,7 @@ getCost <- function(mhDB,
 
   hmo <- data.table::rbindlist(lapply(listR, getHMO), use.names = TRUE)
   mhDB.hmo <- dplyr::filter(mhDB, mhType %in% distType) %>%
-    dplyr::group_by(ID, month, costCenter) %>%
+    dplyr::group_by(ID, month, costCenter, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
@@ -605,7 +602,7 @@ getCost <- function(mhDB,
     dplyr::summarise(benefits = sum(benefits))
 
   mhDB.benefits <- dplyr::filter(mhDB, mhType %in% distType) %>%
-    dplyr::group_by(ID, month, costCenter, status) %>%
+    dplyr::group_by(ID, month, costCenter, status, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
@@ -629,7 +626,7 @@ getCost <- function(mhDB,
                                  mhType %in% distType,
                                  status == "sea",
                                  month %in% 4:10) %>%
-      dplyr::group_by(ID, costCenter) %>%
+      dplyr::group_by(ID, costCenter, equipment) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
       dplyr::mutate(totMH = sum(mh)) %>%
@@ -651,7 +648,7 @@ getCost <- function(mhDB,
   cat("\nComputing safety bonus.\n")
 
   mhDB.SB <- mhDB %>%
-    dplyr::group_by(costCenter, month) %>%
+    dplyr::group_by(costCenter, month, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::mutate(
       cost = round(mh * 0.2, digits = 2),
@@ -673,7 +670,7 @@ getCost <- function(mhDB,
   cat("\nComputing Pag-ibig contributions.\n")
 
   mhDB.PI <- dplyr::filter(mhDB, mhType %in% distType) %>%
-    dplyr::group_by(ID, month, costCenter, status) %>%
+    dplyr::group_by(ID, month, costCenter, status, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(PI = 150) %>%
@@ -746,7 +743,7 @@ getCost <- function(mhDB,
     data.table::rbindlist(use.names = TRUE)
 
   mhDB.PHIC <- dplyr::filter(mhDB, mhType %in% distType) %>%
-    dplyr::group_by(ID, month, costCenter, status) %>%
+    dplyr::group_by(ID, month, costCenter, status, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
@@ -765,10 +762,7 @@ getCost <- function(mhDB,
 
   ### Extract maximum regular hours for each employee
   maxRegDB <- lapply(listR[sapply(listR, isReg)], FUN = function(x) {
-    data.frame(ID = x@ID,
-               month = 1:12,
-               maxReg = x@maxReg,
-               stringsAsFactors = FALSE)
+    data.frame(ID = x@ID, month = 1:12, maxReg = x@maxReg)
   })
 
   if (length(maxRegDB) > 0) {
@@ -854,7 +848,7 @@ getCost <- function(mhDB,
 
     ### Distribute LC cost for regular employees
     mhDB.LC.R <- dplyr::filter(mhDB, mhType %in% distType, status == "reg") %>%
-      dplyr::group_by(ID, month, costCenter) %>%
+      dplyr::group_by(ID, month, costCenter, equipment) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID, month) %>%
       dplyr::mutate(totMH = sum(mh)) %>%
@@ -867,9 +861,12 @@ getCost <- function(mhDB,
     if (nrow(vacationMode) > 0 &&
         !is.null(absenteeCost) &&
         nrow(absenteeCost) > 0) {
-      mhDB.LC.R <- dplyr::select(mhDB.LC.R, ID, month, costCenter, cost) %>%
+      mhDB.LC.R <- dplyr::select(
+        mhDB.LC.R, ID, month, costCenter, equipment, cost
+      ) %>%
         dplyr::bind_rows(
-          dplyr::select(absenteeCost, ID, month, costCenter = costCenters, cost)
+          dplyr::select(
+            absenteeCost, ID, month, costCenter = costCenters, equipment, cost)
         )
     }
   } else {
@@ -885,10 +882,7 @@ getCost <- function(mhDB,
   LH <- lapply(listR[sapply(listR, FUN = function(x) {
     x@status %in% c("sea", "age")
   })], FUN = function(x) {
-    data.frame(ID = x@ID,
-               LH = x@leaveHours,
-               sal = "a",
-               stringsAsFactors = FALSE)
+    data.frame(ID = x@ID, LH = x@leaveHours, sal = "a")
   }) %>% data.table::rbindlist(use.names = TRUE)
 
   if (nrow(LH) > 0) {
@@ -902,7 +896,7 @@ getCost <- function(mhDB,
     mhDB.LC.S <- dplyr::filter(mhDB,
                                status %in% c("sea", "age"),
                                mhType %in% distType) %>%
-      dplyr::group_by(ID, month, costCenter, status) %>%
+      dplyr::group_by(ID, month, costCenter, status, equipment) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
       dplyr::mutate(totMH = sum(mh)) %>%
@@ -915,14 +909,15 @@ getCost <- function(mhDB,
                                         status = character(),
                                         costCenter = character(),
                                         month = integer(),
+                                        equipment = character(),
                                         cost = numeric())
   }
 
   ## Get cost
   mhDB.LC <- dplyr::filter(mhDB.LC.S, status == "sea") %>%
-    dplyr::select(costCenter, month, cost)
+    dplyr::select(costCenter, month, equipment, cost)
   mhDB.LC.A <- dplyr::filter(mhDB.LC.S, status == "age") %>%
-    dplyr::select(costCenter, month, cost)
+    dplyr::select(costCenter, month, equipment, cost)
 
   ##### Compute for SSS contribution of employer ####
   cat("\nComputing SSS contribution.\n")
@@ -1011,6 +1006,33 @@ getCost <- function(mhDB,
               mhDB.m.S.Reg$month,
               mhDB.m.S.Reg$month,
               mhDB.LC.R$month),
+    equipment = c(hol.mhDB.d.R$equipment,
+                  hol.mhDB.d.S$equipment,
+                  mhDB.d.P.OT$equipment,
+                  mhDB.d.P.OT$equipment,
+                  mhDB.d.P.Reg$equipment,
+                  mhDB.d.P.Reg$equipment,
+                  mhDB.d.R.OT$equipment,
+                  mhDB.d.R.OT$equipment,
+                  mhDB.d.R.Reg$equipment,
+                  mhDB.d.R.Reg$equipment,
+                  mhDB.d.S.OT$equipment,
+                  mhDB.d.S.OT$equipment,
+                  mhDB.d.S.Reg$equipment,
+                  mhDB.d.S.Reg$equipment,
+                  mhDB.m.P.OT$equipment,
+                  mhDB.m.P.OT$equipment,
+                  mhDB.m.P.Reg$equipment,
+                  mhDB.m.P.Reg$equipment,
+                  mhDB.m.R.OT$equipment,
+                  mhDB.m.R.OT$equipment,
+                  mhDB.m.R.Reg$equipment,
+                  mhDB.m.R.Reg$equipment,
+                  mhDB.m.S.OT$equipment,
+                  mhDB.m.S.OT$equipment,
+                  mhDB.m.S.Reg$equipment,
+                  mhDB.m.S.Reg$equipment,
+                  mhDB.LC.R$equipment),
     cost = c(hol.mhDB.d.R$XcostWage,
              hol.mhDB.d.S$XcostWage,
              mhDB.d.P.OT$costNP,
@@ -1037,10 +1059,9 @@ getCost <- function(mhDB,
              mhDB.m.S.OT$costWage,
              mhDB.m.S.Reg$costNP,
              mhDB.m.S.Reg$costWage,
-             mhDB.LC.R$cost),
-    stringsAsFactors = FALSE
+             mhDB.LC.R$cost)
   ) %>%
-    dplyr::group_by(ID, month, costCenter) %>%
+    dplyr::group_by(ID, month, costCenter, equipment) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     dplyr::filter(cost > 0) %>%
     dplyr::group_by(ID, month) %>%
@@ -1051,11 +1072,11 @@ getCost <- function(mhDB,
   })
   SSSdb$SSS <- SSSdb$X * SSSdb$SSSRate
 
-  mhDB.SSS <- dplyr::group_by(SSSdb, ID, month, costCenter) %>%
+  mhDB.SSS <- dplyr::group_by(SSSdb, ID, month, costCenter, equipment) %>%
     dplyr::summarise(cost = round(sum(SSS), digits = 2)) %>%
     dplyr::left_join(
       lapply(listR, function(x) {
-        data.frame(ID = x@ID, status = x@status, stringsAsFactors = FALSE)
+        data.frame(ID = x@ID, status = x@status)
       }) %>%
         data.table::rbindlist(use.names = TRUE)
     ) %>%
@@ -1070,7 +1091,7 @@ getCost <- function(mhDB,
   hm <- data.table::rbindlist(lapply(listR, getHM), use.names = TRUE)
 
   mhDB.HM <- dplyr::filter(mhDB, mhType %in% distType) %>%
-    dplyr::group_by(ID, month, costCenter, status) %>%
+    dplyr::group_by(ID, month, costCenter, status, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
@@ -1095,7 +1116,7 @@ getCost <- function(mhDB,
   }), use.names = TRUE)
 
   mhDB.13mp <- dplyr::filter(mhDB, mhType %in% distType) %>%
-    dplyr::group_by(ID, month, costCenter, status) %>%
+    dplyr::group_by(ID, month, costCenter, status, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
@@ -1103,7 +1124,7 @@ getCost <- function(mhDB,
     dplyr::mutate(X = mh / totMH) %>%
     dplyr::left_join(mp13, by = c("ID", "month")) %>%
     dplyr::mutate(cost = round(X * mp, digits = 2)) %>%
-    dplyr::group_by(costCenter, status, month) %>%
+    dplyr::group_by(costCenter, status, month, equipment) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     dplyr::ungroup()
 
@@ -1113,18 +1134,20 @@ getCost <- function(mhDB,
   ## Separate 13th month pay for regular and non-regular in-house as requested
   ## by accounting
 
-  accr.13mp <- dplyr::group_by(mhDB.13mp, status, costCenter, month) %>%
+  accr.13mp <- dplyr::group_by(
+    mhDB.13mp, status, costCenter, month, equipment
+  ) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     tidyr::spread(month, cost, fill = 0)
 
   # Sum all man-hours
-  mhDB.mh1 <- dplyr::group_by(mhDB, costCenter, month) %>%
+  mhDB.mh1 <- dplyr::group_by(mhDB, costCenter, month, equipment) %>%
     dplyr::summarise(cost = sum(mh))
 
-  mhDB.mh2 <- dplyr::group_by(hol.mhDB.m, costCenter, month) %>%
+  mhDB.mh2 <- dplyr::group_by(hol.mhDB.m, costCenter, month, equipment) %>%
     dplyr::summarise(cost = sum(XholHours))
 
-  mhDB.mh3 <- dplyr::group_by(hol.mhDB.d, costCenter, month) %>%
+  mhDB.mh3 <- dplyr::group_by(hol.mhDB.d, costCenter, month, equipment) %>%
     dplyr::summarise(cost = sum(XholHours))
 
   mhDB.mh <- data.table::rbindlist(list(mhDB.mh1, mhDB.mh2, mhDB.mh3),
@@ -1183,7 +1206,7 @@ getCost <- function(mhDB,
                                    month < 6,
                                    month >= monthStart,
                                    status == "reg") %>%
-      dplyr::group_by(ID, costCenter) %>%
+      dplyr::group_by(ID, costCenter, equipment) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
       dplyr::mutate(totMH = sum(mh), month = 5L) %>%
@@ -1197,7 +1220,7 @@ getCost <- function(mhDB,
     mhDB.bonusEnd <- dplyr::filter(
       mhDB, mhType %in% distType, month >= monthStart, status == "reg"
     ) %>%
-      dplyr::group_by(ID, costCenter) %>%
+      dplyr::group_by(ID, costCenter, equipment) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
       dplyr::mutate(totMH = sum(mh), month = 12L) %>%
@@ -1208,11 +1231,12 @@ getCost <- function(mhDB,
                                         use.names = TRUE) %>%
       dplyr::mutate(cost = round(X * bonus, digits = 2)) %>%
       dplyr::filter(!is.na(cost)) %>%
-      dplyr::group_by(costCenter, month) %>%
+      dplyr::group_by(costCenter, month, equipment) %>%
       dplyr::summarise(cost = sum(cost))
   } else {
     mhDB.bonus <- data.table::data.table(costCenter = character(),
                                          month = integer(),
+                                         equipment = character(),
                                          cost = numeric())
   }
 
@@ -1257,8 +1281,8 @@ getCost <- function(mhDB,
     # Distribute leave conversion to all manhours from January to December
     mhDB.leaveConversion <- dplyr::filter(
       mhDB, mhType %in% distType, month >= monthStart, status == "reg"
-      ) %>%
-      dplyr::group_by(ID, costCenter) %>%
+    ) %>%
+      dplyr::group_by(ID, costCenter, equipment) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID) %>%
       dplyr::mutate(totMH = sum(mh)) %>%
@@ -1266,11 +1290,12 @@ getCost <- function(mhDB,
       dplyr::left_join(leaveConversion, by = c("ID", "month")) %>%
       dplyr::mutate(cost = round(X * conversion, digits = 2)) %>%
       dplyr::filter(!is.na(cost)) %>%
-      dplyr::group_by(costCenter, month) %>%
+      dplyr::group_by(costCenter, month, equipment) %>%
       dplyr::summarise(cost = sum(cost))
   } else {
     mhDB.leaveConversion <- data.table::data.table(costCenter = character(),
                                                    month = integer(),
+                                                   equipment = character(),
                                                    cost = numeric())
   }
 
@@ -1283,14 +1308,14 @@ getCost <- function(mhDB,
 
   # Distribute seasonal signing bonus
   mhDB.signingBonusSea <- dplyr::filter(mhDB, status == "sea") %>%
-    dplyr::group_by(ID, costCenter, month) %>%
+    dplyr::group_by(ID, costCenter, month, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID, month) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
     dplyr::mutate(X = mh / totMH) %>%
     dplyr::left_join(signingBonusSea, by = c("ID", "month")) %>%
     dplyr::mutate(benefits = signingBonus * X) %>%
-    dplyr::group_by(costCenter, month) %>%
+    dplyr::group_by(costCenter, month, equipment) %>%
     dplyr::summarise(cost = round(sum(benefits), digits = 2))
 
   cat("\nComputing retention bonus for seasonal employees.\n")
@@ -1300,7 +1325,7 @@ getCost <- function(mhDB,
 
   # Distribute seasonal retention bonus
   mhDB.retentionBonusSea <- dplyr::filter(mhDB, status == "sea") %>%
-    dplyr::group_by(ID, costCenter, month) %>%
+    dplyr::group_by(ID, costCenter, month, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
@@ -1309,14 +1334,14 @@ getCost <- function(mhDB,
     dplyr::mutate(X = totMHCostCenter / totMH) %>%
     dplyr::left_join(retentionBonusSea, by = c("ID", "month")) %>%
     dplyr::mutate(benefits = retentionBonus * X) %>%
-    dplyr::group_by(costCenter, month) %>%
+    dplyr::group_by(costCenter, month, equipment) %>%
     dplyr::summarise(cost = round(sum(benefits), digits = 2))
 
   # Combine Bonuses
   mhDB.RB <- data.table::rbindlist(list(mhDB.signingBonusSea,
                                         mhDB.retentionBonusSea),
                                    use.names = TRUE) %>%
-    dplyr::group_by(costCenter, month) %>%
+    dplyr::group_by(costCenter, month, equipment) %>%
     dplyr::summarise(cost = sum(cost))
 
   ####  Compute for Rice Subsidy for Agency ####
@@ -1334,7 +1359,7 @@ getCost <- function(mhDB,
     mhDB.riceSub.A <- dplyr::filter(mhDB,
                                     mhType %in% distType,
                                     status == "age") %>%
-      dplyr::group_by(ID, month, costCenter) %>%
+      dplyr::group_by(ID, month, costCenter, equipment) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID, month) %>%
       dplyr::mutate(totMH = sum(mh)) %>%
@@ -1361,7 +1386,7 @@ getCost <- function(mhDB,
     mhDB.riceSub.I <- dplyr::filter(mhDB,
                                     mhType %in% distType,
                                     status != "age") %>%
-      dplyr::group_by(ID, month, costCenter, status) %>%
+      dplyr::group_by(ID, month, costCenter, status, equipment) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       dplyr::group_by(ID, month) %>%
       dplyr::mutate(totMH = sum(mh)) %>%
@@ -1379,21 +1404,27 @@ getCost <- function(mhDB,
   c60300000 <- dplyr::bind_rows(
     data.frame(costCenter = mhDB.m.R.Reg$costCenter,
                month = mhDB.m.R.Reg$month,
+               equipment = mhDB.m.R.Reg$equipment,
                cost = mhDB.m.R.Reg$costWage),
     data.frame(costCenter = mhDB.d.R.Reg$costCenter,
                month = mhDB.d.R.Reg$month,
+               equipment = mhDB.d.R.Reg$equipment,
                cost = mhDB.d.R.Reg$costWage),
     data.frame(costCenter = hol.mhDB.d.R$costCenter,
                month = hol.mhDB.d.R$month,
+               equipment = hol.mhDB.d.R$equipment,
                cost = hol.mhDB.d.R$XcostWage),
     data.frame(costCenter = mhDB.m.P.Reg$costCenter,
                month = mhDB.m.P.Reg$month,
+               equipment = mhDB.m.P.Reg$equipment,
                cost = mhDB.m.P.Reg$costWage),
     data.frame(costCenter = mhDB.d.P.Reg$costCenter,
                month = mhDB.d.P.Reg$month,
+               equipment = mhDB.d.P.Reg$equipment,
                cost = mhDB.d.P.Reg$costWage),
     data.frame(costCenter = mhDB.LC.R$costCenter,
                month = mhDB.LC.R$month,
+               equipment = mhDB.LC.R$equipment,
                cost = mhDB.LC.R$cost)
   ) %>%
     dplyr::mutate(description = "Payroll - Salaries (Regular)")
@@ -1401,12 +1432,15 @@ getCost <- function(mhDB,
   c60300001 <- dplyr::bind_rows(
     data.frame(costCenter = mhDB.m.S.Reg$costCenter,
                month = mhDB.m.S.Reg$month,
+               equipment = mhDB.m.S.Reg$equipment,
                cost = mhDB.m.S.Reg$costWage),
     data.frame(costCenter = mhDB.d.S.Reg$costCenter,
                month = mhDB.d.S.Reg$month,
+               equipment = mhDB.d.S.Reg$equipment,
                cost = mhDB.d.S.Reg$costWage),
     data.frame(costCenter = hol.mhDB.d.S$costCenter,
                month = hol.mhDB.d.S$month,
+               equipment = hol.mhDB.d.S$equipment,
                cost = hol.mhDB.d.S$XcostWage)
   ) %>%
     dplyr::mutate(description = "Payroll - Salaries (Seasonal)")
@@ -1414,39 +1448,51 @@ getCost <- function(mhDB,
   c60300004 <- dplyr::bind_rows(
     data.frame(costCenter = mhDB.m.R.Reg$costCenter,
                month = mhDB.m.R.Reg$month,
+               equipment = mhDB.m.R.Reg$equipment,
                cost = mhDB.m.R.Reg$costNP),
     data.frame(costCenter = mhDB.m.R.OT$costCenter,
                month = mhDB.m.R.OT$month,
+               equipment = mhDB.m.R.OT$equipment,
                cost = mhDB.m.R.OT$costWage),
     data.frame(costCenter = mhDB.m.R.OT$costCenter,
                month = mhDB.m.R.OT$month,
+               equipment = mhDB.m.R.OT$equipment,
                cost = mhDB.m.R.OT$costNP),
     data.frame(costCenter = mhDB.d.R.Reg$costCenter,
                month = mhDB.d.R.Reg$month,
+               equipment = mhDB.d.R.Reg$equipment,
                cost = mhDB.d.R.Reg$costNP),
     data.frame(costCenter = mhDB.d.R.OT$costCenter,
                month = mhDB.d.R.OT$month,
+               equipment = mhDB.d.R.OT$equipment,
                cost = mhDB.d.R.OT$costWage),
     data.frame(costCenter = mhDB.d.R.OT$costCenter,
                month = mhDB.d.R.OT$month,
+               equipment = mhDB.d.R.OT$equipment,
                cost = mhDB.d.R.OT$costNP),
     data.frame(costCenter = mhDB.m.P.Reg$costCenter,
                month = mhDB.m.P.Reg$month,
+               equipment = mhDB.m.P.Reg$equipment,
                cost = mhDB.m.P.Reg$costNP),
     data.frame(costCenter = mhDB.m.P.OT$costCenter,
                month = mhDB.m.P.OT$month,
+               equipment = mhDB.m.P.OT$equipment,
                cost = mhDB.m.P.OT$costWage),
     data.frame(costCenter = mhDB.m.P.OT$costCenter,
                month = mhDB.m.P.OT$month,
+               equipment = mhDB.m.P.OT$equipment,
                cost = mhDB.m.P.OT$costNP),
     data.frame(costCenter = mhDB.d.P.Reg$costCenter,
                month = mhDB.d.P.Reg$month,
+               equipment = mhDB.d.P.Reg$equipment,
                cost = mhDB.d.P.Reg$costNP),
     data.frame(costCenter = mhDB.d.P.OT$costCenter,
                month = mhDB.d.P.OT$month,
+               equipment = mhDB.d.P.OT$equipment,
                cost = mhDB.d.P.OT$costWage),
     data.frame(costCenter = mhDB.d.P.OT$costCenter,
                month = mhDB.d.P.OT$month,
+               equipment = mhDB.d.P.OT$equipment,
                cost = mhDB.d.P.OT$costNP)
   ) %>%
     dplyr::mutate(description = "Payroll - Overtime (Regular)")
@@ -1454,105 +1500,109 @@ getCost <- function(mhDB,
   c60300005 <- dplyr::bind_rows(
     data.frame(costCenter = mhDB.m.S.Reg$costCenter,
                month = mhDB.m.S.Reg$month,
+               equipment = mhDB.m.S.Reg$equipment,
                cost = mhDB.m.S.Reg$costNP),
     data.frame(costCenter = mhDB.m.S.OT$costCenter,
                month = mhDB.m.S.OT$month,
+               equipment = mhDB.m.S.OT$equipment,
                cost = mhDB.m.S.OT$costWage),
     data.frame(costCenter = mhDB.m.S.OT$costCenter,
                month = mhDB.m.S.OT$month,
+               equipment = mhDB.m.S.OT$equipment,
                cost = mhDB.m.S.OT$costNP),
     data.frame(costCenter = mhDB.d.S.Reg$costCenter,
                month = mhDB.d.S.Reg$month,
+               equipment = mhDB.d.S.Reg$equipment,
                cost = mhDB.d.S.Reg$costNP),
     data.frame(costCenter = mhDB.d.S.OT$costCenter,
                month = mhDB.d.S.OT$month,
+               equipment = mhDB.d.S.OT$equipment,
                cost = mhDB.d.S.OT$costWage),
     data.frame(costCenter = mhDB.d.S.OT$costCenter,
                month = mhDB.d.S.OT$month,
+               equipment = mhDB.d.S.OT$equipment,
                cost = mhDB.d.S.OT$costNP)
   ) %>%
     dplyr::mutate(description = "Payroll - Overtime (Seasonal)")
 
   c60300008 <- dplyr::bind_rows(
     dplyr::filter(mhDB.13mp, status != "sea") %>%
-      dplyr::select(costCenter, month, cost),
-    dplyr::select(mhDB.bonus, costCenter, month, cost),
-    dplyr::select(mhDB.signingBonus, costCenter, month, cost)
+      dplyr::select(costCenter, month, equipment, cost),
+    dplyr::select(mhDB.bonus, costCenter, month, equipment, cost),
+    dplyr::select(mhDB.signingBonus, costCenter, month, equipment, cost)
   ) %>%
     dplyr::mutate(description = "Payroll - 13th Month and Other Bonuses (Regular)")
 
   c60300009 <- dplyr::bind_rows(
     dplyr::filter(mhDB.13mp, status == "sea") %>%
-      dplyr::select(costCenter, month, cost),
-    dplyr::select(mhDB.RB, costCenter, month, cost)
+      dplyr::select(costCenter, month, equipment, cost),
+    dplyr::select(mhDB.RB, costCenter, month, equipment, cost)
   ) %>%
     dplyr::mutate(description = "Payroll - 13th Month and Other Bonuses (Seasonal)")
 
 
-  c60300011 <- data.frame(costCenter = mhDB.leaveConversion$costCenter,
-                          month = mhDB.leaveConversion$month,
-                          cost = mhDB.leaveConversion$cost) %>%
+  c60300011 <- dplyr::select(
+    mhDB.leaveConversion, costCenter, month, equipment, cost
+  ) %>%
     dplyr::mutate(description = "Payroll - Leave Commutation (Regular)")
 
-  c60300012 <- data.frame(costCenter = mhDB.LC$costCenter,
-                          month = mhDB.LC$month,
-                          cost = mhDB.LC$cost) %>%
+  c60300012 <- dplyr::select(mhDB.LC, costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "Payroll - Leave Commutation (Seasonal)")
 
   c60300014 <- dplyr::bind_rows(
     dplyr::filter(mhDB.benefits, status != "sea") %>%
-      dplyr::select(costCenter, month, cost),
+      dplyr::select(costCenter, month, equipment, cost),
     dplyr::filter(mhDB.riceSub.I, status != "sea") %>%
-      dplyr::select(costCenter, month, cost)
+      dplyr::select(costCenter, month, equipment, cost)
   ) %>%
     dplyr::mutate(description = "Payroll - De Minimis Benefits (Regular)")
 
   c60300015 <- dplyr::bind_rows(
     dplyr::filter(mhDB.benefits, status == "sea") %>%
-      dplyr::select(costCenter, month, cost),
+      dplyr::select(costCenter, month, equipment, cost),
     dplyr::filter(mhDB.riceSub.I, status == "sea") %>%
-      dplyr::select(costCenter, month, cost)
+      dplyr::select(costCenter, month, equipment, cost)
   ) %>%
     dplyr::mutate(description = "Payroll - De Minimis Benefits (Seasonal)")
 
   c60300017 <- dplyr::filter(mhDB.SSS, status != "sea") %>%
-    dplyr::select(costCenter, month, cost) %>%
+    dplyr::select(costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "SSS Contributions (Regular)")
 
   c60300018 <- dplyr::filter(mhDB.SSS, status == "sea") %>%
-    dplyr::select(costCenter, month, cost) %>%
+    dplyr::select(costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "SSS Contributions (Seasonal)")
 
   c60300020 <- dplyr::filter(mhDB.PHIC, status != "sea") %>%
-    dplyr::select(costCenter, month, cost) %>%
+    dplyr::select(costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "PHIC Contributions (Regular)")
 
   c60300021 <- dplyr::filter(mhDB.PHIC, status == "sea") %>%
-    dplyr::select(costCenter, month, cost) %>%
+    dplyr::select(costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "PHIC Contributions (Seasonal)")
 
   c60300023 <- dplyr::filter(mhDB.PI, status != "sea") %>%
-    dplyr::select(costCenter, month, cost) %>%
+    dplyr::select(costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "HDMF Contributions (Regular)")
 
   c60300024 <- dplyr::filter(mhDB.PI, status == "sea") %>%
-    dplyr::select(costCenter, month, cost) %>%
+    dplyr::select(costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "HDMF Contributions (Seasonal)")
 
   c60300036 <- dplyr::select(mhDB.SB, -c(mh, costCenterNew)) %>%
     dplyr::mutate(description = "Awards and Prizes")
 
-  c60300029 <- dplyr::group_by(mhDB.allow, costCenter, month) %>%
+  c60300029 <- dplyr::group_by(mhDB.allow, costCenter, month, equipment) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     dplyr::mutate(description = "Other Employee Allowances")
 
-  c60300033 <- dplyr::select(mhDB.HM, costCenter, month, cost) %>%
+  c60300033 <- dplyr::select(mhDB.HM, costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "Hospital and Medical Expenses - Employees")
 
   c60900000 <- dplyr::bind_rows(
-    dplyr::group_by(mhDB.hmo, costCenter, month) %>%
+    dplyr::group_by(mhDB.hmo, costCenter, month, equipment) %>%
       dplyr::summarise(cost = sum(cost)),
-    dplyr::group_by(mhDB.groupLife, costCenter, month) %>%
+    dplyr::group_by(mhDB.groupLife, costCenter, month, equipment) %>%
       dplyr::summarise(cost = sum(cost))
   )  %>%
     dplyr::mutate(description = "Life and Medical Insurance - Employees")
@@ -1560,38 +1610,49 @@ getCost <- function(mhDB,
   c61100000 <- dplyr::bind_rows(
     data.frame(costCenter = mhDB.d.A$costCenter,
                month = mhDB.d.A$month,
+               equipment = mhDB.d.A$equipment,
                cost = mhDB.d.A$cost),
     data.frame(costCenter = hol.mhDB.d.A$costCenter,
                month = hol.mhDB.d.A$month,
+               equipment = hol.mhDB.d.A$equipment,
                cost = hol.mhDB.d.A$XcostWage),
     data.frame(costCenter = mhDB.SSS.A$costCenter,
                month = mhDB.SSS.A$month,
+               equipment = mhDB.SSS.A$equipment,
                cost = mhDB.SSS.A$cost),
     data.frame(costCenter = mhDB.PI.A$costCenter,
                month = mhDB.PI.A$month,
+               equipment = mhDB.PI.A$equipment,
                cost = mhDB.PI.A$cost),
     data.frame(costCenter = mhDB.PHIC.A$costCenter,
                month = mhDB.PHIC.A$month,
+               equipment = mhDB.PHIC.A$equipment,
                cost = mhDB.PHIC.A$cost),
     data.frame(costCenter = mhDB.LC.A$costCenter,
                month = mhDB.LC.A$month,
+               equipment = mhDB.LC.A$equipment,
                cost = mhDB.LC.A$cost),
     data.frame(costCenter = mhDB.HM.A$costCenter,
                month = mhDB.HM.A$month,
+               equipment = mhDB.HM.A$equipment,
                cost = mhDB.HM.A$cost),
     data.frame(costCenter = mhDB.13mp.A$costCenter,
                month = mhDB.13mp.A$month,
+               equipment = mhDB.13mp.A$equipment,
                cost = mhDB.13mp.A$cost)
   ) %>%
     dplyr::mutate(cost = round(cost * 1.3117, digits = 2)) %>%
     dplyr::bind_rows(
       data.frame(costCenter = mhDB.riceSub.A$costCenter,
                  month = mhDB.riceSub.A$month,
+                 equipment = mhDB.riceSub.A$equipment,
                  cost = mhDB.riceSub.A$cost)
     ) %>%
     dplyr::mutate(description = "Contract Fee - Agency Services")
 
-  c61300016 <- dplyr::group_by(mhDB.safetyGadgets, costCenter, month) %>%
+  c61300016 <- dplyr::group_by(
+    mhDB.safetyGadgets, costCenter, month, equipment
+  ) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     dplyr::mutate(description = "Safety Equipment and Supplies")
 
@@ -1621,7 +1682,7 @@ getCost <- function(mhDB,
                              c61100000,
                              c61300016,
                              c99999999) %>%
-    dplyr::group_by(costCenter, description, month) %>%
+    dplyr::group_by(costCenter, description, month, equipment) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     dplyr::left_join(y = mansched::acSAP, by = "description") %>%
     tidyr::spread(month, cost, fill = 0) %>%
@@ -1635,19 +1696,23 @@ getCost <- function(mhDB,
     cmd <- paste0("costDB$`", i, "` <- 0")
     eval(parse(text = cmd))
   }
-  costDB <- costDB[, c("costCenter", "description", "code", as.character(1:12))]
+  costDB <- costDB[, c("costCenter",
+                       "description",
+                       "equipment",
+                       "code",
+                       as.character(1:12))]
 
   export.mh <- dplyr::filter(costDB, code == 99999999L) %>%
     dplyr::select(-c(description, code)) %>%
-    dplyr::arrange(costCenter) %>%
+    dplyr::arrange(costCenter, equipment) %>%
     as.data.frame()
   missingCols <- (1:12)[which(!1:12 %in% colnames(export.mh))]
   for (i in missingCols) {
     cmd <- paste0("export.mh$`", i, "` <- 0")
     eval(parse(text = cmd))
   }
-  export.mh <- export.mh[, c("costCenter", as.character(1:12))]
-  export.mh$SUM <- apply(export.mh[, 2:13], MARGIN = 1, FUN = sum)
+  export.mh <- export.mh[, c("costCenter", "equipment", as.character(1:12))]
+  export.mh$SUM <- apply(export.mh[, 3:14], MARGIN = 1, FUN = sum)
 
   return(list(costDB, export.mh, accr.13mp, mhDB.bonus))
 }
