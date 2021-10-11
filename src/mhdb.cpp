@@ -104,7 +104,7 @@ Rcpp::DataFrame dfAppend ( Rcpp::DataFrame a, Rcpp::DataFrame b, R_xlen_t& x )
   Rcpp::IntegerVector monthB      = Rcpp::as<Rcpp::IntegerVector>( b["month"     ] );
   Rcpp::NumericVector npB         = Rcpp::as<Rcpp::NumericVector>( b["np"        ] );
   Rcpp::StringVector  costCenterB = Rcpp::as<Rcpp::StringVector >( b["costCenter"] );
-  Rcpp::StringVector  equipmentB  = Rcpp::as<Rcpp::StringVector >( a["equipment" ] );
+  Rcpp::StringVector  equipmentB  = Rcpp::as<Rcpp::StringVector >( b["equipment" ] );
 
   for ( R_xlen_t i = 0; i < lengthB; i++ )
   {
@@ -152,7 +152,8 @@ Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
                                    Rcpp::String cc,
                                    Rcpp::StringVector dcc,
                                    bool selfAssign,
-                                   Rcpp::String equipmentReq )
+                                   Rcpp::String equipmentReq,
+                                   bool debug )
 {
   Rcpp::DataFrame mhDB = mhdbInit( mhTypes.length() );
   Rcpp::StringVector  id         = Rcpp::as<Rcpp::StringVector >( mhDB["ID"        ] );

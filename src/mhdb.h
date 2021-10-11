@@ -37,7 +37,8 @@ Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
                                    Rcpp::String cc,
                                    Rcpp::StringVector dcc,
                                    bool selfAssign,
-                                   Rcpp::String equipmentReq );
+                                   Rcpp::String equipmentReq,
+                                   bool debug = false );
 
 // Test man-hours database a whether there is enough blank rows for appending.
 // `x` is the index in R of the first empty row in a where another man-hours

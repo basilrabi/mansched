@@ -210,6 +210,14 @@ Rcpp::DataFrame assignEmp ( Rcpp::S4 empT,
                   << ".\n";
 
     Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot( "costCenter" ), empR.slot( "dcc" ), selfAssign, equipT[0] );
+
+    if ( debug ) {
+      Rcpp::StringVector assignedEquipment = Rcpp::as<Rcpp::StringVector>( mhdbEmp["equipment"] );
+      Rcpp::Rcout << "Prepairing an operator with equipment "
+                  << assignedEquipment[0]
+                  << ".\n";
+    }
+
     if ( Rcpp::is_true( Rcpp::all( isElement( equipT, equipR ) ) )  )
     {
       assignProductionPersonnel( empT, empR, mhdbEmp, selfAssign );

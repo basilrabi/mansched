@@ -264,6 +264,11 @@ Rcpp::List assignPool( Rcpp::List listT,
                           << "\nMH Pool: "
                           << availableHours( listRC[*jj] )
                           << "\n";
+
+              Rcpp::StringVector assignedEquipment = Rcpp::as<Rcpp::StringVector>( tempData["equipment"] );
+              Rcpp::Rcout << "Assigned personnel for equipment "
+                          << assignedEquipment[0]
+                          << ".\n";
             }
             mhDB = dfAppend( mhDB, tempData, idx );
           }
@@ -342,6 +347,10 @@ Rcpp::List assignPool( Rcpp::List listT,
   Rcpp::List out = Rcpp::List::create( listTC, listRC, mhDB );
   if ( debug )
   {
+    Rcpp::Rcout << "Exporting mhDB with staring equipment of "
+                << equipment[0]
+                << ".\n";
+
     Rcpp::Rcout << "\n\n***********************"
                 << "**** End asignPool ****"
                 << "***********************\n\n";
