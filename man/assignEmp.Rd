@@ -66,6 +66,8 @@ a \code{\link{data.frame}} containing the man hours database
       pay}
     \item{costCenter}{character string representing the cost center
       wherein the man hours is charged}
+    \item{equipment}{character string of the equipment type should the
+      required personnel is an operator}
   }
 }
 \description{

@@ -29,12 +29,15 @@ Rcpp::DataFrame mhdbInit ( const R_xlen_t& n );
 // `cc` cost center to be assigned
 // `dcc` dump cost center. StringVector of length 12.
 // `selfAssign` self-assignment flag, If true, dcc is used instead of cc
+// `equipmentReq` required equipment type should the theoretical/requirement
+//    employee is an operator
 Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
                                    Rcpp::String empID,
                                    Rcpp::String reqID,
                                    Rcpp::String cc,
                                    Rcpp::StringVector dcc,
-                                   bool selfAssign );
+                                   bool selfAssign,
+                                   Rcpp::String equipmentReq );
 
 // Test man-hours database a whether there is enough blank rows for appending.
 // `x` is the index in R of the first empty row in a where another man-hours

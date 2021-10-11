@@ -308,6 +308,7 @@ Rcpp::List assignPool( Rcpp::List listT,
     listTC = listTC[!toBeRemoved];
 
   Rcpp::StringVector  costCenter = Rcpp::as<Rcpp::StringVector >( mhDB["costCenter"] );
+  Rcpp::StringVector  equipment  = Rcpp::as<Rcpp::StringVector >( mhDB["equipment" ] );
   Rcpp::StringVector  id         = Rcpp::as<Rcpp::StringVector >( mhDB["ID"        ] );
   Rcpp::StringVector  reqid      = Rcpp::as<Rcpp::StringVector >( mhDB["reqID"     ] );
   Rcpp::IntegerVector mh         = Rcpp::as<Rcpp::IntegerVector>( mhDB["mh"        ] );
@@ -318,6 +319,7 @@ Rcpp::List assignPool( Rcpp::List listT,
   // Remove NA values at the bottom
   Rcpp::LogicalVector withValues = mh > 0;
   costCenter = costCenter[withValues];
+  equipment  = equipment [withValues];
   id         = id        [withValues];
   reqid      = reqid     [withValues];
   mh         = mh        [withValues];
@@ -333,6 +335,7 @@ Rcpp::List assignPool( Rcpp::List listT,
     Rcpp::Named( "month"            ) = month,
     Rcpp::Named( "np"               ) = np,
     Rcpp::Named( "costCenter"       ) = costCenter,
+    Rcpp::Named( "equipment"        ) = equipment,
     Rcpp::Named( "stringsAsFactors" ) = false
   );
 

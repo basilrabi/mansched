@@ -88,6 +88,8 @@ assignPool <- function(listT, listR, prioStat = NA_character_, prioCode = FALSE,
 #'       pay}
 #'     \item{costCenter}{character string representing the cost center
 #'       wherein the man hours is charged}
+#'     \item{equipment}{character string of the equipment type should the
+#'       required personnel is an operator}
 #'   }
 #' @export
 assignEmp <- function(empT, empR, selfAssign) {

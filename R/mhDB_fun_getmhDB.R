@@ -31,6 +31,8 @@
 #'           pay}
 #'         \item{costCenter}{character string representing the cost center
 #'           wherein the man hours is charged}
+#'         \item{equipment}{character string of the equipment type should the
+#'           required personnel is an operator}
 #'       }
 #'     \item list of \code{\link{Employee-class}} objects representing the
 #'       theoretical employees with un-assigned man hours

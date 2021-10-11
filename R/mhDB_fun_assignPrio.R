@@ -85,6 +85,7 @@ assignPrio <- function(listT, listR) {
                           month = as.integer(NA),
                           np = as.numeric(NA),
                           costCenter = as.character(NA),
+                          equipment = as.character(NA),
                           stringsAsFactors = FALSE)
 
   if (length(listR) > 0) {

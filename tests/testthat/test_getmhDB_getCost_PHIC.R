@@ -3,7 +3,6 @@ library(mansched)
 library(readxl)
 library(stringr)
 
-
 set.seed(1)
 
 xlsxFile <- system.file("exdata",

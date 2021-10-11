@@ -101,7 +101,7 @@ Rcpp::DataFrame normEmp ( Rcpp::S4 emp )
   {
     Rcpp::StringVector equip = Rcpp::as<Rcpp::StringVector>( emp.slot( "equipment" ) );
     equip = equip[0];
-    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTC, id, id, cc, dcc, false );
+    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTC, id, id, cc, dcc, false, equip[0] );
     normOperationPersonnel( emp, mhdbEmp );
     return mhdbEmp;
   }
@@ -109,13 +109,13 @@ Rcpp::DataFrame normEmp ( Rcpp::S4 emp )
        empClass == "Laborer" ||
        empClass == "Technical" )
   {
-    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTC, id, id, cc, dcc, false );
+    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTC, id, id, cc, dcc, false, NA_STRING );
     normOperationPersonnel( emp, mhdbEmp );
     return mhdbEmp;
   }
   else if ( empClass == "Clerk" )
   {
-    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTB, id, id, cc, dcc, false );
+    Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeOTB, id, id, cc, dcc, false, NA_STRING );
     normNonStaff( emp, mhdbEmp );
     return mhdbEmp;
   }

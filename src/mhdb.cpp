@@ -3,13 +3,14 @@
 
 Rcpp::DataFrame combineMHDB ( Rcpp::DataFrame a, Rcpp::DataFrame b )
 {
-  Rcpp::StringVector  id         = combine( Rcpp::as<Rcpp::StringVector >( a["ID"         ] ), Rcpp::as<Rcpp::StringVector >( b["ID"         ] ) );
-  Rcpp::StringVector  reqid      = combine( Rcpp::as<Rcpp::StringVector >( a["reqID"      ] ), Rcpp::as<Rcpp::StringVector >( b["reqID"      ] ) );
-  Rcpp::IntegerVector mh         = combine( Rcpp::as<Rcpp::IntegerVector>( a["mh"         ] ), Rcpp::as<Rcpp::IntegerVector>( b["mh"         ] ) );
-  Rcpp::StringVector  mhType     = combine( Rcpp::as<Rcpp::StringVector >( a["mhType"     ] ), Rcpp::as<Rcpp::StringVector >( b["mhType"     ] ) );
-  Rcpp::IntegerVector month      = combine( Rcpp::as<Rcpp::IntegerVector>( a["month"      ] ), Rcpp::as<Rcpp::IntegerVector>( b["month"      ] ) );
-  Rcpp::NumericVector np         = combine( Rcpp::as<Rcpp::NumericVector>( a["np"         ] ), Rcpp::as<Rcpp::NumericVector>( b["np"         ] ) );
-  Rcpp::StringVector  costCenter = combine( Rcpp::as<Rcpp::StringVector >( a["costCenter" ] ), Rcpp::as<Rcpp::StringVector >( b["costCenter" ] ) );
+  Rcpp::StringVector  id         = combine( Rcpp::as<Rcpp::StringVector >( a["ID"        ] ), Rcpp::as<Rcpp::StringVector >( b["ID"        ] ) );
+  Rcpp::StringVector  reqid      = combine( Rcpp::as<Rcpp::StringVector >( a["reqID"     ] ), Rcpp::as<Rcpp::StringVector >( b["reqID"     ] ) );
+  Rcpp::IntegerVector mh         = combine( Rcpp::as<Rcpp::IntegerVector>( a["mh"        ] ), Rcpp::as<Rcpp::IntegerVector>( b["mh"        ] ) );
+  Rcpp::StringVector  mhType     = combine( Rcpp::as<Rcpp::StringVector >( a["mhType"    ] ), Rcpp::as<Rcpp::StringVector >( b["mhType"    ] ) );
+  Rcpp::IntegerVector month      = combine( Rcpp::as<Rcpp::IntegerVector>( a["month"     ] ), Rcpp::as<Rcpp::IntegerVector>( b["month"     ] ) );
+  Rcpp::NumericVector np         = combine( Rcpp::as<Rcpp::NumericVector>( a["np"        ] ), Rcpp::as<Rcpp::NumericVector>( b["np"        ] ) );
+  Rcpp::StringVector  costCenter = combine( Rcpp::as<Rcpp::StringVector >( a["costCenter"] ), Rcpp::as<Rcpp::StringVector >( b["costCenter"] ) );
+  Rcpp::StringVector  equipment  = combine( Rcpp::as<Rcpp::StringVector >( a["equipment" ] ), Rcpp::as<Rcpp::StringVector >( b["equipment" ] ) );
   Rcpp::DataFrame mhDB = Rcpp::DataFrame::create(
     Rcpp::Named( "ID"               ) = id,
     Rcpp::Named( "reqID"            ) = reqid,
@@ -18,6 +19,7 @@ Rcpp::DataFrame combineMHDB ( Rcpp::DataFrame a, Rcpp::DataFrame b )
     Rcpp::Named( "month"            ) = month,
     Rcpp::Named( "np"               ) = np,
     Rcpp::Named( "costCenter"       ) = costCenter,
+    Rcpp::Named( "equipment"        ) = equipment,
     Rcpp::Named( "stringsAsFactors" ) = false
   );
   return mhDB;
@@ -32,6 +34,7 @@ Rcpp::DataFrame mhdbBlank ( const Rcpp::S4& emp )
   Rcpp::IntegerVector month      = { 1 };
   Rcpp::NumericVector np         = { 0 };
   Rcpp::StringVector  costCenter = { NA_STRING };
+  Rcpp::StringVector  equipment  = { NA_STRING };
   Rcpp::DataFrame mhDB = Rcpp::DataFrame::create(
     Rcpp::Named( "ID"               ) = id,
     Rcpp::Named( "reqID"            ) = reqid,
@@ -40,6 +43,7 @@ Rcpp::DataFrame mhdbBlank ( const Rcpp::S4& emp )
     Rcpp::Named( "month"            ) = month,
     Rcpp::Named( "np"               ) = np,
     Rcpp::Named( "costCenter"       ) = costCenter,
+    Rcpp::Named( "equipment"        ) = equipment,
     Rcpp::Named( "stringsAsFactors" ) = false
   );
   return mhDB;
@@ -47,22 +51,24 @@ Rcpp::DataFrame mhdbBlank ( const Rcpp::S4& emp )
 
 Rcpp::DataFrame mhdbFilter ( Rcpp::DataFrame mhdb )
 {
-  Rcpp::StringVector  id         = Rcpp::as<Rcpp::StringVector >( mhdb["ID"         ] );
-  Rcpp::StringVector  reqid      = Rcpp::as<Rcpp::StringVector >( mhdb["reqID"      ] );
-  Rcpp::IntegerVector mh         = Rcpp::as<Rcpp::IntegerVector>( mhdb["mh"         ] );
-  Rcpp::StringVector  mhType     = Rcpp::as<Rcpp::StringVector >( mhdb["mhType"     ] );
-  Rcpp::IntegerVector month      = Rcpp::as<Rcpp::IntegerVector>( mhdb["month"      ] );
-  Rcpp::NumericVector np         = Rcpp::as<Rcpp::NumericVector>( mhdb["np"         ] );
-  Rcpp::StringVector  costCenter = Rcpp::as<Rcpp::StringVector >( mhdb["costCenter" ] );
+  Rcpp::StringVector  id         = Rcpp::as<Rcpp::StringVector >( mhdb["ID"        ] );
+  Rcpp::StringVector  reqid      = Rcpp::as<Rcpp::StringVector >( mhdb["reqID"     ] );
+  Rcpp::IntegerVector mh         = Rcpp::as<Rcpp::IntegerVector>( mhdb["mh"        ] );
+  Rcpp::StringVector  mhType     = Rcpp::as<Rcpp::StringVector >( mhdb["mhType"    ] );
+  Rcpp::IntegerVector month      = Rcpp::as<Rcpp::IntegerVector>( mhdb["month"     ] );
+  Rcpp::NumericVector np         = Rcpp::as<Rcpp::NumericVector>( mhdb["np"        ] );
+  Rcpp::StringVector  costCenter = Rcpp::as<Rcpp::StringVector >( mhdb["costCenter"] );
+  Rcpp::StringVector  equipment  = Rcpp::as<Rcpp::StringVector >( mhdb["equipment" ] );
 
   Rcpp::LogicalVector withValues = mh > 0;
-  id         = id      [withValues];
-  reqid      = reqid   [withValues];
-  mh         = mh      [withValues];
-  mhType     = mhType  [withValues];
-  month      = month   [withValues];
-  np         = np      [withValues];
+  id         = id        [withValues];
+  reqid      = reqid     [withValues];
+  mh         = mh        [withValues];
+  mhType     = mhType    [withValues];
+  month      = month     [withValues];
+  np         = np        [withValues];
   costCenter = costCenter[withValues];
+  equipment  = equipment [withValues];
   Rcpp::DataFrame mhDB = Rcpp::DataFrame::create(
     Rcpp::Named( "ID"               ) = id,
     Rcpp::Named( "reqID"            ) = reqid,
@@ -71,6 +77,7 @@ Rcpp::DataFrame mhdbFilter ( Rcpp::DataFrame mhdb )
     Rcpp::Named( "month"            ) = month,
     Rcpp::Named( "np"               ) = np,
     Rcpp::Named( "costCenter"       ) = costCenter,
+    Rcpp::Named( "equipment"        ) = equipment,
     Rcpp::Named( "stringsAsFactors" ) = false
   );
   return mhDB;
@@ -88,6 +95,7 @@ Rcpp::DataFrame dfAppend ( Rcpp::DataFrame a, Rcpp::DataFrame b, R_xlen_t& x )
   Rcpp::IntegerVector monthA      = Rcpp::as<Rcpp::IntegerVector>( a["month"     ] );
   Rcpp::NumericVector npA         = Rcpp::as<Rcpp::NumericVector>( a["np"        ] );
   Rcpp::StringVector  costCenterA = Rcpp::as<Rcpp::StringVector >( a["costCenter"] );
+  Rcpp::StringVector  equipmentA  = Rcpp::as<Rcpp::StringVector >( a["equipment" ] );
 
   Rcpp::StringVector  idB         = Rcpp::as<Rcpp::StringVector >( b["ID"        ] );
   Rcpp::StringVector  reqidB      = Rcpp::as<Rcpp::StringVector >( b["reqID"     ] );
@@ -96,6 +104,7 @@ Rcpp::DataFrame dfAppend ( Rcpp::DataFrame a, Rcpp::DataFrame b, R_xlen_t& x )
   Rcpp::IntegerVector monthB      = Rcpp::as<Rcpp::IntegerVector>( b["month"     ] );
   Rcpp::NumericVector npB         = Rcpp::as<Rcpp::NumericVector>( b["np"        ] );
   Rcpp::StringVector  costCenterB = Rcpp::as<Rcpp::StringVector >( b["costCenter"] );
+  Rcpp::StringVector  equipmentB  = Rcpp::as<Rcpp::StringVector >( a["equipment" ] );
 
   for ( R_xlen_t i = 0; i < lengthB; i++ )
   {
@@ -106,6 +115,7 @@ Rcpp::DataFrame dfAppend ( Rcpp::DataFrame a, Rcpp::DataFrame b, R_xlen_t& x )
     monthA     [x] = monthB     [i];
     npA        [x] = npB        [i];
     costCenterA[x] = costCenterB[i];
+    equipmentA [x] = equipmentB [i];
     x = x + 1;
   }
 
@@ -121,6 +131,7 @@ Rcpp::DataFrame mhdbInit ( const R_xlen_t& n )
   Rcpp::IntegerVector month      ( 12 * n, Rcpp::IntegerVector::get_na() );
   Rcpp::NumericVector np         ( 12 * n, 0 );
   Rcpp::StringVector  costCenter ( 12 * n, Rcpp::StringVector::get_na()  );
+  Rcpp::StringVector  equipment  ( 12 * n, Rcpp::StringVector::get_na()  );
   Rcpp::DataFrame mhDB = Rcpp::DataFrame::create(
     Rcpp::Named( "ID"               ) = id,
     Rcpp::Named( "reqID"            ) = reqid,
@@ -129,6 +140,7 @@ Rcpp::DataFrame mhdbInit ( const R_xlen_t& n )
     Rcpp::Named( "month"            ) = month,
     Rcpp::Named( "np"               ) = np,
     Rcpp::Named( "costCenter"       ) = costCenter,
+    Rcpp::Named( "equipment"        ) = equipment,
     Rcpp::Named( "stringsAsFactors" ) = false
   );
   return mhDB;
@@ -139,23 +151,26 @@ Rcpp::DataFrame mhdbInitEmployee ( Rcpp::StringVector mhTypes,
                                    Rcpp::String reqID,
                                    Rcpp::String cc,
                                    Rcpp::StringVector dcc,
-                                   bool selfAssign )
+                                   bool selfAssign,
+                                   Rcpp::String equipmentReq )
 {
   Rcpp::DataFrame mhDB = mhdbInit( mhTypes.length() );
-  Rcpp::StringVector id         = Rcpp::as<Rcpp::StringVector >( mhDB["ID"        ] );
-  Rcpp::StringVector reqid      = Rcpp::as<Rcpp::StringVector >( mhDB["reqID"     ] );
-  Rcpp::StringVector mhType     = Rcpp::as<Rcpp::StringVector >( mhDB["mhType"    ] );
-  Rcpp::IntegerVector month     = Rcpp::as<Rcpp::IntegerVector>( mhDB["month"     ] );
-  Rcpp::StringVector costCenter = Rcpp::as<Rcpp::StringVector >( mhDB["costCenter"] );
+  Rcpp::StringVector  id         = Rcpp::as<Rcpp::StringVector >( mhDB["ID"        ] );
+  Rcpp::StringVector  reqid      = Rcpp::as<Rcpp::StringVector >( mhDB["reqID"     ] );
+  Rcpp::StringVector  mhType     = Rcpp::as<Rcpp::StringVector >( mhDB["mhType"    ] );
+  Rcpp::IntegerVector month      = Rcpp::as<Rcpp::IntegerVector>( mhDB["month"     ] );
+  Rcpp::StringVector  costCenter = Rcpp::as<Rcpp::StringVector >( mhDB["costCenter"] );
+  Rcpp::StringVector  equipment  = Rcpp::as<Rcpp::StringVector >( mhDB["equipment" ] );
   for ( int i = 0; i < mhTypes.length(); i++ )
   {
     for ( int j = 1; j < 13; j++ )
     {
       R_xlen_t idx  = ( i * 12 ) + ( j - 1 );
-      id    [idx] = empID;
-      reqid [idx] = reqID;
-      mhType[idx] = mhTypes[i];
-      month [idx] = j;
+      id       [idx] = empID;
+      reqid    [idx] = reqID;
+      mhType   [idx] = mhTypes[i];
+      month    [idx] = j;
+      equipment[idx] = equipmentReq;
 
       if ( !selfAssign )
       {
