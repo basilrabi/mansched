@@ -248,7 +248,7 @@ Rcpp::List assignPool( Rcpp::List listT,
                         << "\n";
           }
 
-          Rcpp::DataFrame tempData = assignEmp( listTC[i], listRC[*jj], false );
+          Rcpp::DataFrame tempData = assignEmp( listTC[i], listRC[*jj], false, debug );
           if ( debug )
             Rcpp::Rcout << Rcpp::as<Rcpp::StringVector>( Rcpp::as<Rcpp::S4>( listRC[*jj] ).slot( "ID" ) );
 

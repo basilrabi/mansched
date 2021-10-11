@@ -104,6 +104,7 @@ getCost <- function(mhDB,
     costNP <-
     costWage <-
     description <-
+    equipment <-
     hRateA <-
     hRateB <-
     i <-

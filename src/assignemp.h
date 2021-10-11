@@ -19,6 +19,7 @@
 //'
 //'   Is the employee being self-assigned? Self assigning means that the two
 //'   arguments above points to the same object.
+//' @param debug logical flag for debugging
 //' @return a \code{\link{data.frame}} containing the man hours database
 //'   resulting from the employee assignment. This is consisted of the following
 //'   columns:
@@ -71,6 +72,6 @@
 //'   }
 //' @export
 // [[Rcpp::export]]
-Rcpp::DataFrame assignEmp ( Rcpp::S4 empT, Rcpp::S4 empR, bool selfAssign );
+Rcpp::DataFrame assignEmp ( Rcpp::S4 empT, Rcpp::S4 empR, bool selfAssign = false, bool debug = false );
 
 #endif

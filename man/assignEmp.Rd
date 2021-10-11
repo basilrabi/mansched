@@ -4,7 +4,7 @@
 \alias{assignEmp}
 \title{Assign an employee}
 \usage{
-assignEmp(empT, empR, selfAssign)
+assignEmp(empT, empR, selfAssign = FALSE, debug = FALSE)
 }
 \arguments{
 \item{empT}{an \code{\link{Employee-class}} object representing a
@@ -17,6 +17,8 @@ employee}
 
   Is the employee being self-assigned? Self assigning means that the two
   arguments above points to the same object.}
+
+\item{debug}{logical flag for debugging}
 }
 \value{
 a \code{\link{data.frame}} containing the man hours database

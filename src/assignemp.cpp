@@ -180,7 +180,8 @@ void assignProductionPersonnel ( Rcpp::S4 empT,
 
 Rcpp::DataFrame assignEmp ( Rcpp::S4 empT,
                             Rcpp::S4 empR,
-                            bool selfAssign = false )
+                            bool selfAssign = false,
+                            bool debug = false )
 {
   Rcpp::String empClass = Rcpp::as<Rcpp::String>( empT.attr( "class" ) );
   Rcpp::StringVector idT = Rcpp::as<Rcpp::StringVector>( empT.slot( "ID" ) );
@@ -202,6 +203,12 @@ Rcpp::DataFrame assignEmp ( Rcpp::S4 empT,
   {
     Rcpp::StringVector equipT = Rcpp::as<Rcpp::StringVector>( empT.slot( "equipment" ) );
     Rcpp::StringVector equipR = Rcpp::as<Rcpp::StringVector>( empR.slot( "equipment" ) );
+
+    if ( debug )
+      Rcpp::Rcout << "Assigning an operator with equipment "
+                  << equipT[0]
+                  << ".\n";
+
     Rcpp::DataFrame mhdbEmp = mhdbInitEmployee( mhTypeC, empR.slot( "ID" ), empT.slot( "ID" ), empT.slot( "costCenter" ), empR.slot( "dcc" ), selfAssign, equipT[0] );
     if ( Rcpp::is_true( Rcpp::all( isElement( equipT, equipR ) ) )  )
     {

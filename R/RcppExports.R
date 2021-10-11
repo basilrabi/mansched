@@ -41,6 +41,7 @@ assignPool <- function(listT, listR, prioStat = NA_character_, prioCode = FALSE,
 #'
 #'   Is the employee being self-assigned? Self assigning means that the two
 #'   arguments above points to the same object.
+#' @param debug logical flag for debugging
 #' @return a \code{\link{data.frame}} containing the man hours database
 #'   resulting from the employee assignment. This is consisted of the following
 #'   columns:
@@ -92,8 +93,8 @@ assignPool <- function(listT, listR, prioStat = NA_character_, prioCode = FALSE,
 #'       required personnel is an operator}
 #'   }
 #' @export
-assignEmp <- function(empT, empR, selfAssign) {
-    .Call('_mansched_assignEmp', PACKAGE = 'mansched', empT, empR, selfAssign)
+assignEmp <- function(empT, empR, selfAssign = FALSE, debug = FALSE) {
+    .Call('_mansched_assignEmp', PACKAGE = 'mansched', empT, empR, selfAssign, debug)
 }
 
 #' Spend all available man hours
