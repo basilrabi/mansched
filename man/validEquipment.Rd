@@ -15,6 +15,7 @@ character vector:
     \item{DT}{dump truck}
     \item{FL}{fuel truck}
     \item{FORKLIFT}{forklift}
+    \item{HDT}{HOWO dump truck}
     \item{MDT}{mini dump truck}
     \item{MOC}{mobile crusher}
     \item{MOS}{mobile screen}
