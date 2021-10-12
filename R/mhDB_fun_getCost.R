@@ -243,7 +243,7 @@ getCost <- function(mhDB,
     dplyr::left_join(dplyr::select(wage, ID, isRF), by = "ID")
 
   # Join sal, scheme, status, and maxReg
-  mhDB <- dplyr::left_join(mhDB,
+  mhDB <- dplyr::left_join(dplyr::ungroup(mhDB),
                            dplyr::select(empSS,  ID, scheme, status),
                            by = "ID") %>%
     dplyr::left_join(empSM, by = c("ID", "month")) %>%
