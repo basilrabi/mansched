@@ -6,23 +6,27 @@ NULL
 #' Calculates monthly personnel cost for each cost center Personnel costs are
 #'   comprised by:
 #'   \describe{
-#'     \item{521001}{Salaries-Regular}
-#'     \item{521021}{OT Pay - Regular}
-#'     \item{521002}{Salaries-Seasonal}
-#'     \item{521022}{OT Pay - Seasonal}
-#'     \item{521004}{Employees Allowance}
-#'     \item{521005}{Employee Benefits}
-#'     \item{521006}{Premium SSS, EC}
-#'     \item{521007}{Prem-HDMF (Pag-ibig)}
-#'     \item{521008}{Philhealth}
-#'     \item{521012}{Leave Commutation}
-#'     \item{521011}{Food Allowance / Rice Subsidy}
-#'     \item{521017}{Hospital and Medical Expenses}
-#'     \item{521009}{Bonus}
-#'     \item{521018}{HMO}
-#'     \item{524037}{Grouplife}
-#'     \item{523011}{Safety Gadgets}
-#'     \item{522010}{CF Manpower Services}
+#'     \item{60300000}{Payroll - Salaries (Regular)}
+#'     \item{60300001}{Payroll - Salaries (Seasonal)}
+#'     \item{60300004}{Payroll - Overtime (Regular)}
+#'     \item{60300005}{Payroll - Overtime (Seasonal)}
+#'     \item{60300008}{Payroll - 13th Month and Other Bonuses (Regular)}
+#'     \item{60300009}{Payroll - 13th Month and Other Bonuses (Seasonal)}
+#'     \item{60300011}{Payroll - Leave Commutation (Regular)}
+#'     \item{60300012}{Payroll - Leave Commutation (Seasonal)}
+#'     \item{60300014}{Payroll - De Minimis Benefits (Regular)}
+#'     \item{60300015}{Payroll - De Minimis Benefits (Seasonal)}
+#'     \item{60300017}{SSS Contributions (Regular)}
+#'     \item{60300018}{SSS Contributions (Seasonal)}
+#'     \item{60300020}{PHIC Contributions (Regular)}
+#'     \item{60300021}{PHIC Contributions (Seasonal)}
+#'     \item{60300023}{HDMF Contributions (Regular)}
+#'     \item{60300024}{HDMF Contributions (Seasonal)}
+#'     \item{60300029}{Other Employee Allowances}
+#'     \item{60300033}{Hospital and Medical Expenses - Employees}
+#'     \item{60300036}{Awards and Prizes}
+#'     \item{60900000}{Life and Medical Insurance - Employees}
+#'     \item{61100000}{Contract Fee - Agency Services}
 #'   }
 #'
 #' @param mhDB a \code{\link{data.frame}} similar to \code{mhDB} return by
@@ -61,10 +65,10 @@ NULL
 #'     \item a data.frame with 16 columns
 #'
 #'       The last 12 columns represents the cost per month.
-#'       The first column is the activity cost center.
+#'       The 1st column is the activity cost center.
 #'       The 2nd column is the description of the general ledger code.
 #'       The 3rd column is the equipment type used.
-#'       The 4rth column is the general ledger code.
+#'       The 4th column is the general ledger code.
 #'
 #'     \item tabulated total man hours per month per cost center
 #'     \item tabulated 13th month pay per month per cost center
