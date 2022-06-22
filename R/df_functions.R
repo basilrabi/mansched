@@ -12,6 +12,25 @@ cleanCC <- function(x) {
   return(x)
 }
 
+#' Clean Cost Centers
+#'
+#' Similar to \link{cleanCC} but each element of the vector can be multiple
+#'   cost centers separated by white space.
+#'
+#' @param x character vector
+#' @return character vector without leading zero and without non-alpha-numeric
+#'   characters
+#' @export cleanCCS
+cleanCCS <- function(x) {
+  x <- gsub(pattern = "\\s+", replacement = " ", x = trimws(x))
+  x <- strsplit(x = x, split = " ", fixed = TRUE)
+  x <- sapply(x, function(y) {
+    y <- cleanCC(y)
+    paste(y, collapse = "0CCSPLIT0")
+  })
+  return(x)
+}
+
 #' Expand \code{data.frame}
 #'
 #' Expands a \code{data.frame} twice its original number of rows. The expanded

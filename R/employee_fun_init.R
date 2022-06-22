@@ -136,7 +136,7 @@ setMethod(
     theObject@ID <- ID
     theObject@name <- name
     theObject@designation <- designation
-    theObject@dcc <- cleanCC(dcc)
+    theObject@dcc <- cleanCCS(dcc)
     theObject@forecast <- forecast
     theObject@field <- field
 

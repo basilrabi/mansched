@@ -82,8 +82,9 @@
 #'       }
 #'   }
 #' @export getmhDB
-#' @importFrom tidyr gather
 #' @importFrom data.table rbindlist
+#' @importFrom stringr str_detect
+#' @importFrom tidyr gather
 getmhDB <- function(empReq,
                     empPool,
                     sched,
@@ -215,6 +216,38 @@ getmhDB <- function(empReq,
     mhReq <- data.table::rbindlist(list(mhReq, u.mhReq), use.names = TRUE)
     mhReq <- mhReq[mhReq$mh > 0, ]
     mhReq <- as.data.frame(mhReq)
+  }
+
+  rowsWithSplitDCC <- stringr::str_detect(mhDB$costCenter, "0CCSPLIT0")
+  if (any(rowsWithSplitDCC)) {
+    mhDBClean <- mhDB[!rowsWithSplitDCC,]
+    mhDBForSplitting <- mhDB[rowsWithSplitDCC,]
+    mhDBSplit <- lapply(1:nrow(mhDBForSplitting), function(x) {
+      costCenters <- strsplit(mhDBForSplitting$costCenter[x], "0CCSPLIT0")[[1]]
+      mhSplit <- rep(as.integer(mhDBForSplitting$mh[x] / length(costCenters)),
+                     times = length(costCenters))
+
+      while (sum(mhSplit) != mhDBForSplitting$mh[x]) {
+        increment <- 1L
+        mhDiff <- mhDBForSplitting$mh[x] - sum(mhSplit)
+        if (mhDiff < 0L)
+          increment <- -1L
+        if (mhDiff == 0L)
+          break
+        idx <- sample.int(length(mhSplit), abs(mhDiff))
+        mhSplit[idx] <- mhSplit[idx] + increment
+      }
+      data.frame(ID = mhDBForSplitting$ID[x],
+                 reqID = mhDBForSplitting$reqID[x],
+                 mh = mhSplit,
+                 mhType = mhDBForSplitting$mhType[x],
+                 month = mhDBForSplitting$month[x],
+                 np = mhSplit * mhDBForSplitting$np[x] / sum(mhSplit),
+                 costCenter = costCenters,
+                 equipment = mhDBForSplitting$equipment[x])
+    }) %>%
+      data.table::rbindlist()
+    mhDB <- data.table::rbindlist(list(mhDBClean, mhDBSplit))
   }
 
   return(list(mhDB, listT.a, listR.a, listT, listR, mhReq, mhPool, discarded))
