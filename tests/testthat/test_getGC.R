@@ -219,13 +219,14 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           hol = hol,
                           forecast = TRUE)
 
+gc_rate <- 1600
 test_that("getGC() works for forecast", {
-  expect_equal(sum(getGC(tempEmp1)$benefits), 1500)
-  expect_equal(sum(getGC(tempEmp2)$benefits), 1500)
-  expect_equal(sum(getGC(tempEmp3)$benefits), 1500)
-  expect_equal(sum(getGC(tempEmp4)$benefits), 3000)
-  expect_equal(sum(getGC(tempEmp5)$benefits), 3000)
-  expect_equal(sum(getGC(tempEmp6)$benefits), 2571.43)
+  expect_equal(sum(getGC(tempEmp1)$benefits), gc_rate)
+  expect_equal(sum(getGC(tempEmp2)$benefits), gc_rate)
+  expect_equal(sum(getGC(tempEmp3)$benefits), gc_rate)
+  expect_equal(sum(getGC(tempEmp4)$benefits), gc_rate * 2)
+  expect_equal(sum(getGC(tempEmp5)$benefits), gc_rate * 2)
+  expect_equal(sum(getGC(tempEmp6)$benefits), round(gc_rate * 2 * 6 / 7, 2))
   expect_equal(sum(getGC(tempEmp7)$benefits), 0)
 })
 

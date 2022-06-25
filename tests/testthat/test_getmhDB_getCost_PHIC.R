@@ -95,12 +95,12 @@ cost <- cost[stringr::str_detect(cost$description, "PHIC"),
              c("costCenter", "description", mCols)]
 
 test_that("Correct PHIC in Forecast", {
-  expect_equal(cost$`1`[1], 875)
-  expect_equal(cost$`7`[1], 875)
-  expect_equal(cost$`1`[2], 1225)
-  expect_equal(cost$`7`[2], 1225)
-  expect_equal(cost$`1`[3], 182.58)
-  expect_equal(cost$`1`[5], 175)
+  expect_equal(cost$`1`[1], 1000)
+  expect_equal(cost$`7`[1], 1000)
+  expect_equal(cost$`1`[2], 1600)
+  expect_equal(cost$`7`[2], 1600)
+  expect_equal(cost$`1`[3], 208.67)
+  expect_equal(cost$`1`[5], 200)
 })
 
 rm(list = ls())

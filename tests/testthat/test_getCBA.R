@@ -248,9 +248,9 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           forecast = TRUE)
 
 test_that("getCBA() works for forecast", {
-  expect_equal(sum(getCBA(tempEmp1)$benefits), 479.17 * 12)
-  expect_equal(sum(getCBA(tempEmp2)$benefits), 479.17 * 11)
-  expect_equal(sum(getCBA(tempEmp3)$benefits), 479.17 * 10)
+  expect_equal(sum(getCBA(tempEmp1)$benefits), 508.33 * 12)
+  expect_equal(sum(getCBA(tempEmp2)$benefits), 508.33 * 11)
+  expect_equal(sum(getCBA(tempEmp3)$benefits), 508.33 * 10)
   expect_equal(sum(getCBA(tempEmp4)$benefits), 0)
   expect_equal(sum(getCBA(tempEmp5)$benefits), 0)
   expect_equal(sum(getCBA(tempEmp6)$benefits), 0)

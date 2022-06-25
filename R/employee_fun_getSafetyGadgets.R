@@ -31,14 +31,12 @@ setMethod(
   signature  = "Employee",
   definition = function(theObject) {
 
-    boots <- 400
+    boots <- 650
     raincoat <- 1600
     shoes <- 2750
     umbrella <- 400
-    if (theObject@forecast) {
-      boots <- 300
-      umbrella <- 300
-    }
+    if (theObject@forecast)
+      umbrella <- 350
 
     if (theObject@field)
       shoes <- shoes * 1.5

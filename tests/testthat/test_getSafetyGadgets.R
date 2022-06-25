@@ -115,13 +115,21 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           restday = restday,
                           hol = hol)
 
+boots <- 650
+raincoat <- 1600
+shoes <- 2750
+umbrella <- 400
+
+gadget <- boots + raincoat + shoes * 1.5 + umbrella
+gadget <- round(gadget / 12, 2)
+
 test_that("getSafetyGadgets() works for budget", {
-  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), 543.75 * 12)
-  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), 543.75 * 11)
-  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), 543.75 * 10)
-  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), 543.75 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), 543.75 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), 429.17 * 7)
+  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), gadget * 12)
+  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), gadget * 11)
+  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), gadget * 10)
+  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), gadget * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), gadget * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), (gadget - round(shoes / 24, 2)) * 7)
   expect_equal(sum(getSafetyGadgets(tempEmp7)$sg), 0)
 })
 
@@ -248,13 +256,17 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           hol = hol,
                           forecast = TRUE)
 
+umbrella <- 350
+gadget <- boots + raincoat + shoes * 1.5 + umbrella
+gadget <- round(gadget / 12, 2)
+
 test_that("getSafetyGadgets() works for forecast", {
-  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), 527.08 * 12)
-  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), 527.08 * 11)
-  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), 527.08 * 10)
-  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), 527.08 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), 527.08 * 9)
-  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), 527.08 * 7)
+  expect_equal(sum(getSafetyGadgets(tempEmp1)$sg), gadget * 12)
+  expect_equal(sum(getSafetyGadgets(tempEmp2)$sg), gadget * 11)
+  expect_equal(sum(getSafetyGadgets(tempEmp3)$sg), gadget * 10)
+  expect_equal(sum(getSafetyGadgets(tempEmp4)$sg), gadget * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp5)$sg), gadget * 9)
+  expect_equal(sum(getSafetyGadgets(tempEmp6)$sg), gadget * 7)
   expect_equal(sum(getSafetyGadgets(tempEmp7)$sg), 0)
 })
 

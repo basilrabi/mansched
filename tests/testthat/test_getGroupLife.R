@@ -268,11 +268,11 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
 
 test_that("getGroupLife() works for forecast", {
   expect_equal(sum(getGroupLife(tempEmp1)$gl),
-               round(12980 / 12, digits = 2) * 12)
+               round(12800 / 12, digits = 2) * 12)
   expect_equal(sum(getGroupLife(tempEmp2)$gl),
-               round(12980 / 12, digits = 2) * 11)
+               round(12800 / 12, digits = 2) * 11)
   expect_equal(sum(getGroupLife(tempEmp3)$gl),
-               round(3894 / 12, digits = 2) * 10)
+               round(3840 / 12, digits = 2) * 10)
   expect_equal(sum(getGroupLife(tempEmp4)$gl), 0)
   expect_equal(sum(getGroupLife(tempEmp5)$gl), 0)
   expect_equal(sum(getGroupLife(tempEmp6)$gl), 0)

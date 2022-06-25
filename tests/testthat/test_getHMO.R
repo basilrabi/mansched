@@ -314,15 +314,15 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
 
 test_that("getHMO() works", {
   expect_equal(
-    abs(sum(getHMO(tempEmp1)$hmo) - (round((16003 * 2) / 12, digits = 2) * 12)) < 10,
+    abs(sum(getHMO(tempEmp1)$hmo) - (round((15523 + 14823) / 12, digits = 2) * 12)) < 10,
     TRUE
   )
   expect_equal(
-    abs(sum(getHMO(tempEmp2)$hmo) - (round((16003 * 2) / 12, digits = 2) * 11)) < 10,
+    abs(sum(getHMO(tempEmp2)$hmo) - (round((15523 + 14823) / 12, digits = 2) * 11)) < 10,
     TRUE
   )
   expect_equal(
-    abs(sum(getHMO(tempEmp3)$hmo) - (round((12025 * 2) / 12, digits = 2) * 10)) < 10,
+    abs(sum(getHMO(tempEmp3)$hmo) - (round((11539 + 11139) / 12, digits = 2) * 10)) < 10,
     TRUE
   )
   expect_equal(sum(getHMO(tempEmp4)$hmo), 0)

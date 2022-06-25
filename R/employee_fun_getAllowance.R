@@ -53,11 +53,6 @@ setMethod(
     food <- 2200
     lighting <- 1200
     housing <- 1200
-    if (theObject@forecast) {
-      food <- 2100
-      lighting <- 1150
-      housing <- 1150
-    }
 
     if (!theObject@inHouse)
       cost <- cost + food + lighting
@@ -89,11 +84,6 @@ setMethod(
       food <- 2100
       lighting <- 1200
       housing <- 1200
-      if (theObject@forecast) {
-        food <- 2000
-        lighting <- 1150
-        housing <- 1150
-      }
 
       cost <- cost + food
 

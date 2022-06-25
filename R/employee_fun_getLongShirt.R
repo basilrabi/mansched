@@ -32,8 +32,6 @@ setMethod(
   definition = function(theObject) {
 
     price <- 1400
-    if (theObject@forecast)
-      price <- 1350
 
     longShirt  <- getCM(theObject)
 

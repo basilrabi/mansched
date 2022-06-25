@@ -169,7 +169,11 @@ getCost <- function(mhDB,
   # Employee salary link and maximum regular hours per month
   empSM <- lapply(listR, function(x) {
     if (forecast) {
-      sm <- data.frame(month = 1:12, sal = "a")
+      # For the forecasting in 2022, there is a salary adjustment in September
+      # due to the new governemnt regulations.
+      sm <- data.frame(
+        month = 1:12, sal = c(rep("a", times = 8), rep("b", times = 4))
+      )
     } else if (isRF(x)) {
       sm <- payB
     } else {
@@ -255,6 +259,21 @@ getCost <- function(mhDB,
                            by = "ID") %>%
     dplyr::left_join(empSM, by = c("ID", "month")) %>%
     dplyr::mutate(costCenter = cleanCC(costCenter))
+
+  mhDBYear <- dplyr::group_by(mhDB, ID, costCenter) %>%
+    dplyr::summarise(mh = sum(mh))
+
+  empStatus <- lapply(listR, function(x) {
+    data.frame(ID = x@ID, status = x@status)
+  }) %>%
+    data.table::rbindlist(use.names = TRUE)
+
+  # A dummy man hours assignment intended to distributed cost during months that
+  # a personnel is not employed.
+  mhDBdummy <- dplyr::filter(empSM, maxReg == 0) %>%
+    dplyr::select(month, ID) %>%
+    dplyr::left_join(mhDBYear) %>%
+    dplyr::left_join(empStatus)
 
   #### Compute Salaries for monthly wagers ####
 
@@ -704,12 +723,6 @@ getCost <- function(mhDB,
     phic_premium <- 0.02
     phic_premium_max <- 1600
     phic_premium_min <- 200
-    if (forecast) {
-      max_salary <- 70000
-      phic_premium <- 0.0175
-      phic_premium_max <- 1225
-      phic_premium_min <- 175
-    }
 
     tempData <- getCM(x)
 
@@ -1097,12 +1110,7 @@ getCost <- function(mhDB,
 
   mhDB.SSS <- dplyr::group_by(SSSdb, ID, month, costCenter, equipment) %>%
     dplyr::summarise(cost = round(sum(SSS), digits = 2)) %>%
-    dplyr::left_join(
-      lapply(listR, function(x) {
-        data.frame(ID = x@ID, status = x@status)
-      }) %>%
-        data.table::rbindlist(use.names = TRUE)
-    ) %>%
+    dplyr::left_join(empStatus) %>%
     dplyr::ungroup()
 
   mhDB.SSS.A <- dplyr::filter(mhDB.SSS, status == "age")
@@ -1415,6 +1423,9 @@ getCost <- function(mhDB,
                                     status != "age") %>%
       dplyr::group_by(ID, month, costCenter, status, equipment) %>%
       dplyr::summarise(mh = sum(mh)) %>%
+      dplyr::bind_rows(
+        dplyr::mutate(mhDBdummy, equipment = as.character(NA))
+      ) %>%
       dplyr::group_by(ID, month) %>%
       dplyr::mutate(totMH = sum(mh)) %>%
       dplyr::ungroup() %>%
