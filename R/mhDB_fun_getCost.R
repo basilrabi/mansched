@@ -788,7 +788,9 @@ getCost <- function(mhDB,
 
   if (length(maxRegDB) > 0) {
     ### Get total reg hours attendance (RH)
-    mhDB.RH <- dplyr::filter(mhDB, status == "reg", mhType == "reg") %>%
+    mhDB.RH <- dplyr::filter(
+      mhDB, status == "reg", mhType == "reg", month >= monthStart
+    ) %>%
       dplyr::group_by(ID, month) %>%
       dplyr::summarise(mh = sum(mh)) %>%
       tidyr::pivot_wider(names_from = month,
