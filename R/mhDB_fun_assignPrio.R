@@ -90,7 +90,7 @@ assignPrio <- function(listT, listR) {
 
   if (length(listR) > 0) {
     hasDCC <- sapply(listR, function(x) {
-      if (!all(is.na(x@dcc)))
+      if (any(x@dcc != "NA"))
         return(TRUE)
       return(FALSE)
     })
@@ -108,7 +108,7 @@ assignPrio <- function(listT, listR) {
 
       tempData4 <- lapply(listR.dcc, function(x) {
         x@costCenter <- sapply(X = x@dcc, FUN = function(y) {
-          if (is.na(y))
+          if (any(y == "NA"))
             return("0-0")
           return(y)
         })
