@@ -89,7 +89,6 @@ getCost <- function(mhDB,
                     absentee = NA,
                     monthStart = 1L,
                     leaveConversionFactor = 0.5) {
-
   HM <-
     ID <-
     LC <-
@@ -260,7 +259,7 @@ getCost <- function(mhDB,
     dplyr::left_join(empSM, by = c("ID", "month")) %>%
     dplyr::mutate(costCenter = cleanCC(costCenter))
 
-  mhDBYear <- dplyr::group_by(mhDB, ID, costCenter) %>%
+  mhDBYear <- dplyr::group_by(mhDB, ID, costCenter, equipment) %>%
     dplyr::summarise(mh = sum(mh))
 
   empStatus <- lapply(listR, function(x) {
@@ -1425,9 +1424,7 @@ getCost <- function(mhDB,
                                     status != "age") %>%
       dplyr::group_by(ID, month, costCenter, status, equipment) %>%
       dplyr::summarise(mh = sum(mh)) %>%
-      dplyr::bind_rows(
-        dplyr::mutate(mhDBdummy, equipment = as.character(NA))
-      ) %>%
+      dplyr::bind_rows(mhDBdummy) %>%
       dplyr::group_by(ID, month) %>%
       dplyr::mutate(totMH = sum(mh)) %>%
       dplyr::ungroup() %>%
