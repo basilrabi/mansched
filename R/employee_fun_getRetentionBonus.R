@@ -40,7 +40,7 @@ setMethod(
       monthStart <- as.integer(lubridate::month(as.Date(theObject@cBegin)))
       monthEnd <- as.integer(lubridate::month(as.Date(theObject@cEnd)))
       retentionFactor <- 1
-      retentionBonus <- 20930
+      retentionBonus <- 12000
 
       duration <- monthEnd - monthStart
       if (duration < 6)
