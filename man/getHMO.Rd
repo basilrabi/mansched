@@ -37,10 +37,10 @@ HMO privilege is only available to regular employees. The higher the job
 }
 \section{Functions}{
 \itemize{
-\item \code{getHMO,Employee-method}: Compute cost multiplier
+\item \code{getHMO(Employee)}: Compute cost multiplier
 
-\item \code{getHMO,Staff-method}: Compute premium list
+\item \code{getHMO(Staff)}: Compute premium list
 
-\item \code{getHMO,NonStaff-method}: Compute monthly cost
+\item \code{getHMO(NonStaff)}: Compute monthly cost
+
 }}
-

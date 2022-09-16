@@ -14,21 +14,21 @@ LazyData: true
 Depends: R   (>= 4.1.0), methods
 Imports:
   data.table (>= 1.14.2),
-  dplyr      (>= 1.0.9),
+  dplyr      (>= 1.0.10),
   lubridate  (>= 1.8.0),
-  Rcpp       (>= 1.0.8.3),
-  readxl     (>= 1.4.0),
-  stringr    (>= 1.4.0),
-  tidyr      (>= 1.2.0),
+  Rcpp       (>= 1.0.9),
+  readxl     (>= 1.4.1),
+  stringr    (>= 1.4.1),
+  tidyr      (>= 1.2.1),
   xlsx       (>= 0.6.5),
 Suggests:
-  knitr      (>= 1.39),
-  rmarkdown  (>= 2.14),
-  rstudioapi (>= 0.13),
+  knitr      (>= 1.40),
+  rmarkdown  (>= 2.16),
+  rstudioapi (>= 0.14),
   testthat   (>= 3.1.4),
   covr
 Remotes:
   r-lib/covr
-RoxygenNote: 7.2.0
-LinkingTo: Rcpp  (>= 1.0.8.3)
+RoxygenNote: 7.2.1
+LinkingTo: Rcpp  (>= 1.0.9)
 VignetteBuilder: knitr

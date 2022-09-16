@@ -41,28 +41,28 @@ sanityCheckEmpPool <- function(empPool) {
                paste(empPool.colnames, collapse = " ")))
   }
 
-  if (class(empPool$ID) != "character")
+  if (!is(empPool$ID, "character"))
     stop("Column ID in Pool is not character!")
 
-  if (class(empPool$name) != "character")
+  if (!is(empPool$name, "character"))
     stop("Column name in Pool is not character!")
 
-  if (class(empPool$designation) != "character")
+  if (!is(empPool$designation, "character"))
     stop("Column designation in Pool is not character!")
 
-  if (class(empPool$personnelClass) != "character")
+  if (!is(empPool$personnelClass, "character"))
     stop("Column personnelClass in Pool is not character!")
 
-  if (!all(is.na(empPool$equipment)) & class(empPool$equipment) != "character")
+  if (!all(is.na(empPool$equipment)) & !is(empPool$equipment, "character"))
     stop("Column equipment in Pool is not character!")
 
-  if (!all(is.na(empPool$equipment)) & class(empPool$costCenter) != "character")
+  if (!all(is.na(empPool$equipment)) & !is(empPool$costCenter, "character"))
     stop("Column costCenter in Pool is not character!")
 
-  if (!all(is.na(empPool$dcc)) & class(empPool$dcc) != "character")
+  if (!all(is.na(empPool$dcc)) & !is(empPool$dcc, "character"))
     stop("Column dcc in Pool is not character!")
 
-  if (class(empPool$status) != "character")
+  if (!is(empPool$status, "character"))
     stop("Column status in Pool is not character!")
 
   if (!"POSIXct" %in% class(empPool$cBegin))
@@ -71,22 +71,22 @@ sanityCheckEmpPool <- function(empPool) {
   if (!"POSIXct" %in% class(empPool$cEnd))
     stop("Column cEnd in Pool is not date!")
 
-  if (class(empPool$restday) != "character")
+  if (!is(empPool$restday, "character"))
     stop("Column restday in Pool is not character!")
 
   for (i in dcc) {
-    if (!all(is.na(empPool[[i]])) & class(empPool[[i]]) != "character")
+    if (!all(is.na(empPool[[i]])) & !is(empPool[[i]], "character"))
       stop(sprintf("Column %s is not character.", i))
   }
 
   for (i in dependentsCol) {
-    if (class(empPool[[i]]) != "numeric") {
+    if (!is(empPool[[i]], "numeric")) {
       stop(paste("Column", i, "is not numeric!"))
     }
   }
 
   for (i in c(attendanceCol, d.rdCol, d.hoCol, d.rhCol)) {
-    if (class(empPool[[i]]) != "numeric")
+    if (!is(empPool[[i]], "numeric"))
       stop(paste("Column", i, "is not numeric!"))
 
     if (anyNA(empPool[[i]]))
@@ -94,9 +94,9 @@ sanityCheckEmpPool <- function(empPool) {
 
   }
 
-  if (class(empPool$VL) != "numeric")
+  if (!is(empPool$VL, "numeric"))
     stop("Column VL is not numeric!")
-  if (class(empPool$SL) != "numeric")
+  if (!is(empPool$SL, "numeric"))
     stop("Column SL is not numeric!")
 
   empPool[, c("cBegin", "cEnd")] <- lapply(empPool[, c("cBegin", "cEnd")],

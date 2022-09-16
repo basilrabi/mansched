@@ -30,6 +30,6 @@ Signing bonus to be given to all seasonal employees at the start of
 }
 \section{Functions}{
 \itemize{
-\item \code{getSigningBonusSea,Employee-method}: Compute seasonal employee's signing bonus
-}}
+\item \code{getSigningBonusSea(Employee)}: Compute seasonal employee's signing bonus
 
+}}

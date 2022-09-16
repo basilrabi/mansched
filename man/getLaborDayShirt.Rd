@@ -30,6 +30,6 @@ During labor day (May 1), all regular employees are given a shirt worth
 }
 \section{Functions}{
 \itemize{
-\item \code{getLaborDayShirt,Employee-method}: Summarize shirt cost
-}}
+\item \code{getLaborDayShirt(Employee)}: Summarize shirt cost
 
+}}

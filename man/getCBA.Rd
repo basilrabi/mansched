@@ -30,7 +30,7 @@ Taganito Mine provides items to all regular employees as agreed upon with
 }
 \section{Functions}{
 \itemize{
-\item \code{getCBA,Employee-method}: Compute pro-rated cost for CBA provisions
+\item \code{getCBA(Employee)}: Compute pro-rated cost for CBA provisions
 throughout the year
-}}
 
+}}

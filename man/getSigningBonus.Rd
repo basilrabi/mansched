@@ -37,10 +37,10 @@ Signing bonus is given to Rank-and-File employees at the year of the start
 }
 \section{Functions}{
 \itemize{
-\item \code{getSigningBonus,Employee-method}: Compute cost multiplier
+\item \code{getSigningBonus(Employee)}: Compute cost multiplier
 
-\item \code{getSigningBonus,Staff-method}: No signing bonus for Staff
+\item \code{getSigningBonus(Staff)}: No signing bonus for Staff
 
-\item \code{getSigningBonus,NonStaff-method}: Compute monthly cost
+\item \code{getSigningBonus(NonStaff)}: Compute monthly cost
+
 }}
-

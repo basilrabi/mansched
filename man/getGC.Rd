@@ -33,6 +33,6 @@ Gift certificates amounting to 1500 PhP are usually given to employee on
 }
 \section{Functions}{
 \itemize{
-\item \code{getGC,Employee-method}: Summarize gift certificate cost
-}}
+\item \code{getGC(Employee)}: Summarize gift certificate cost
 
+}}

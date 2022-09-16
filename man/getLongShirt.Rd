@@ -29,7 +29,7 @@ Taganito Mine issues working long shirts to all in-house employees.
 }
 \section{Functions}{
 \itemize{
-\item \code{getLongShirt,Employee-method}: Compute distributed cost for working long shirts
+\item \code{getLongShirt(Employee)}: Compute distributed cost for working long shirts
 throughout the year
-}}
 
+}}

@@ -30,6 +30,6 @@ Taganito Mine provides steel toe shoes, umbrella, raincoats, and rain boots
 }
 \section{Functions}{
 \itemize{
-\item \code{getSafetyGadgets,Employee-method}: Compute price and cost multplier
-}}
+\item \code{getSafetyGadgets(Employee)}: Compute price and cost multplier
 
+}}

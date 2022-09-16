@@ -30,6 +30,6 @@ Retention bonus to be given to all seasonal employees at the end of their
 }
 \section{Functions}{
 \itemize{
-\item \code{getRetentionBonus,Employee-method}: Compute retention bonus
-}}
+\item \code{getRetentionBonus(Employee)}: Compute retention bonus
 
+}}

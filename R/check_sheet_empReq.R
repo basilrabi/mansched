@@ -26,27 +26,27 @@ sanityCheckEmpReq <- function(empReq) {
                paste(empReq.colnames, collapse = " ")))
   }
 
-  if (class(empReq$activity) != "character")
+  if (!is(empReq$activity, "character"))
     stop("Column activity in Requirement is not character!")
 
-  if (class(empReq$personnelClass) != "character")
+  if (!is(empReq$personnelClass, "character"))
     stop("Column personnelClass in Requirement is not character!")
 
-  if (class(empReq$quantity) != "numeric")
+  if (!is(empReq$quantity, "numeric"))
     stop("Column quantity in Requirement is not numeric!")
 
-  if (!all(is.na(empReq$spareFactor)) & class(empReq$spareFactor) != "numeric")
+  if (!all(is.na(empReq$spareFactor)) & !is(empReq$spareFactor, "numeric"))
     stop("Column spareFactor in Requirement is not numeric!")
 
   empReq$spareFactor <- as.numeric(empReq$spareFactor)
 
-  if (class(empReq$equipment) != "character")
+  if (!is(empReq$equipment, "character"))
     stop("Column equipment in Requirement is not character!")
 
-  if (class(empReq$OT) != "numeric")
+  if (!is(empReq$OT, "numeric"))
     stop("Column OT in Requirement is not numeric!")
 
-  if (class(empReq$costCenter) != "character")
+  if (!is(empReq$costCenter, "character"))
     stop("Column costCenter in Requirement is not character!")
 
   if (any(is.na(empReq$costCenter)))

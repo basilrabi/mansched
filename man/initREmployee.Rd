@@ -351,38 +351,38 @@ Initializes employee data and its working hours. This function can be
 }
 \section{Functions}{
 \itemize{
-\item \code{initREmployee,Employee-method}: Initialize ID, name, designation, attendance,
+\item \code{initREmployee(Employee)}: Initialize ID, name, designation, attendance,
 costCenter, status, cBegin, cEnd, inHouse, restday and calDays
 (see \code{\link{getCalDays}})
 
-\item \code{initREmployee,Staff-method}: Return only the \code{\link{Staff-class}} object
+\item \code{initREmployee(Staff)}: Return only the \code{\link{Staff-class}} object
 
-\item \code{initREmployee,NonStaff-method}: Initialize regOT
+\item \code{initREmployee(NonStaff)}: Initialize regOT
 
-\item \code{initREmployee,Clerk-method}: Initialize RF and return only the
+\item \code{initREmployee(Clerk)}: Initialize RF and return only the
 \code{\link{Clerk-class}} object
 
-\item \code{initREmployee,OperationPersonnel-method}: Initialize rd, rdOT, sh, shOT, lh, lhOT, nh, nhOT,
+\item \code{initREmployee(OperationPersonnel)}: Initialize rd, rdOT, sh, shOT, lh, lhOT, nh, nhOT,
 rs, rsOT, rl, rlOT, rn, rnOT. Return only the
 \code{\link{OperationPersonnel-class}} object.
 
-\item \code{initREmployee,Technical-method}: Return only the \code{\link{Technical-class}}
+\item \code{initREmployee(Technical)}: Return only the \code{\link{Technical-class}}
 object. All \code{Technical-class} personnel are not rank and file.
 
-\item \code{initREmployee,Supervisor-method}: Return only the
+\item \code{initREmployee(Supervisor)}: Return only the
 \code{\link{Supervisor-class}} object. All \code{Supervisor-class}
 employees are not rank and file
 
-\item \code{initREmployee,Laborer-method}: Return only the
+\item \code{initREmployee(Laborer)}: Return only the
 \code{\link{Laborer-class}} object. All \code{Laborer-class}
 employees are rank and file
 
-\item \code{initREmployee,Operator-method}: Initialize equipment
+\item \code{initREmployee(Operator)}: Initialize equipment
 
 \code{\link{Operator-class}} personnel may be authorized to operate multiple
   types of equipment. In Taganito Mining Corporation, some of the equipment
   types are listed in \code{\link{validEquipment}}.
 
   All \code{Operator-class} employees are rank and file.
-}}
 
+}}

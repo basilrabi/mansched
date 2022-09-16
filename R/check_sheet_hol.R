@@ -13,18 +13,18 @@ sanityCheckHol <- function(hol) {
                paste(hol.colnames, collapse = " ")))
   }
 
-  if (class(hol$Month) != "character")
+  if (!is(hol$Month, "character"))
     stop("Column Month in hol is not character!")
 
-  if (class(hol$Day) != "numeric")
+  if (!is(hol$Day, "numeric"))
     stop("Column Day in hol is not numeric!")
 
   hol$Day <- as.integer(hol$Day)
 
-  if (class(hol$Type) != "character")
+  if (!is(hol$Type, "character"))
     stop("Column Type in hol is not character!")
 
-  if (class(hol$Description) != "character")
+  if (!is(hol$Description, "character"))
     stop("Column Description in hol is not character!")
 
   hol <- as.data.frame(hol)

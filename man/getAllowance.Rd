@@ -42,10 +42,10 @@ Depending on the attributes of the employee, his or her monthly allowances
 }
 \section{Functions}{
 \itemize{
-\item \code{getAllowance,Employee-method}: Compute allowance multiplier
+\item \code{getAllowance(Employee)}: Compute allowance multiplier
 
-\item \code{getAllowance,Staff-method}: Compute monthly allowance
+\item \code{getAllowance(Staff)}: Compute monthly allowance
 
-\item \code{getAllowance,NonStaff-method}: Compute monthly allowance
+\item \code{getAllowance(NonStaff)}: Compute monthly allowance
+
 }}
-

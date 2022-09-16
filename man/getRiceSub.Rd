@@ -31,6 +31,6 @@ For every month, 1 sack of rice is awarded to the employee.
 }
 \section{Functions}{
 \itemize{
-\item \code{getRiceSub,Employee-method}: Compute rice subsidy throughout the year
-}}
+\item \code{getRiceSub(Employee)}: Compute rice subsidy throughout the year
 
+}}

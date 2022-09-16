@@ -36,6 +36,6 @@ Depending on the employment status of the employee, his or her monthly
 }
 \section{Functions}{
 \itemize{
-\item \code{getHM,Employee-method}: Compute hospital and medical expenses
-}}
+\item \code{getHM(Employee)}: Compute hospital and medical expenses
 
+}}

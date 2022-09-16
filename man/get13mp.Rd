@@ -35,6 +35,6 @@ a \code{\link{data.frame}} with 12 rows and 3 columns representing
 }
 \section{Functions}{
 \itemize{
-\item \code{get13mp,Employee-method}: Compute 13 month pay
-}}
+\item \code{get13mp(Employee)}: Compute 13 month pay
 
+}}

@@ -102,15 +102,15 @@ Initialize employee data and its working hours. This function can be applied
 }
 \section{Functions}{
 \itemize{
-\item \code{initTEmployee,Employee-method}: Initialize ID, costCenter and spareFactor
+\item \code{initTEmployee(Employee)}: Initialize ID, costCenter and spareFactor
 
-\item \code{initTEmployee,Staff-method}: Initialize reg
+\item \code{initTEmployee(Staff)}: Initialize reg
 
-\item \code{initTEmployee,Clerk-method}: Initialize reg and regOT
+\item \code{initTEmployee(Clerk)}: Initialize reg and regOT
 
-\item \code{initTEmployee,OperationPersonnel-method}: Initialize all man hour type using man day type
+\item \code{initTEmployee(OperationPersonnel)}: Initialize all man hour type using man day type
 probabilities
 
-\item \code{initTEmployee,Operator-method}: Initialize equipment
-}}
+\item \code{initTEmployee(Operator)}: Initialize equipment
 
+}}

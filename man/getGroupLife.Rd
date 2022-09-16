@@ -50,18 +50,18 @@ Life insurance privilege is only available to regular and probationary
 }
 \section{Functions}{
 \itemize{
-\item \code{getGroupLife,Employee-method}: Compute cost multiplier
+\item \code{getGroupLife(Employee)}: Compute cost multiplier
 
-\item \code{getGroupLife,Staff-method}: Compute premium list
+\item \code{getGroupLife(Staff)}: Compute premium list
 
-\item \code{getGroupLife,DivisionManager-method}: Compute monthly cost
+\item \code{getGroupLife(DivisionManager)}: Compute monthly cost
 
-\item \code{getGroupLife,GroupManager-method}: Compute monthly cost
+\item \code{getGroupLife(GroupManager)}: Compute monthly cost
 
-\item \code{getGroupLife,DepartmentManager-method}: Compute monthly cost
+\item \code{getGroupLife(DepartmentManager)}: Compute monthly cost
 
-\item \code{getGroupLife,SectionHead-method}: Compute monthly cost
+\item \code{getGroupLife(SectionHead)}: Compute monthly cost
 
-\item \code{getGroupLife,NonStaff-method}: Compute monthly cost
+\item \code{getGroupLife(NonStaff)}: Compute monthly cost
+
 }}
-

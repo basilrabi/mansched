@@ -12,13 +12,13 @@ sanityCheckWage <- function(wage, empPool) {
   colnames(wage)[2] <- "s"
   colnames(wage)[3] <- "i"
 
-  if (class(wage$ID) != "character")
+  if (!is(wage$ID, "character"))
     stop("Column ID in wage is not character!")
 
-  if (class(wage$s) != "numeric")
+  if (!is(wage$s, "numeric"))
     wage$s <- as.numeric(wage$s)
 
-  if (class(wage$i) != "numeric")
+  if (!is(wage$i, "numeric"))
     wage$i <- as.numeric(wage$i)
 
   wage <- wage[wage$ID %in% empPool$ID,]

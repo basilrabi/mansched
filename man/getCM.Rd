@@ -31,6 +31,6 @@ Based on the period of employment of the personnel, his or her cost
 }
 \section{Functions}{
 \itemize{
-\item \code{getCM,Employee-method}: Compute allowance multiplier
-}}
+\item \code{getCM(Employee)}: Compute allowance multiplier
 
+}}
