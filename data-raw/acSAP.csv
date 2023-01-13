@@ -1,780 +1,780 @@
-code,description,approach
-10000000,Petty Cash Fund - HO Admin,main
-10000001,Petty Cash Fund - Site,main
-10000002,Petty Cash Fund - HO Purchasing,main
-10000003,Petty Cash Fund - HO Legal,main
-10000004,Petty Cash Fund - HO Gov Rel,main
-10000005,Petty Cash Fund - HO Corp Comm,main
-10000006,Emergency Fund Site,main
-10100000,SBC PHP - Main,main
-10100001,SBC PHP - Receipts,main
-10100002,SBC PHP - Disbursements,main
-10100003,SBC PHP - Others,main
-10100010,SBC USD - Main,main
-10100011,SBC USD - Receipts,main
-10100012,SBC USD - Disbursements,main
-10100013,SBC USD - Others,main
-10100014,SBC USD - Foreign Currency Adjustment,main
-10101000,BDO PHP - Main,main
-10101001,BDO PHP - Receipts,main
-10101002,BDO PHP - Disbursements,main
-10101003,BDO PHP - Others,main
-10101010,BDO USD - Main,main
-10101011,BDO USD - Receipts,main
-10101012,BDO USD - Disbursements,main
-10101013,BDO USD - Others,main
-10101014,BDO USD - Foreign Currency Adjustment,main
-10102000,BPI PHP - Main,main
-10102001,BPI PHP - Receipts,main
-10102002,BPI PHP - Disbursements,main
-10102003,BPI PHP - Others,main
-10102010,BPI USD - Main,main
-10102011,BPI USD - Receipts,main
-10102012,BPI USD - Disbursements,main
-10102013,BPI USD - Others,main
-10102014,BPI USD - Foreign Currency Adjustment,main
-10103000,BPI Family PHP - Main,main
-10103001,BPI Family PHP - Receipts,main
-10103002,BPI Family PHP - Disbursements,main
-10103003,BPI Family PHP - Others,main
-10103010,BPI Family USD - Main,main
-10103011,BPI Family USD - Receipts,main
-10103012,BPI Family USD - Disbursements,main
-10103013,BPI Family USD - Others,main
-10103014,BPI Family USD - Foreign Currency Adjustment,main
-10104000,Maybank PHP - Main,main
-10104001,Maybank PHP - Receipts,main
-10104002,Maybank PHP - Disbursements,main
-10104003,Maybank PHP - Others,main
-10104010,Maybank USD - Main,main
-10104011,Maybank USD - Receipts,main
-10104012,Maybank USD - Disbursements,main
-10104013,Maybank USD - Others,main
-10104014,Maybank USD - Foreign Currency Adjustment,main
-10105000,RCBC PHP - Main,main
-10105001,RCBC PHP - Receipts,main
-10105002,RCBC PHP - Disbursements,main
-10105003,RCBC PHP - Others,main
-10105010,RCBC USD - Main,main
-10105011,RCBC USD - Receipts,main
-10105012,RCBC USD - Disbursements,main
-10105013,RCBC USD - Others,main
-10105014,RCBC USD - Foreign Currency Adjustment,main
-10106000,Union Bank PHP - Main,main
-10106001,Union Bank PHP - Receipts,main
-10106002,Union Bank PHP - Disbursements,main
-10106003,Union Bank PHP - Others,main
-10106010,Union Bank USD - Main,main
-10106011,Union Bank USD - Receipts,main
-10106012,Union Bank USD - Disbursements,main
-10106013,Union Bank USD - Others,main
-10106014,Union Bank USD - Foreign Currency Adjustment,main
-10107000,MBTC PHP - Main,main
-10107001,MBTC PHP - Receipts,main
-10107002,MBTC PHP - Disbursements,main
-10107003,MBTC PHP - Others,main
-10108000,DBP PHP - Main,main
-10108001,DBP PHP - Receipts,main
-10108002,DBP PHP - Disbursements,main
-10108003,DBP PHP - Others,main
-10109000,UCPB PHP - Main,main
-10109001,UCPB PHP - Receipts,main
-10109002,UCPB PHP - Disbursements,main
-10109003,UCPB PHP - Others,main
-10110000,Cantilan PHP - Main,main
-10110001,Cantilan PHP - Receipts,main
-10110002,Cantilan PHP - Disbursements,main
-10110003,Cantilan PHP - Others,main
-10800000,Cash under Managed Funds PHP,main
-10801000,Cash under Managed Funds USD,main
-10900000,Short Term Investments PHP =/< 3 months,main
-10901000,Short Term Investments USD =/< 3 months,main
-10910000,Short Term Inv USD =/< 3 months Adjustments,main
-11000000,Trade Receivables Domestic,main
-11000001,Trade Receivables Domestic - One Time Accounts,main
-11000002,Trade Receivables Foreign,main
-11000003,Trade Receivables Foreign - One Time Accounts,main
-11099000,Trade Receivables Adjustments,main
-11100000,Receivables Affiliated Companies,main
-11100001,Receivables Affiliated Companies - Others,main
-11150000,Receivables Affiliated Companies Adjustments,main
-11150001,Interdivision Clearing - PEZA,main
-11200000,Advances - Employee Loans,main
-11200001,Advances - Officers and Employees,main
-11200002,Advances - Subject to Liquidation,main
-11201000,Interest Receivables - Loans PHP,main
-11201001,Interest Receivables - Loans USD,main
-11202000,Despatch Receivable,main
-11202001,Guarantee Fee Receivable,main
-11202002,Other Receivables Domestic - One Time Accounts,main
-11202003,Other Receivables - NT,main
-11203000,Down Payment Requests - Vendors,main
-11203001,Down Payment Noted Item - Vendors,main
-11203002,Input VAT Clearing on Down Payments,main
-11210000,Allowance for Doubtful Receivables - Trade,main
-11210001,Allowance for Doubtful Receivables - Nontrade,main
-11250000,Short-term Loan Receivables,main
-11250001,Long-term Loan Receivables - Current,main
-11250100,Dividend Receivables - Affiliates,main
-11250101,Dividend Receivables - Others,main
-11250200,Interest Receivables - Others PHP,main
-11250300,Interest Receivables - Others USD,main
-11250400,Clearing Interest Receivables,main
-11250401,Receivable from RTNFI/CBNC,main
-11250402,Receivable from Claimowners,main
-11250403,Other Receivables PHP,main
-11250404,Other Receivables USD,main
-11250405,Other Employee Receivable,main
-11251000,Allowance for Expected Credit Losses - Trade,main
-11251001,Allow for Doubtful Receivables (Valuation) - Trade,main
-11251100,Allowance for Expected Credit Losses - Nontrade,main
-11252000,Interest Receivables - USD Adjustments,main
-11252001,Despatch Receivable Adjustments,main
-11252002,Other Receivables Adjustments,main
-12000000,Inventory - Saprolite,main
-12000001,Inventory - Limonite,main
-12000002,Inventory - Limestone,main
-12000003,Inventory - Quarry Material,main
-12100001,Inventory - Gasoline,main
-12100002,Inventory - Diesel,main
-12100003,Inventory - Bunker Oil,main
-12100004,Inventory - Oil and Lubricants,main
-12100005,Inventory - Spare Parts,main
-12100006,Inventory - Tires,main
-12100007,Inventory - Tire Accessories,main
-12100008,Inventory - Conveyor Supplies,main
-12100009,Inventory - Tools and Other Supplies,main
-12110000,Allow for Impairment Losses - Ore,main
-12110001,Allow for Impairment Losses - Mats and Supplies,main
-13000000,Investment - FVTPL (Debt) - Current,main
-13001001,Investment - FVTPL (Equity) - Current,main
-13010000,Investment - FVOCI (Debt) - Current,main
-13020000,Investment - Amortized Cost (Debt) - Current,main
-14000000,Prepaid Expenses - Insurance,main
-14000001,Prepaid Expenses - Rent,main
-14000002,Prepaid Expenses - Royalty (Government),main
-14000003,Prepaid Expenses - Royalty (Others),main
-14000004,Prepaid Expenses - Others,main
-14000005,Creditable Withholding Taxes,main
-14100000,Advances to Suppliers and Contractors - Current,main
-14100001,Deposits to Suppliers - Current,main
-14300000,Advances to Suppliers and Contractors Adjustments,main
-14301000,Input VAT,main
-14301001,Deferred Input VAT - Services,main
-14301002,Deferred Input VAT - Capital Goods,main
-14302000,Short Term Investments PHP 3-12 months,main
-14303000,Short Term Investments USD 3-12 months,main
-14304000,Tax Credit Certificate,main
-14304001,Other Prepayments and Current Assets,main
-14310000,Allow for Impairment Losses - OCA,main
-15000000,Land & Land Improvements,main
-15001000,Mine and Mining Property,main
-15001001,Asset Retirement Obligation,main
-15001002,Development Costs,main
-15002000,Buildings (ROU),main
-15002001,Land and Land Improvements (ROU),main
-15003000,Buildings Structure and Improvements,main
-15003001,Transmission Lines and Substation,main
-15003002,Leasehold Improvements,main
-15004000,Machinery & Equipment,main
-15004001,Engine Generator Sets,main
-15004002,Transportation Equipment,main
-15004003,Office Equipment,main
-15004004,Furniture and Fixtures,main
-15004005,Computer Hardware and Equipment,main
-15005000,Low Value Assets,main
-15006000,Assets under Construction,main
-15006100,Fixed Assets in Transit,main
-15010000,Accum Depreciation - Land Improvements,main
-15011000,Accum Depletion - Mine and Mining Property,main
-15011001,Accum Depletion - ARO,main
-15011002,Accum Amortization - Development Costs,main
-15012000,Accum Depreciation - Buildings (ROU),main
-15012001,Accum Depreciation - Land Improvements (ROU),main
-15013000,Accum Depreciation - Bldgs Structure and Improv,main
-15013001,Accum Depreciation - Transmission Lines and Subs,main
-15013002,Accum Depreciation - Leasehold Improvements,main
-15014000,Accum Depreciation - Machinery & Equipment,main
-15014001,Accum Depreciation - Engine Generator Sets,main
-15014002,Accum Depreciation - Transportation Equipment,main
-15014003,Accum Depreciation - Office Equipment,main
-15014004,Accum Depreciation - Furniture and Fixtures,main
-15014005,Accum Depreciation - Computer Hardware and Eqpmt,main
-15015000,Accum Depreciation - Low Value Assets,main
-15020000,Technical Clrng Acct Integrated Asset Acquisition,main
-15020001,Clearing Account for Asset Acquisition,main
-15110000,Allow for Impairment Losses - PPE,main
-16000000,Investment in Subsidiaries,main
-16001000,Investment in Associates,main
-16010000,Allow for Impairment Losses - Inv in Associate,main
-16100000,Investment - FVTPL (Equity) - Noncurrent,main
-16101001,Investment - FVTPL (Debt) - Noncurrent,main
-16110000,Investment - FVOCI (Debt) - Noncurrent,main
-16120000,Investment - Amortized Cost (Debt) - Noncurrent,main
-16200000,Deferred Income Tax Assets,main
-17000000,Deferred Mine Exploration Costs,main
-17000001,Deposits for Future Stock Subscription (Dr),main
-17000002,Investment Properties,main
-17000003,Advances to Suppliers and Contractors - Noncurrent,main
-17000004,Pension Asset,main
-17000005,Deferred Input VAT - Capital Goods - Noncurrent,main
-17000006,Long-term Loan Receivables,main
-17000007,Deposits to Suppliers - Noncurrent,main
-17000008,Restricted Cash - SDMP,main
-17000009,Restricted Cash - MRF/FMRDP,main
-17000010,Restricted Cash - Others,main
-17000011,Computer Software,main
-17000012,Other Investments - Noncurrent,main
-17000013,Input VAT Receivable,main
-17000100,Deferred Input VAT - Capital Asset Adjustment,main
-17000101,Long-term Loan Receivables Adjustments,main
-17000102,Deposits to Suppliers Adjustments,main
-17010000,Accumulated Amortization - Computer Software,main
-17010100,Accumulated Depreciation - Investment Properties,main
-17110000,Allow for Impairment Losses - DEC and Others,main
-17110001,Allow for Impairment Losses - Input VAT,main
-20000000,Trade Payables Domestic,main
-20000001,Trade Payables Domestic - One Time Accounts,main
-20000002,Trade Payables Foreign,main
-20000003,Trade Payables Foreign - One Time Accounts,main
-20050000,Trade Payables Adjustments,main
-20050001,Document Split Clearing Account,main
-20050002,Document Split Clearing Account CO,main
-20050003,Goods Received/Invoice Received,main
-20050004,GR/IR Sett.Transferred (Material Ledger),main
-20050005,Goods Received/Invoice Received Adjustment,main
-20050006,Goods Received/Invoice Received Consignt/Pipeline,main
-20100000,Payables Affiliated Companies,main
-20100001,Payables Affiliated Companies - Others,main
-20150000,Payables Affiliated Companies Adjustments,main
-20150001,Interdivision Clearing - Main,main
-20200000,Accrued Interest,main
-20200001,Accrued Others (w/ WT),main
-20250000,Accrued Net Payroll,main
-20250001,Accrued 13th Month Pay,main
-20250002,Accrued Guarantee Fee,main
-20250003,Accrued Others,main
-20250004,GR/IR: Goods and Services not yet invoiced,main
-20250100,Accrued Expenses Adjustments,main
-20300000,Excise Tax Payable,main
-20300001,Royalty Payable - Government,main
-20400000,Withholding Tax on Compensation,main
-20400001,Expanded Withholding Tax,main
-20400002,Final Withholding Tax,main
-20400003,Output VAT,main
-20400004,Deferred Output VAT,main
-20400005,FBT Payable,main
-20400006,DST Payable,main
-20400007,VAT Payable,main
-20500000,Interest Payable PHP,main
-20500001,Interest Payable USD,main
-20500002,Down Payment Requests - Customers,main
-20500003,Payables to Employees,main
-20500004,Down Payment Noted Item - Customers,main
-20500005,Output VAT Clearing on Down Payments,main
-20500006,Royalty Payable - Others,main
-20500007,Retention Fees Payable,main
-20500008,Other Payables - NT,main
-20550000,Dividends Payable,main
-20550001,Contract Liability for Down Payments,main
-20550002,Other Payables,main
-20550003,Payroll - SSS Payable,main
-20550004,Payroll - PHIC Payable,main
-20550005,Payroll - HDMF Payable,main
-20550006,Payroll - SSS Loan Payable,main
-20550007,Payroll - HDMF Loan Payable,main
-20550008,Deferred Income - Current,main
-20550009,Customers with a Credit Balance,main
-20550010,Freight Clearing Account (MM),main
-20550011,Delivery Costs Provision (MM),main
-20550012,Delivery Costs Clearing (MM),main
-20550013,Customs Duty Clearing Account (MM),main
-20550014,Customs Provision (MM),main
-20550015,GR/IR: Goods and Services not yet delivered,main
-20550100,Other Payables Adjustments,main
-20600000,Short-term Debt,main
-20600100,Short-Term Debt Adjustments,main
-20700000,Income Tax Payable,main
-20800000,Lease Liability (ROU) - Current,main
-20900000,Long-term Debts - Current,main
-21000000,Long-term Debts - Noncurrent,main
-21000100,Long-term Debts Adjustments,main
-22000000,Deferred Income Tax Liabilities,main
-22000001,Lease Liability (ROU) - Noncurrent,main
-22000002,Provision for Mine Rehabilitation and Decommission,main
-22000003,Pension Liability,main
-22000004,Deferred Income - Noncurrent,main
-22000100,Lease Liability (ROU) Adjustments,main
-22000101,Deferred Income Adjustment,main
-30000000,Common Stock,main
-30000001,Preferred Stock,main
-30000002,Stock Dividend Distributable,main
-30000003,Deposits for Future Stock Subscription (Cr),main
-30000004,Additional Paid-in Capital,main
-30000005,Paid in Capital from Treasury Stock,main
-31000000,Cost of Share-based Payment Plan,main
-32000000,Net Valuation Losses (Gains) on Financial Assets,main
-33000000,Retained Earnings - Unappropriated,main
-33000001,Retained Earnings - Appropriated,main
-34000000,Treasury Stock,main
-40000000,Revenue Foreign - Saprolite,main
-40000001,Revenue Foreign - Limonite,main
-40000002,Revenue Domestic - Limonite,main
-40000003,Revenue Domestic - Limestone,main
-40000004,Revenue Domestic - Quarry Materials,main
-40001000,Billed Revenue - Management Services,main
-40001001,Billed Revenue - Marketing Services,main
-40001002,Billed Revenue - Materials Handling,main
-40001003,Billed Revenue - Pier Usage and Others,main
-40002000,Billed Revenue - Power,main
-40002001,Billed Revenue - Capital Recovery Fee,main
-50000000,COGS Ore - Personnel Cost,main
-50000001,COGS Ore - Outside Services,main
-50000002,COGS Ore - Depreciation Amortization & Depletion,main
-50000003,COGS Ore - Production Overhead,main
-50000004,COGS Ore - General,main
-50001000,COGS Limestone - Personnel Cost,main
-50001001,COGS Limestone - Outside Services,main
-50001002,COGS Limestone - Depreciation Amort & Depletion,main
-50001003,COGS Limestone - Production Overhead,main
-50001004,COGS Limestone - General,main
-50002000,COGS Quarry Material - Personnel Cost,main
-50002001,COGS Quarry Material - Outside Services,main
-50002002,COGS Quarry Material - Depreciation Amort & Depl,main
-50002003,COGS Quarry Material - Production Overhead,main
-50002004,COGS Quarry Material - General,main
-50003000,Cost of Goods Manufactured,main
-50100000,COSO MH - Personnel Cost,main
-50100001,COSO MH - Outside Services,main
-50100002,COSO MH - Depreciation,main
-50100003,COSO MH - Overhead,main
-50101000,COSO TSEZ - Personnel Cost,main
-50101001,COSO TSEZ - Outside Services,main
-50101002,COSO TSEZ - Depreciation,main
-50101003,COSO TSEZ - Overhead,main
-50101004,COSO TSEZ - Equipment Operating Cost,main
-50102000,COSO Others - Personnel Cost,main
-50102001,COSO Others - Overhead,main
-50200000,COPG - Materials and Supplies,main
-50200001,COPG - Personnel Cost,main
-50200002,COPG - Outside Services,main
-50200003,COPG - Depreciation and Amortization,main
-50200004,COPG - Overhead,main
-50300000,Loss (Gain) from Production Variances,main
-50300001,Loss (Gain) Variance - Equipment,main
-50300002,Loss (Gain) Variance - Man Hour,main
-50300003,Loss (Gain) Variance - Fuel,main
-50300004,Loss (Gain) Variance - External Service,main
-50300005,Loss (Gain) Variance - Maintenance Cost,main
-50300006,Loss (Gain) Variance - Others,main
-50300007,Loss (Gain) Variance - Production Overhead,main
-50300008,Loss (Gain) Variance - Mine Support,main
-50300009,Loss (Gain) from Revaluation - Inventory,main
-50300010,Loss (Gain) from Revaluation - COGS,main
-50300011,Loss (Gain) Variance - Specialized Equipment,main
-60000000,S&L - Personnel Cost,mh
-60000001,S&L - Contract Fees,main
-60000002,S&L - Depreciation and Amortization,main
-60000003,S&L - Other Services and Fees,main
-60000004,S&L - Materials and Supplies,main
-60000005,S&L - General,main
-60100000,Excise Taxes,main
-60100001,Royalty - Government,main
-60100002,Royalty - Claimowner,main
-60100003,Royalty - IP and Others,main
-60200000,Commission Expenses,main
-60200001,Marketing Expenses,main
-60300000,Payroll - Salaries (Regular),mh
-60300001,Payroll - Salaries (Seasonal),mh
-60300002,Payroll - Salaries (Fixed Term/Project),mh
-60300003,Payroll - Salaries (Others),mh
-60300004,Payroll - Overtime (Regular),mh
-60300005,Payroll - Overtime (Seasonal),mh
-60300006,Payroll - Overtime (Fixed Term/Project),mh
-60300007,Payroll - Overtime (Others),mh
-60300008,Payroll - 13th Month and Other Bonuses (Regular),mh
-60300009,Payroll - 13th Month and Other Bonuses (Seasonal),mh
-60300010,Payroll - 13th Month and Other Bonuses (FT/Others),mh
-60300011,Payroll - Leave Commutation (Regular),mh
-60300012,Payroll - Leave Commutation (Seasonal),mh
-60300013,Payroll - Leave Commutation (FT/Others),mh
-60300014,Payroll - De Minimis Benefits (Regular),mh
-60300015,Payroll - De Minimis Benefits (Seasonal),mh
-60300016,Payroll - De Minimis Benefits (FT/Others),mh
-60300017,SSS Contributions (Regular),mh
-60300018,SSS Contributions (Seasonal),mh
-60300019,SSS Contributions (FT/Others),mh
-60300020,PHIC Contributions (Regular),mh
-60300021,PHIC Contributions (Seasonal),mh
-60300022,PHIC Contributions (FT/Others),mh
-60300023,HDMF Contributions (Regular),mh
-60300024,HDMF Contributions (Seasonal),mh
-60300025,HDMF Contributions (FT/Others),mh
-60300026,ESOP Expense,mh
-60300027,Retirement Benefits,mh
-60300028,Employee Benefits,mh
-60300029,Other Employee Allowances,mh
-60300030,Employee Uniform (Regular),mh
-60300031,Employee Uniform (Seasonal),mh
-60300032,Employee Uniform (FT/Others),mh
-60300033,Hospital and Medical Expenses - Employees,mh
-60300034,Food Allowance,mh
-60300035,Sports and Recreation,mh
-60300036,Awards and Prizes,mh
-60300100,Payroll - PM Adjustment,oh
-60300200,Payroll - PS Adjustment,oh
-60300300,Payroll - Other Adjustment,oh
-60300400,BLOCKED Payroll - Other Adjustment,mh
-60400000,Training and Education - Employees,main
-60400001,Training and Education - Others,mh
-60400100,Trainings and Seminar - Other Adjustment,mh
-60400200,BLOCKED Trainings and Seminar - Other Adjustment,mh
-60500000,Repairs and Maintenance - Labor,oh
-60500001,Repairs and Maintenance - Parts,oh
-60500100,Outside Services - PM Adjustment,oh
-60500200,Outside Services - PS Adjustment,oh
-60500300,Repairs and Maintenance - Other Adjustment,oh
-60600000,Rent Expense - Building/Office space,main
-60600001,Rent Expense - Equipment,main
-60600002,Rent Expense - Others,main
-60600100,Rent Expense - Other Adjustment,main
-60700000,Electricity and Other Utilities,main
-60700001,Water,main
-60700002,Telephone and Other Communication,main
-60700003,Fax and Internet,main
-60700004,Postage and Shipping,main
-60700005,Freight and Handling,main
-60700100,Communication and Other Utilities - Other Adj,main
-60700200,BLOCKED Communication and Other Utilities - Other Adj,main
-60800000,Dues and Subscription,main
-60800100,Dues and Subscription - Other Adjustment,main
-60800200,BLOCKED Dues and Subscription - Other Adjustment,main
-60900000,Life and Medical Insurance - Employees,mh
-60900001,Insurance - Others,mh
-60900100,Insurance -  Other Adjustment,mh
-60900200,BLOCKED Insurance -  Other Adjustment,mh
-61000000,Depreciation Expense - Land Improvements,main
-61001000,Depletion Expense - Mine and Mining Property,main
-61001001,Depletion Expense - Asset Retirement Obligation,main
-61001002,Amortization Expense - Development Costs,main
-61002000,Dep Exp - Buildings (ROU),main
-61002001,Dep Exp - Land Improvements (ROU),main
-61003000,Dep Exp - Buildings Structures and Improv,main
-61003001,Dep Exp - Transmission Lines and Substation,main
-61003002,Dep Exp - Leasehold Improvement,main
-61004000,Dep Exp - Machinery & Equipment,oh
-61004001,Dep Exp - Engine Generator Sets,main
-61004002,Dep Exp - Transportation Equipment,oh
-61004003,Dep Exp - Office Equipment,main
-61004004,Dep Exp - Furniture and Fixtures,main
-61004005,Dep Exp - Computer Hardware and Eqpmt,main
-61005000,Dep Exp - Low Value Assets,main
-61006000,Amortization Expense - Computer Software,main
-61006100,Dep Exp - Investment Properties,main
-61009000,Depreciation and Amortization - Other Adjustment,main
-61009100,BLOCKED Depreciation and Amortization - Other Adjustment,main
-61100000,Contract Fee - Agency Services,main
-61101000,Contract Fee - Mining,main
-61101001,Contract Fee - Cover/Uncover,main
-61101002,Contract Fee - Stevedoring,main
-61101003,Contract Fee - LCT,main
-61101004,Contract Fee - Wharfage,main
-61101005,Contract Fee - Maintenance,main
-61101006,Contract Fee - Others,main
-61101100,Contract Fee - Agency Services - PM Adjustment,main
-61101110,Contract Fee - Agency Services - PS Adjustment,main
-61101120,Outside Services - Other Adjustment,oh
-61102000,Draft Survey Fee,main
-61102001,PPA Usage Fee,main
-61102002,Umpiring Fees,main
-61102003,Brokerage Fees,main
-61102004,Security Services,main
-61102005,SCAA Allowances,main
-61102006,Software Support & Maintenance,main
-61102007,Other Services - Metering Charges,main
-61102008,Other Services - General,main
-61102009,Other Services - Shipment,main
-61102100,BLOCKED Outside Services - Other Adjustment,main
-61200000,Professional Fees,main
-61200001,Consultancy Fees,main
-61200002,Per Diem and Honorarium Fees,main
-61200003,Management fee,main
-61200100,Professional and  Consultancy Fees - Other Adj,main
-61200200,BLOCKED Professional and  Consultancy Fees - Other Adj,main
-61300000,Fuel - Gasoline,oh
-61300001,Fuel - Diesel Oil,oh
-61300002,Fuel - Bunker Oil,oh
-61300003,Fuel - Contractors,main
-61300004,Oil and Lubricants,oh
-61300005,Tires,oh
-61300006,Tires Accessories,oh
-61300007,Conveyor Supplies,main
-61300008,Spare Parts,oh
-61300009,Construction Hardware and Electrical Supplies,oh
-61300010,Lumber,main
-61300011,Steel Balls/Rods,main
-61300012,Household Supplies,main
-61300013,Laboratory Supplies,main
-61300014,Chemicals,main
-61300015,Medicines and Medical Supplies,main
-61300016,Safety Equipment and Supplies,mh
-61300017,Stationeries and Office Supplies,main
-61300018,Other General Materials and Supplies,main
-61300019,Computer Supplies and Other Electronics,main
-61300020,Tools Instruments and Machine,main
-61300021,Food and Food Supplies,mh
-61300100,Spare Parts - PM Adjustment,oh
-61300110,Tires - PM Adjustment,oh
-61300120,Oil & Lubricants - PM Adjustment,oh
-61300130,Others - PM Adjustment,oh
-61300200,Spare Parts - PS Adjustment,oh
-61300210,Tires - PS Adjustment,oh
-61300220,Oil & Lubricants - PS Adjustment,oh
-61300230,Others - PS Adjustment,oh
-61300300,Materials and Supplies - Other Adjustment,oh
-61300400,BLOCKED Materials and Supplies - Other Adjustment,oh
-61400000,Taxes and Licenses,main
-61400001,FBT Expense,main
-61400100,Taxes and Licenses - Other Adjustment,main
-61400200,BLOCKED Taxes and Licenses - Other Adjustment,main
-61500000,Transportation and Travel Expenses,main
-61500100,Transportation and Travel - Other Adjustment,main
-61500200,BLOCKED Transportation and Travel - Other Adjustment,main
-61600000,Representation Entertainment and Recreation,main
-61600100,Representation - Other Adjustment,main
-61600200,BLOCKED Representation - Other Adjustment,main
-61700000,Donations,main
-61700100,Donations - Other Adjustment,main
-61700200,BLOCKED Donations - Other Adjustment,main
-61800000,Advertising Publicity and Promotion,main
-61800001,Livelihood and Community Assistance,main
-61800100,Publicity and Promotion - Other Adjustment,main
-61800200,BLOCKED Publicity and Promotion - Other Adjustment,main
-61900000,Medical Assistance - Others,mh
-61900001,Legal Documentation,main
-61900002,Government and Regulator Fees,main
-61900003,Other Miscellaneous Expense,main
-61900004,Bank Charges,main
-61900100,Expense Clearing Account,main
-61900200,Other Operating  Expenses - Other Adjustment,main
-61900300,BLOCKED Other Operating  Expenses - Other Adjustment,main
-70000000,Interest Income - Cash and Cash Equivalents,main
-70000001,Interest Income - Short-term Investment,main
-70000002,Interest Income - FVOCI,main
-70000003,Interest Income - Amortized Cost,main
-70000004,Interest Income - FVTPL,main
-70000005,Interest Income - Loans,main
-70000006,Interest Income - MRF/FMRDP,main
-70000007,Interest Income - SDMP,main
-70000008,Interest Income - Pension,main
-70000009,Interest Income - Others,main
-70000010,Interest Income - Subsidiaries,main
-70001000,Guarantee fee income,main
-71000000,Interest Expense - LT Debts,main
-71000001,Interest Expense - ST Debts,main
-71000002,Interest Expense - Subsidiaries,main
-71000003,Interest Expense - Pension,main
-71000004,Accretion of Interest - ARO,main
-71000005,Accretion of Interest - Lease,main
-71001000,Guarantee Service Fee,main
-72000000,Dividend Income - Affiliates,main
-72000001,Dividend Income - Others,main
-72001000,Realized Loss from Exchange Rate Differences,main
-72001001,Realized Gain from Exchange Rate Differences,main
-72002000,Unrealized Forex Loss (Gain) - Cash & Cash Equiv,main
-72002001,Unrealized Forex Loss (Gain) - Receivables,main
-72002002,Unrealized Forex Loss (Gain) - Payables,main
-72002003,Unrealized Forex Loss (Gain) - ST/LT Debts,main
-72002004,Unrealized Forex Loss (Gain) - FVOCI,main
-72002005,Unrealized Forex Loss (Gain) - FVTPL,main
-72002006,Unrealized Forex Loss (Gain) - STI > 90 Days,main
-72003000,Loss on Changes in FV of FA at FVTPL,main
-72003001,Gain on Changes in FV of FA at FVTPL,main
-72004000,Loss on Sale/Redemption of Financial Asset,main
-72004001,Gain on Sale/Redemption of Financial Asset,main
-72004002,Loss from Asset Transactions,main
-72004003,Gain from Asset Transactions,main
-72004004,Clearing Account Asset Disposals,main
-72004005,Gain from Asset Sale Clearing,main
-72005000,Provision for Expected Credit Losses,main
-72005001,Prov for Impairment Losses - Ore and Limestone,main
-72005002,Prov for Impairment Losses - Mats and Supplies,main
-72005003,Prov for Impairment Losses - Others,main
-72005004,Loss (Gain) on Scrapping - Materials and Supplies,main
-72005005,Loss (Gain) from Valuation of FG Inventory,main
-72005006,Loss (Gain) from Valuation of  MS Inventory,main
-72005007,Loss (Gain) Invty Count Variance - FG,main
-72005008,Loss (Gain) Invty Count Variance - MS,main
-72006000,Reversal of Allowance for Impairment Losses,main
-72007000,Loss on Write-off,main
-72008000,Despatch,main
-72008001,Demurrage,main
-72008002,Trust Fee - Managed Funds,main
-72008003,Rent Income,main
-72008004,FOL Issuance,main
-72008005,Cash Discount - Vendor,main
-72008006,Loss (Gain) Price Differences Invoice Receipt (MM),main
-72008007,Other Charges,main
-72008100,Other Miscellaneous Income,main
-73000000,Provision for Current Income Tax,main
-73000001,Provision for Deferred Income Tax,main
-80000000,Fixed Asset Migration Account,main
-80000001,Accumulated Depreciation Migration Account,main
-80010000,AR Open Items Migration Account,main
-80020000,AP Open Items Migration Account,main
-80030000,Inventory - Beg Bal MS - Gasoline Balances,main
-80030001,Inventory - Beg Bal MS - Diesel Balances,main
-80030002,Inventory - Beg Bal MS - Bunker Oil Balances,main
-80030003,Inventory - Beg Bal MS - Oil & Lubricants Balances,main
-80030004,Inventory - Beg Bal MS - Spare Parts Balances,main
-80030005,Inventory - Beg Bal MS - Tires Balances,main
-80030006,Inventory - Beg Bal MS - Tire Accessories Balances,main
-80030007,Inventory - Beg Bal MS - Conveyor Supp Balances,main
-80030008,Inventory - Beg Bal MS - Tools and Other Supplies,main
-80030009,Inventory - Beg Bal FG - Saprolite Balances,main
-80030010,Inventory - Beg Bal FG - Limonite Balances,main
-80030011,Inventory - Beg Bal FG - Limestone Balances,main
-80030012,Inventory - Beg Bal FG - Quarry Materials Balances,main
-80040000,General Ledger Migration Account,main
-80050000,GL - CO Migration Account,main
-92110000,Settlement_PM Preventive_Personnel,oh
-92110100,Settlement_PM Preventive_Spare Parts,oh
-92110200,Settlement_PM Preventive_Tires,oh
-92110300,Settlement_PM Preventive_Outside Srv,oh
-92110400,Settlement_PM Preventive_Others,oh
-92110500,Settlement_PM Preventive_Oil&Lubricants,oh
-92110600,Settlement_PM Preventive_External Labor,oh
-92120000,Settlement_PM Corrective_Personnel,oh
-92120100,Settlement_PM Corrective_Spare Parts,oh
-92120200,Settlement_PM Corrective_Tires,oh
-92120300,Settlement_PM Corrective_Outside Srv,oh
-92120400,Settlement_PM Corrective_Others,oh
-92120500,Settlement_PM Corrective_Oil&Lubricants,oh
-92120600,Settlement_PM Corrective_External Labor,oh
-92130000,Settlement_PM Emergency_Personnel,oh
-92130100,Settlement_PM Emergency_Spare Parts,oh
-92130200,Settlement_PM Emergency_Tires,oh
-92130300,Settlement_PM Emergency_Outside Srv,oh
-92130400,Settlement_PM Emergency_Others,oh
-92130500,Settlement_PM Emergency_Oil&Lubricants,oh
-92130600,Settlement_PM Emergency_External Labor,oh
-92140000,Settlement_Project System_Personnel,oh
-92140100,Settlement_Project System_Spare Parts,oh
-92140200,Settlement_Project System_Tires,oh
-92140300,Settlement_Project System_Outside Srv,oh
-92140400,Settlement_Project System_Others,oh
-92140500,Settlement_Project System_Oil&Lubricants,oh
-92140600,Settlement_Project System_External Labor,oh
-94110000,Overhead_Plant Maintenance_Personnel,oh
-94110100,Overhead_Plant Maintenance_Spare Parts,oh
-94110200,Overhead_Plant Maintenance_Tires,oh
-94110300,Overhead_Plant Maintenance_Outside Srv,oh
-94110400,Overhead_Plant Maintenance_Others,oh
-94110500,Overhead_Plant Maintenance_Oil&Lubricant,oh
-94110600,Overhead_Plant Maintenance_ExternalLabor,oh
-94111000,Overhead _Production Overhead_Personnel,oh
-94111100,Overhead _Production Overhead_Overhead,oh
-94111200,Overhead _Production Overhead_Depre&Amor,oh
-94111300,Overhead _Production Overhead_OustideSrv,oh
-94111400,Overhead _Production Overhead_Depletion,oh
-94112000,Overhead_Mine Support_Personnel,oh
-94112100,Overhead_Mine Support_Overhead,oh
-94112200,Overhead_Mine Support_Depre&Amor,oh
-94112300,Overhead_Mine Support_Outside Srv,oh
-94113000,Other Direct Costs,oh
-94114000,External Services_Contract Fees,oh
-94115000,External Services_Rental,oh
-94116000,External Services_Others,oh
-94117000,Overhead_OtherDirectCost_SE_Personnel,oh
-94117100,Overhead_OtherDirectCost_SE_Others,oh
-94117200,Overhead_OtherDirectCost_SE_Depre&Amor,oh
-94117300,Overhead_OtherDirectCost_SE_OutsideSrv,oh
-94210000,Assessment_TSD Electrical_Personnel,oh
-94210100,Assessment_TSD Electrical_Outside Srv,oh
-94210200,Assessment_TSD Electrical_FOL,oh
-94210300,Assessment_TSD Electrical_Materials,oh
-94210400,Assessment_TSD Electrical_Depre&Amor,oh
-94210500,Assessment_TSD Electrical_Others,oh
-94211000,Assessment_Assay_Personnel,oh
-94211100,Assessment_Assay_Outside Srv,oh
-94211200,Assessment_Assay_FOL,oh
-94211300,Assessment_Assay_Materials,oh
-94211400,Assessment_Assay_Depre&Amor,oh
-94211500,Assessment_Assay_Others,oh
-94212000,Assessment_TSD General_Personnel,oh
-94212100,Assessment_TSD General_Outside Srv,oh
-94212200,Assessment_TSD General_FOL,oh
-94212300,Assessment_TSD General_Materials,oh
-94212400,Assessment_TSD General_Depre&Amor,oh
-94212500,Assessment_TSD General_Others,oh
-94213000,Assessment_MineSup_Personnel,oh
-94213100,Assessment_MineSup_Outside Srv,oh
-94213200,Assessment_MineSup_FOL,oh
-94213300,Assessment_MineSup_Materials,oh
-94213400,Assessment_MineSup_Depre&Amor,oh
-94213500,Assessment_MineSup_Others,oh
-94214000,Assessment_Production Ovrhead_Personnel,oh
-94214100,Assessment_Production Ovrhead_Overhead,oh
-94214200,Assessment_Production Ovrhead_Depre&Amor,oh
-94214300,Assessment_Production Ovrhead_OutsideSrv,oh
-94214400,Assessment_Production Ovrhead_Depletion,oh
-94215000,Assessment_Mine Support_Personnel,oh
-94215100,Assessment_Mine Support_Overhead,oh
-94215200,Assessment_Mine Support_Depre&Amor,oh
-94215300,Assessment_Mine Support_OutsideSrv,oh
-94216000,Assessment_Profitability Analysis 1,oh
-94217000,Assessment_Profitability Analysis 2,oh
-94218000,Assessment_Plant Maintenance_Personnel,oh
-94218100,Assessment_Plant Maintenance_Spare Parts,oh
-94218200,Assessment_Plant Maintenance_Tires,oh
-94218300,Assessment_Plant Maintenance_Outside Srv,oh
-94218400,Assessment_Plant Maintenance_Others,oh
-94218500,Assessment_Plant Maintenance_Oil&Lubes,oh
-94218600,Assessment_Plant Maintenance_ExternalLab,oh
-94219000,Assessment_Plant Maint Bal_Personnel,oh
-94219100,Assessment_Plant Maint Bal_Spare Parts,oh
-94219200,Assessment_Plant Maint Bal_Tires,oh
-94219300,Assessment_Plant Maint Bal_Outside Srv,oh
-94219400,Assessment_Plant Maint Bal_Others,oh
-94219500,Assessment_Plant Maint Bal_Oil&Lubes,oh
-94219600,Assessment_Plant Maint Bal_ExternalLabor,oh
-94220000,Assessment_Other Direct Costs,oh
-94221000,Assessment_OtherDirectCost_SE_Personnel,oh
-94221100,Assessment_OtherDirectCost_SE_Others,oh
-94221200,Assessment_OtherDirectCost_SE_Depre&Amor,oh
-94221300,Assessment_OtherDirectCost_SE_OutsideSrv,oh
-94223000,Assessment_Quarry_Personnel,oh
-94223100,Assessment_Quarry_Overhead,oh
-94223200,Assessment_Quarry_Depre&Amor,oh
-94223300,Assessment_Quarry_OutsideSrv,oh
-94224000,Assessment_Materials Handling_Personnel,oh
-94224100,Assessment_Materials Handling_Overhead,oh
-94224200,Assessment_Materials Handling_Depre&Amor,oh
-94224300,Assessment_Materials Handling_OutsideSrv,oh
-94225000,Assessment_LST_Prod Ovrhead_Personnel,oh
-94225100,Assessment_LST_Prod Ovrhead_Overhead,oh
-94225200,Assessment_LST_Prod Ovrhead_Depre&Amor,oh
-94225300,Assessment_LST_Prod Ovrhead_OutsideSrv,oh
-94225400,Assessment_LST_Prod Ovrhead_Depletion,oh
-94226000,Assessment_LST_Mine Support_Personnel,oh
-94226100,Assessment_LST_Mine Support_Overhead,oh
-94226200,Assessment_LST_Mine Support_Depre&Amor,oh
-94226300,Assessment_LST_Mine Support_OutsideSrv,oh
-94310000,Production_Equipment Hours,oh
-94311000,Production_Conveyor Equipment Hours,oh
-94312000,Production_LCP_Equipment Hours,oh
-94320000,Production_Manhour -Regular,oh
-94330000,Production_Manhour -Seasonal,oh
-94331000,Production_Manhour -Fixed Term/Project,oh
-94340000,Production_Fuel Consumption_Inhouse,oh
-94341000,Production_Fuel Consumption_Conveyor,oh
-94350000,Production_Fuel Consumption_Contract Min,oh
-94360000,Production_Fuel Consumption_Rental,oh
-94370000,Plant Maintenance_Manhour -Regular,oh
-94380000,Plant Maintenance_Manhour -Seasonal,oh
-94381000,Plant Maintenance_Manhour -Fixed Term,oh
-94390000,Production_Production Volume,oh
-99999996,TMC Tools - Liters Gasoline,oh
-99999997,TMC Tools - Equipment Operating Hours,oh
-99999998,TMC Tools - Liters Diesel,oh
-99999999,TMC Tools - Man-hours,mh
+code,description,approach,class
+10000000,Petty Cash Fund - HO Admin,main,Non-minesite
+10000001,Petty Cash Fund - Site,main,Non-minesite
+10000002,Petty Cash Fund - HO Purchasing,main,Non-minesite
+10000003,Petty Cash Fund - HO Legal,main,Non-minesite
+10000004,Petty Cash Fund - HO Gov Rel,main,Non-minesite
+10000005,Petty Cash Fund - HO Corp Comm,main,Non-minesite
+10000006,Emergency Fund Site,main,Non-minesite
+10100000,SBC PHP - Main,main,Non-minesite
+10100001,SBC PHP - Receipts,main,Non-minesite
+10100002,SBC PHP - Disbursements,main,Non-minesite
+10100003,SBC PHP - Others,main,Non-minesite
+10100010,SBC USD - Main,main,Non-minesite
+10100011,SBC USD - Receipts,main,Non-minesite
+10100012,SBC USD - Disbursements,main,Non-minesite
+10100013,SBC USD - Others,main,Non-minesite
+10100014,SBC USD - Foreign Currency Adjustment,main,Non-minesite
+10101000,BDO PHP - Main,main,Non-minesite
+10101001,BDO PHP - Receipts,main,Non-minesite
+10101002,BDO PHP - Disbursements,main,Non-minesite
+10101003,BDO PHP - Others,main,Non-minesite
+10101010,BDO USD - Main,main,Non-minesite
+10101011,BDO USD - Receipts,main,Non-minesite
+10101012,BDO USD - Disbursements,main,Non-minesite
+10101013,BDO USD - Others,main,Non-minesite
+10101014,BDO USD - Foreign Currency Adjustment,main,Non-minesite
+10102000,BPI PHP - Main,main,Non-minesite
+10102001,BPI PHP - Receipts,main,Non-minesite
+10102002,BPI PHP - Disbursements,main,Non-minesite
+10102003,BPI PHP - Others,main,Non-minesite
+10102010,BPI USD - Main,main,Non-minesite
+10102011,BPI USD - Receipts,main,Non-minesite
+10102012,BPI USD - Disbursements,main,Non-minesite
+10102013,BPI USD - Others,main,Non-minesite
+10102014,BPI USD - Foreign Currency Adjustment,main,Non-minesite
+10103000,BPI Family PHP - Main,main,Non-minesite
+10103001,BPI Family PHP - Receipts,main,Non-minesite
+10103002,BPI Family PHP - Disbursements,main,Non-minesite
+10103003,BPI Family PHP - Others,main,Non-minesite
+10103010,BPI Family USD - Main,main,Non-minesite
+10103011,BPI Family USD - Receipts,main,Non-minesite
+10103012,BPI Family USD - Disbursements,main,Non-minesite
+10103013,BPI Family USD - Others,main,Non-minesite
+10103014,BPI Family USD - Foreign Currency Adjustment,main,Non-minesite
+10104000,Maybank PHP - Main,main,Non-minesite
+10104001,Maybank PHP - Receipts,main,Non-minesite
+10104002,Maybank PHP - Disbursements,main,Non-minesite
+10104003,Maybank PHP - Others,main,Non-minesite
+10104010,Maybank USD - Main,main,Non-minesite
+10104011,Maybank USD - Receipts,main,Non-minesite
+10104012,Maybank USD - Disbursements,main,Non-minesite
+10104013,Maybank USD - Others,main,Non-minesite
+10104014,Maybank USD - Foreign Currency Adjustment,main,Non-minesite
+10105000,RCBC PHP - Main,main,Non-minesite
+10105001,RCBC PHP - Receipts,main,Non-minesite
+10105002,RCBC PHP - Disbursements,main,Non-minesite
+10105003,RCBC PHP - Others,main,Non-minesite
+10105010,RCBC USD - Main,main,Non-minesite
+10105011,RCBC USD - Receipts,main,Non-minesite
+10105012,RCBC USD - Disbursements,main,Non-minesite
+10105013,RCBC USD - Others,main,Non-minesite
+10105014,RCBC USD - Foreign Currency Adjustment,main,Non-minesite
+10106000,Union Bank PHP - Main,main,Non-minesite
+10106001,Union Bank PHP - Receipts,main,Non-minesite
+10106002,Union Bank PHP - Disbursements,main,Non-minesite
+10106003,Union Bank PHP - Others,main,Non-minesite
+10106010,Union Bank USD - Main,main,Non-minesite
+10106011,Union Bank USD - Receipts,main,Non-minesite
+10106012,Union Bank USD - Disbursements,main,Non-minesite
+10106013,Union Bank USD - Others,main,Non-minesite
+10106014,Union Bank USD - Foreign Currency Adjustment,main,Non-minesite
+10107000,MBTC PHP - Main,main,Non-minesite
+10107001,MBTC PHP - Receipts,main,Non-minesite
+10107002,MBTC PHP - Disbursements,main,Non-minesite
+10107003,MBTC PHP - Others,main,Non-minesite
+10108000,DBP PHP - Main,main,Non-minesite
+10108001,DBP PHP - Receipts,main,Non-minesite
+10108002,DBP PHP - Disbursements,main,Non-minesite
+10108003,DBP PHP - Others,main,Non-minesite
+10109000,UCPB PHP - Main,main,Non-minesite
+10109001,UCPB PHP - Receipts,main,Non-minesite
+10109002,UCPB PHP - Disbursements,main,Non-minesite
+10109003,UCPB PHP - Others,main,Non-minesite
+10110000,Cantilan PHP - Main,main,Non-minesite
+10110001,Cantilan PHP - Receipts,main,Non-minesite
+10110002,Cantilan PHP - Disbursements,main,Non-minesite
+10110003,Cantilan PHP - Others,main,Non-minesite
+10800000,Cash under Managed Funds PHP,main,Non-minesite
+10801000,Cash under Managed Funds USD,main,Non-minesite
+10900000,Short Term Investments PHP =/< 3 months,main,Non-minesite
+10901000,Short Term Investments USD =/< 3 months,main,Non-minesite
+10910000,Short Term Inv USD =/< 3 months Adjustments,main,Non-minesite
+11000000,Trade Receivables Domestic,main,Non-minesite
+11000001,Trade Receivables Domestic - One Time Accounts,main,Non-minesite
+11000002,Trade Receivables Foreign,main,Non-minesite
+11000003,Trade Receivables Foreign - One Time Accounts,main,Non-minesite
+11099000,Trade Receivables Adjustments,main,Non-minesite
+11100000,Receivables Affiliated Companies,main,Non-minesite
+11100001,Receivables Affiliated Companies - Others,main,Non-minesite
+11150000,Receivables Affiliated Companies Adjustments,main,Non-minesite
+11150001,Interdivision Clearing - PEZA,main,Non-minesite
+11200000,Advances - Employee Loans,main,Non-minesite
+11200001,Advances - Officers and Employees,main,Non-minesite
+11200002,Advances - Subject to Liquidation,main,Non-minesite
+11201000,Interest Receivables - Loans PHP,main,Non-minesite
+11201001,Interest Receivables - Loans USD,main,Non-minesite
+11202000,Despatch Receivable,main,Non-minesite
+11202001,Guarantee Fee Receivable,main,Non-minesite
+11202002,Other Receivables Domestic - One Time Accounts,main,Non-minesite
+11202003,Other Receivables - NT,main,Non-minesite
+11203000,Down Payment Requests - Vendors,main,Non-minesite
+11203001,Down Payment Noted Item - Vendors,main,Non-minesite
+11203002,Input VAT Clearing on Down Payments,main,Non-minesite
+11210000,Allowance for Doubtful Receivables - Trade,main,Non-minesite
+11210001,Allowance for Doubtful Receivables - Nontrade,main,Non-minesite
+11250000,Short-term Loan Receivables,main,Non-minesite
+11250001,Long-term Loan Receivables - Current,main,Non-minesite
+11250100,Dividend Receivables - Affiliates,main,Non-minesite
+11250101,Dividend Receivables - Others,main,Non-minesite
+11250200,Interest Receivables - Others PHP,main,Non-minesite
+11250300,Interest Receivables - Others USD,main,Non-minesite
+11250400,Clearing Interest Receivables,main,Non-minesite
+11250401,Receivable from RTNFI/CBNC,main,Non-minesite
+11250402,Receivable from Claimowners,main,Non-minesite
+11250403,Other Receivables PHP,main,Non-minesite
+11250404,Other Receivables USD,main,Non-minesite
+11250405,Other Employee Receivable,main,Non-minesite
+11251000,Allowance for Expected Credit Losses - Trade,main,Non-minesite
+11251001,Allow for Doubtful Receivables (Valuation) - Trade,main,Non-minesite
+11251100,Allowance for Expected Credit Losses - Nontrade,main,Non-minesite
+11252000,Interest Receivables - USD Adjustments,main,Non-minesite
+11252001,Despatch Receivable Adjustments,main,Non-minesite
+11252002,Other Receivables Adjustments,main,Non-minesite
+12000000,Inventory - Saprolite,main,Non-minesite
+12000001,Inventory - Limonite,main,Non-minesite
+12000002,Inventory - Limestone,main,Non-minesite
+12000003,Inventory - Quarry Material,main,Non-minesite
+12100001,Inventory - Gasoline,main,Non-minesite
+12100002,Inventory - Diesel,main,Non-minesite
+12100003,Inventory - Bunker Oil,main,Non-minesite
+12100004,Inventory - Oil and Lubricants,main,Non-minesite
+12100005,Inventory - Spare Parts,main,Non-minesite
+12100006,Inventory - Tires,main,Non-minesite
+12100007,Inventory - Tire Accessories,main,Non-minesite
+12100008,Inventory - Conveyor Supplies,main,Non-minesite
+12100009,Inventory - Tools and Other Supplies,main,Non-minesite
+12110000,Allow for Impairment Losses - Ore,main,Non-minesite
+12110001,Allow for Impairment Losses - Mats and Supplies,main,Non-minesite
+13000000,Investment - FVTPL (Debt) - Current,main,Non-minesite
+13001001,Investment - FVTPL (Equity) - Current,main,Non-minesite
+13010000,Investment - FVOCI (Debt) - Current,main,Non-minesite
+13020000,Investment - Amortized Cost (Debt) - Current,main,Non-minesite
+14000000,Prepaid Expenses - Insurance,main,Non-minesite
+14000001,Prepaid Expenses - Rent,main,Non-minesite
+14000002,Prepaid Expenses - Royalty (Government),main,Non-minesite
+14000003,Prepaid Expenses - Royalty (Others),main,Non-minesite
+14000004,Prepaid Expenses - Others,main,Non-minesite
+14000005,Creditable Withholding Taxes,main,Non-minesite
+14100000,Advances to Suppliers and Contractors - Current,main,Non-minesite
+14100001,Deposits to Suppliers - Current,main,Non-minesite
+14300000,Advances to Suppliers and Contractors Adjustments,main,Non-minesite
+14301000,Input VAT,main,Non-minesite
+14301001,Deferred Input VAT - Services,main,Non-minesite
+14301002,Deferred Input VAT - Capital Goods,main,Non-minesite
+14302000,Short Term Investments PHP 3-12 months,main,Non-minesite
+14303000,Short Term Investments USD 3-12 months,main,Non-minesite
+14304000,Tax Credit Certificate,main,Non-minesite
+14304001,Other Prepayments and Current Assets,main,Non-minesite
+14310000,Allow for Impairment Losses - OCA,main,Non-minesite
+15000000,Land & Land Improvements,main,Non-minesite
+15001000,Mine and Mining Property,main,Non-minesite
+15001001,Asset Retirement Obligation,main,Non-minesite
+15001002,Development Costs,main,Non-minesite
+15002000,Buildings (ROU),main,Non-minesite
+15002001,Land and Land Improvements (ROU),main,Non-minesite
+15003000,Buildings Structure and Improvements,main,Non-minesite
+15003001,Transmission Lines and Substation,main,Non-minesite
+15003002,Leasehold Improvements,main,Non-minesite
+15004000,Machinery & Equipment,main,Non-minesite
+15004001,Engine Generator Sets,main,Non-minesite
+15004002,Transportation Equipment,main,Non-minesite
+15004003,Office Equipment,main,Non-minesite
+15004004,Furniture and Fixtures,main,Non-minesite
+15004005,Computer Hardware and Equipment,main,Non-minesite
+15005000,Low Value Assets,main,Non-minesite
+15006000,Assets under Construction,main,Non-minesite
+15006100,Fixed Assets in Transit,main,Non-minesite
+15010000,Accum Depreciation - Land Improvements,main,Non-minesite
+15011000,Accum Depletion - Mine and Mining Property,main,Non-minesite
+15011001,Accum Depletion - ARO,main,Non-minesite
+15011002,Accum Amortization - Development Costs,main,Non-minesite
+15012000,Accum Depreciation - Buildings (ROU),main,Non-minesite
+15012001,Accum Depreciation - Land Improvements (ROU),main,Non-minesite
+15013000,Accum Depreciation - Bldgs Structure and Improv,main,Non-minesite
+15013001,Accum Depreciation - Transmission Lines and Subs,main,Non-minesite
+15013002,Accum Depreciation - Leasehold Improvements,main,Non-minesite
+15014000,Accum Depreciation - Machinery & Equipment,main,Non-minesite
+15014001,Accum Depreciation - Engine Generator Sets,main,Non-minesite
+15014002,Accum Depreciation - Transportation Equipment,main,Non-minesite
+15014003,Accum Depreciation - Office Equipment,main,Non-minesite
+15014004,Accum Depreciation - Furniture and Fixtures,main,Non-minesite
+15014005,Accum Depreciation - Computer Hardware and Eqpmt,main,Non-minesite
+15015000,Accum Depreciation - Low Value Assets,main,Non-minesite
+15020000,Technical Clrng Acct Integrated Asset Acquisition,main,Non-minesite
+15020001,Clearing Account for Asset Acquisition,main,Non-minesite
+15110000,Allow for Impairment Losses - PPE,main,Non-minesite
+16000000,Investment in Subsidiaries,main,Non-minesite
+16001000,Investment in Associates,main,Non-minesite
+16010000,Allow for Impairment Losses - Inv in Associate,main,Non-minesite
+16100000,Investment - FVTPL (Equity) - Noncurrent,main,Non-minesite
+16101001,Investment - FVTPL (Debt) - Noncurrent,main,Non-minesite
+16110000,Investment - FVOCI (Debt) - Noncurrent,main,Non-minesite
+16120000,Investment - Amortized Cost (Debt) - Noncurrent,main,Non-minesite
+16200000,Deferred Income Tax Assets,main,Non-minesite
+17000000,Deferred Mine Exploration Costs,main,Non-minesite
+17000001,Deposits for Future Stock Subscription (Dr),main,Non-minesite
+17000002,Investment Properties,main,Non-minesite
+17000003,Advances to Suppliers and Contractors - Noncurrent,main,Non-minesite
+17000004,Pension Asset,main,Non-minesite
+17000005,Deferred Input VAT - Capital Goods - Noncurrent,main,Non-minesite
+17000006,Long-term Loan Receivables,main,Non-minesite
+17000007,Deposits to Suppliers - Noncurrent,main,Non-minesite
+17000008,Restricted Cash - SDMP,main,Non-minesite
+17000009,Restricted Cash - MRF/FMRDP,main,Non-minesite
+17000010,Restricted Cash - Others,main,Non-minesite
+17000011,Computer Software,main,Non-minesite
+17000012,Other Investments - Noncurrent,main,Non-minesite
+17000013,Input VAT Receivable,main,Non-minesite
+17000100,Deferred Input VAT - Capital Asset Adjustment,main,Non-minesite
+17000101,Long-term Loan Receivables Adjustments,main,Non-minesite
+17000102,Deposits to Suppliers Adjustments,main,Non-minesite
+17010000,Accumulated Amortization - Computer Software,main,Non-minesite
+17010100,Accumulated Depreciation - Investment Properties,main,Non-minesite
+17110000,Allow for Impairment Losses - DEC and Others,main,Non-minesite
+17110001,Allow for Impairment Losses - Input VAT,main,Non-minesite
+20000000,Trade Payables Domestic,main,Non-minesite
+20000001,Trade Payables Domestic - One Time Accounts,main,Non-minesite
+20000002,Trade Payables Foreign,main,Non-minesite
+20000003,Trade Payables Foreign - One Time Accounts,main,Non-minesite
+20050000,Trade Payables Adjustments,main,Non-minesite
+20050001,Document Split Clearing Account,main,Non-minesite
+20050002,Document Split Clearing Account CO,main,Non-minesite
+20050003,Goods Received/Invoice Received,main,Non-minesite
+20050004,GR/IR Sett.Transferred (Material Ledger),main,Non-minesite
+20050005,Goods Received/Invoice Received Adjustment,main,Non-minesite
+20050006,Goods Received/Invoice Received Consignt/Pipeline,main,Non-minesite
+20100000,Payables Affiliated Companies,main,Non-minesite
+20100001,Payables Affiliated Companies - Others,main,Non-minesite
+20150000,Payables Affiliated Companies Adjustments,main,Non-minesite
+20150001,Interdivision Clearing - Main,main,Non-minesite
+20200000,Accrued Interest,main,Non-minesite
+20200001,Accrued Others (w/ WT),main,Non-minesite
+20250000,Accrued Net Payroll,main,Non-minesite
+20250001,Accrued 13th Month Pay,main,Non-minesite
+20250002,Accrued Guarantee Fee,main,Non-minesite
+20250003,Accrued Others,main,Non-minesite
+20250004,GR/IR: Goods and Services not yet invoiced,main,Non-minesite
+20250100,Accrued Expenses Adjustments,main,Non-minesite
+20300000,Excise Tax Payable,main,Non-minesite
+20300001,Royalty Payable - Government,main,Non-minesite
+20400000,Withholding Tax on Compensation,main,Non-minesite
+20400001,Expanded Withholding Tax,main,Non-minesite
+20400002,Final Withholding Tax,main,Non-minesite
+20400003,Output VAT,main,Non-minesite
+20400004,Deferred Output VAT,main,Non-minesite
+20400005,FBT Payable,main,Non-minesite
+20400006,DST Payable,main,Non-minesite
+20400007,VAT Payable,main,Non-minesite
+20500000,Interest Payable PHP,main,Non-minesite
+20500001,Interest Payable USD,main,Non-minesite
+20500002,Down Payment Requests - Customers,main,Non-minesite
+20500003,Payables to Employees,main,Non-minesite
+20500004,Down Payment Noted Item - Customers,main,Non-minesite
+20500005,Output VAT Clearing on Down Payments,main,Non-minesite
+20500006,Royalty Payable - Others,main,Non-minesite
+20500007,Retention Fees Payable,main,Non-minesite
+20500008,Other Payables - NT,main,Non-minesite
+20550000,Dividends Payable,main,Non-minesite
+20550001,Contract Liability for Down Payments,main,Non-minesite
+20550002,Other Payables,main,Non-minesite
+20550003,Payroll - SSS Payable,main,Non-minesite
+20550004,Payroll - PHIC Payable,main,Non-minesite
+20550005,Payroll - HDMF Payable,main,Non-minesite
+20550006,Payroll - SSS Loan Payable,main,Non-minesite
+20550007,Payroll - HDMF Loan Payable,main,Non-minesite
+20550008,Deferred Income - Current,main,Non-minesite
+20550009,Customers with a Credit Balance,main,Non-minesite
+20550010,Freight Clearing Account (MM),main,Non-minesite
+20550011,Delivery Costs Provision (MM),main,Non-minesite
+20550012,Delivery Costs Clearing (MM),main,Non-minesite
+20550013,Customs Duty Clearing Account (MM),main,Non-minesite
+20550014,Customs Provision (MM),main,Non-minesite
+20550015,GR/IR: Goods and Services not yet delivered,main,Non-minesite
+20550100,Other Payables Adjustments,main,Non-minesite
+20600000,Short-term Debt,main,Non-minesite
+20600100,Short-Term Debt Adjustments,main,Non-minesite
+20700000,Income Tax Payable,main,Non-minesite
+20800000,Lease Liability (ROU) - Current,main,Non-minesite
+20900000,Long-term Debts - Current,main,Non-minesite
+21000000,Long-term Debts - Noncurrent,main,Non-minesite
+21000100,Long-term Debts Adjustments,main,Non-minesite
+22000000,Deferred Income Tax Liabilities,main,Non-minesite
+22000001,Lease Liability (ROU) - Noncurrent,main,Non-minesite
+22000002,Provision for Mine Rehabilitation and Decommission,main,Non-minesite
+22000003,Pension Liability,main,Non-minesite
+22000004,Deferred Income - Noncurrent,main,Non-minesite
+22000100,Lease Liability (ROU) Adjustments,main,Non-minesite
+22000101,Deferred Income Adjustment,main,Non-minesite
+30000000,Common Stock,main,Non-minesite
+30000001,Preferred Stock,main,Non-minesite
+30000002,Stock Dividend Distributable,main,Non-minesite
+30000003,Deposits for Future Stock Subscription (Cr),main,Non-minesite
+30000004,Additional Paid-in Capital,main,Non-minesite
+30000005,Paid in Capital from Treasury Stock,main,Non-minesite
+31000000,Cost of Share-based Payment Plan,main,Non-minesite
+32000000,Net Valuation Losses (Gains) on Financial Assets,main,Non-minesite
+33000000,Retained Earnings - Unappropriated,main,Non-minesite
+33000001,Retained Earnings - Appropriated,main,Non-minesite
+34000000,Treasury Stock,main,Non-minesite
+40000000,Revenue Foreign - Saprolite,main,Non-minesite
+40000001,Revenue Foreign - Limonite,main,Non-minesite
+40000002,Revenue Domestic - Limonite,main,Non-minesite
+40000003,Revenue Domestic - Limestone,main,Non-minesite
+40000004,Revenue Domestic - Quarry Materials,main,Non-minesite
+40001000,Billed Revenue - Management Services,main,Non-minesite
+40001001,Billed Revenue - Marketing Services,main,Non-minesite
+40001002,Billed Revenue - Materials Handling,main,Non-minesite
+40001003,Billed Revenue - Pier Usage and Others,main,Non-minesite
+40002000,Billed Revenue - Power,main,Non-minesite
+40002001,Billed Revenue - Capital Recovery Fee,main,Non-minesite
+50000000,COGS Ore - Personnel Cost,main,Non-minesite
+50000001,COGS Ore - Outside Services,main,Non-minesite
+50000002,COGS Ore - Depreciation Amortization & Depletion,main,Non-minesite
+50000003,COGS Ore - Production Overhead,main,Non-minesite
+50000004,COGS Ore - General,main,Non-minesite
+50001000,COGS Limestone - Personnel Cost,main,Non-minesite
+50001001,COGS Limestone - Outside Services,main,Non-minesite
+50001002,COGS Limestone - Depreciation Amort & Depletion,main,Non-minesite
+50001003,COGS Limestone - Production Overhead,main,Non-minesite
+50001004,COGS Limestone - General,main,Non-minesite
+50002000,COGS Quarry Material - Personnel Cost,main,Non-minesite
+50002001,COGS Quarry Material - Outside Services,main,Non-minesite
+50002002,COGS Quarry Material - Depreciation Amort & Depl,main,Non-minesite
+50002003,COGS Quarry Material - Production Overhead,main,Non-minesite
+50002004,COGS Quarry Material - General,main,Non-minesite
+50003000,Cost of Goods Manufactured,main,Non-minesite
+50100000,COSO MH - Personnel Cost,main,Non-minesite
+50100001,COSO MH - Outside Services,main,Non-minesite
+50100002,COSO MH - Depreciation,main,Non-minesite
+50100003,COSO MH - Overhead,main,Non-minesite
+50101000,COSO TSEZ - Personnel Cost,main,Non-minesite
+50101001,COSO TSEZ - Outside Services,main,Non-minesite
+50101002,COSO TSEZ - Depreciation,main,Non-minesite
+50101003,COSO TSEZ - Overhead,main,Non-minesite
+50101004,COSO TSEZ - Equipment Operating Cost,main,Non-minesite
+50102000,COSO Others - Personnel Cost,main,Non-minesite
+50102001,COSO Others - Overhead,main,Non-minesite
+50200000,COPG - Materials and Supplies,main,Non-minesite
+50200001,COPG - Personnel Cost,main,Non-minesite
+50200002,COPG - Outside Services,main,Non-minesite
+50200003,COPG - Depreciation and Amortization,main,Non-minesite
+50200004,COPG - Overhead,main,Non-minesite
+50300000,Loss (Gain) from Production Variances,main,Non-minesite
+50300001,Loss (Gain) Variance - Equipment,main,Non-minesite
+50300002,Loss (Gain) Variance - Man Hour,main,Non-minesite
+50300003,Loss (Gain) Variance - Fuel,main,Non-minesite
+50300004,Loss (Gain) Variance - External Service,main,Non-minesite
+50300005,Loss (Gain) Variance - Maintenance Cost,main,Non-minesite
+50300006,Loss (Gain) Variance - Others,main,Non-minesite
+50300007,Loss (Gain) Variance - Production Overhead,main,Non-minesite
+50300008,Loss (Gain) Variance - Mine Support,main,Non-minesite
+50300009,Loss (Gain) from Revaluation - Inventory,main,Non-minesite
+50300010,Loss (Gain) from Revaluation - COGS,main,Non-minesite
+50300011,Loss (Gain) Variance - Specialized Equipment,main,Non-minesite
+60000000,S&L - Personnel Cost,mh,Non-minesite
+60000001,S&L - Contract Fees,main,Non-minesite
+60000002,S&L - Depreciation and Amortization,main,Non-minesite
+60000003,S&L - Other Services and Fees,main,Non-minesite
+60000004,S&L - Materials and Supplies,main,Non-minesite
+60000005,S&L - General,main,Non-minesite
+60100000,Excise Taxes,main,Non-minesite
+60100001,Royalty - Government,main,Non-minesite
+60100002,Royalty - Claimowner,main,Non-minesite
+60100003,Royalty - IP and Others,main,Non-minesite
+60200000,Commission Expenses,main,Non-minesite
+60200001,Marketing Expenses,main,Non-minesite
+60300000,Payroll - Salaries (Regular),mh,Personnel Cost
+60300001,Payroll - Salaries (Seasonal),mh,Personnel Cost
+60300002,Payroll - Salaries (Fixed Term/Project),mh,Personnel Cost
+60300003,Payroll - Salaries (Others),mh,Personnel Cost
+60300004,Payroll - Overtime (Regular),mh,Personnel Cost
+60300005,Payroll - Overtime (Seasonal),mh,Personnel Cost
+60300006,Payroll - Overtime (Fixed Term/Project),mh,Personnel Cost
+60300007,Payroll - Overtime (Others),mh,Personnel Cost
+60300008,Payroll - 13th Month and Other Bonuses (Regular),mh,Personnel Cost
+60300009,Payroll - 13th Month and Other Bonuses (Seasonal),mh,Personnel Cost
+60300010,Payroll - 13th Month and Other Bonuses (FT/Others),mh,Personnel Cost
+60300011,Payroll - Leave Commutation (Regular),mh,Personnel Cost
+60300012,Payroll - Leave Commutation (Seasonal),mh,Personnel Cost
+60300013,Payroll - Leave Commutation (FT/Others),mh,Personnel Cost
+60300014,Payroll - De Minimis Benefits (Regular),mh,Personnel Cost
+60300015,Payroll - De Minimis Benefits (Seasonal),mh,Personnel Cost
+60300016,Payroll - De Minimis Benefits (FT/Others),mh,Personnel Cost
+60300017,SSS Contributions (Regular),mh,Personnel Cost
+60300018,SSS Contributions (Seasonal),mh,Personnel Cost
+60300019,SSS Contributions (FT/Others),mh,Personnel Cost
+60300020,PHIC Contributions (Regular),mh,Personnel Cost
+60300021,PHIC Contributions (Seasonal),mh,Personnel Cost
+60300022,PHIC Contributions (FT/Others),mh,Personnel Cost
+60300023,HDMF Contributions (Regular),mh,Personnel Cost
+60300024,HDMF Contributions (Seasonal),mh,Personnel Cost
+60300025,HDMF Contributions (FT/Others),mh,Personnel Cost
+60300026,ESOP Expense,mh,Personnel Cost
+60300027,Retirement Benefits,mh,Personnel Cost
+60300028,Employee Benefits,mh,Personnel Cost
+60300029,Other Employee Allowances,mh,Personnel Cost
+60300030,Employee Uniform (Regular),mh,Other Operating Expenses
+60300031,Employee Uniform (Seasonal),mh,Other Operating Expenses
+60300032,Employee Uniform (FT/Others),mh,Other Operating Expenses
+60300033,Hospital and Medical Expenses - Employees,mh,Other Operating Expenses
+60300034,Food Allowance,mh,Other Operating Expenses
+60300035,Sports and Recreation,mh,Other Operating Expenses
+60300036,Awards and Prizes,mh,Other Operating Expenses
+60300100,Payroll - PM Adjustment,oh,Personnel Cost
+60300200,Payroll - PS Adjustment,oh,Personnel Cost
+60300300,Payroll - Other Adjustment,oh,Personnel Cost
+60300400,BLOCKED Payroll - Other Adjustment,mh,Personnel Cost
+60400000,Training and Education - Employees,main,Trainings And Seminar
+60400001,Training and Education - Others,mh,Trainings And Seminar
+60400100,Trainings and Seminar - Other Adjustment,mh,Trainings And Seminar
+60400200,BLOCKED Trainings and Seminar - Other Adjustment,mh,Trainings And Seminar
+60500000,Repairs and Maintenance - Labor,oh,Repairs And Maintenance
+60500001,Repairs and Maintenance - Parts,oh,Repairs And Maintenance
+60500100,Outside Services - PM Adjustment,oh,Repairs And Maintenance
+60500200,Outside Services - PS Adjustment,oh,Repairs And Maintenance
+60500300,Repairs and Maintenance - Other Adjustment,oh,Repairs And Maintenance
+60600000,Rent Expense - Building/Office space,main,Rent Expense
+60600001,Rent Expense - Equipment,main,Rent Expense
+60600002,Rent Expense - Others,main,Rent Expense
+60600100,Rent Expense - Other Adjustment,main,Rent Expense
+60700000,Electricity and Other Utilities,main,"Communication, Light And Water (Utilities)"
+60700001,Water,main,"Communication, Light And Water (Utilities)"
+60700002,Telephone and Other Communication,main,"Communication, Light And Water (Utilities)"
+60700003,Fax and Internet,main,"Communication, Light And Water (Utilities)"
+60700004,Postage and Shipping,main,"Communication, Light And Water (Utilities)"
+60700005,Freight and Handling,main,"Communication, Light And Water (Utilities)"
+60700100,Communication and Other Utilities - Other Adj,main,"Communication, Light And Water (Utilities)"
+60700200,BLOCKED Communication and Other Utilities - Other Adj,main,"Communication, Light And Water (Utilities)"
+60800000,Dues and Subscription,main,Dues And Subscription
+60800100,Dues and Subscription - Other Adjustment,main,Dues And Subscription
+60800200,BLOCKED Dues and Subscription - Other Adjustment,main,Dues And Subscription
+60900000,Life and Medical Insurance - Employees,mh,Insurance
+60900001,Insurance - Others,mh,Insurance
+60900100,Insurance -  Other Adjustment,mh,Insurance
+60900200,BLOCKED Insurance -  Other Adjustment,mh,Insurance
+61000000,Depreciation Expense - Land Improvements,main,"Depreciation, Amortization And Depletion"
+61001000,Depletion Expense - Mine and Mining Property,main,"Depreciation, Amortization And Depletion"
+61001001,Depletion Expense - Asset Retirement Obligation,main,"Depreciation, Amortization And Depletion"
+61001002,Amortization Expense - Development Costs,main,"Depreciation, Amortization And Depletion"
+61002000,Dep Exp - Buildings (ROU),main,"Depreciation, Amortization And Depletion"
+61002001,Dep Exp - Land Improvements (ROU),main,"Depreciation, Amortization And Depletion"
+61003000,Dep Exp - Buildings Structures and Improv,main,"Depreciation, Amortization And Depletion"
+61003001,Dep Exp - Transmission Lines and Substation,main,"Depreciation, Amortization And Depletion"
+61003002,Dep Exp - Leasehold Improvement,main,"Depreciation, Amortization And Depletion"
+61004000,Dep Exp - Machinery & Equipment,oh,"Depreciation, Amortization And Depletion"
+61004001,Dep Exp - Engine Generator Sets,main,"Depreciation, Amortization And Depletion"
+61004002,Dep Exp - Transportation Equipment,oh,"Depreciation, Amortization And Depletion"
+61004003,Dep Exp - Office Equipment,main,"Depreciation, Amortization And Depletion"
+61004004,Dep Exp - Furniture and Fixtures,main,"Depreciation, Amortization And Depletion"
+61004005,Dep Exp - Computer Hardware and Eqpmt,main,"Depreciation, Amortization And Depletion"
+61005000,Dep Exp - Low Value Assets,main,"Depreciation, Amortization And Depletion"
+61006000,Amortization Expense - Computer Software,main,"Depreciation, Amortization And Depletion"
+61006100,Dep Exp - Investment Properties,main,"Depreciation, Amortization And Depletion"
+61009000,Depreciation and Amortization - Other Adjustment,main,"Depreciation, Amortization And Depletion"
+61009100,BLOCKED Depreciation and Amortization - Other Adjustment,main,"Depreciation, Amortization And Depletion"
+61100000,Contract Fee - Agency Services,main,Outside Services
+61101000,Contract Fee - Mining,main,Outside Services
+61101001,Contract Fee - Cover/Uncover,main,Outside Services
+61101002,Contract Fee - Stevedoring,main,Outside Services
+61101003,Contract Fee - LCT,main,Outside Services
+61101004,Contract Fee - Wharfage,main,Outside Services
+61101005,Contract Fee - Maintenance,main,Outside Services
+61101006,Contract Fee - Others,main,Outside Services
+61101100,Contract Fee - Agency Services - PM Adjustment,main,Outside Services
+61101110,Contract Fee - Agency Services - PS Adjustment,main,Outside Services
+61101120,Outside Services - Other Adjustment,oh,Outside Services
+61102000,Draft Survey Fee,main,Outside Services
+61102001,PPA Usage Fee,main,Outside Services
+61102002,Umpiring Fees,main,Outside Services
+61102003,Brokerage Fees,main,Outside Services
+61102004,Security Services,main,Outside Services
+61102005,SCAA Allowances,main,Outside Services
+61102006,Software Support & Maintenance,main,Outside Services
+61102007,Other Services - Metering Charges,main,Outside Services
+61102008,Other Services - General,main,Outside Services
+61102009,Other Services - Shipment,main,Outside Services
+61102100,BLOCKED Outside Services - Other Adjustment,main,Outside Services
+61200000,Professional Fees,main,Professional And Consultancy Fees
+61200001,Consultancy Fees,main,Professional And Consultancy Fees
+61200002,Per Diem and Honorarium Fees,main,Professional And Consultancy Fees
+61200003,Management fee,main,Professional And Consultancy Fees
+61200100,Professional and  Consultancy Fees - Other Adj,main,Professional And Consultancy Fees
+61200200,BLOCKED Professional and  Consultancy Fees - Other Adj,main,Professional And Consultancy Fees
+61300000,Fuel - Gasoline,oh,Supplies
+61300001,Fuel - Diesel Oil,oh,Supplies
+61300002,Fuel - Bunker Oil,oh,Supplies
+61300003,Fuel - Contractors,main,Supplies
+61300004,Oil and Lubricants,oh,Supplies
+61300005,Tires,oh,Supplies
+61300006,Tires Accessories,oh,Supplies
+61300007,Conveyor Supplies,main,Supplies
+61300008,Spare Parts,oh,Supplies
+61300009,Construction Hardware and Electrical Supplies,oh,Supplies
+61300010,Lumber,main,Supplies
+61300011,Steel Balls/Rods,main,Supplies
+61300012,Household Supplies,main,Supplies
+61300013,Laboratory Supplies,main,Supplies
+61300014,Chemicals,main,Supplies
+61300015,Medicines and Medical Supplies,main,Supplies
+61300016,Safety Equipment and Supplies,mh,Supplies
+61300017,Stationeries and Office Supplies,main,Supplies
+61300018,Other General Materials and Supplies,main,Supplies
+61300019,Computer Supplies and Other Electronics,main,Supplies
+61300020,Tools Instruments and Machine,main,Supplies
+61300021,Food and Food Supplies,mh,Supplies
+61300100,Spare Parts - PM Adjustment,oh,Supplies
+61300110,Tires - PM Adjustment,oh,Supplies
+61300120,Oil & Lubricants - PM Adjustment,oh,Supplies
+61300130,Others - PM Adjustment,oh,Supplies
+61300200,Spare Parts - PS Adjustment,oh,Supplies
+61300210,Tires - PS Adjustment,oh,Supplies
+61300220,Oil & Lubricants - PS Adjustment,oh,Supplies
+61300230,Others - PS Adjustment,oh,Supplies
+61300300,Materials and Supplies - Other Adjustment,oh,Supplies
+61300400,BLOCKED Materials and Supplies - Other Adjustment,oh,Supplies
+61400000,Taxes and Licenses,main,Taxes And Licenses
+61400001,FBT Expense,main,Taxes And Licenses
+61400100,Taxes and Licenses - Other Adjustment,main,Taxes And Licenses
+61400200,BLOCKED Taxes and Licenses - Other Adjustment,main,Taxes And Licenses
+61500000,Transportation and Travel Expenses,main,Transportation And Travel
+61500100,Transportation and Travel - Other Adjustment,main,Transportation And Travel
+61500200,BLOCKED Transportation and Travel - Other Adjustment,main,Transportation And Travel
+61600000,Representation Entertainment and Recreation,main,Representation
+61600100,Representation - Other Adjustment,main,Representation
+61600200,BLOCKED Representation - Other Adjustment,main,Representation
+61700000,Donations,main,Donations
+61700100,Donations - Other Adjustment,main,Donations
+61700200,BLOCKED Donations - Other Adjustment,main,Donations
+61800000,Advertising Publicity and Promotion,main,Publicity And Promotion
+61800001,Livelihood and Community Assistance,main,Publicity And Promotion
+61800100,Publicity and Promotion - Other Adjustment,main,Publicity And Promotion
+61800200,BLOCKED Publicity and Promotion - Other Adjustment,main,Publicity And Promotion
+61900000,Medical Assistance - Others,mh,Other Operating Expenses
+61900001,Legal Documentation,main,Other Operating Expenses
+61900002,Government and Regulator Fees,main,Other Operating Expenses
+61900003,Other Miscellaneous Expense,main,Other Operating Expenses
+61900004,Bank Charges,main,Other Operating Expenses
+61900100,Expense Clearing Account,main,Other Operating Expenses
+61900200,Other Operating  Expenses - Other Adjustment,main,Other Operating Expenses
+61900300,BLOCKED Other Operating  Expenses - Other Adjustment,main,Other Operating Expenses
+70000000,Interest Income - Cash and Cash Equivalents,main,Non-minesite
+70000001,Interest Income - Short-term Investment,main,Non-minesite
+70000002,Interest Income - FVOCI,main,Non-minesite
+70000003,Interest Income - Amortized Cost,main,Non-minesite
+70000004,Interest Income - FVTPL,main,Non-minesite
+70000005,Interest Income - Loans,main,Non-minesite
+70000006,Interest Income - MRF/FMRDP,main,Non-minesite
+70000007,Interest Income - SDMP,main,Non-minesite
+70000008,Interest Income - Pension,main,Non-minesite
+70000009,Interest Income - Others,main,Non-minesite
+70000010,Interest Income - Subsidiaries,main,Non-minesite
+70001000,Guarantee fee income,main,Non-minesite
+71000000,Interest Expense - LT Debts,main,Non-minesite
+71000001,Interest Expense - ST Debts,main,Non-minesite
+71000002,Interest Expense - Subsidiaries,main,Non-minesite
+71000003,Interest Expense - Pension,main,Non-minesite
+71000004,Accretion of Interest - ARO,main,Non-minesite
+71000005,Accretion of Interest - Lease,main,Non-minesite
+71001000,Guarantee Service Fee,main,Non-minesite
+72000000,Dividend Income - Affiliates,main,Non-minesite
+72000001,Dividend Income - Others,main,Non-minesite
+72001000,Realized Loss from Exchange Rate Differences,main,Non-minesite
+72001001,Realized Gain from Exchange Rate Differences,main,Non-minesite
+72002000,Unrealized Forex Loss (Gain) - Cash & Cash Equiv,main,Non-minesite
+72002001,Unrealized Forex Loss (Gain) - Receivables,main,Non-minesite
+72002002,Unrealized Forex Loss (Gain) - Payables,main,Non-minesite
+72002003,Unrealized Forex Loss (Gain) - ST/LT Debts,main,Non-minesite
+72002004,Unrealized Forex Loss (Gain) - FVOCI,main,Non-minesite
+72002005,Unrealized Forex Loss (Gain) - FVTPL,main,Non-minesite
+72002006,Unrealized Forex Loss (Gain) - STI > 90 Days,main,Non-minesite
+72003000,Loss on Changes in FV of FA at FVTPL,main,Non-minesite
+72003001,Gain on Changes in FV of FA at FVTPL,main,Non-minesite
+72004000,Loss on Sale/Redemption of Financial Asset,main,Non-minesite
+72004001,Gain on Sale/Redemption of Financial Asset,main,Non-minesite
+72004002,Loss from Asset Transactions,main,Non-minesite
+72004003,Gain from Asset Transactions,main,Non-minesite
+72004004,Clearing Account Asset Disposals,main,Non-minesite
+72004005,Gain from Asset Sale Clearing,main,Non-minesite
+72005000,Provision for Expected Credit Losses,main,Non-minesite
+72005001,Prov for Impairment Losses - Ore and Limestone,main,Non-minesite
+72005002,Prov for Impairment Losses - Mats and Supplies,main,Non-minesite
+72005003,Prov for Impairment Losses - Others,main,Non-minesite
+72005004,Loss (Gain) on Scrapping - Materials and Supplies,main,Non-minesite
+72005005,Loss (Gain) from Valuation of FG Inventory,main,Non-minesite
+72005006,Loss (Gain) from Valuation of  MS Inventory,main,Non-minesite
+72005007,Loss (Gain) Invty Count Variance - FG,main,Non-minesite
+72005008,Loss (Gain) Invty Count Variance - MS,main,Non-minesite
+72006000,Reversal of Allowance for Impairment Losses,main,Non-minesite
+72007000,Loss on Write-off,main,Non-minesite
+72008000,Despatch,main,Non-minesite
+72008001,Demurrage,main,Non-minesite
+72008002,Trust Fee - Managed Funds,main,Non-minesite
+72008003,Rent Income,main,Non-minesite
+72008004,FOL Issuance,main,Non-minesite
+72008005,Cash Discount - Vendor,main,Non-minesite
+72008006,Loss (Gain) Price Differences Invoice Receipt (MM),main,Non-minesite
+72008007,Other Charges,main,Non-minesite
+72008100,Other Miscellaneous Income,main,Non-minesite
+73000000,Provision for Current Income Tax,main,Non-minesite
+73000001,Provision for Deferred Income Tax,main,Non-minesite
+80000000,Fixed Asset Migration Account,main,Non-minesite
+80000001,Accumulated Depreciation Migration Account,main,Non-minesite
+80010000,AR Open Items Migration Account,main,Non-minesite
+80020000,AP Open Items Migration Account,main,Non-minesite
+80030000,Inventory - Beg Bal MS - Gasoline Balances,main,Non-minesite
+80030001,Inventory - Beg Bal MS - Diesel Balances,main,Non-minesite
+80030002,Inventory - Beg Bal MS - Bunker Oil Balances,main,Non-minesite
+80030003,Inventory - Beg Bal MS - Oil & Lubricants Balances,main,Non-minesite
+80030004,Inventory - Beg Bal MS - Spare Parts Balances,main,Non-minesite
+80030005,Inventory - Beg Bal MS - Tires Balances,main,Non-minesite
+80030006,Inventory - Beg Bal MS - Tire Accessories Balances,main,Non-minesite
+80030007,Inventory - Beg Bal MS - Conveyor Supp Balances,main,Non-minesite
+80030008,Inventory - Beg Bal MS - Tools and Other Supplies,main,Non-minesite
+80030009,Inventory - Beg Bal FG - Saprolite Balances,main,Non-minesite
+80030010,Inventory - Beg Bal FG - Limonite Balances,main,Non-minesite
+80030011,Inventory - Beg Bal FG - Limestone Balances,main,Non-minesite
+80030012,Inventory - Beg Bal FG - Quarry Materials Balances,main,Non-minesite
+80040000,General Ledger Migration Account,main,Non-minesite
+80050000,GL - CO Migration Account,main,Non-minesite
+92110000,Settlement_PM Preventive_Personnel,oh,Personnel Cost
+92110100,Settlement_PM Preventive_Spare Parts,oh,Spare Parts
+92110200,Settlement_PM Preventive_Tires,oh,Tires
+92110300,Settlement_PM Preventive_Outside Srv,oh,Repairs And Maintenance
+92110400,Settlement_PM Preventive_Others,oh,Overhead
+92110500,Settlement_PM Preventive_Oil&Lubricants,oh,Oil & Lubricants
+92110600,Settlement_PM Preventive_External Labor,oh,Outside Services
+92120000,Settlement_PM Corrective_Personnel,oh,Personnel Cost
+92120100,Settlement_PM Corrective_Spare Parts,oh,Spare Parts
+92120200,Settlement_PM Corrective_Tires,oh,Tires
+92120300,Settlement_PM Corrective_Outside Srv,oh,Repairs And Maintenance
+92120400,Settlement_PM Corrective_Others,oh,Overhead
+92120500,Settlement_PM Corrective_Oil&Lubricants,oh,Oil & Lubricants
+92120600,Settlement_PM Corrective_External Labor,oh,Outside Services
+92130000,Settlement_PM Emergency_Personnel,oh,Personnel Cost
+92130100,Settlement_PM Emergency_Spare Parts,oh,Spare Parts
+92130200,Settlement_PM Emergency_Tires,oh,Tires
+92130300,Settlement_PM Emergency_Outside Srv,oh,Repairs And Maintenance
+92130400,Settlement_PM Emergency_Others,oh,Overhead
+92130500,Settlement_PM Emergency_Oil&Lubricants,oh,Oil & Lubricants
+92130600,Settlement_PM Emergency_External Labor,oh,Outside Services
+92140000,Settlement_Project System_Personnel,oh,Personnel Cost
+92140100,Settlement_Project System_Spare Parts,oh,Spare Parts
+92140200,Settlement_Project System_Tires,oh,Tires
+92140300,Settlement_Project System_Outside Srv,oh,Repairs And Maintenance
+92140400,Settlement_Project System_Others,oh,Overhead
+92140500,Settlement_Project System_Oil&Lubricants,oh,Oil & Lubricants
+92140600,Settlement_Project System_External Labor,oh,Outside Services
+94110000,Overhead_Plant Maintenance_Personnel,oh,Non-minesite
+94110100,Overhead_Plant Maintenance_Spare Parts,oh,Non-minesite
+94110200,Overhead_Plant Maintenance_Tires,oh,Non-minesite
+94110300,Overhead_Plant Maintenance_Outside Srv,oh,Non-minesite
+94110400,Overhead_Plant Maintenance_Others,oh,Non-minesite
+94110500,Overhead_Plant Maintenance_Oil&Lubricant,oh,Non-minesite
+94110600,Overhead_Plant Maintenance_ExternalLabor,oh,Non-minesite
+94111000,Overhead _Production Overhead_Personnel,oh,Non-minesite
+94111100,Overhead _Production Overhead_Overhead,oh,Non-minesite
+94111200,Overhead _Production Overhead_Depre&Amor,oh,Non-minesite
+94111300,Overhead _Production Overhead_OustideSrv,oh,Non-minesite
+94111400,Overhead _Production Overhead_Depletion,oh,Non-minesite
+94112000,Overhead_Mine Support_Personnel,oh,Non-minesite
+94112100,Overhead_Mine Support_Overhead,oh,Non-minesite
+94112200,Overhead_Mine Support_Depre&Amor,oh,Non-minesite
+94112300,Overhead_Mine Support_Outside Srv,oh,Non-minesite
+94113000,Other Direct Costs,oh,Non-minesite
+94114000,External Services_Contract Fees,oh,Non-minesite
+94115000,External Services_Rental,oh,Non-minesite
+94116000,External Services_Others,oh,Non-minesite
+94117000,Overhead_OtherDirectCost_SE_Personnel,oh,Non-minesite
+94117100,Overhead_OtherDirectCost_SE_Others,oh,Non-minesite
+94117200,Overhead_OtherDirectCost_SE_Depre&Amor,oh,Non-minesite
+94117300,Overhead_OtherDirectCost_SE_OutsideSrv,oh,Non-minesite
+94210000,Assessment_TSD Electrical_Personnel,oh,Non-minesite
+94210100,Assessment_TSD Electrical_Outside Srv,oh,Non-minesite
+94210200,Assessment_TSD Electrical_FOL,oh,Non-minesite
+94210300,Assessment_TSD Electrical_Materials,oh,Non-minesite
+94210400,Assessment_TSD Electrical_Depre&Amor,oh,Non-minesite
+94210500,Assessment_TSD Electrical_Others,oh,Non-minesite
+94211000,Assessment_Assay_Personnel,oh,Non-minesite
+94211100,Assessment_Assay_Outside Srv,oh,Non-minesite
+94211200,Assessment_Assay_FOL,oh,Non-minesite
+94211300,Assessment_Assay_Materials,oh,Non-minesite
+94211400,Assessment_Assay_Depre&Amor,oh,Non-minesite
+94211500,Assessment_Assay_Others,oh,Non-minesite
+94212000,Assessment_TSD General_Personnel,oh,Non-minesite
+94212100,Assessment_TSD General_Outside Srv,oh,Non-minesite
+94212200,Assessment_TSD General_FOL,oh,Non-minesite
+94212300,Assessment_TSD General_Materials,oh,Non-minesite
+94212400,Assessment_TSD General_Depre&Amor,oh,Non-minesite
+94212500,Assessment_TSD General_Others,oh,Non-minesite
+94213000,Assessment_MineSup_Personnel,oh,Non-minesite
+94213100,Assessment_MineSup_Outside Srv,oh,Non-minesite
+94213200,Assessment_MineSup_FOL,oh,Non-minesite
+94213300,Assessment_MineSup_Materials,oh,Non-minesite
+94213400,Assessment_MineSup_Depre&Amor,oh,Non-minesite
+94213500,Assessment_MineSup_Others,oh,Non-minesite
+94214000,Assessment_Production Ovrhead_Personnel,oh,Non-minesite
+94214100,Assessment_Production Ovrhead_Overhead,oh,Non-minesite
+94214200,Assessment_Production Ovrhead_Depre&Amor,oh,Non-minesite
+94214300,Assessment_Production Ovrhead_OutsideSrv,oh,Non-minesite
+94214400,Assessment_Production Ovrhead_Depletion,oh,Non-minesite
+94215000,Assessment_Mine Support_Personnel,oh,Non-minesite
+94215100,Assessment_Mine Support_Overhead,oh,Non-minesite
+94215200,Assessment_Mine Support_Depre&Amor,oh,Non-minesite
+94215300,Assessment_Mine Support_OutsideSrv,oh,Non-minesite
+94216000,Assessment_Profitability Analysis 1,oh,Non-minesite
+94217000,Assessment_Profitability Analysis 2,oh,Non-minesite
+94218000,Assessment_Plant Maintenance_Personnel,oh,Non-minesite
+94218100,Assessment_Plant Maintenance_Spare Parts,oh,Non-minesite
+94218200,Assessment_Plant Maintenance_Tires,oh,Non-minesite
+94218300,Assessment_Plant Maintenance_Outside Srv,oh,Non-minesite
+94218400,Assessment_Plant Maintenance_Others,oh,Non-minesite
+94218500,Assessment_Plant Maintenance_Oil&Lubes,oh,Non-minesite
+94218600,Assessment_Plant Maintenance_ExternalLab,oh,Non-minesite
+94219000,Assessment_Plant Maint Bal_Personnel,oh,Non-minesite
+94219100,Assessment_Plant Maint Bal_Spare Parts,oh,Non-minesite
+94219200,Assessment_Plant Maint Bal_Tires,oh,Non-minesite
+94219300,Assessment_Plant Maint Bal_Outside Srv,oh,Non-minesite
+94219400,Assessment_Plant Maint Bal_Others,oh,Non-minesite
+94219500,Assessment_Plant Maint Bal_Oil&Lubes,oh,Non-minesite
+94219600,Assessment_Plant Maint Bal_ExternalLabor,oh,Non-minesite
+94220000,Assessment_Other Direct Costs,oh,Non-minesite
+94221000,Assessment_OtherDirectCost_SE_Personnel,oh,Non-minesite
+94221100,Assessment_OtherDirectCost_SE_Others,oh,Non-minesite
+94221200,Assessment_OtherDirectCost_SE_Depre&Amor,oh,Non-minesite
+94221300,Assessment_OtherDirectCost_SE_OutsideSrv,oh,Non-minesite
+94223000,Assessment_Quarry_Personnel,oh,Non-minesite
+94223100,Assessment_Quarry_Overhead,oh,Non-minesite
+94223200,Assessment_Quarry_Depre&Amor,oh,Non-minesite
+94223300,Assessment_Quarry_OutsideSrv,oh,Non-minesite
+94224000,Assessment_Materials Handling_Personnel,oh,Non-minesite
+94224100,Assessment_Materials Handling_Overhead,oh,Non-minesite
+94224200,Assessment_Materials Handling_Depre&Amor,oh,Non-minesite
+94224300,Assessment_Materials Handling_OutsideSrv,oh,Non-minesite
+94225000,Assessment_LST_Prod Ovrhead_Personnel,oh,Non-minesite
+94225100,Assessment_LST_Prod Ovrhead_Overhead,oh,Non-minesite
+94225200,Assessment_LST_Prod Ovrhead_Depre&Amor,oh,Non-minesite
+94225300,Assessment_LST_Prod Ovrhead_OutsideSrv,oh,Non-minesite
+94225400,Assessment_LST_Prod Ovrhead_Depletion,oh,Non-minesite
+94226000,Assessment_LST_Mine Support_Personnel,oh,Non-minesite
+94226100,Assessment_LST_Mine Support_Overhead,oh,Non-minesite
+94226200,Assessment_LST_Mine Support_Depre&Amor,oh,Non-minesite
+94226300,Assessment_LST_Mine Support_OutsideSrv,oh,Non-minesite
+94310000,Production_Equipment Hours,oh,Non-minesite
+94311000,Production_Conveyor Equipment Hours,oh,Non-minesite
+94312000,Production_LCP_Equipment Hours,oh,Non-minesite
+94320000,Production_Manhour -Regular,oh,Non-minesite
+94330000,Production_Manhour -Seasonal,oh,Non-minesite
+94331000,Production_Manhour -Fixed Term/Project,oh,Non-minesite
+94340000,Production_Fuel Consumption_Inhouse,oh,Non-minesite
+94341000,Production_Fuel Consumption_Conveyor,oh,Non-minesite
+94350000,Production_Fuel Consumption_Contract Min,oh,Non-minesite
+94360000,Production_Fuel Consumption_Rental,oh,Non-minesite
+94370000,Plant Maintenance_Manhour -Regular,oh,Non-minesite
+94380000,Plant Maintenance_Manhour -Seasonal,oh,Non-minesite
+94381000,Plant Maintenance_Manhour -Fixed Term,oh,Non-minesite
+94390000,Production_Production Volume,oh,Non-minesite
+99999996,TMC Tools - Liters Gasoline,oh,Non-minesite
+99999997,TMC Tools - Equipment Operating Hours,oh,Non-minesite
+99999998,TMC Tools - Liters Diesel,oh,Non-minesite
+99999999,TMC Tools - Man-hours,mh,Non-minesite

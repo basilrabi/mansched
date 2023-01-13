@@ -1,8 +1,8 @@
 Package: mansched
 Type: Package
 Title: Manpower Scheduler and Personnel Cost Calculator for Taganito Mine
-Version: 0.2.1
-Date: 2022-09-19
+Version: 0.2.2
+Date: 2023-01-13
 Authors@R: c(
   person("Basil Eric", "Rabi",
   email = "basil.rabi@tmc.nickelasia.com",
@@ -11,21 +11,21 @@ Description: Tools for computing man power costs in Taganito Mine.
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: R   (>= 4.1.0), methods
+Depends: R   (>= 4.2.0), methods
 Imports:
-  data.table (>= 1.14.2),
+  data.table (>= 1.14.6),
   dplyr      (>= 1.0.10),
-  lubridate  (>= 1.8.0),
+  lubridate  (>= 1.9.0),
   Rcpp       (>= 1.0.9),
   readxl     (>= 1.4.1),
-  stringr    (>= 1.4.1),
+  stringr    (>= 1.5.0),
   tidyr      (>= 1.2.1),
   xlsx       (>= 0.6.5),
 Suggests:
-  knitr      (>= 1.40),
-  rmarkdown  (>= 2.16),
+  knitr      (>= 1.41),
+  rmarkdown  (>= 2.19),
   rstudioapi (>= 0.14),
-  testthat   (>= 3.1.4),
+  testthat   (>= 3.1.6),
   covr
 Remotes:
   r-lib/covr

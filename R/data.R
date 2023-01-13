@@ -15,11 +15,12 @@
 #'
 #' SAP cost codes used by accounting.
 #'
-#' @format \code{\link{data.frame}} with 779 rows and 3 columns:
+#' @format \code{\link{data.frame}} with 779 rows and 4 columns:
 #'   \describe{
 #'     \item{code}{accounting code}
 #'     \item{description}{cost component}
 #'     \item{approach}{where to distribute SAP cost to in-house cost centers}
+#'     \item{class}{mine site cost classification}
 #'   }
 "acSAP"
 
