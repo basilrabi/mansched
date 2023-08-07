@@ -218,6 +218,7 @@ getmhDB <- function(empReq,
     mhReq <- as.data.frame(mhReq)
   }
 
+  mhDB <- dplyr::filter(mhDB, !is.na(mh))
   rowsWithSplitDCC <- stringr::str_detect(mhDB$costCenter, "0CCSPLIT0")
   if (any(rowsWithSplitDCC)) {
     mhDBClean <- mhDB[!rowsWithSplitDCC,]
