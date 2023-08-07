@@ -175,7 +175,7 @@ getmhDB <- function(empReq,
 
     listTN <- u.listR
     discarded <- lapply(listTN, FUN = normEmp) %>%
-      data.table::rbindlist(discarded, use.names = TRUE)
+      dplyr::bind_rows(discarded)
 
     u.mhPool <- lapply(listTN, FUN = function(x) {
       mh <- as.data.frame(getHours(x))
