@@ -175,7 +175,7 @@ getmhDB <- function(empReq,
 
     listTN <- u.listR
     discarded <- lapply(listTN, FUN = normEmp) %>%
-      data.table::rbindlist(discarded)
+      data.table::rbindlist(discarded, use.names = TRUE)
 
     u.mhPool <- lapply(listTN, FUN = function(x) {
       mh <- as.data.frame(getHours(x))
@@ -183,7 +183,7 @@ getmhDB <- function(empReq,
       mh$ID <- x@ID
       return(mh)
     }) %>%
-      data.table::rbindlist() %>%
+      data.table::rbindlist(use.names = TRUE) %>%
       tidyr::gather(key = "mhType", value = mh, -month, -ID)
 
     mhPool <- data.table::rbindlist(list(mhPool, u.mhPool), use.names = TRUE)
@@ -246,8 +246,8 @@ getmhDB <- function(empReq,
                  costCenter = costCenters,
                  equipment = mhDBForSplitting$equipment[x])
     }) %>%
-      data.table::rbindlist()
-    mhDB <- data.table::rbindlist(list(mhDBClean, mhDBSplit))
+      data.table::rbindlist(use.names = TRUE)
+    mhDB <- data.table::rbindlist(list(mhDBClean, mhDBSplit), use.names = TRUE)
   }
 
   return(list(mhDB, listT.a, listR.a, listT, listR, mhReq, mhPool, discarded))

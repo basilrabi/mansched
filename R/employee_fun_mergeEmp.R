@@ -11,7 +11,7 @@
 #' @export mergeEmp
 mergeEmp <- function(x) {
 
-  if(class(x) != "list")
+  if(!inherits(x, "list"))
     stop("Argument is not a list of Employee-class objects!")
 
   if (length(x) == 1L) {

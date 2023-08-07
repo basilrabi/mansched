@@ -5,7 +5,7 @@
 \alias{acSAP}
 \title{Cost accounting codes in SAP}
 \format{
-\code{\link{data.frame}} with 778 rows and 3 columns:
+\code{\link{data.frame}} with 779 rows and 3 columns:
   \describe{
     \item{code}{accounting code}
     \item{description}{cost component}
