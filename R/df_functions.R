@@ -57,10 +57,10 @@ expandDF <- function(x) {
 #' @export capacityEnough
 capacityEnough <- function(x, dfLength) {
 
-  remainingSlots <- length(x[,1]) - suppressWarnings(max(which(!is.na(x[,1]))))
+  remainingSlots <- nrow(x) - suppressWarnings(max(which(!is.na(x[[1]]))))
 
   if (is.infinite(remainingSlots))
-    remainingSlots <- length(x[,1])
+    remainingSlots <- nrow(x)
 
   if (remainingSlots > dfLength) {
     return(TRUE)
@@ -95,14 +95,14 @@ testAndExpand <- function(x, dfLength) {
 #' @export dfAppend
 dfAppend <- function(x, y) {
 
-  lengthY <- length(y[,1])
+  lengthY <- nrow(y)
   x       <- testAndExpand(x = x, dfLength = lengthY)
 
-  if (is.infinite(suppressWarnings(max(which(!is.na(x[,1])))))) {
+  if (is.infinite(suppressWarnings(max(which(!is.na(x[[1]])))))) {
     x[1:lengthY,] <- y
   } else {
 
-    tempIndex <- 1L + max(which(!is.na(x[,1])))
+    tempIndex <- 1L + max(which(!is.na(x[[1]])))
 
     x[(tempIndex):(tempIndex + lengthY - 1),] <- y
   }

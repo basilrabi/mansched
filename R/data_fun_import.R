@@ -325,7 +325,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
            FUN = as.integer)
 
   # Pre-allocate employee list
-  manPool <- rep(list(NA), times = length(empPool[, 1]))
+  manPool <- rep(list(NA), times = nrow(empPool))
 
   if (is.na(year)) {
     year <- as.integer(format(Sys.Date() + 365, "%Y"))
@@ -338,7 +338,7 @@ initEmpPool <- function(empPool, hol = NA, year = NA, forecast = FALSE) {
   }
   hol <- getHol(hol = hol, year = year)
 
-  for (i in 1:length(empPool[,1])) {
+  for (i in 1:nrow(empPool)) {
     field <- empPool$field[i]
     if (is.na(field))
       field <- TRUE
@@ -542,9 +542,9 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
   mdtProb <- getMDTProb(hol = hol)
 
   # Pre-allocate list of Employee-class objects
-  manReq <- rep(list(NA), times = length(empReq[,1]))
+  manReq <- rep(list(NA), times = nrow(empReq))
 
-  for (i in 1:length(empReq[,1])) {
+  for (i in 1:nrow(empReq)) {
 
     schedIndex <- which(sched$activity == empReq$activity[i])
     tempEmp <- createEmp(empReq$personnelClass[i])
