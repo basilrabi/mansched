@@ -49,9 +49,9 @@ setMethod(
   definition = function(theObject) {
 
     gl <- callNextMethod(theObject)
-    groupLife <-  6400 / 12
+    groupLife <-  7139 / 12
     if (!theObject@forecast)
-      groupLife <-  7139 / 12
+      groupLife <-  7852.9 / 12
 
     return(list(gl, groupLife))
   }
@@ -66,9 +66,9 @@ setMethod(
     glList <- callNextMethod(theObject)
 
     gl <- glList[[1]]
-    groupLife  <- 12800 / 12
+    groupLife  <- 14278 / 12
     if (!theObject@forecast)
-      groupLife  <- 14278 / 12
+      groupLife  <- 15705.8 / 12
     gl$gl <- round(gl$allow * groupLife, digits = 2)
 
     return(gl[, c("month", "ID", "gl")])
@@ -84,9 +84,9 @@ setMethod(
     glList <- callNextMethod(theObject)
 
     gl <- glList[[1]]
-    groupLife  <- 12800 / 12
+    groupLife  <- 14278 / 12
     if (!theObject@forecast)
-      groupLife  <- 14278 / 12
+      groupLife  <- 15705.8 / 12
     gl$gl <- round(gl$allow * groupLife, digits = 2)
 
     return(gl[, c("month", "ID", "gl")])
@@ -102,9 +102,9 @@ setMethod(
     glList <- callNextMethod(theObject)
 
     gl <- glList[[1]]
-    groupLife  <- 12800 / 12
+    groupLife  <- 14278 / 12
     if (!theObject@forecast)
-      groupLife  <- 14278 / 12
+      groupLife  <- 15705.8 / 12
     gl$gl <- round(gl$allow * groupLife, digits = 2)
 
     return(gl[, c("month", "ID", "gl")])
@@ -136,14 +136,14 @@ setMethod(
     gl <- callNextMethod(theObject)
 
     if (isRF(theObject)) {
-      groupLife <-  1920 / 12
+      groupLife <-  2142 / 12
       if (!theObject@forecast)
-        groupLife <-  2142 / 12
+        groupLife <- 2356.2 / 12
 
     } else {
-      groupLife <-  3840 / 12
+      groupLife <-  4283 / 12
       if (!theObject@forecast)
-        groupLife <-  4283 / 12
+        groupLife <-  4711.3 / 12
     }
 
     gl$gl <- round(gl$allow * groupLife, digits = 2)
