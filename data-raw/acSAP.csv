@@ -523,6 +523,7 @@ code,description,approach
 61300019,Computer Supplies and Other Electronics,main
 61300020,Tools Instruments and Machine,main
 61300021,Food and Food Supplies,mh
+61300023,Fuel – Others,oh
 61300100,Spare Parts - PM Adjustment,oh
 61300110,Tires - PM Adjustment,oh
 61300120,Oil & Lubricants - PM Adjustment,oh
@@ -773,6 +774,8 @@ code,description,approach
 94370000,Plant Maintenance_Manhour -Regular,oh
 94380000,Plant Maintenance_Manhour -Seasonal,oh
 94381000,Plant Maintenance_Manhour -Fixed Term,oh
+94382000,Plant Maintenance_Manhour_Outserv_Mech1,oh
+94383000,Plant Maintenance_Manhour_Outserv_Mech2,oh
 94390000,Production_Production Volume,oh
 99999996,TMC Tools - Liters Gasoline,oh
 99999997,TMC Tools - Equipment Operating Hours,oh
