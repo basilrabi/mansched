@@ -474,7 +474,7 @@ code,description,approach
 61009000,Depreciation and Amortization - Other Adjustment,main
 61009100,BLOCKED Depreciation and Amortization - Other Adjustment,main
 61100000,Contract Fee - Agency Services,main
-61101000,Contract Fee - Mining,main
+61101000,Contract Fee - Mining,oh
 61101001,Contract Fee - Cover/Uncover,main
 61101002,Contract Fee - Stevedoring,main
 61101003,Contract Fee - LCT,main
@@ -504,7 +504,7 @@ code,description,approach
 61300000,Fuel - Gasoline,oh
 61300001,Fuel - Diesel Oil,oh
 61300002,Fuel - Bunker Oil,oh
-61300003,Fuel - Contractors,main
+61300003,Fuel - Contractors,oh
 61300004,Oil and Lubricants,oh
 61300005,Tires,oh
 61300006,Tires Accessories,oh
