@@ -271,7 +271,7 @@ getCost <- function(mhDB,
   # a personnel is not employed.
   mhDBdummy <- dplyr::filter(empSM, maxReg == 0) %>%
     dplyr::select(month, ID) %>%
-    dplyr::left_join(mhDBYear) %>%
+    dplyr::left_join(mhDBYear, relationship = "many-to-many") %>%
     dplyr::left_join(empStatus)
 
   #### Compute Salaries for monthly wagers ####
@@ -1172,22 +1172,17 @@ getCost <- function(mhDB,
     dplyr::summarise(cost = sum(cost)) %>%
     tidyr::spread(month, cost, fill = 0)
 
-  # Sum all man-hours
-  mhDB.mh1 <- dplyr::group_by(mhDB, costCenter, month, equipment, status) %>%
+  # TODO: Delete hol.mhDB.m and hol.mhDB.d
+
+  mhDB.mh <- dplyr::mutate(
+    mhDB,
+    ot = dplyr::case_when(
+      mhType == "reg" ~ "reg",
+      TRUE ~ "ot"
+    )
+  ) %>%
+    dplyr::group_by(costCenter, month, equipment, status, ot) %>%
     dplyr::summarise(cost = sum(mh))
-
-  mhDB.mh2 <- dplyr::group_by(
-    hol.mhDB.m, costCenter, month, equipment, status
-  ) %>%
-    dplyr::summarise(cost = sum(XholHours))
-
-  mhDB.mh3 <- dplyr::group_by(
-    hol.mhDB.d, costCenter, month, equipment, status
-  ) %>%
-    dplyr::summarise(cost = sum(XholHours))
-
-  mhDB.mh <- data.table::rbindlist(list(mhDB.mh1, mhDB.mh2, mhDB.mh3),
-                                   use.names = TRUE)
 
   #### Compute for Mid-year and Year-end bonus ####
   cat("\nComputing bonus.\n")
@@ -1726,8 +1721,15 @@ getCost <- function(mhDB,
     dplyr::summarise(cost = sum(cost)) %>%
     dplyr::mutate(description = "Safety Equipment and Supplies")
 
+  c99999998 <- as.data.frame(mhDB.mh) %>%
+    dplyr::filter(ot == "reg") %>%
+    dplyr::select(-ot) %>%
+    dplyr::mutate(description = "TMC Tools - Man-hours Reg")
+
   c99999999 <- as.data.frame(mhDB.mh) %>%
-    dplyr::mutate(description = "TMC Tools - Man-hours")
+    dplyr::filter(ot == "ot") %>%
+    dplyr::select(-ot) %>%
+    dplyr::mutate(description = "TMC Tools - Man-hours OT")
 
   costDBraw <- dplyr::bind_rows(c60300000,
                                 c60300001,
@@ -1751,6 +1753,7 @@ getCost <- function(mhDB,
                                 c60900000,
                                 c61100000,
                                 c61300016,
+                                c99999998,
                                 c99999999)
 
   costDB <- dplyr::group_by(
@@ -1794,7 +1797,8 @@ getCost <- function(mhDB,
                                        "status",
                                        as.character(1:12))]
 
-  export.mh <- dplyr::filter(costDB, code == 99999999L) %>%
+  export.mh <- dplyr::filter(costDB, code %in% c(99999998L,
+                                                 99999999L)) %>%
     dplyr::select(-c(description, code)) %>%
     dplyr::arrange(costCenter, equipment) %>%
     as.data.frame()

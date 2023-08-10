@@ -777,7 +777,8 @@ code,description,approach
 94382000,Plant Maintenance_Manhour_Outserv_Mech1,oh
 94383000,Plant Maintenance_Manhour_Outserv_Mech2,oh
 94390000,Production_Production Volume,oh
-99999996,TMC Tools - Liters Gasoline,oh
-99999997,TMC Tools - Equipment Operating Hours,oh
-99999998,TMC Tools - Liters Diesel,oh
-99999999,TMC Tools - Man-hours,mh
+99999995,TMC Tools - Liters Gasoline,oh
+99999996,TMC Tools - Equipment Operating Hours,oh
+99999997,TMC Tools - Liters Diesel,oh
+99999998,TMC Tools - Man-hours Reg,mh
+99999999,TMC Tools - Man-hours OT,mh
