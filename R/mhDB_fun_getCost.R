@@ -1276,7 +1276,8 @@ getCost <- function(mhDB,
                                                   costCenter = character(),
                                                   month = integer(),
                                                   equipment = character(),
-                                                  cost = numeric())
+                                                  cost = numeric(),
+                                                  description = character())
   }
 
 
@@ -1837,7 +1838,8 @@ getCost <- function(mhDB,
     dplyr::summarise(cost = sum(cost)) %>%
     dplyr::mutate(description = "Gift Certificate")
 
-  bonus_and_gc <- dplyr::bind_rows(mhDB.bonus.detailed, gc)
+  bonus_and_gc <- dplyr::bind_rows(mhDB.bonus.detailed, gc) %>%
+    dplyr::filter(cost > 0)
 
   return(list(costDB, export.mh, accr.13mp, bonus_and_gc, costDBbyStatus))
 }
