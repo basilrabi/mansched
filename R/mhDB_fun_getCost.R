@@ -72,7 +72,7 @@ NULL
 #'
 #'     \item tabulated total man hours per month per cost center
 #'     \item tabulated 13th month pay per month per cost center
-#'     \item tabulated bonus cost per month per cost center
+#'     \item tabulated bonus and gift certificate cost per month per cost center
 #'     \item a data.frame with 16 columns similar to the first element of the
 #'       returned list but with an additional column indicating the employment
 #'       status
@@ -126,6 +126,7 @@ getCost <- function(mhDB,
     np <-
     npR <-
     npS <-
+    ot <-
     premiumR <-
     premiumS <-
     retentionBonus <-
@@ -612,17 +613,19 @@ getCost <- function(mhDB,
   #### Employee benefits ####
   # cat("\nComputing for employee benefits.\n")
 
+  gcReg <- data.table::rbindlist(lapply(listR, FUN = function(x) {
+    if (isReg(x)) {
+      return(getGC(x))
+    } else {
+      return(NULL)
+    }
+  }), use.names = TRUE)
+
   benefits <- data.table::rbindlist(list(
     data.table::rbindlist(lapply(listR, getCBA), use.names = TRUE),
     data.table::rbindlist(lapply(listR, getLongShirt), use.names = TRUE),
     data.table::rbindlist(lapply(listR, getLaborDayShirt), use.names = TRUE),
-    data.table::rbindlist(lapply(listR, FUN = function(x) {
-      if (isReg(x)) {
-        return(getGC(x))
-      } else {
-        return(NULL)
-      }
-    }), use.names = TRUE)
+    gcReg
   ), use.names = TRUE) %>%
     dplyr::group_by(month, ID) %>%
     dplyr::summarise(benefits = sum(benefits))
@@ -635,9 +638,6 @@ getCost <- function(mhDB,
     dplyr::left_join(benefits, by = c("ID", "month")) %>%
     dplyr::mutate(X = mh / totMH) %>%
     dplyr::mutate(cost = round(X * benefits, digits = 2))
-
-  mhDB.benefits.sea <- dplyr::filter(mhDB.benefits, status == "sea") %>%
-    dplyr::select(-status)
 
   gcSea <- data.table::rbindlist(lapply(listR, FUN = function(x) {
     if (x@status == "sea") {
@@ -659,11 +659,7 @@ getCost <- function(mhDB,
       dplyr::ungroup() %>%
       dplyr::mutate(month = 11L, X = mh / totMH) %>%
       dplyr::left_join(gcSea, by = c("ID", "month")) %>%
-      dplyr::mutate(cost = round(X * benefits, digits = 2))
-    mhDB.benefits.sea <- data.table::rbindlist(list(mhDB.benefits.sea,
-                                                    mhDB.GC.sea),
-                                               use.names = TRUE)
-    mhDB.GC.sea$status <- "sea"
+      dplyr::mutate(cost = round(X * benefits, digits = 2), status = "sea")
   } else {
     mhDB.GC.sea  <- NULL
   }
@@ -1258,17 +1254,29 @@ getCost <- function(mhDB,
       dplyr::mutate(X = mh / totMH) %>%
       dplyr::left_join(bonus, by = c("ID", "month"))
 
-    mhDB.bonus <- data.table::rbindlist(list(mhDB.bonusMid, mhDB.bonusEnd),
+    mhDB.bonus.detailed <- data.table::rbindlist(list(mhDB.bonusMid, mhDB.bonusEnd),
                                         use.names = TRUE) %>%
-      dplyr::mutate(cost = round(X * bonus, digits = 2)) %>%
+      dplyr::mutate(cost = round(X * bonus, digits = 2),
+                    status = "reg") %>%
       dplyr::filter(!is.na(cost)) %>%
-      dplyr::group_by(costCenter, month, equipment) %>%
+      dplyr::group_by(status, costCenter, equipment, month) %>%
+      dplyr::summarise(cost = sum(cost)) %>%
+      dplyr::mutate(description = "Bonus")
+    mhDB.bonus <- dplyr::group_by(mhDB.bonus.detailed,
+                                  costCenter,
+                                  month,
+                                  equipment) %>%
       dplyr::summarise(cost = sum(cost))
   } else {
     mhDB.bonus <- data.table::data.table(costCenter = character(),
                                          month = integer(),
                                          equipment = character(),
                                          cost = numeric())
+    mhDB.bonus.detailed <- data.table::data.table(status = character(),
+                                                  costCenter = character(),
+                                                  month = integer(),
+                                                  equipment = character(),
+                                                  cost = numeric())
   }
 
 
@@ -1810,5 +1818,26 @@ getCost <- function(mhDB,
   export.mh <- export.mh[, c("costCenter", "equipment", as.character(1:12))]
   export.mh$SUM <- apply(export.mh[, 3:14], MARGIN = 1, FUN = sum)
 
-  return(list(costDB, export.mh, accr.13mp, mhDB.bonus, costDBbyStatus))
+  if (nrow(gcReg) > 0) {
+    mhDB.GC.reg <- dplyr::filter(mhDB, mhType %in% distType) %>%
+      dplyr::group_by(ID, month, costCenter, status, equipment) %>%
+      dplyr::summarise(mh = sum(mh)) %>%
+      dplyr::group_by(ID, month) %>%
+      dplyr::mutate(totMH = sum(mh)) %>%
+      dplyr::left_join(gcReg, by = c("ID", "month")) %>%
+      dplyr::filter(!is.na(benefits)) %>%
+      dplyr::mutate(X = mh / totMH) %>%
+      dplyr::mutate(cost = round(X * benefits, digits = 2))
+  } else {
+    mhDB.GC.reg <- NULL
+  }
+
+  gc <- dplyr::bind_rows(mhDB.GC.reg, mhDB.GC.sea) %>%
+    dplyr::group_by(status, costCenter, equipment, month) %>%
+    dplyr::summarise(cost = sum(cost)) %>%
+    dplyr::mutate(description = "Gift Certificate")
+
+  bonus_and_gc <- dplyr::bind_rows(mhDB.bonus.detailed, gc)
+
+  return(list(costDB, export.mh, accr.13mp, bonus_and_gc, costDBbyStatus))
 }

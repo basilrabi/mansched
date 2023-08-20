@@ -68,7 +68,7 @@ a list containing the following:
 
     \item tabulated total man hours per month per cost center
     \item tabulated 13th month pay per month per cost center
-    \item tabulated bonus cost per month per cost center
+    \item tabulated bonus and gift certificate cost per month per cost center
     \item a data.frame with 16 columns similar to the first element of the
       returned list but with an additional column indicating the employment
       status
