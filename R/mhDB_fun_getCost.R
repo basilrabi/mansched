@@ -168,13 +168,7 @@ getCost <- function(mhDB,
 
   # Employee salary link and maximum regular hours per month
   empSM <- lapply(listR, function(x) {
-    if (forecast) {
-      # For the forecasting in 2022, there is a salary adjustment in September
-      # due to the new governemnt regulations.
-      sm <- data.frame(
-        month = 1:12, sal = c(rep("a", times = 8), rep("b", times = 4))
-      )
-    } else if (isRF(x)) {
+    if (isRF(x)) {
       sm <- payB
     } else {
       sm <- payA
@@ -1167,8 +1161,6 @@ getCost <- function(mhDB,
   ) %>%
     dplyr::summarise(cost = sum(cost)) %>%
     tidyr::spread(month, cost, fill = 0)
-
-  # TODO: Delete hol.mhDB.m and hol.mhDB.d
 
   mhDB.mh <- dplyr::mutate(
     mhDB,
