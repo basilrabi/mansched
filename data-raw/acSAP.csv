@@ -421,19 +421,19 @@ code,description,approach
 60300034,Food Allowance,mh
 60300035,Sports and Recreation,mh
 60300036,Awards and Prizes,mh
-60300100,Payroll - PM Adjustment,oh
-60300200,Payroll - PS Adjustment,oh
-60300300,Payroll - Other Adjustment,oh
+60300100,Payroll - PM Adjustment,oh-i
+60300200,Payroll - PS Adjustment,oh-i
+60300300,Payroll - Other Adjustment,oh-i
 60300400,BLOCKED Payroll - Other Adjustment,mh
 60400000,Training and Education - Employees,main
 60400001,Training and Education - Others,mh
 60400100,Trainings and Seminar - Other Adjustment,mh
 60400200,BLOCKED Trainings and Seminar - Other Adjustment,mh
-60500000,Repairs and Maintenance - Labor,oh
-60500001,Repairs and Maintenance - Parts,oh
-60500100,Outside Services - PM Adjustment,oh
-60500200,Outside Services - PS Adjustment,oh
-60500300,Repairs and Maintenance - Other Adjustment,oh
+60500000,Repairs and Maintenance - Labor,oh-i
+60500001,Repairs and Maintenance - Parts,oh-i
+60500100,Outside Services - PM Adjustment,oh-i
+60500200,Outside Services - PS Adjustment,oh-i
+60500300,Repairs and Maintenance - Other Adjustment,oh-i
 60600000,Rent Expense - Building/Office space,main
 60600001,Rent Expense - Equipment,main
 60600002,Rent Expense - Others,main
@@ -462,9 +462,9 @@ code,description,approach
 61003000,Dep Exp - Buildings Structures and Improv,main
 61003001,Dep Exp - Transmission Lines and Substation,main
 61003002,Dep Exp - Leasehold Improvement,main
-61004000,Dep Exp - Machinery & Equipment,oh
+61004000,Dep Exp - Machinery & Equipment,oh-i
 61004001,Dep Exp - Engine Generator Sets,main
-61004002,Dep Exp - Transportation Equipment,oh
+61004002,Dep Exp - Transportation Equipment,oh-i
 61004003,Dep Exp - Office Equipment,main
 61004004,Dep Exp - Furniture and Fixtures,main
 61004005,Dep Exp - Computer Hardware and Eqpmt,main
@@ -474,7 +474,7 @@ code,description,approach
 61009000,Depreciation and Amortization - Other Adjustment,main
 61009100,BLOCKED Depreciation and Amortization - Other Adjustment,main
 61100000,Contract Fee - Agency Services,main
-61101000,Contract Fee - Mining,oh
+61101000,Contract Fee - Mining,oh-e
 61101001,Contract Fee - Cover/Uncover,main
 61101002,Contract Fee - Stevedoring,main
 61101003,Contract Fee - LCT,main
@@ -483,7 +483,7 @@ code,description,approach
 61101006,Contract Fee - Others,main
 61101100,Contract Fee - Agency Services - PM Adjustment,main
 61101110,Contract Fee - Agency Services - PS Adjustment,main
-61101120,Outside Services - Other Adjustment,oh
+61101120,Outside Services - Other Adjustment,oh-i
 61102000,Draft Survey Fee,main
 61102001,PPA Usage Fee,main
 61102002,Umpiring Fees,main
@@ -501,16 +501,16 @@ code,description,approach
 61200003,Management fee,main
 61200100,Professional and  Consultancy Fees - Other Adj,main
 61200200,BLOCKED Professional and  Consultancy Fees - Other Adj,main
-61300000,Fuel - Gasoline,oh
-61300001,Fuel - Diesel Oil,oh
-61300002,Fuel - Bunker Oil,oh
-61300003,Fuel - Contractors,oh
-61300004,Oil and Lubricants,oh
-61300005,Tires,oh
-61300006,Tires Accessories,oh
+61300000,Fuel - Gasoline,oh-i
+61300001,Fuel - Diesel Oil,oh-i
+61300002,Fuel - Bunker Oil,oh-i
+61300003,Fuel - Contractors,oh-e
+61300004,Oil and Lubricants,oh-i
+61300005,Tires,oh-i
+61300006,Tires Accessories,oh-i
 61300007,Conveyor Supplies,main
-61300008,Spare Parts,oh
-61300009,Construction Hardware and Electrical Supplies,oh
+61300008,Spare Parts,oh-i
+61300009,Construction Hardware and Electrical Supplies,oh-i
 61300010,Lumber,main
 61300011,Steel Balls/Rods,main
 61300012,Household Supplies,main
@@ -523,17 +523,17 @@ code,description,approach
 61300019,Computer Supplies and Other Electronics,main
 61300020,Tools Instruments and Machine,main
 61300021,Food and Food Supplies,mh
-61300023,Fuel - Others,oh
-61300100,Spare Parts - PM Adjustment,oh
-61300110,Tires - PM Adjustment,oh
-61300120,Oil & Lubricants - PM Adjustment,oh
-61300130,Others - PM Adjustment,oh
-61300200,Spare Parts - PS Adjustment,oh
-61300210,Tires - PS Adjustment,oh
-61300220,Oil & Lubricants - PS Adjustment,oh
-61300230,Others - PS Adjustment,oh
-61300300,Materials and Supplies - Other Adjustment,oh
-61300400,BLOCKED Materials and Supplies - Other Adjustment,oh
+61300023,Fuel - Others,oh-i
+61300100,Spare Parts - PM Adjustment,oh-i
+61300110,Tires - PM Adjustment,oh-i
+61300120,Oil & Lubricants - PM Adjustment,oh-i
+61300130,Others - PM Adjustment,oh-i
+61300200,Spare Parts - PS Adjustment,oh-i
+61300210,Tires - PS Adjustment,oh-i
+61300220,Oil & Lubricants - PS Adjustment,oh-i
+61300230,Others - PS Adjustment,oh-i
+61300300,Materials and Supplies - Other Adjustment,oh-i
+61300400,BLOCKED Materials and Supplies - Other Adjustment,oh-i
 61400000,Taxes and Licenses,main
 61400001,FBT Expense,main
 61400100,Taxes and Licenses - Other Adjustment,main
@@ -638,145 +638,145 @@ code,description,approach
 80030012,Inventory - Beg Bal FG - Quarry Materials Balances,main
 80040000,General Ledger Migration Account,main
 80050000,GL - CO Migration Account,main
-92110000,Settlement_PM Preventive_Personnel,oh
-92110100,Settlement_PM Preventive_Spare Parts,oh
-92110200,Settlement_PM Preventive_Tires,oh
-92110300,Settlement_PM Preventive_Outside Srv,oh
-92110400,Settlement_PM Preventive_Others,oh
-92110500,Settlement_PM Preventive_Oil&Lubricants,oh
-92110600,Settlement_PM Preventive_External Labor,oh
-92120000,Settlement_PM Corrective_Personnel,oh
-92120100,Settlement_PM Corrective_Spare Parts,oh
-92120200,Settlement_PM Corrective_Tires,oh
-92120300,Settlement_PM Corrective_Outside Srv,oh
-92120400,Settlement_PM Corrective_Others,oh
-92120500,Settlement_PM Corrective_Oil&Lubricants,oh
-92120600,Settlement_PM Corrective_External Labor,oh
-92130000,Settlement_PM Emergency_Personnel,oh
-92130100,Settlement_PM Emergency_Spare Parts,oh
-92130200,Settlement_PM Emergency_Tires,oh
-92130300,Settlement_PM Emergency_Outside Srv,oh
-92130400,Settlement_PM Emergency_Others,oh
-92130500,Settlement_PM Emergency_Oil&Lubricants,oh
-92130600,Settlement_PM Emergency_External Labor,oh
-92140000,Settlement_Project System_Personnel,oh
-92140100,Settlement_Project System_Spare Parts,oh
-92140200,Settlement_Project System_Tires,oh
-92140300,Settlement_Project System_Outside Srv,oh
-92140400,Settlement_Project System_Others,oh
-92140500,Settlement_Project System_Oil&Lubricants,oh
-92140600,Settlement_Project System_External Labor,oh
-94110000,Overhead_Plant Maintenance_Personnel,oh
-94110100,Overhead_Plant Maintenance_Spare Parts,oh
-94110200,Overhead_Plant Maintenance_Tires,oh
-94110300,Overhead_Plant Maintenance_Outside Srv,oh
-94110400,Overhead_Plant Maintenance_Others,oh
-94110500,Overhead_Plant Maintenance_Oil&Lubricant,oh
-94110600,Overhead_Plant Maintenance_ExternalLabor,oh
-94111000,Overhead _Production Overhead_Personnel,oh
-94111100,Overhead _Production Overhead_Overhead,oh
-94111200,Overhead _Production Overhead_Depre&Amor,oh
-94111300,Overhead _Production Overhead_OustideSrv,oh
-94111400,Overhead _Production Overhead_Depletion,oh
-94112000,Overhead_Mine Support_Personnel,oh
-94112100,Overhead_Mine Support_Overhead,oh
-94112200,Overhead_Mine Support_Depre&Amor,oh
-94112300,Overhead_Mine Support_Outside Srv,oh
-94113000,Other Direct Costs,oh
-94114000,External Services_Contract Fees,oh
-94115000,External Services_Rental,oh
-94116000,External Services_Others,oh
-94117000,Overhead_OtherDirectCost_SE_Personnel,oh
-94117100,Overhead_OtherDirectCost_SE_Others,oh
-94117200,Overhead_OtherDirectCost_SE_Depre&Amor,oh
-94117300,Overhead_OtherDirectCost_SE_OutsideSrv,oh
-94210000,Assessment_TSD Electrical_Personnel,oh
-94210100,Assessment_TSD Electrical_Outside Srv,oh
-94210200,Assessment_TSD Electrical_FOL,oh
-94210300,Assessment_TSD Electrical_Materials,oh
-94210400,Assessment_TSD Electrical_Depre&Amor,oh
-94210500,Assessment_TSD Electrical_Others,oh
-94211000,Assessment_Assay_Personnel,oh
-94211100,Assessment_Assay_Outside Srv,oh
-94211200,Assessment_Assay_FOL,oh
-94211300,Assessment_Assay_Materials,oh
-94211400,Assessment_Assay_Depre&Amor,oh
-94211500,Assessment_Assay_Others,oh
-94212000,Assessment_TSD General_Personnel,oh
-94212100,Assessment_TSD General_Outside Srv,oh
-94212200,Assessment_TSD General_FOL,oh
-94212300,Assessment_TSD General_Materials,oh
-94212400,Assessment_TSD General_Depre&Amor,oh
-94212500,Assessment_TSD General_Others,oh
-94213000,Assessment_MineSup_Personnel,oh
-94213100,Assessment_MineSup_Outside Srv,oh
-94213200,Assessment_MineSup_FOL,oh
-94213300,Assessment_MineSup_Materials,oh
-94213400,Assessment_MineSup_Depre&Amor,oh
-94213500,Assessment_MineSup_Others,oh
-94214000,Assessment_Production Ovrhead_Personnel,oh
-94214100,Assessment_Production Ovrhead_Overhead,oh
-94214200,Assessment_Production Ovrhead_Depre&Amor,oh
-94214300,Assessment_Production Ovrhead_OutsideSrv,oh
-94214400,Assessment_Production Ovrhead_Depletion,oh
-94215000,Assessment_Mine Support_Personnel,oh
-94215100,Assessment_Mine Support_Overhead,oh
-94215200,Assessment_Mine Support_Depre&Amor,oh
-94215300,Assessment_Mine Support_OutsideSrv,oh
-94216000,Assessment_Profitability Analysis 1,oh
-94217000,Assessment_Profitability Analysis 2,oh
-94218000,Assessment_Plant Maintenance_Personnel,oh
-94218100,Assessment_Plant Maintenance_Spare Parts,oh
-94218200,Assessment_Plant Maintenance_Tires,oh
-94218300,Assessment_Plant Maintenance_Outside Srv,oh
-94218400,Assessment_Plant Maintenance_Others,oh
-94218500,Assessment_Plant Maintenance_Oil&Lubes,oh
-94218600,Assessment_Plant Maintenance_ExternalLab,oh
-94219000,Assessment_Plant Maint Bal_Personnel,oh
-94219100,Assessment_Plant Maint Bal_Spare Parts,oh
-94219200,Assessment_Plant Maint Bal_Tires,oh
-94219300,Assessment_Plant Maint Bal_Outside Srv,oh
-94219400,Assessment_Plant Maint Bal_Others,oh
-94219500,Assessment_Plant Maint Bal_Oil&Lubes,oh
-94219600,Assessment_Plant Maint Bal_ExternalLabor,oh
-94220000,Assessment_Other Direct Costs,oh
-94221000,Assessment_OtherDirectCost_SE_Personnel,oh
-94221100,Assessment_OtherDirectCost_SE_Others,oh
-94221200,Assessment_OtherDirectCost_SE_Depre&Amor,oh
-94221300,Assessment_OtherDirectCost_SE_OutsideSrv,oh
-94223000,Assessment_Quarry_Personnel,oh
-94223100,Assessment_Quarry_Overhead,oh
-94223200,Assessment_Quarry_Depre&Amor,oh
-94223300,Assessment_Quarry_OutsideSrv,oh
-94224000,Assessment_Materials Handling_Personnel,oh
-94224100,Assessment_Materials Handling_Overhead,oh
-94224200,Assessment_Materials Handling_Depre&Amor,oh
-94224300,Assessment_Materials Handling_OutsideSrv,oh
-94225000,Assessment_LST_Prod Ovrhead_Personnel,oh
-94225100,Assessment_LST_Prod Ovrhead_Overhead,oh
-94225200,Assessment_LST_Prod Ovrhead_Depre&Amor,oh
-94225300,Assessment_LST_Prod Ovrhead_OutsideSrv,oh
-94225400,Assessment_LST_Prod Ovrhead_Depletion,oh
-94226000,Assessment_LST_Mine Support_Personnel,oh
-94226100,Assessment_LST_Mine Support_Overhead,oh
-94226200,Assessment_LST_Mine Support_Depre&Amor,oh
-94226300,Assessment_LST_Mine Support_OutsideSrv,oh
-94310000,Production_Equipment Hours,oh
-94311000,Production_Conveyor Equipment Hours,oh
-94312000,Production_LCP_Equipment Hours,oh
-94320000,Production_Manhour -Regular,oh
-94330000,Production_Manhour -Seasonal,oh
-94331000,Production_Manhour -Fixed Term/Project,oh
-94340000,Production_Fuel Consumption_Inhouse,oh
-94341000,Production_Fuel Consumption_Conveyor,oh
-94350000,Production_Fuel Consumption_Contract Min,oh
-94360000,Production_Fuel Consumption_Rental,oh
-94370000,Plant Maintenance_Manhour -Regular,oh
-94380000,Plant Maintenance_Manhour -Seasonal,oh
-94381000,Plant Maintenance_Manhour -Fixed Term,oh
-94382000,Plant Maintenance_Manhour_Outserv_Mech1,oh
-94383000,Plant Maintenance_Manhour_Outserv_Mech2,oh
-94390000,Production_Production Volume,oh
+92110000,Settlement_PM Preventive_Personnel,oh-i
+92110100,Settlement_PM Preventive_Spare Parts,oh-i
+92110200,Settlement_PM Preventive_Tires,oh-i
+92110300,Settlement_PM Preventive_Outside Srv,oh-i
+92110400,Settlement_PM Preventive_Others,oh-i
+92110500,Settlement_PM Preventive_Oil&Lubricants,oh-i
+92110600,Settlement_PM Preventive_External Labor,oh-i
+92120000,Settlement_PM Corrective_Personnel,oh-i
+92120100,Settlement_PM Corrective_Spare Parts,oh-i
+92120200,Settlement_PM Corrective_Tires,oh-i
+92120300,Settlement_PM Corrective_Outside Srv,oh-i
+92120400,Settlement_PM Corrective_Others,oh-i
+92120500,Settlement_PM Corrective_Oil&Lubricants,oh-i
+92120600,Settlement_PM Corrective_External Labor,oh-i
+92130000,Settlement_PM Emergency_Personnel,oh-i
+92130100,Settlement_PM Emergency_Spare Parts,oh-i
+92130200,Settlement_PM Emergency_Tires,oh-i
+92130300,Settlement_PM Emergency_Outside Srv,oh-i
+92130400,Settlement_PM Emergency_Others,oh-i
+92130500,Settlement_PM Emergency_Oil&Lubricants,oh-i
+92130600,Settlement_PM Emergency_External Labor,oh-i
+92140000,Settlement_Project System_Personnel,oh-i
+92140100,Settlement_Project System_Spare Parts,oh-i
+92140200,Settlement_Project System_Tires,oh-i
+92140300,Settlement_Project System_Outside Srv,oh-i
+92140400,Settlement_Project System_Others,oh-i
+92140500,Settlement_Project System_Oil&Lubricants,oh-i
+92140600,Settlement_Project System_External Labor,oh-i
+94110000,Overhead_Plant Maintenance_Personnel,oh-i
+94110100,Overhead_Plant Maintenance_Spare Parts,oh-i
+94110200,Overhead_Plant Maintenance_Tires,oh-i
+94110300,Overhead_Plant Maintenance_Outside Srv,oh-i
+94110400,Overhead_Plant Maintenance_Others,oh-i
+94110500,Overhead_Plant Maintenance_Oil&Lubricant,oh-i
+94110600,Overhead_Plant Maintenance_ExternalLabor,oh-i
+94111000,Overhead _Production Overhead_Personnel,oh-i
+94111100,Overhead _Production Overhead_Overhead,oh-i
+94111200,Overhead _Production Overhead_Depre&Amor,oh-i
+94111300,Overhead _Production Overhead_OustideSrv,oh-i
+94111400,Overhead _Production Overhead_Depletion,oh-i
+94112000,Overhead_Mine Support_Personnel,oh-i
+94112100,Overhead_Mine Support_Overhead,oh-i
+94112200,Overhead_Mine Support_Depre&Amor,oh-i
+94112300,Overhead_Mine Support_Outside Srv,oh-i
+94113000,Other Direct Costs,oh-i
+94114000,External Services_Contract Fees,oh-e
+94115000,External Services_Rental,oh-e
+94116000,External Services_Others,oh-e
+94117000,Overhead_OtherDirectCost_SE_Personnel,oh-i
+94117100,Overhead_OtherDirectCost_SE_Others,oh-i
+94117200,Overhead_OtherDirectCost_SE_Depre&Amor,oh-i
+94117300,Overhead_OtherDirectCost_SE_OutsideSrv,oh-i
+94210000,Assessment_TSD Electrical_Personnel,oh-i
+94210100,Assessment_TSD Electrical_Outside Srv,oh-i
+94210200,Assessment_TSD Electrical_FOL,oh-i
+94210300,Assessment_TSD Electrical_Materials,oh-i
+94210400,Assessment_TSD Electrical_Depre&Amor,oh-i
+94210500,Assessment_TSD Electrical_Others,oh-i
+94211000,Assessment_Assay_Personnel,oh-i
+94211100,Assessment_Assay_Outside Srv,oh-i
+94211200,Assessment_Assay_FOL,oh-i
+94211300,Assessment_Assay_Materials,oh-i
+94211400,Assessment_Assay_Depre&Amor,oh-i
+94211500,Assessment_Assay_Others,oh-i
+94212000,Assessment_TSD General_Personnel,oh-i
+94212100,Assessment_TSD General_Outside Srv,oh-i
+94212200,Assessment_TSD General_FOL,oh-i
+94212300,Assessment_TSD General_Materials,oh-i
+94212400,Assessment_TSD General_Depre&Amor,oh-i
+94212500,Assessment_TSD General_Others,oh-i
+94213000,Assessment_MineSup_Personnel,oh-i
+94213100,Assessment_MineSup_Outside Srv,oh-i
+94213200,Assessment_MineSup_FOL,oh-i
+94213300,Assessment_MineSup_Materials,oh-i
+94213400,Assessment_MineSup_Depre&Amor,oh-i
+94213500,Assessment_MineSup_Others,oh-i
+94214000,Assessment_Production Ovrhead_Personnel,oh-i
+94214100,Assessment_Production Ovrhead_Overhead,oh-i
+94214200,Assessment_Production Ovrhead_Depre&Amor,oh-i
+94214300,Assessment_Production Ovrhead_OutsideSrv,oh-i
+94214400,Assessment_Production Ovrhead_Depletion,oh-i
+94215000,Assessment_Mine Support_Personnel,oh-i
+94215100,Assessment_Mine Support_Overhead,oh-i
+94215200,Assessment_Mine Support_Depre&Amor,oh-i
+94215300,Assessment_Mine Support_OutsideSrv,oh-i
+94216000,Assessment_Profitability Analysis 1,oh-i
+94217000,Assessment_Profitability Analysis 2,oh-i
+94218000,Assessment_Plant Maintenance_Personnel,oh-i
+94218100,Assessment_Plant Maintenance_Spare Parts,oh-i
+94218200,Assessment_Plant Maintenance_Tires,oh-i
+94218300,Assessment_Plant Maintenance_Outside Srv,oh-i
+94218400,Assessment_Plant Maintenance_Others,oh-i
+94218500,Assessment_Plant Maintenance_Oil&Lubes,oh-i
+94218600,Assessment_Plant Maintenance_ExternalLab,oh-i
+94219000,Assessment_Plant Maint Bal_Personnel,oh-i
+94219100,Assessment_Plant Maint Bal_Spare Parts,oh-i
+94219200,Assessment_Plant Maint Bal_Tires,oh-i
+94219300,Assessment_Plant Maint Bal_Outside Srv,oh-i
+94219400,Assessment_Plant Maint Bal_Others,oh-i
+94219500,Assessment_Plant Maint Bal_Oil&Lubes,oh-i
+94219600,Assessment_Plant Maint Bal_ExternalLabor,oh-i
+94220000,Assessment_Other Direct Costs,oh-i
+94221000,Assessment_OtherDirectCost_SE_Personnel,oh-i
+94221100,Assessment_OtherDirectCost_SE_Others,oh-i
+94221200,Assessment_OtherDirectCost_SE_Depre&Amor,oh-i
+94221300,Assessment_OtherDirectCost_SE_OutsideSrv,oh-i
+94223000,Assessment_Quarry_Personnel,oh-i
+94223100,Assessment_Quarry_Overhead,oh-i
+94223200,Assessment_Quarry_Depre&Amor,oh-i
+94223300,Assessment_Quarry_OutsideSrv,oh-i
+94224000,Assessment_Materials Handling_Personnel,oh-i
+94224100,Assessment_Materials Handling_Overhead,oh-i
+94224200,Assessment_Materials Handling_Depre&Amor,oh-i
+94224300,Assessment_Materials Handling_OutsideSrv,oh-i
+94225000,Assessment_LST_Prod Ovrhead_Personnel,oh-i
+94225100,Assessment_LST_Prod Ovrhead_Overhead,oh-i
+94225200,Assessment_LST_Prod Ovrhead_Depre&Amor,oh-i
+94225300,Assessment_LST_Prod Ovrhead_OutsideSrv,oh-i
+94225400,Assessment_LST_Prod Ovrhead_Depletion,oh-i
+94226000,Assessment_LST_Mine Support_Personnel,oh-i
+94226100,Assessment_LST_Mine Support_Overhead,oh-i
+94226200,Assessment_LST_Mine Support_Depre&Amor,oh-i
+94226300,Assessment_LST_Mine Support_OutsideSrv,oh-i
+94310000,Production_Equipment Hours,oh-i
+94311000,Production_Conveyor Equipment Hours,oh-i
+94312000,Production_LCP_Equipment Hours,oh-i
+94320000,Production_Manhour -Regular,oh-i
+94330000,Production_Manhour -Seasonal,oh-i
+94331000,Production_Manhour -Fixed Term/Project,oh-i
+94340000,Production_Fuel Consumption_Inhouse,oh-i
+94341000,Production_Fuel Consumption_Conveyor,oh-i
+94350000,Production_Fuel Consumption_Contract Min,oh-e
+94360000,Production_Fuel Consumption_Rental,oh-e
+94370000,Plant Maintenance_Manhour -Regular,oh-i
+94380000,Plant Maintenance_Manhour -Seasonal,oh-i
+94381000,Plant Maintenance_Manhour -Fixed Term,oh-i
+94382000,Plant Maintenance_Manhour_Outserv_Mech1,oh-i
+94383000,Plant Maintenance_Manhour_Outserv_Mech2,oh-i
+94390000,Production_Production Volume,oh-i
 99999995,TMC Tools - Liters Gasoline,oh
 99999996,TMC Tools - Equipment Operating Hours,oh
 99999997,TMC Tools - Liters Diesel,oh
