@@ -392,43 +392,43 @@ code,description,approach,activity_group,employee_type,mh_type
 60300005,Payroll - Overtime (Seasonal),mh,I,sea,ot
 60300006,Payroll - Overtime (Fixed Term/Project),mh,I,fix,ot
 60300007,Payroll - Overtime (Others),mh,I,oth,ot
-60300008,Payroll - 13th Month and Other Bonuses (Regular),mh,I,reg pro,
-60300009,Payroll - 13th Month and Other Bonuses (Seasonal),mh,I,sea,
-60300010,Payroll - 13th Month and Other Bonuses (FT/Others),mh,I,fix oth,
-60300011,Payroll - Leave Commutation (Regular),mh,I,reg pro,
-60300012,Payroll - Leave Commutation (Seasonal),mh,I,sea,
-60300013,Payroll - Leave Commutation (FT/Others),mh,I,fix oth,
-60300014,Payroll - De Minimis Benefits (Regular),mh,I,reg pro,
-60300015,Payroll - De Minimis Benefits (Seasonal),mh,I,sea,
-60300016,Payroll - De Minimis Benefits (FT/Others),mh,I,fix oth,
-60300017,SSS Contributions (Regular),mh,I,reg pro,
-60300018,SSS Contributions (Seasonal),mh,I,sea,
-60300019,SSS Contributions (FT/Others),mh,I,fix oth,
-60300020,PHIC Contributions (Regular),mh,I,reg pro,
-60300021,PHIC Contributions (Seasonal),mh,I,sea,
-60300022,PHIC Contributions (FT/Others),mh,I,fix oth,
-60300023,HDMF Contributions (Regular),mh,I,reg pro,
-60300024,HDMF Contributions (Seasonal),mh,I,sea,
-60300025,HDMF Contributions (FT/Others),mh,I,fix oth,
-60300026,ESOP Expense,mh,I,reg,
-60300027,Retirement Benefits,mh,I,reg,
-60300028,Employee Benefits,mh,I,reg,
-60300029,Other Employee Allowances,mh,I,reg,
-60300030,Employee Uniform (Regular),mh,I,reg pro,
-60300031,Employee Uniform (Seasonal),mh,I,sea,
-60300032,Employee Uniform (FT/Others),mh,I,fix oth,
-60300033,Hospital and Medical Expenses - Employees,mh,I,reg pro sea fix oth,
-60300034,Food Allowance,mh,I,reg pro,
-60300035,Sports and Recreation,mh,I,reg pro,
-60300036,Awards and Prizes,mh,I,reg,
+60300008,Payroll - 13th Month and Other Bonuses (Regular),mh,I,reg pro,reg ot
+60300009,Payroll - 13th Month and Other Bonuses (Seasonal),mh,I,sea,reg ot
+60300010,Payroll - 13th Month and Other Bonuses (FT/Others),mh,I,fix oth,reg ot
+60300011,Payroll - Leave Commutation (Regular),mh,I,reg pro,reg ot
+60300012,Payroll - Leave Commutation (Seasonal),mh,I,sea,reg ot
+60300013,Payroll - Leave Commutation (FT/Others),mh,I,fix oth,reg ot
+60300014,Payroll - De Minimis Benefits (Regular),mh,I,reg pro,reg ot
+60300015,Payroll - De Minimis Benefits (Seasonal),mh,I,sea,reg ot
+60300016,Payroll - De Minimis Benefits (FT/Others),mh,I,fix oth,reg ot
+60300017,SSS Contributions (Regular),mh,I,reg pro,reg ot
+60300018,SSS Contributions (Seasonal),mh,I,sea,reg ot
+60300019,SSS Contributions (FT/Others),mh,I,fix oth,reg ot
+60300020,PHIC Contributions (Regular),mh,I,reg pro,reg ot
+60300021,PHIC Contributions (Seasonal),mh,I,sea,reg ot
+60300022,PHIC Contributions (FT/Others),mh,I,fix oth,reg ot
+60300023,HDMF Contributions (Regular),mh,I,reg pro,reg ot
+60300024,HDMF Contributions (Seasonal),mh,I,sea,reg ot
+60300025,HDMF Contributions (FT/Others),mh,I,fix oth,reg ot
+60300026,ESOP Expense,mh,I,reg,reg ot
+60300027,Retirement Benefits,mh,I,reg,reg ot
+60300028,Employee Benefits,mh,I,reg,reg ot
+60300029,Other Employee Allowances,mh,I,reg,reg ot
+60300030,Employee Uniform (Regular),mh,I,reg pro,reg ot
+60300031,Employee Uniform (Seasonal),mh,I,sea,reg ot
+60300032,Employee Uniform (FT/Others),mh,I,fix oth,reg ot
+60300033,Hospital and Medical Expenses - Employees,mh,I,reg pro sea fix oth,reg ot
+60300034,Food Allowance,mh,I,reg pro,reg ot
+60300035,Sports and Recreation,mh,I,reg pro,reg ot
+60300036,Awards and Prizes,mh,I,reg,reg ot
 60300100,Payroll - PM Adjustment,oh,I,,
 60300200,Payroll - PS Adjustment,oh,I,,
 60300300,Payroll - Other Adjustment,oh,I,,
-60300400,BLOCKED Payroll - Other Adjustment,mh,I,reg pro,
+60300400,BLOCKED Payroll - Other Adjustment,mh,I,reg pro,reg ot
 60400000,Training and Education - Employees,main,I,,
-60400001,Training and Education - Others,mh,I,reg pro,
-60400100,Trainings and Seminar - Other Adjustment,mh,I,reg pro,
-60400200,BLOCKED Trainings and Seminar - Other Adjustment,mh,I,reg pro,
+60400001,Training and Education - Others,mh,I,reg pro,reg ot
+60400100,Trainings and Seminar - Other Adjustment,mh,I,reg pro,reg ot
+60400200,BLOCKED Trainings and Seminar - Other Adjustment,mh,I,reg pro,reg ot
 60500000,Repairs and Maintenance - Labor,oh,I,,
 60500001,Repairs and Maintenance - Parts,oh,I,,
 60500100,Outside Services - PM Adjustment,oh,I,,
@@ -449,10 +449,10 @@ code,description,approach,activity_group,employee_type,mh_type
 60800000,Dues and Subscription,main,I,,
 60800100,Dues and Subscription - Other Adjustment,main,I,,
 60800200,BLOCKED Dues and Subscription - Other Adjustment,main,I,,
-60900000,Life and Medical Insurance - Employees,mh,I,reg pro,
-60900001,Insurance - Others,mh,I,reg pro,
-60900100,Insurance -  Other Adjustment,mh,I,reg pro,
-60900200,BLOCKED Insurance -  Other Adjustment,mh,I,reg pro,
+60900000,Life and Medical Insurance - Employees,mh,I,reg pro,reg ot
+60900001,Insurance - Others,mh,I,reg pro,reg ot
+60900100,Insurance -  Other Adjustment,mh,I,reg pro,reg ot
+60900200,BLOCKED Insurance -  Other Adjustment,mh,I,reg pro,reg ot
 61000000,Depreciation Expense - Land Improvements,main,I,,
 61001000,Depletion Expense - Mine and Mining Property,main,I,,
 61001001,Depletion Expense - Asset Retirement Obligation,main,I,,
@@ -473,7 +473,7 @@ code,description,approach,activity_group,employee_type,mh_type
 61006100,Dep Exp - Investment Properties,main,I,,
 61009000,Depreciation and Amortization - Other Adjustment,main,I,,
 61009100,BLOCKED Depreciation and Amortization - Other Adjustment,main,I,,
-61100000,Contract Fee - Agency Services,mh,I,age,
+61100000,Contract Fee - Agency Services,mh,I,age,reg ot
 61101000,Contract Fee - Mining,oh,C,,
 61101001,Contract Fee - Cover/Uncover,main,I,,
 61101002,Contract Fee - Stevedoring,main,I,,
@@ -517,12 +517,12 @@ code,description,approach,activity_group,employee_type,mh_type
 61300013,Laboratory Supplies,main,I,,
 61300014,Chemicals,main,I,,
 61300015,Medicines and Medical Supplies,main,I,,
-61300016,Safety Equipment and Supplies,mh,I,reg pro sea,
+61300016,Safety Equipment and Supplies,mh,I,reg pro sea,reg ot
 61300017,Stationeries and Office Supplies,main,I,,
 61300018,Other General Materials and Supplies,main,I,,
 61300019,Computer Supplies and Other Electronics,main,I,,
 61300020,Tools Instruments and Machine,main,I,,
-61300021,Food and Food Supplies,mh,I,reg pro,
+61300021,Food and Food Supplies,mh,I,reg pro,reg ot
 61300023,Fuel - Others,oh,I,,
 61300100,Spare Parts - PM Adjustment,oh,I,,
 61300110,Tires - PM Adjustment,oh,I,,
@@ -551,7 +551,7 @@ code,description,approach,activity_group,employee_type,mh_type
 61800001,Livelihood and Community Assistance,main,I,,
 61800100,Publicity and Promotion - Other Adjustment,main,I,,
 61800200,BLOCKED Publicity and Promotion - Other Adjustment,main,I,,
-61900000,Medical Assistance - Others,mh,I,reg pro sea,
+61900000,Medical Assistance - Others,mh,I,reg pro sea,reg ot
 61900001,Legal Documentation,main,I,,
 61900002,Government and Regulator Fees,main,I,,
 61900003,Other Miscellaneous Expense,main,I,,
@@ -764,9 +764,9 @@ code,description,approach,activity_group,employee_type,mh_type
 94310000,Production_Equipment Hours,oh,I,,
 94311000,Production_Conveyor Equipment Hours,oh,I,,
 94312000,Production_LCP_Equipment Hours,oh,I,,
-94320000,Production_Manhour -Regular,mh,I,reg pro,
-94330000,Production_Manhour -Seasonal,mh,I,sea,
-94331000,Production_Manhour -Fixed Term/Project,mh,I,fix oth,
+94320000,Production_Manhour -Regular,mh,I,reg pro,reg ot
+94330000,Production_Manhour -Seasonal,mh,I,sea,reg ot
+94331000,Production_Manhour -Fixed Term/Project,mh,I,fix oth,reg ot
 94340000,Production_Fuel Consumption_Inhouse,oh,I,,
 94341000,Production_Fuel Consumption_Conveyor,oh,I,,
 94350000,Production_Fuel Consumption_Contract Min,oh,C,,
@@ -780,5 +780,5 @@ code,description,approach,activity_group,employee_type,mh_type
 99999995,TMC Tools - Liters Gasoline,oh,I C R,,
 99999996,TMC Tools - Equipment Operating Hours,oh,I C R,,
 99999997,TMC Tools - Liters Diesel,oh,I,,
-99999998,TMC Tools - Man-hours Reg,mh,I,reg pro sea age fix oth,
-99999999,TMC Tools - Man-hours OT,mh,I,reg pro sea age fix oth,
+99999998,TMC Tools - Man-hours Reg,mh,I,reg pro sea age fix oth,reg
+99999999,TMC Tools - Man-hours OT,mh,I,reg pro sea age fix oth,ot
