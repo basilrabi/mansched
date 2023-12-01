@@ -3,19 +3,22 @@
 \docType{data}
 \name{acSAP}
 \alias{acSAP}
-\title{Cost accounting codes in SAP}
+\title{General ledger codes in SAP}
 \format{
-\code{\link{data.frame}} with 779 rows and 3 columns:
+\code{\link{data.frame}} with 783 rows and 5 columns:
   \describe{
     \item{code}{accounting code}
     \item{description}{cost component}
-    \item{approach}{where to distribute SAP cost to in-house cost centers}
+    \item{approach}{how to distribute SAP cost to old cost centers}
+    \item{activity_group}{flag whether the cost can be distributed to in-house (I), rental (R), or contract (C) old cost centers}
+    \item{employee_type}{employment type of employee if cost is to be distributed by manhours}
+    \item{mh_type}{type of manhours whether regular or overtime}
   }
 }
 \usage{
 acSAP
 }
 \description{
-SAP cost codes used by accounting.
+SAP general ledger accounts used by accounting.
 }
 \keyword{datasets}

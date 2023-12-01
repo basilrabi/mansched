@@ -99,5 +99,7 @@ Calculates monthly personnel cost for each cost center Personnel costs are
     \item{60300036}{Awards and Prizes}
     \item{60900000}{Life and Medical Insurance - Employees}
     \item{61100000}{Contract Fee - Agency Services}
+    \item{99999998}{TMC Tools - Man-hours Reg}
+    \item{99999999}{TMC Tools - Man-hours OT}
   }
 }
