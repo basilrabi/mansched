@@ -1757,7 +1757,8 @@ getCost <- function(mhDB,
                                 c61100000,
                                 c61300016,
                                 c99999998,
-                                c99999999)
+                                c99999999) %>%
+    dplyr::filter(!is.na(cost))
 
   costDB <- dplyr::group_by(
     costDBraw, costCenter, description, month, equipment

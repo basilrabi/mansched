@@ -553,7 +553,12 @@ initEmpReq <- function(empReq, sched, hol = NA, year = NA) {
       workSched <- NA
     } else {
       workSched <- as.integer(sched[schedIndex,c(2:13)])
-      workSched[is.na(workSched)] <- 0L
+      workSched <- sapply(1:12, function(x) {
+        if (is.na(workSched[x])) {
+          return(mdtProb$days[x])
+        }
+        return(sched[schedIndex, x + 1])
+      })
     }
 
     if (is.na(empReq$spareFactor[i]))

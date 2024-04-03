@@ -40,7 +40,7 @@ cleanCCS <- function(x) {
 #' @return \code{data.frame} with \code{NA} values at the lower half rows
 #' @export expandDF
 expandDF <- function(x) {
-  tempData <- matrix(NA, nrow = length(x[,1]), ncol = length(x))
+  tempData <- matrix(NA, nrow = nrow(x), ncol = length(x))
   colnames(tempData) <- colnames(x)
   rbind(x, tempData)
 }
