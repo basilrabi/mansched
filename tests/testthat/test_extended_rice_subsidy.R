@@ -50,7 +50,7 @@ cost <- tempData[[1]] %>%
 
 
 test_that("off-season rice subsidy", {
-  expect_equal(abs(sum(cost$`1`) - 2500) < 0.1, TRUE)
+  expect_equal(abs(sum(cost$`1`) - 3000) < 0.1, TRUE)
 })
 
 rm(list = ls())

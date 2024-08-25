@@ -115,9 +115,9 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           hol = hol)
 
 test_that("getCBA() works for budget", {
-  expect_equal(sum(getCBA(tempEmp1)$benefits), 508.33 * 12)
-  expect_equal(sum(getCBA(tempEmp2)$benefits), 508.33 * 11)
-  expect_equal(sum(getCBA(tempEmp3)$benefits), 508.33 * 10)
+  expect_equal(sum(getCBA(tempEmp1)$benefits), 558.33 * 12)
+  expect_equal(sum(getCBA(tempEmp2)$benefits), 558.33 * 11)
+  expect_equal(sum(getCBA(tempEmp3)$benefits), 558.33 * 10)
   expect_equal(sum(getCBA(tempEmp4)$benefits), 0)
   expect_equal(sum(getCBA(tempEmp5)$benefits), 0)
   expect_equal(sum(getCBA(tempEmp6)$benefits), 0)
@@ -248,9 +248,9 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           forecast = TRUE)
 
 test_that("getCBA() works for forecast", {
-  expect_equal(sum(getCBA(tempEmp1)$benefits), 508.33 * 12)
-  expect_equal(sum(getCBA(tempEmp2)$benefits), 508.33 * 11)
-  expect_equal(sum(getCBA(tempEmp3)$benefits), 508.33 * 10)
+  expect_equal(sum(getCBA(tempEmp1)$benefits), 462.5 * 12)
+  expect_equal(sum(getCBA(tempEmp2)$benefits), 462.5 * 11)
+  expect_equal(sum(getCBA(tempEmp3)$benefits), 462.5 * 10)
   expect_equal(sum(getCBA(tempEmp4)$benefits), 0)
   expect_equal(sum(getCBA(tempEmp5)$benefits), 0)
   expect_equal(sum(getCBA(tempEmp6)$benefits), 0)

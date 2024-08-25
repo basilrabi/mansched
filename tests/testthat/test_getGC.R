@@ -86,15 +86,15 @@ tempEmp5 <- initREmployee(theObject = tempEmp,
                           equipment = equipment)
 
 test_that("getGC() works for budget", {
-  expect_equal(sum(getGC(tempEmp1)$benefits), 1600)
-  expect_equal(getGC(tempEmp1)$benefits[12], 1600)
+  expect_equal(sum(getGC(tempEmp1)$benefits), 2000)
+  expect_equal(getGC(tempEmp1)$benefits[12], 2000)
   expect_equal(sum(getGC(tempEmp2)$benefits), 0)
-  expect_equal(sum(getGC(tempEmp3)$benefits), 3200)
+  expect_equal(sum(getGC(tempEmp3)$benefits), 4000)
   expect_equal(getGC(tempEmp3)$benefits[12], 0)
-  expect_equal(sum(getGC(tempEmp4)$benefits), 3200)
-  expect_equal(getGC(tempEmp4)$benefits[11], 3200)
-  expect_equal(sum(getGC(tempEmp5)$benefits), 3200)
-  expect_equal(getGC(tempEmp5)$benefits[11], 3200)
+  expect_equal(sum(getGC(tempEmp4)$benefits), 4000)
+  expect_equal(getGC(tempEmp4)$benefits[11], 4000)
+  expect_equal(sum(getGC(tempEmp5)$benefits), 4000)
+  expect_equal(getGC(tempEmp5)$benefits[11], 4000)
 })
 
 # Test for forecast

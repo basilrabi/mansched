@@ -51,8 +51,13 @@ setMethod(
 
     # Allowances
     food <- 2200
-    lighting <- 1200
-    housing <- 1200
+    lighting <- 1500
+    housing <- 2000
+
+    if (theObject@forecast) {
+      lighting <- 1150
+      housing <- 1150
+    }
 
     if (!theObject@inHouse)
       cost <- cost + food + lighting
@@ -74,16 +79,27 @@ setMethod(
     cost      <- 0
 
     if (isRF(theObject)) {
+      rf_housing <- 2000
+      rf_lighting <- 1500
+      if (theObject@forecast) {
+        rf_housing <- 850
+        rf_lighting <- 750
+      }
 
       if (isReg(theObject = theObject)) {
-        cost <- cost + 750 # for lighting
-        cost <- cost + 850 # for housing
+        cost <- cost + rf_lighting
+        cost <- cost + rf_housing
       }
     } else {
 
       food <- 2100
-      lighting <- 1200
-      housing <- 1200
+      lighting <- 1500
+      housing <- 2000
+
+      if (theObject@forecast) {
+        lighting <- 1150
+        housing <- 1150
+      }
 
       cost <- cost + food
 

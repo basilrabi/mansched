@@ -33,9 +33,12 @@ setMethod(
 
     shirt <- getCM(theObject)
     shirt$shirt <- 0
+    price <- 600
+    if (theObject@forecast)
+      price <- 550
 
     if (isReg(theObject))
-      shirt$shirt[shirt$month == 5L] <- 500
+      shirt$shirt[shirt$month == 5L] <- price
 
     shirt$benefits <- round(shirt$allow * shirt$shirt, digits = 2)
 

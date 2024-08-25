@@ -32,7 +32,9 @@ setMethod(
   signature  = "Employee",
   definition = function(theObject) {
 
-    rice <- 2500
+    rice <- 3000
+    if (theObject@forecast)
+      rice <- 2800
 
     if (grepl("BARGE MAIN", theObject@name))
       rice <- 0

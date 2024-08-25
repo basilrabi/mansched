@@ -151,15 +151,15 @@ tempEmp9 <- initREmployee(theObject = tempEmp,
                           dependents = c(NA, rep(1L, times = 10), NA))
 
 test_that("getRiceSub() works in budget", {
-  expect_equal(sum(getRiceSub(tempEmp1)$riceSub), 2500 * 12)
-  expect_equal(sum(getRiceSub(tempEmp2)$riceSub), 2500 * 11)
-  expect_equal(sum(getRiceSub(tempEmp3)$riceSub), 2500 * 10)
-  expect_equal(sum(getRiceSub(tempEmp4)$riceSub), 2500 * 12)
-  expect_equal(sum(getRiceSub(tempEmp5)$riceSub), 2500 * 12)
-  expect_equal(sum(getRiceSub(tempEmp6)$riceSub), 2500 * 12)
-  expect_equal(sum(getRiceSub(tempEmp7)$riceSub), 2500 * 7)
+  expect_equal(sum(getRiceSub(tempEmp1)$riceSub), 3000 * 12)
+  expect_equal(sum(getRiceSub(tempEmp2)$riceSub), 3000 * 11)
+  expect_equal(sum(getRiceSub(tempEmp3)$riceSub), 3000 * 10)
+  expect_equal(sum(getRiceSub(tempEmp4)$riceSub), 3000 * 12)
+  expect_equal(sum(getRiceSub(tempEmp5)$riceSub), 3000 * 12)
+  expect_equal(sum(getRiceSub(tempEmp6)$riceSub), 3000 * 12)
+  expect_equal(sum(getRiceSub(tempEmp7)$riceSub), 3000 * 7)
   expect_equal(sum(getRiceSub(tempEmp8)$riceSub), 0)
-  expect_equal(sum(getRiceSub(tempEmp9)$riceSub), 2500 * 12 * 0.5)
+  expect_equal(sum(getRiceSub(tempEmp9)$riceSub), 3000 * 12 * 0.5)
 })
 
 # Test for forecast
@@ -324,15 +324,15 @@ tempEmp9 <- initREmployee(theObject = tempEmp,
                           dependents = c(NA, rep(1L, times = 10), NA))
 
 test_that("getRiceSub() works in forecast", {
-  expect_equal(sum(getRiceSub(tempEmp1)$riceSub), 2500 * 12)
-  expect_equal(sum(getRiceSub(tempEmp2)$riceSub), 2500 * 11)
-  expect_equal(sum(getRiceSub(tempEmp3)$riceSub), 2500 * 10)
-  expect_equal(sum(getRiceSub(tempEmp4)$riceSub), 2500 * 12)
-  expect_equal(sum(getRiceSub(tempEmp5)$riceSub), 2500 * 12)
-  expect_equal(sum(getRiceSub(tempEmp6)$riceSub), 2500 * 12)
-  expect_equal(sum(getRiceSub(tempEmp7)$riceSub), 2500 * 7)
+  expect_equal(sum(getRiceSub(tempEmp1)$riceSub), 2800 * 12)
+  expect_equal(sum(getRiceSub(tempEmp2)$riceSub), 2800 * 11)
+  expect_equal(sum(getRiceSub(tempEmp3)$riceSub), 2800 * 10)
+  expect_equal(sum(getRiceSub(tempEmp4)$riceSub), 2800 * 12)
+  expect_equal(sum(getRiceSub(tempEmp5)$riceSub), 2800 * 12)
+  expect_equal(sum(getRiceSub(tempEmp6)$riceSub), 2800 * 12)
+  expect_equal(sum(getRiceSub(tempEmp7)$riceSub), 2800 * 7)
   expect_equal(sum(getRiceSub(tempEmp8)$riceSub), 0)
-  expect_equal(sum(getRiceSub(tempEmp9)$riceSub), 2500 * 12 * 0.5)
+  expect_equal(sum(getRiceSub(tempEmp9)$riceSub), 2800 * 12 * 0.5)
 })
 
 rm(list = ls())

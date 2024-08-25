@@ -290,7 +290,7 @@ iS            <- premium.nonRF$mhType %in% c("sh", "lh")
 premium.nonRF[iR, c("premiumR")] <- premium.nonRF[iR, c("premiumR")] - 1
 premium.nonRF[iS, c("premiumS")] <- premium.nonRF[iS, c("premiumS")] - 1
 
-seasonalSigningBonus <- 2400
+seasonalSigningBonus <- 0
 
 #' Employer's SSS Contribution
 #'

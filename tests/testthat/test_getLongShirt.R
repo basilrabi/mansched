@@ -115,12 +115,12 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           hol = hol)
 
 test_that("getLongShirt() works for budget", {
-  expect_equal(sum(getLongShirt(tempEmp1)$benefits), round(1400/12, 2) * 12)
-  expect_equal(sum(getLongShirt(tempEmp2)$benefits), round(1400/12, 2) * 11)
-  expect_equal(sum(getLongShirt(tempEmp3)$benefits), round(1400/12, 2) * 10)
-  expect_equal(sum(getLongShirt(tempEmp4)$benefits), 1400)
-  expect_equal(sum(getLongShirt(tempEmp5)$benefits), 1400)
-  expect_equal(sum(getLongShirt(tempEmp6)$benefits), 1400)
+  expect_equal(sum(getLongShirt(tempEmp1)$benefits), round(1800/12, 2) * 12)
+  expect_equal(sum(getLongShirt(tempEmp2)$benefits), round(1800/12, 2) * 11)
+  expect_equal(sum(getLongShirt(tempEmp3)$benefits), round(1800/12, 2) * 10)
+  expect_equal(sum(getLongShirt(tempEmp4)$benefits), 1800)
+  expect_equal(sum(getLongShirt(tempEmp5)$benefits), 1800)
+  expect_equal(sum(getLongShirt(tempEmp6)$benefits), 1800)
   expect_equal(sum(getLongShirt(tempEmp7)$benefits), 0)
 })
 
@@ -247,7 +247,7 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           hol = hol,
                           forecast = TRUE)
 
-shirt_cost <- 1400
+shirt_cost <- 1500
 test_that("getLongShirt() works for forecast", {
   expect_equal(abs(sum(getLongShirt(tempEmp1)$benefits) - shirt_cost) < 0.1, TRUE)
   expect_equal(abs(sum(getLongShirt(tempEmp2)$benefits) - (shirt_cost * 11 / 12)) < 0.1, TRUE)
