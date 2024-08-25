@@ -89,8 +89,10 @@ sanityCheckEmpPool <- function(empPool) {
     if (!is(empPool[[i]], "numeric"))
       stop(paste("Column", i, "is not numeric!"))
 
-    if (anyNA(empPool[[i]]))
-      stop(paste("Column", i, "is incomplete!"))
+    if (anyNA(empPool[[i]])) {
+      warning(sprintf("Empty rows in column %s are assumed as 0.", i))
+      empPool[[i]][is.na(empPool[[i]])] <- 0
+    }
 
   }
 
