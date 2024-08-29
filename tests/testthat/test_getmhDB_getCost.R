@@ -97,7 +97,7 @@ PI14100 <- sum(c14100[stringr::str_detect(c14100$description, "HDMF"),
 
 test_that("getCost() works", {
   expect_equal(mh14000 + mh14100, totMH)
-  expect_equal(PI14000 + PI14100, 750 * 12)
+  expect_equal(PI14000 + PI14100, 1000 * 12)
 })
 
 rm(list = ls())

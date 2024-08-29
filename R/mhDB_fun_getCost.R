@@ -691,7 +691,7 @@ getCost <- function(mhDB,
     dplyr::group_by(ID, month, costCenter, status, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(PI = 150) %>%
+    dplyr::mutate(PI = 200) %>%
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
     dplyr::ungroup() %>%
