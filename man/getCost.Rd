@@ -80,20 +80,28 @@ Calculates monthly personnel cost for each cost center Personnel costs are
   \describe{
     \item{60300000}{Payroll - Salaries (Regular)}
     \item{60300001}{Payroll - Salaries (Seasonal)}
+    \item{60300002}{Payroll - Salaries (Fixed Term/Project)}
     \item{60300004}{Payroll - Overtime (Regular)}
     \item{60300005}{Payroll - Overtime (Seasonal)}
+    \item{60300006}{Payroll - Overtime (Fixed Term/Project)}
     \item{60300008}{Payroll - 13th Month and Other Bonuses (Regular)}
     \item{60300009}{Payroll - 13th Month and Other Bonuses (Seasonal)}
+    \item{60300010}{Payroll - 13th Month and Other Bonuses (FT/Others)}
     \item{60300011}{Payroll - Leave Commutation (Regular)}
     \item{60300012}{Payroll - Leave Commutation (Seasonal)}
+    \item{60300013}{Payroll - Leave Commutation (FT/Others)}
     \item{60300014}{Payroll - De Minimis Benefits (Regular)}
     \item{60300015}{Payroll - De Minimis Benefits (Seasonal)}
+    \item{60300016}{Payroll - De Minimis Benefits (FT/Others)}
     \item{60300017}{SSS Contributions (Regular)}
     \item{60300018}{SSS Contributions (Seasonal)}
+    \item{60300019}{SSS Contributions (FT/Others)}
     \item{60300020}{PHIC Contributions (Regular)}
     \item{60300021}{PHIC Contributions (Seasonal)}
+    \item{60300022}{PHIC Contributions (FT/Others)}
     \item{60300023}{HDMF Contributions (Regular)}
     \item{60300024}{HDMF Contributions (Seasonal)}
+    \item{60300025}{HDMF Contributions (FT/Others)}
     \item{60300029}{Other Employee Allowances}
     \item{60300033}{Hospital and Medical Expenses - Employees}
     \item{60300036}{Awards and Prizes}

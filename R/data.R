@@ -26,6 +26,18 @@
 #'   }
 "acSAP"
 
+#' Employer's SSS Contribution
+#'
+#' Details are posted in
+#' \url{https://www.sss.gov.ph/sss/appmanager/pages.jsp?page=scheduleofcontribution}.
+#'
+#' @format \code{\link{data.frame}} with 53 rows and 3 columns:
+#'   \describe{
+#'     \item{r1}{minimum gross salary}
+#'     \item{r2}{maximum gross salary}
+#'    }
+"SSS"
+
 #' Valid equipment types
 #'
 #' A character vector containing the valid equipment types in Taganito Mine.
@@ -291,15 +303,3 @@ premium.nonRF[iR, c("premiumR")] <- premium.nonRF[iR, c("premiumR")] - 1
 premium.nonRF[iS, c("premiumS")] <- premium.nonRF[iS, c("premiumS")] - 1
 
 seasonalSigningBonus <- 0
-
-#' Employer's SSS Contribution
-#'
-#' Details are posted in
-#' \url{https://www.sss.gov.ph/sss/appmanager/pages.jsp?page=scheduleofcontribution}.
-#'
-#' @format \code{\link{data.frame}} with 53 rows and 3 columns:
-#'   \describe{
-#'     \item{r1}{minimum gross salary}
-#'     \item{r2}{maximum gross salary}
-#'    }
-"SSS"

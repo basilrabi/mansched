@@ -5,7 +5,11 @@
 \alias{SSS}
 \title{Employer's SSS Contribution}
 \format{
-An object of class \code{data.frame} with 45 rows and 3 columns.
+\code{\link{data.frame}} with 53 rows and 3 columns:
+  \describe{
+    \item{r1}{minimum gross salary}
+    \item{r2}{maximum gross salary}
+   }
 }
 \usage{
 SSS
