@@ -22,7 +22,8 @@ NULL
 #'   employee
 #'
 #'   The accepted values are \code{"reg"} (regular), \code{"pro"}
-#'   (probationary), and \code{"sea"} (seasonal).
+#'   (probationary), \code{"sea"} (seasonal), and \code{"prj"}
+#'   (project-based).
 #' @param cBegin character string defining the date wherein the employment
 #'   contract of the employee began
 #'

@@ -47,7 +47,7 @@ setMethod(
       gc$benefits <- round(gc$allow * gc$gc, digits = 2)
     }
 
-    if (theObject@status %in% c("sea", "pro")) {
+    if (theObject@status %in% c("sea", "pro", "prj")) {
 
       if (sum(gc$allow) > 6) {
         multiplier <- 7

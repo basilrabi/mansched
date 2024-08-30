@@ -8,20 +8,28 @@ NULL
 #'   \describe{
 #'     \item{60300000}{Payroll - Salaries (Regular)}
 #'     \item{60300001}{Payroll - Salaries (Seasonal)}
+#'     \item{60300002}{Payroll - Salaries (Fixed Term/Project)}
 #'     \item{60300004}{Payroll - Overtime (Regular)}
 #'     \item{60300005}{Payroll - Overtime (Seasonal)}
+#'     \item{60300006}{Payroll - Overtime (Fixed Term/Project)}
 #'     \item{60300008}{Payroll - 13th Month and Other Bonuses (Regular)}
 #'     \item{60300009}{Payroll - 13th Month and Other Bonuses (Seasonal)}
+#'     \item{60300010}{Payroll - 13th Month and Other Bonuses (FT/Others)}
 #'     \item{60300011}{Payroll - Leave Commutation (Regular)}
 #'     \item{60300012}{Payroll - Leave Commutation (Seasonal)}
+#'     \item{60300013}{Payroll - Leave Commutation (FT/Others)}
 #'     \item{60300014}{Payroll - De Minimis Benefits (Regular)}
 #'     \item{60300015}{Payroll - De Minimis Benefits (Seasonal)}
+#'     \item{60300016}{Payroll - De Minimis Benefits (FT/Others)}
 #'     \item{60300017}{SSS Contributions (Regular)}
 #'     \item{60300018}{SSS Contributions (Seasonal)}
+#'     \item{60300019}{SSS Contributions (FT/Others)}
 #'     \item{60300020}{PHIC Contributions (Regular)}
 #'     \item{60300021}{PHIC Contributions (Seasonal)}
+#'     \item{60300022}{PHIC Contributions (FT/Others)}
 #'     \item{60300023}{HDMF Contributions (Regular)}
 #'     \item{60300024}{HDMF Contributions (Seasonal)}
+#'     \item{60300025}{HDMF Contributions (FT/Others)}
 #'     \item{60300029}{Other Employee Allowances}
 #'     \item{60300033}{Hospital and Medical Expenses - Employees}
 #'     \item{60300036}{Awards and Prizes}
@@ -419,6 +427,54 @@ getCost <- function(mhDB,
     dplyr::mutate(costWage = round(salH * mh * premiumS, digits = 2),
                   costNP = round(salH * np * npS, digits = 2))
 
+  ## Separate project-based employees
+  mhDB.m.Prj <- dplyr::filter(mhDB.m, status == "prj") %>%
+    dplyr::select(-c(sal, status, maxReg)) %>%
+    dplyr::left_join(
+      dplyr::select(premium.nonRF, isOT.S, premiumS, npS, mhType),
+      by = "mhType"
+    )
+
+  ### Separate non-OT
+  mhDB.m.Prj.Reg <- dplyr::filter(mhDB.m.Prj, !isOT.S) %>%
+    dplyr::select(-c(mhType, isOT.S, premiumS))
+
+  #### Get monthly wage minus absences
+  mhDB.m.Prj.Reg.M <- mhDB.m.Prj.Reg %>%
+    dplyr::group_by(ID, month) %>%
+    dplyr::summarise(mhTot = sum(mh)) %>%
+    dplyr::left_join(
+      unique(dplyr::select(mhDB, ID, month, maxReg)),
+      by = c("ID", "month")
+    ) %>%
+    dplyr::mutate(abHours = maxReg - mhTot) %>%
+    dplyr::left_join(unique(dplyr::select(mhDB, ID, month, sal)),
+                     by = c("ID", "month")) %>%
+    dplyr::left_join(dplyr::select(wageEmp, -isRF),
+                     by = c("ID", "sal")) %>%
+    dplyr::mutate(abCost = round(salH * abHours, digits = 2)) %>%
+    dplyr::mutate(salMB = salM - abCost)
+
+  #### Combine salMB
+  mhDB.m.Prj.Reg <- dplyr::left_join(
+    x = mhDB.m.Prj.Reg,
+    y = dplyr::select(mhDB.m.Prj.Reg.M, ID, month, mhTot, salH, salMB),
+    by = c("ID", "month")
+  ) %>%
+    dplyr::mutate(Xmh = mh / mhTot) %>%
+    dplyr::mutate(costWage = round(Xmh * salMB, digits = 2),
+                  costNP = round(salH * np * npS, digits = 2))
+
+  ### Separate OT
+  mhDB.m.Prj.OT <- dplyr::filter(mhDB.m.Prj, isOT.S) %>%
+    dplyr::select(-mhType) %>%
+    dplyr::left_join(unique(dplyr::select(mhDB, ID, month, sal)),
+                     by = c("ID", "month")) %>%
+    dplyr::left_join(dplyr::select(wageEmp, -c(salM, isRF)),
+                     by = c("ID", "sal")) %>%
+    dplyr::mutate(costWage = round(salH * mh * premiumS, digits = 2),
+                  costNP = round(salH * np * npS, digits = 2))
+
   #### Compute Salaries for daily wagers ####
   cat("\nComputing salaries for RF.\n")
 
@@ -464,6 +520,18 @@ getCost <- function(mhDB,
   ### Separate non-OT and OT
   mhDB.d.S.Reg <- dplyr::filter(mhDB.d.S, !isOT.S)
   mhDB.d.S.OT <- dplyr::filter(mhDB.d.S, isOT.S)
+
+  ## Separate project-based employees
+  mhDB.d.Prj <- dplyr::filter(mhDB.d, status == "prj") %>%
+    dplyr::select(-c(status, maxReg)) %>%
+    dplyr::left_join(dplyr::select(premium.RF, isOT.S, premiumS, npS, mhType),
+                     by = "mhType") %>%
+    dplyr::mutate(costWage = round(salH * mh * premiumS, digits = 2),
+                  costNP = round(salH * np * npS, digits = 2))
+
+  ### Separate non-OT and OT
+  mhDB.d.Prj.Reg <- dplyr::filter(mhDB.d.Prj, !isOT.S)
+  mhDB.d.Prj.OT <- dplyr::filter(mhDB.d.Prj, isOT.S)
 
   ## Separate agency employees
   mhDB.d.A <- dplyr::filter(mhDB.d, status == "age") %>%
@@ -531,6 +599,7 @@ getCost <- function(mhDB,
   hol.mhDB.d.R <- dplyr::filter(hol.mhDB.d, status %in% c("reg", "pro"))
   hol.mhDB.d.S <- dplyr::filter(hol.mhDB.d, status == "sea")
   hol.mhDB.d.A <- dplyr::filter(hol.mhDB.d, status == "age")
+  hol.mhDB.d.Prj <- dplyr::filter(hol.mhDB.d, status == "prj")
 
   #### Compute for Employee Allowances ####
   cat("\nComputing employee allowances.\n")
@@ -710,10 +779,10 @@ getCost <- function(mhDB,
 
   PHICdb <- lapply(listR, FUN = function(x) {
 
-    max_salary <- 80000
-    phic_premium <- 0.02
-    phic_premium_max <- 1600
-    phic_premium_min <- 200
+    max_salary <- 100000
+    phic_premium <- 0.025
+    phic_premium_max <- 2500
+    phic_premium_min <- 250
 
     tempData <- getCM(x)
 
@@ -887,14 +956,14 @@ getCost <- function(mhDB,
     mhDB.LC.R <- NULL
   }
 
-  ## Separate seasonal and agency employees
+  ## Separate seasonal, agency, and project-based employees
   ##- These must be separated since they are not entitled to negotiated
   ##- holiday premium.
   ##- Probationary employees have no leave commutation.
 
   ### Get leave hours
   LH <- lapply(listR[sapply(listR, FUN = function(x) {
-    x@status %in% c("sea", "age")
+    x@status %in% c("sea", "age", "prj")
   })], FUN = function(x) {
     data.frame(ID = x@ID, LH = x@leaveHours, sal = "a")
   }) %>% data.table::rbindlist(use.names = TRUE)
@@ -930,6 +999,8 @@ getCost <- function(mhDB,
   ## Get cost
   mhDB.LC <- dplyr::filter(mhDB.LC.S, status == "sea") %>%
     dplyr::select(costCenter, month, equipment, cost)
+  mhDB.LC.Prj <- dplyr::filter(mhDB.LC.S, status == "prj") %>%
+    dplyr::select(costCenter, month, equipment, cost)
   mhDB.LC.A <- dplyr::filter(mhDB.LC.S, status == "age") %>%
     dplyr::select(costCenter, month, equipment, cost)
 
@@ -956,6 +1027,10 @@ getCost <- function(mhDB,
            mhDB.d.S.OT$ID,
            mhDB.d.S.Reg$ID,
            mhDB.d.S.Reg$ID,
+           mhDB.d.Prj.OT$ID,
+           mhDB.d.Prj.OT$ID,
+           mhDB.d.Prj.Reg$ID,
+           mhDB.d.Prj.Reg$ID,
            mhDB.m.P.OT$ID,
            mhDB.m.P.OT$ID,
            mhDB.m.P.Reg$ID,
@@ -986,6 +1061,10 @@ getCost <- function(mhDB,
                    mhDB.d.S.OT$costCenter,
                    mhDB.d.S.Reg$costCenter,
                    mhDB.d.S.Reg$costCenter,
+                   mhDB.d.Prj.OT$costCenter,
+                   mhDB.d.Prj.OT$costCenter,
+                   mhDB.d.Prj.Reg$costCenter,
+                   mhDB.d.Prj.Reg$costCenter,
                    mhDB.m.P.OT$costCenter,
                    mhDB.m.P.OT$costCenter,
                    mhDB.m.P.Reg$costCenter,
@@ -1016,6 +1095,10 @@ getCost <- function(mhDB,
               mhDB.d.S.OT$month,
               mhDB.d.S.Reg$month,
               mhDB.d.S.Reg$month,
+              mhDB.d.Prj.OT$month,
+              mhDB.d.Prj.OT$month,
+              mhDB.d.Prj.Reg$month,
+              mhDB.d.Prj.Reg$month,
               mhDB.m.P.OT$month,
               mhDB.m.P.OT$month,
               mhDB.m.P.Reg$month,
@@ -1046,6 +1129,10 @@ getCost <- function(mhDB,
                   mhDB.d.S.OT$equipment,
                   mhDB.d.S.Reg$equipment,
                   mhDB.d.S.Reg$equipment,
+                  mhDB.d.Prj.OT$equipment,
+                  mhDB.d.Prj.OT$equipment,
+                  mhDB.d.Prj.Reg$equipment,
+                  mhDB.d.Prj.Reg$equipment,
                   mhDB.m.P.OT$equipment,
                   mhDB.m.P.OT$equipment,
                   mhDB.m.P.Reg$equipment,
@@ -1076,6 +1163,10 @@ getCost <- function(mhDB,
              mhDB.d.S.OT$costWage,
              mhDB.d.S.Reg$costNP,
              mhDB.d.S.Reg$costWage,
+             mhDB.d.Prj.OT$costNP,
+             mhDB.d.Prj.OT$costWage,
+             mhDB.d.Prj.Reg$costNP,
+             mhDB.d.Prj.Reg$costWage,
              mhDB.m.P.OT$costNP,
              mhDB.m.P.OT$costWage,
              mhDB.m.P.Reg$costNP,
@@ -1485,6 +1576,23 @@ getCost <- function(mhDB,
     dplyr::mutate(description = "Payroll - Salaries (Seasonal)",
                   status = "sea")
 
+  c60300002 <- dplyr::bind_rows(
+    data.frame(costCenter = mhDB.m.Prj.Reg$costCenter,
+               month = mhDB.m.Prj.Reg$month,
+               equipment = mhDB.m.Prj.Reg$equipment,
+               cost = mhDB.m.Prj.Reg$costWage),
+    data.frame(costCenter = mhDB.d.Prj.Reg$costCenter,
+               month = mhDB.d.Prj.Reg$month,
+               equipment = mhDB.d.Prj.Reg$equipment,
+               cost = mhDB.d.Prj.Reg$costWage),
+    data.frame(costCenter = hol.mhDB.d.Prj$costCenter,
+               month = hol.mhDB.d.Prj$month,
+               equipment = hol.mhDB.d.Prj$equipment,
+               cost = hol.mhDB.d.Prj$XcostWage)
+  ) %>%
+    dplyr::mutate(description = "Payroll - Salaries (Fixed Term/Project)",
+                  status = "prj")
+
   c60300004 <- dplyr::bind_rows(
     data.frame(costCenter = mhDB.m.R.Reg$costCenter,
                month = mhDB.m.R.Reg$month,
@@ -1567,8 +1675,37 @@ getCost <- function(mhDB,
     dplyr::mutate(description = "Payroll - Overtime (Seasonal)",
                   status = "sea")
 
+  c60300006 <- dplyr::bind_rows(
+    data.frame(costCenter = mhDB.m.Prj.Reg$costCenter,
+               month = mhDB.m.Prj.Reg$month,
+               equipment = mhDB.m.Prj.Reg$equipment,
+               cost = mhDB.m.Prj.Reg$costNP),
+    data.frame(costCenter = mhDB.m.Prj.OT$costCenter,
+               month = mhDB.m.Prj.OT$month,
+               equipment = mhDB.m.Prj.OT$equipment,
+               cost = mhDB.m.Prj.OT$costWage),
+    data.frame(costCenter = mhDB.m.Prj.OT$costCenter,
+               month = mhDB.m.Prj.OT$month,
+               equipment = mhDB.m.Prj.OT$equipment,
+               cost = mhDB.m.Prj.OT$costNP),
+    data.frame(costCenter = mhDB.d.Prj.Reg$costCenter,
+               month = mhDB.d.Prj.Reg$month,
+               equipment = mhDB.d.Prj.Reg$equipment,
+               cost = mhDB.d.Prj.Reg$costNP),
+    data.frame(costCenter = mhDB.d.Prj.OT$costCenter,
+               month = mhDB.d.Prj.OT$month,
+               equipment = mhDB.d.Prj.OT$equipment,
+               cost = mhDB.d.Prj.OT$costWage),
+    data.frame(costCenter = mhDB.d.Prj.OT$costCenter,
+               month = mhDB.d.Prj.OT$month,
+               equipment = mhDB.d.Prj.OT$equipment,
+               cost = mhDB.d.Prj.OT$costNP)
+  ) %>%
+    dplyr::mutate(description = "Payroll - Overtime (Fixed Term/Project)",
+                  status = "prj")
+
   c60300008 <- dplyr::bind_rows(
-    dplyr::filter(mhDB.13mp, status != "sea") %>%
+    dplyr::filter(mhDB.13mp, !status %in% c("sea", "prj")) %>%
       dplyr::select(costCenter, month, equipment, cost),
     dplyr::select(mhDB.bonus, costCenter, month, equipment, cost),
     dplyr::select(mhDB.signingBonus, costCenter, month, equipment, cost)
@@ -1588,6 +1725,13 @@ getCost <- function(mhDB,
       status = "sea"
     )
 
+  c60300010 <- dplyr::bind_rows(
+    dplyr::filter(mhDB.13mp, status == "prj") %>%
+      dplyr::select(costCenter, month, equipment, cost),
+    dplyr::select(mhDB.RB, costCenter, month, equipment, cost)
+  ) %>%
+    dplyr::mutate(description = "Payroll - 13th Month and Other Bonuses (FT/Others)",
+                  status = "prj")
 
   c60300011 <- dplyr::select(
     mhDB.leaveConversion, costCenter, month, equipment, cost
@@ -1598,6 +1742,12 @@ getCost <- function(mhDB,
   c60300012 <- dplyr::select(mhDB.LC, costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "Payroll - Leave Commutation (Seasonal)",
                   status = "sea")
+
+  c60300013 <- dplyr::select(
+    mhDB.LC.Prj, costCenter, month, equipment, cost
+  ) %>%
+    dplyr::mutate(description = "Payroll - Leave Commutation (FT/Others)",
+                  status = "prj")
 
   c60300014 <- dplyr::bind_rows(
     dplyr::filter(mhDB.benefits, status != "sea") %>%
@@ -1617,7 +1767,16 @@ getCost <- function(mhDB,
     dplyr::mutate(description = "Payroll - De Minimis Benefits (Seasonal)",
                   status = "sea")
 
-  c60300017 <- dplyr::filter(mhDB.SSS, status != "sea") %>%
+  c60300016 <- dplyr::bind_rows(
+    dplyr::filter(mhDB.benefits, status == "prj") %>%
+      dplyr::select(costCenter, month, equipment, cost),
+    dplyr::filter(mhDB.riceSub.I, status == "prj") %>%
+      dplyr::select(costCenter, month, equipment, cost)
+  ) %>%
+    dplyr::mutate(description = "Payroll - De Minimis Benefits (FT/Others)",
+                  status = "prj")
+
+  c60300017 <- dplyr::filter(mhDB.SSS, status %in% c("pro", "reg")) %>%
     dplyr::select(costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "SSS Contributions (Regular)",
                   status = "reg")
@@ -1627,7 +1786,12 @@ getCost <- function(mhDB,
     dplyr::mutate(description = "SSS Contributions (Seasonal)",
                   status = "sea")
 
-  c60300020 <- dplyr::filter(mhDB.PHIC, status != "sea") %>%
+  c60300019 <- dplyr::filter(mhDB.SSS, status == "prj") %>%
+    dplyr::select(costCenter, month, equipment, cost) %>%
+    dplyr::mutate(description = "SSS Contributions (FT/Others)",
+                  status = "prj")
+
+  c60300020 <- dplyr::filter(mhDB.PHIC, status %in% c("pro", "reg")) %>%
     dplyr::select(costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "PHIC Contributions (Regular)",
                   status = "reg")
@@ -1637,7 +1801,12 @@ getCost <- function(mhDB,
     dplyr::mutate(description = "PHIC Contributions (Seasonal)",
                   status = "sea")
 
-  c60300023 <- dplyr::filter(mhDB.PI, status != "sea") %>%
+  c60300022 <- dplyr::filter(mhDB.PHIC, status == "prj") %>%
+    dplyr::select(costCenter, month, equipment, cost) %>%
+    dplyr::mutate(description = "PHIC Contributions (FT/Others)",
+                  status = "prj")
+
+  c60300023 <- dplyr::filter(mhDB.PI, status %in% c("pro", "reg")) %>%
     dplyr::select(costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "HDMF Contributions (Regular)",
                   status = "reg")
@@ -1646,6 +1815,11 @@ getCost <- function(mhDB,
     dplyr::select(costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "HDMF Contributions (Seasonal)",
                   status = "sea")
+
+  c60300025 <- dplyr::filter(mhDB.PI, status == "prj") %>%
+    dplyr::select(costCenter, month, equipment, cost) %>%
+    dplyr::mutate(description = "HDMF Contributions (FT/Others)",
+                  status = "prj")
 
   c60300036 <- dplyr::select(mhDB.SB, -c(mh, costCenterNew)) %>%
     dplyr::mutate(description = "Awards and Prizes")
@@ -1736,20 +1910,28 @@ getCost <- function(mhDB,
 
   costDBraw <- dplyr::bind_rows(c60300000,
                                 c60300001,
+                                c60300002,
                                 c60300004,
                                 c60300005,
+                                c60300006,
                                 c60300008,
                                 c60300009,
+                                c60300010,
                                 c60300011,
                                 c60300012,
+                                c60300013,
                                 c60300014,
                                 c60300015,
+                                c60300016,
                                 c60300017,
                                 c60300018,
+                                c60300019,
                                 c60300020,
                                 c60300021,
+                                c60300022,
                                 c60300023,
                                 c60300024,
+                                c60300025,
                                 c60300036,
                                 c60300029,
                                 c60300033,

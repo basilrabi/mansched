@@ -51,7 +51,7 @@ setMethod(
         cost <- 1600
     } else if (theObject@status == "pro") {
       cost <- 1000 * 1.25
-    } else if (theObject@status %in% c("sea", "age")) {
+    } else if (theObject@status %in% c("sea", "age", "prj")) {
       cost <- 600 * 1.25
     } else {
       stop("Invalid employment status!")

@@ -27,7 +27,8 @@
 #'       employee
 #'
 #'       Accepted values are \code{"reg"} (regular), \code{"pro"}
-#'       (probationary), \code{'sea'} (seasonal), and \code{'age'} (agency).}
+#'       (probationary), \code{'sea'} (seasonal), \code{'age'} (agency), and
+#'       \code{'prj'} (project-based).}
 #'     \item{cBegin}{character string representing the date of employment of
 #'       personnel
 #'

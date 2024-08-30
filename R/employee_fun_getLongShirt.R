@@ -49,7 +49,7 @@ setMethod(
       )
     }
 
-    if (theObject@status == "sea") {
+    if (theObject@status %in% c("sea", "prj")) {
       longShirt$benefits <- 0
       longShirt$benefits[min(which(longShirt$allow > 0))] <- price
     }

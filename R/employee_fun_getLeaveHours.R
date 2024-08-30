@@ -32,7 +32,7 @@ getLeaveHours <- function(cBegin, cEnd = NA, year, status) {
     return(0L)
 
   # 5 days service incentive leave per year for agency and seasonal
-  if (status %in% c("sea", "age")) {
+  if (status %in% c("sea", "age", "prj")) {
 
     if (is.na(cEnd))
       stop("cEnd must be present for agency and seasonal employees.")
