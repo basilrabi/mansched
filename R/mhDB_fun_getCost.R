@@ -86,6 +86,7 @@ NULL
 #'     \item a data.frame with 16 columns similar to the first element of the
 #'       returned list but with an additional column indicating the employment
 #'       status
+#'     \item a data.frame consisting of agency fees
 #'   }
 #' @export getCost
 #' @importFrom dplyr "%>%" bind_rows case_when filter group_by left_join mutate select summarise ungroup
@@ -1844,50 +1845,62 @@ getCost <- function(mhDB,
     dplyr::mutate(description = "Life and Medical Insurance - Employees",
                   status = "reg")
 
-  c61100000 <- dplyr::bind_rows(
+  c61100000_components <- dplyr::bind_rows(
     data.frame(costCenter = mhDB.d.A$costCenter,
                month = mhDB.d.A$month,
                equipment = mhDB.d.A$equipment,
-               cost = mhDB.d.A$cost),
+               cost = mhDB.d.A$cost) %>%
+      dplyr::mutate(description = "Regular hours"),
     data.frame(costCenter = mhDB.d.A$costCenter,
                month = mhDB.d.A$month,
                equipment = mhDB.d.A$equipment,
-               cost = mhDB.d.A$costNP),
+               cost = mhDB.d.A$costNP) %>%
+      dplyr::mutate(description = "Regular NP"),
     data.frame(costCenter = hol.mhDB.d.A$costCenter,
                month = hol.mhDB.d.A$month,
                equipment = hol.mhDB.d.A$equipment,
-               cost = hol.mhDB.d.A$XcostWage),
+               cost = hol.mhDB.d.A$XcostWage) %>%
+      dplyr::mutate(description = "Pre-paid holidays"),
     data.frame(costCenter = mhDB.SSS.A$costCenter,
                month = mhDB.SSS.A$month,
                equipment = mhDB.SSS.A$equipment,
-               cost = mhDB.SSS.A$cost),
+               cost = mhDB.SSS.A$cost) %>%
+      dplyr::mutate(description = "SSS"),
     data.frame(costCenter = mhDB.PI.A$costCenter,
                month = mhDB.PI.A$month,
                equipment = mhDB.PI.A$equipment,
-               cost = mhDB.PI.A$cost),
+               cost = mhDB.PI.A$cost) %>%
+      dplyr::mutate(description = "Pag-ibig"),
     data.frame(costCenter = mhDB.PHIC.A$costCenter,
                month = mhDB.PHIC.A$month,
                equipment = mhDB.PHIC.A$equipment,
-               cost = mhDB.PHIC.A$cost),
+               cost = mhDB.PHIC.A$cost) %>%
+      dplyr::mutate(description = "PhilHealth"),
     data.frame(costCenter = mhDB.LC.A$costCenter,
                month = mhDB.LC.A$month,
                equipment = mhDB.LC.A$equipment,
-               cost = mhDB.LC.A$cost),
+               cost = mhDB.LC.A$cost) %>%
+      dplyr::mutate(description = "Service leave"),
     data.frame(costCenter = mhDB.HM.A$costCenter,
                month = mhDB.HM.A$month,
                equipment = mhDB.HM.A$equipment,
-               cost = mhDB.HM.A$cost),
+               cost = mhDB.HM.A$cost) %>%
+      dplyr::mutate(description = "Hospital and medical"),
     data.frame(costCenter = mhDB.13mp.A$costCenter,
                month = mhDB.13mp.A$month,
                equipment = mhDB.13mp.A$equipment,
-               cost = mhDB.13mp.A$cost)
-  ) %>%
-    dplyr::mutate(cost = round(cost * 1.3117, digits = 2)) %>%
-    dplyr::bind_rows(
-      data.frame(costCenter = mhDB.riceSub.A$costCenter,
-                 month = mhDB.riceSub.A$month,
-                 equipment = mhDB.riceSub.A$equipment,
-                 cost = mhDB.riceSub.A$cost)
+               cost = mhDB.13mp.A$cost) %>%
+      dplyr::mutate(description = "13th month pay"),
+    data.frame(costCenter = mhDB.riceSub.A$costCenter,
+               month = mhDB.riceSub.A$month,
+               equipment = mhDB.riceSub.A$equipment,
+               cost = mhDB.riceSub.A$cost) %>%
+      dplyr::mutate(description = "Rice")
+  )
+
+  c61100000 <- dplyr::mutate(c61100000_components, cost = dplyr::case_when(
+      description == "Rice" ~ cost,
+      TRUE ~ round(cost * 1.3117, digits = 2))
     ) %>%
     dplyr::mutate(description = "Contract Fee - Agency Services",
                   status = "age")
@@ -2018,5 +2031,5 @@ getCost <- function(mhDB,
   bonus_and_gc <- dplyr::bind_rows(mhDB.bonus.detailed, gc) %>%
     dplyr::filter(cost > 0)
 
-  return(list(costDB, export.mh, accr.13mp, bonus_and_gc, costDBbyStatus))
+  return(list(costDB, export.mh, accr.13mp, bonus_and_gc, costDBbyStatus, c61100000_components))
 }

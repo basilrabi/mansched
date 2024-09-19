@@ -72,6 +72,7 @@ a list containing the following:
     \item a data.frame with 16 columns similar to the first element of the
       returned list but with an additional column indicating the employment
       status
+    \item a data.frame consisting of agency fees
   }
 }
 \description{
