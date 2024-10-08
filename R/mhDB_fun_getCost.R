@@ -87,6 +87,8 @@ NULL
 #'       returned list but with an additional column indicating the employment
 #'       status
 #'     \item a data.frame consisting of agency fees
+#'     \item a data.frame consisting of food allowances
+#'     \item a data.frame consisting of rice subsidy
 #'   }
 #' @export getCost
 #' @importFrom dplyr "%>%" bind_rows case_when filter group_by left_join mutate select summarise ungroup
@@ -613,6 +615,17 @@ getCost <- function(mhDB,
     dplyr::group_by(ID, month, status) %>%
     dplyr::mutate(totMH = sum(mh)) %>%
     dplyr::left_join(allowance, by = c("ID", "month")) %>%
+    dplyr::mutate(X = mh / totMH) %>%
+    dplyr::mutate(cost = round(X * allowance, digits = 2))
+
+  foodAllowance  <- data.table::rbindlist(lapply(listR, getFoodAllowance),
+                                      use.names = TRUE)
+  mhDB.foodAllow <- dplyr::filter(mhDB, mhType %in% distType) %>%
+    dplyr::group_by(ID, month, costCenter, status, equipment) %>%
+    dplyr::summarise(mh = sum(mh)) %>%
+    dplyr::group_by(ID, month, status) %>%
+    dplyr::mutate(totMH = sum(mh)) %>%
+    dplyr::left_join(foodAllowance, by = c("ID", "month")) %>%
     dplyr::mutate(X = mh / totMH) %>%
     dplyr::mutate(cost = round(X * allowance, digits = 2))
 
@@ -2031,5 +2044,12 @@ getCost <- function(mhDB,
   bonus_and_gc <- dplyr::bind_rows(mhDB.bonus.detailed, gc) %>%
     dplyr::filter(cost > 0)
 
-  return(list(costDB, export.mh, accr.13mp, bonus_and_gc, costDBbyStatus, c61100000_components))
+  return(list(costDB,
+              export.mh,
+              accr.13mp,
+              bonus_and_gc,
+              costDBbyStatus,
+              c61100000_components,
+              mhDB.foodAllow,
+              mhDB.riceSub.I))
 }

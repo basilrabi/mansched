@@ -73,6 +73,8 @@ a list containing the following:
       returned list but with an additional column indicating the employment
       status
     \item a data.frame consisting of agency fees
+    \item a data.frame consisting of food allowances
+    \item a data.frame consisting of rice subsidy
   }
 }
 \description{
