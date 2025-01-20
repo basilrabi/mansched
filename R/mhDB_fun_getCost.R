@@ -860,7 +860,7 @@ getCost <- function(mhDB,
     data.frame(ID = x@ID, month = 1:12, maxReg = x@maxReg)
   })
 
-  if (length(maxRegDB) > 0) {
+  if (length(maxRegDB) > 0 & monthStart < 13L) {
     ### Get total reg hours attendance (RH)
     mhDB.RH <- dplyr::filter(
       mhDB, status == "reg", mhType == "reg", month >= monthStart
