@@ -928,7 +928,7 @@ getCost <- function(mhDB,
 
     if (nrow(vacationMode) > 0) {
       if (is.null(absenteeList))
-        stop("Absentees present but without cost centers distribution.")
+        stop("Absentees present but without cost centers distribution: ", paste(sort(unique(vacationMode$ID)), collapse = " "))
       absenteeID <- unique(vacationMode$ID)
       absenteeIDAbsent <- absenteeID[!absenteeID %in% absenteeList$ID]
       if (length(absenteeIDAbsent) > 0)
