@@ -664,11 +664,11 @@ getCost <- function(mhDB,
                                         use.names = TRUE)
   mhDB.signingBonus <- dplyr::filter(mhDB,
                                      mhType %in% distType,
-                                     month < 6) %>%
+                                     month < (monthRegularSigningBonus + 1L)) %>%
     dplyr::group_by(ID, costCenter, equipment) %>%
     dplyr::summarise(mh = sum(mh)) %>%
     dplyr::group_by(ID) %>%
-    dplyr::mutate(totMH = sum(mh), month = 5L) %>%
+    dplyr::mutate(totMH = sum(mh), month = monthRegularSigningBonus) %>%
     dplyr::mutate(X = mh / totMH) %>%
     dplyr::left_join(signingBonus, by = c("ID", "month")) %>%
     dplyr::mutate(cost = round(X * signingBonus, digits = 2)) %>%

@@ -64,7 +64,7 @@ setMethod(
     signingBonus$bonus <- 0
 
     if (isRF(theObject))
-      signingBonus$bonus[signingBonus$month == 2L] <- 20000
+      signingBonus$bonus[signingBonus$month == monthRegularSigningBonus] <- 20000
 
     signingBonus$signingBonus <- round(signingBonus$allow * signingBonus$bonus,
                                        digits = 2)
