@@ -51,7 +51,7 @@ costBudget <- costBudget[costBudget$code < 99999998, mCols]
 cost <- sum(as.matrix(costBudget))
 
 test_that("correct buget", {
-  expect_equal(cost, 2571702.52)
+  expect_equal(cost, 2586611.11)
 })
 
 rm(list = ls())

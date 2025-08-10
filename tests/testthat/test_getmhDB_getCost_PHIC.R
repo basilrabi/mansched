@@ -52,7 +52,7 @@ cost <- cost[stringr::str_detect(cost$description, "PHIC"),
 
 test_that("Correct PHIC in Budget", {
   expect_equal(cost$`1`[1], 1375)
-  expect_equal(cost$`7`[2], 2500)
+  expect_equal(cost$`7`[2], 5000)
   expect_equal(cost$`1`[3], round(400 * 313 * 0.025 / 12, 2))
   expect_equal(cost$`1`[4], round(400 * 313 * 0.025 / 12, 2))
   expect_equal(cost$`1`[5], 250)
@@ -97,8 +97,8 @@ cost <- cost[stringr::str_detect(cost$description, "PHIC"),
 test_that("Correct PHIC in Forecast", {
   expect_equal(cost$`1`[1], 1250)
   expect_equal(cost$`7`[1], 1250)
-  expect_equal(cost$`1`[2], 2500)
-  expect_equal(cost$`7`[2], 2500)
+  expect_equal(cost$`1`[2], 5000)
+  expect_equal(cost$`7`[2], 5000)
   expect_equal(cost$`1`[3], 260.83)
   expect_equal(cost$`1`[5], 250)
 })

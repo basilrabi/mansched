@@ -29,9 +29,9 @@
 #' Employer's SSS Contribution
 #'
 #' Details are posted in
-#' \url{https://www.sss.gov.ph/sss/appmanager/pages.jsp?page=scheduleofcontribution}.
+#' \url{https://www.sss.gov.ph/wp-content/uploads/2024/12/2025-SSS-Contribution-Table-rev.pdf}.
 #'
-#' @format \code{\link{data.frame}} with 53 rows and 3 columns:
+#' @format \code{\link{data.frame}} with 62 rows and 3 columns:
 #'   \describe{
 #'     \item{r1}{minimum gross salary}
 #'     \item{r2}{maximum gross salary}

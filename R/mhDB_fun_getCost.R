@@ -795,7 +795,7 @@ getCost <- function(mhDB,
 
     max_salary <- 100000
     phic_premium <- 0.025
-    phic_premium_max <- 2500
+    phic_premium_max <- 5000
     phic_premium_min <- 250
 
     tempData <- getCM(x)
@@ -828,7 +828,7 @@ getCost <- function(mhDB,
                               salG = round(salM * allow, digits = 2)) %>%
       dplyr::mutate(PHIC = dplyr::case_when(
         salG < 0.01 ~ 0,
-        salG < 10000.01 ~ phic_premium_min,
+        salG < 10000 ~ phic_premium_min,
         salG < max_salary ~ round(salG * phic_premium, digits = 2),
         TRUE ~ phic_premium_max
       )) %>%
