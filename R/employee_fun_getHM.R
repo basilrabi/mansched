@@ -46,9 +46,9 @@ setMethod(
     }
 
     if (theObject@status == "reg") {
-      cost <- 2000
+      cost <- 2100
       if (theObject@forecast)
-        cost <- 1600
+        cost <- 2000
     } else if (theObject@status == "pro") {
       cost <- 1000 * 1.25
     } else if (theObject@status %in% c("sea", "age", "prj")) {

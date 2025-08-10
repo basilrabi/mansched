@@ -33,9 +33,9 @@ setMethod(
 
     shirt <- getCM(theObject)
     shirt$shirt <- 0
-    price <- 600
+    price <- 650
     if (theObject@forecast)
-      price <- 550
+      price <- 600
 
     if (isReg(theObject))
       shirt$shirt[shirt$month == 5L] <- price

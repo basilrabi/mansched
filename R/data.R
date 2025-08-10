@@ -303,4 +303,4 @@ premium.nonRF[iR, c("premiumR")] <- premium.nonRF[iR, c("premiumR")] - 1
 premium.nonRF[iS, c("premiumS")] <- premium.nonRF[iS, c("premiumS")] - 1
 
 monthRegularSigningBonus <- 2L
-seasonalSigningBonus <- 0
+seasonalSigningBonus <- 4500

@@ -33,8 +33,6 @@ setMethod(
   definition = function(theObject) {
 
     rice <- 3000
-    if (theObject@forecast)
-      rice <- 2800
 
     if (grepl("BARGE MAIN", theObject@name))
       rice <- 0

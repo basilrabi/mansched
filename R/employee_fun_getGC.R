@@ -38,9 +38,7 @@ setMethod(
     gc$gc <- 0
     gc$benefits <- gc$gc
 
-    gcPrice <- 2000
-    if (theObject@forecast)
-      gcPrice <- 1600
+    gcPrice <- 1500
 
     if (theObject@status %in% c("reg")) {
       gc$gc[gc$month == 12L] <- gcPrice

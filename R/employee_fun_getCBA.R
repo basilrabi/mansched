@@ -32,16 +32,16 @@ setMethod(
   signature  = "Employee",
   definition = function(theObject) {
 
-    bag <- 1200
-    lunchBox <- 600
-    pants <- 900
-    uniform <- 4000
+    bag <- 0
+    lunchBox <- 0
+    pants <- 0
+    uniform <- 3000
 
     if (theObject@forecast) {
-      bag <- 1000
-      lunchBox <- 550
-      pants <- 800
-      uniform <- 3200
+      bag <- 1200
+      lunchBox <- 600
+      pants <- 900
+      uniform <- 4000
     }
 
     price <- uniform + pants + bag + lunchBox

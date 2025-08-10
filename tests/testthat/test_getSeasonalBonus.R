@@ -89,8 +89,8 @@ test_that("getSigningBonusSea() works", {
   expect_equal(sum(getSigningBonusSea(tempEmp1)$signingBonus), 0)
   expect_equal(sum(getSigningBonusSea(tempEmp2)$signingBonus), 0)
   expect_equal(sum(getSigningBonusSea(tempEmp3)$signingBonus), 0)
-  expect_equal(sum(getSigningBonusSea(tempEmp4)$signingBonus), 0)
-  expect_equal(sum(getSigningBonusSea(tempEmp5)$signingBonus), 0)
+  expect_equal(sum(getSigningBonusSea(tempEmp4)$signingBonus), 4500)
+  expect_equal(sum(getSigningBonusSea(tempEmp5)$signingBonus), 4500)
 })
 
 test_that("getRetentionBonus() works", {
@@ -230,8 +230,8 @@ test_that("getSigningBonusSea() works", {
   expect_equal(sum(getSigningBonusSea(tempEmp1)$signingBonus), 0)
   expect_equal(sum(getSigningBonusSea(tempEmp2)$signingBonus), 0)
   expect_equal(sum(getSigningBonusSea(tempEmp3)$signingBonus), 0)
-  expect_equal(sum(getSigningBonusSea(tempEmp4)$signingBonus), 0)
-  expect_equal(sum(getSigningBonusSea(tempEmp5)$signingBonus), 0)
+  expect_equal(sum(getSigningBonusSea(tempEmp4)$signingBonus), 4500)
+  expect_equal(sum(getSigningBonusSea(tempEmp5)$signingBonus), 4500)
 })
 
 test_that("getRetentionBonus() works", {

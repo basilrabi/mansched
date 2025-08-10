@@ -84,10 +84,10 @@ tempEmp5 <- initREmployee(theObject = tempEmp,
                           hol = hol)
 
 test_that("getLaborDayShirt() works", {
-  expect_equal(sum(getLaborDayShirt(tempEmp1)$benefits), 600)
-  expect_equal(sum(getLaborDayShirt(tempEmp1)$benefits[5]), 600)
-  expect_equal(sum(getLaborDayShirt(tempEmp2)$benefits), 550)
-  expect_equal(sum(getLaborDayShirt(tempEmp2)$benefits[5]), 550)
+  expect_equal(sum(getLaborDayShirt(tempEmp1)$benefits), 650)
+  expect_equal(sum(getLaborDayShirt(tempEmp1)$benefits[5]), 650)
+  expect_equal(sum(getLaborDayShirt(tempEmp2)$benefits), 600)
+  expect_equal(sum(getLaborDayShirt(tempEmp2)$benefits[5]), 600)
   expect_equal(sum(getLaborDayShirt(tempEmp3)$benefits), 0)
   expect_equal(sum(getLaborDayShirt(tempEmp3)$benefits[5]), 0)
   expect_equal(sum(getLaborDayShirt(tempEmp4)$benefits), 0)

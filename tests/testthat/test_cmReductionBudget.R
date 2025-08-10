@@ -50,8 +50,8 @@ row.names(costBudget) <- paste(costBudget$costCenter, costBudget$code)
 costBudget <- costBudget[costBudget$code < 99999998, mCols]
 cost <- sum(as.matrix(costBudget))
 
-test_that("correct buget", {
-  expect_equal(cost, 2586611.11)
+test_that("correct budget", {
+  expect_equal(cost, 2561294.51)
 })
 
 rm(list = ls())

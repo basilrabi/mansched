@@ -150,16 +150,17 @@ tempEmp9 <- initREmployee(theObject = tempEmp,
                           hol = hol,
                           dependents = c(NA, rep(1L, times = 10), NA))
 
+rice_cost <- 3000
 test_that("getRiceSub() works in budget", {
-  expect_equal(sum(getRiceSub(tempEmp1)$riceSub), 3000 * 12)
-  expect_equal(sum(getRiceSub(tempEmp2)$riceSub), 3000 * 11)
-  expect_equal(sum(getRiceSub(tempEmp3)$riceSub), 3000 * 10)
-  expect_equal(sum(getRiceSub(tempEmp4)$riceSub), 3000 * 12)
-  expect_equal(sum(getRiceSub(tempEmp5)$riceSub), 3000 * 12)
-  expect_equal(sum(getRiceSub(tempEmp6)$riceSub), 3000 * 12)
-  expect_equal(sum(getRiceSub(tempEmp7)$riceSub), 3000 * 7)
+  expect_equal(sum(getRiceSub(tempEmp1)$riceSub), rice_cost * 12)
+  expect_equal(sum(getRiceSub(tempEmp2)$riceSub), rice_cost * 11)
+  expect_equal(sum(getRiceSub(tempEmp3)$riceSub), rice_cost * 10)
+  expect_equal(sum(getRiceSub(tempEmp4)$riceSub), rice_cost * 12)
+  expect_equal(sum(getRiceSub(tempEmp5)$riceSub), rice_cost * 12)
+  expect_equal(sum(getRiceSub(tempEmp6)$riceSub), rice_cost * 12)
+  expect_equal(sum(getRiceSub(tempEmp7)$riceSub), rice_cost * 7)
   expect_equal(sum(getRiceSub(tempEmp8)$riceSub), 0)
-  expect_equal(sum(getRiceSub(tempEmp9)$riceSub), 3000 * 12 * 0.5)
+  expect_equal(sum(getRiceSub(tempEmp9)$riceSub), rice_cost * 12 * 0.5)
 })
 
 # Test for forecast
@@ -323,16 +324,17 @@ tempEmp9 <- initREmployee(theObject = tempEmp,
                           forecast = TRUE,
                           dependents = c(NA, rep(1L, times = 10), NA))
 
+rice_cost <- 3000
 test_that("getRiceSub() works in forecast", {
-  expect_equal(sum(getRiceSub(tempEmp1)$riceSub), 2800 * 12)
-  expect_equal(sum(getRiceSub(tempEmp2)$riceSub), 2800 * 11)
-  expect_equal(sum(getRiceSub(tempEmp3)$riceSub), 2800 * 10)
-  expect_equal(sum(getRiceSub(tempEmp4)$riceSub), 2800 * 12)
-  expect_equal(sum(getRiceSub(tempEmp5)$riceSub), 2800 * 12)
-  expect_equal(sum(getRiceSub(tempEmp6)$riceSub), 2800 * 12)
-  expect_equal(sum(getRiceSub(tempEmp7)$riceSub), 2800 * 7)
+  expect_equal(sum(getRiceSub(tempEmp1)$riceSub), rice_cost * 12)
+  expect_equal(sum(getRiceSub(tempEmp2)$riceSub), rice_cost * 11)
+  expect_equal(sum(getRiceSub(tempEmp3)$riceSub), rice_cost * 10)
+  expect_equal(sum(getRiceSub(tempEmp4)$riceSub), rice_cost * 12)
+  expect_equal(sum(getRiceSub(tempEmp5)$riceSub), rice_cost * 12)
+  expect_equal(sum(getRiceSub(tempEmp6)$riceSub), rice_cost * 12)
+  expect_equal(sum(getRiceSub(tempEmp7)$riceSub), rice_cost * 7)
   expect_equal(sum(getRiceSub(tempEmp8)$riceSub), 0)
-  expect_equal(sum(getRiceSub(tempEmp9)$riceSub), 2800 * 12 * 0.5)
+  expect_equal(sum(getRiceSub(tempEmp9)$riceSub), rice_cost * 12 * 0.5)
 })
 
 rm(list = ls())
