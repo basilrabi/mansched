@@ -3,7 +3,10 @@
 \name{getHMO}
 \alias{getHMO}
 \alias{getHMO,Employee-method}
-\alias{getHMO,Staff-method}
+\alias{getHMO,DivisionManager-method}
+\alias{getHMO,GroupManager-method}
+\alias{getHMO,DepartmentManager-method}
+\alias{getHMO,SectionHead-method}
 \alias{getHMO,NonStaff-method}
 \title{Compute the monthly cost for health and maintenance organization}
 \usage{
@@ -11,7 +14,13 @@ getHMO(theObject)
 
 \S4method{getHMO}{Employee}(theObject)
 
-\S4method{getHMO}{Staff}(theObject)
+\S4method{getHMO}{DivisionManager}(theObject)
+
+\S4method{getHMO}{GroupManager}(theObject)
+
+\S4method{getHMO}{DepartmentManager}(theObject)
+
+\S4method{getHMO}{SectionHead}(theObject)
 
 \S4method{getHMO}{NonStaff}(theObject)
 }
@@ -39,7 +48,13 @@ HMO privilege is only available to regular employees. The higher the job
 \itemize{
 \item \code{getHMO(Employee)}: Compute cost multiplier
 
-\item \code{getHMO(Staff)}: Compute premium list
+\item \code{getHMO(DivisionManager)}: Compute premium list
+
+\item \code{getHMO(GroupManager)}: Compute premium list
+
+\item \code{getHMO(DepartmentManager)}: Compute premium list
+
+\item \code{getHMO(SectionHead)}: Compute premium list
 
 \item \code{getHMO(NonStaff)}: Compute monthly cost
 

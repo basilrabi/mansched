@@ -44,17 +44,76 @@ setMethod(
 #' @describeIn getHMO Compute premium list
 setMethod(
   f          = "getHMO",
-  signature  = "Staff",
+  signature  = "DivisionManager",
   definition = function(theObject) {
 
     hmo <- callNextMethod(theObject)
 
-    principal <- 24572.9
-    dependent <- 24132.9
-    if (theObject@forecast) {
-      principal <- 22339
-      dependent <- 21939
-    }
+    principal <- 32225.61
+    dependent <- 31813.61
+
+    employeeHMO <- principal / 12
+    dependentHMO <- dependent * theObject@dependents / 12
+
+    cost <- employeeHMO + dependentHMO
+    hmo$hmo <- round(hmo$allow * cost, digits = 2)
+
+    return(hmo[, c("month", "ID", "hmo")])
+  }
+)
+
+#' @describeIn getHMO Compute premium list
+setMethod(
+  f          = "getHMO",
+  signature  = "GroupManager",
+  definition = function(theObject) {
+
+    hmo <- callNextMethod(theObject)
+
+    principal <- 32225.61
+    dependent <- 31813.61
+
+    employeeHMO <- principal / 12
+    dependentHMO <- dependent * theObject@dependents / 12
+
+    cost <- employeeHMO + dependentHMO
+    hmo$hmo <- round(hmo$allow * cost, digits = 2)
+
+    return(hmo[, c("month", "ID", "hmo")])
+  }
+)
+
+#' @describeIn getHMO Compute premium list
+setMethod(
+  f          = "getHMO",
+  signature  = "DepartmentManager",
+  definition = function(theObject) {
+
+    hmo <- callNextMethod(theObject)
+
+    principal <- 23009.17
+    dependent <- 31813.61
+
+    employeeHMO <- principal / 12
+    dependentHMO <- dependent * theObject@dependents / 12
+
+    cost <- employeeHMO + dependentHMO
+    hmo$hmo <- round(hmo$allow * cost, digits = 2)
+
+    return(hmo[, c("month", "ID", "hmo")])
+  }
+)
+
+#' @describeIn getHMO Compute premium list
+setMethod(
+  f          = "getHMO",
+  signature  = "SectionHead",
+  definition = function(theObject) {
+
+    hmo <- callNextMethod(theObject)
+
+    principal <- 23009.17
+    dependent <- 31813.61
 
     employeeHMO <- principal / 12
     dependentHMO <- dependent * theObject@dependents / 12
@@ -75,19 +134,11 @@ setMethod(
     hmo <- callNextMethod(theObject)
 
     if (isRF(theObject)) {
-      principal <- 17607.7
-      dependent <- 17167.7
-      if (theObject@forecast) {
-        principal <- 16007
-        dependent <- 15607
-      }
+      principal <- 16487.21
+      dependent <- 16075.21
     } else {
-      principal <- 18574.6
-      dependent <- 18134.6
-      if (theObject@forecast) {
-        principal <- 16886
-        dependent <- 16486
-      }
+      principal <- 17392.58
+      dependent <- 22597.17
     }
     employeeHMO <- principal / 12
     dependentHMO <- dependent / 12

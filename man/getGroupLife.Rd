@@ -3,7 +3,10 @@
 \name{getGroupLife}
 \alias{getGroupLife}
 \alias{getGroupLife,Employee-method}
-\alias{getGroupLife,Staff-method}
+\alias{getGroupLife,DivisionManager-method}
+\alias{getGroupLife,GroupManager-method}
+\alias{getGroupLife,DepartmentManager-method}
+\alias{getGroupLife,SectionHead-method}
 \alias{getGroupLife,NonStaff-method}
 \title{Compute the monthly cost for group life insurance premium}
 \usage{
@@ -11,7 +14,13 @@ getGroupLife(theObject)
 
 \S4method{getGroupLife}{Employee}(theObject)
 
-\S4method{getGroupLife}{Staff}(theObject)
+\S4method{getGroupLife}{DivisionManager}(theObject)
+
+\S4method{getGroupLife}{GroupManager}(theObject)
+
+\S4method{getGroupLife}{DepartmentManager}(theObject)
+
+\S4method{getGroupLife}{SectionHead}(theObject)
 
 \S4method{getGroupLife}{NonStaff}(theObject)
 }
@@ -40,7 +49,13 @@ Life insurance privilege is only available to regular and probationary
 \itemize{
 \item \code{getGroupLife(Employee)}: Compute cost multiplier
 
-\item \code{getGroupLife(Staff)}: Compute premium list
+\item \code{getGroupLife(DivisionManager)}: Compute premium list
+
+\item \code{getGroupLife(GroupManager)}: Compute premium list
+
+\item \code{getGroupLife(DepartmentManager)}: Compute premium list
+
+\item \code{getGroupLife(SectionHead)}: Compute premium list
 
 \item \code{getGroupLife(NonStaff)}: Compute monthly cost
 

@@ -45,13 +45,56 @@ setMethod(
 #' @describeIn getGroupLife Compute premium list
 setMethod(
   f          = "getGroupLife",
-  signature  = "Staff",
+  signature  = "DivisionManager",
   definition = function(theObject) {
 
     gl <- callNextMethod(theObject)
-    groupLife <-  8131.2 / 12
-    if (theObject@forecast)
-      groupLife <-  6400 / 12
+    groupLife <-  13184 / 12
+
+    gl$gl <- round(gl$allow * groupLife, digits = 2)
+
+    return(gl[, c("month", "ID", "gl")])
+  }
+)
+
+#' @describeIn getGroupLife Compute premium list
+setMethod(
+  f          = "getGroupLife",
+  signature  = "GroupManager",
+  definition = function(theObject) {
+
+    gl <- callNextMethod(theObject)
+    groupLife <-  13184 / 12
+
+    gl$gl <- round(gl$allow * groupLife, digits = 2)
+
+    return(gl[, c("month", "ID", "gl")])
+  }
+)
+
+#' @describeIn getGroupLife Compute premium list
+setMethod(
+  f          = "getGroupLife",
+  signature  = "DepartmentManager",
+  definition = function(theObject) {
+
+    gl <- callNextMethod(theObject)
+    groupLife <-  6592 / 12
+
+    gl$gl <- round(gl$allow * groupLife, digits = 2)
+
+    return(gl[, c("month", "ID", "gl")])
+  }
+)
+
+#' @describeIn getGroupLife Compute premium list
+setMethod(
+  f          = "getGroupLife",
+  signature  = "SectionHead",
+  definition = function(theObject) {
+
+    gl <- callNextMethod(theObject)
+    groupLife <-  6592 / 12
 
     gl$gl <- round(gl$allow * groupLife, digits = 2)
 
@@ -68,14 +111,10 @@ setMethod(
     gl <- callNextMethod(theObject)
 
     if (isRF(theObject)) {
-      groupLife <-  2439.36 / 12
-      if (theObject@forecast)
-        groupLife <- 1920 / 12
+      groupLife <-  2020 / 12
 
     } else {
-      groupLife <-  4878.72 / 12
-      if (theObject@forecast)
-        groupLife <-  3840 / 12
+      groupLife <-  3955.2 / 12
     }
 
     gl$gl <- round(gl$allow * groupLife, digits = 2)
