@@ -1739,11 +1739,8 @@ getCost <- function(mhDB,
       status = "sea"
     )
 
-  c60300010 <- dplyr::bind_rows(
-    dplyr::filter(mhDB.13mp, status == "prj") %>%
-      dplyr::select(costCenter, month, equipment, cost),
-    dplyr::select(mhDB.RB, costCenter, month, equipment, cost)
-  ) %>%
+  c60300010 <- dplyr::filter(mhDB.13mp, status == "prj") %>%
+    dplyr::select(costCenter, month, equipment, cost) %>%
     dplyr::mutate(description = "Payroll - 13th Month and Other Bonuses (FT/Others)",
                   status = "prj")
 
