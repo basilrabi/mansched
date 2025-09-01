@@ -1910,7 +1910,7 @@ getCost <- function(mhDB,
 
   c61100000 <- dplyr::mutate(c61100000_components, cost = dplyr::case_when(
       description == "Rice" ~ cost,
-      TRUE ~ round(cost * 1.3117, digits = 2))
+      TRUE ~ round(cost * 1.2, digits = 2))
     ) %>%
     dplyr::mutate(description = "Contract Fee - Agency Services",
                   status = "age")

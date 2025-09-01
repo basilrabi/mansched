@@ -51,7 +51,7 @@ cost <- cost[cost$code < 99999998, mCols]
 cost <- sum(as.matrix(cost))
 
 test_that("correct forecast", {
-  expect_equal(cost, 2460801.92)
+  expect_equal(cost, 2399022.09)
 })
 
 rm(list = ls())
