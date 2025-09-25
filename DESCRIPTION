@@ -2,7 +2,7 @@ Package: mansched
 Type: Package
 Title: Manpower Scheduler and Personnel Cost Calculator for Taganito Mine
 Version: 0.2.3
-Date: 2025-09-01
+Date: 2025-09-26
 Authors@R: c(
   person("Basil Eric", "Rabi",
   email = "basil.rabi@tmc.nickelasia.com",
@@ -29,6 +29,6 @@ Suggests:
   covr
 Remotes:
   r-lib/covr
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 LinkingTo: Rcpp  (>= 1.0.13)
 VignetteBuilder: knitr

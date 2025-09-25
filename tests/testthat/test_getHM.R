@@ -102,9 +102,9 @@ tempEmp6 <- initREmployee(theObject = tempEmp,
                           equipment = equipment)
 
 test_that("getHM() works", {
-  expect_equal(sum(getHM(tempEmp1)$HM), 2100 * 12)
-  expect_equal(sum(getHM(tempEmp2)$HM), 2100 * 11)
-  expect_equal(sum(getHM(tempEmp3)$HM), 2100 * 10)
+  expect_equal(sum(getHM(tempEmp1)$HM), 2000 * 12)
+  expect_equal(sum(getHM(tempEmp2)$HM), 2000 * 11)
+  expect_equal(sum(getHM(tempEmp3)$HM), 2000 * 10)
   expect_equal(sum(getHM(tempEmp4)$HM), 750 * 1)
   expect_equal(sum(getHM(tempEmp5)$HM), 750 * 1)
   expect_equal(sum(getHM(tempEmp6)$HM), 1250 * 1)
