@@ -15,7 +15,7 @@
 #'
 #' SAP general ledger accounts used by accounting.
 #'
-#' @format \code{\link{data.frame}} with 783 rows and 5 columns:
+#' @format \code{\link{data.frame}} with 841 rows and 5 columns:
 #'   \describe{
 #'     \item{code}{accounting code}
 #'     \item{description}{cost component}

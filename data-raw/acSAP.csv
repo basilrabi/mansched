@@ -567,6 +567,7 @@ code,description,approach,activity_group,employee_type,mh_type
 61300400,BLOCKED Materials and Supplies - Other Adjustment,oh,I,,
 61400000,Taxes and Licenses,main,I,,
 61400001,FBT Expense,main,I,,
+61400002,Local Business Tax,main,I,,
 61400100,Taxes and Licenses - Other Adjustment,main,I,,
 61400200,BLOCKED Taxes and Licenses - Other Adjustment,main,I,,
 61500000,Transportation and Travel Expenses,main,I,,
