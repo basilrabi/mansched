@@ -256,7 +256,7 @@ tempEmp7 <- initREmployee(theObject = tempEmp,
                           hol = hol,
                           forecast = TRUE)
 
-umbrella <- 350
+umbrella <- 400
 gadget <- boots + raincoat + shoes * 1.5 + umbrella
 gadget <- round(gadget / 12, 2)
 

@@ -39,26 +39,8 @@ setMethod(
   f          = "getFoodAllowance",
   signature  = "Staff",
   definition = function(theObject) {
-
     allowance <- callNextMethod(theObject)
-    cost      <- 0
-
-    # Allowances
-    food <- 2200
-    lighting <- 0
-    housing <- 0
-
-    if (theObject@forecast) {
-      lighting <- 0
-      housing <- 0
-    }
-
-    if (!theObject@inHouse)
-      cost <- cost + food + lighting
-
-    cost <- cost + housing
-    allowance$allowance <- round(allowance$allow * cost, digits = 2)
-
+    allowance$allowance <- round(allowance$allow * 2200, digits = 2)
     return(allowance[, c("month", "ID", "allowance")])
   }
 )
@@ -73,39 +55,11 @@ setMethod(
     cost      <- 0
 
     if (isRF(theObject)) {
-      rf_housing <- 0
-      rf_lighting <- 0
-      if (theObject@forecast) {
-        rf_housing <- 0
-        rf_lighting <- 0
-      }
-
-      if (isReg(theObject = theObject)) {
-        cost <- cost + rf_lighting
-        cost <- cost + rf_housing
-      }
+      cost <- 0
     } else {
-
-      food <- 2100
-      lighting <- 0
-      housing <- 0
-
-      if (theObject@forecast) {
-        lighting <- 0
-        housing <- 0
-      }
-
-      cost <- cost + food
-
-      if (isReg(theObject)) {
-        cost <- cost + housing
-        if (!theObject@inHouse)
-          cost <- cost + lighting
-      }
+      cost <- 2100
     }
-
     allowance$allowance <- round(allowance$allow * cost, digits = 2)
-
     return(allowance[, c("month", "ID", "allowance")])
   }
 )
